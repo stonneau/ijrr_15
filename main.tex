@@ -4,6 +4,9 @@
 
 \setcounter{secnumdepth}{3}
 \usepackage{moreverb,url}
+\usepackage{makeidx}         % allows index generation
+\usepackage[percent]{overpic}
+\usepackage{array} 
 
 \usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=red,urlcolor=red]{hyperref}
 
@@ -43,6 +46,8 @@ France.}
 
 \section{Introduction}
 \input{body/intro}
-
+\theendnotes
+\bibliographystyle{SageH}
+\bibliography{biblio}
 
 \end{document}

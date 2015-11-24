@@ -5,7 +5,7 @@ in two sub-problems: first, planning a guide path for the root of the robot and
 then, generating relevant contacts along this path.
 We propose theoritical contributions for each sub-problem, and implement them
 as a complete contact planner. 
-First, we propose a geometrical characterization of a guide trajectory, the "reachability condition", that guarantees that a
+First, we propose a geometrical characterization of a guide trajectory, the ``reachability condition", that guarantees that a
 guide can be mapped into the contact manifold of the robot. With this condition, asserting the "true feasibility" 
 of a guide path boils down to performing collision tests, thus avoiding the costful of explicit computation of balanced contact configurations, as opposed to previous approaches.
 Then, we propose a sequential algorithm to extend a truly feasible path into a sequence of contacts. For each limb, an offline sampling approach,
