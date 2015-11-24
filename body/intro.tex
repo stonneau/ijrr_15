@@ -1,8 +1,8 @@
 We consider the problem of planning the acyclic sequence of contacts describing the motion of a multiped robot in a cluttered environment. Acyclic contact planning is a particular class of motion planning where every configuration of the resulting trajectory must be in contact with the environment in order to support the balance of the system.
 
-Most multipedal locomotion focus on cyclic walking gaits \citep{Kajita03a}. But executing
+Most multipedal locomotion systems focus on cyclic walking gaits \citep{Kajita03a}. But executing
 this behaviour on cluttered environments is dangerous, if not impossible.
-in an analysis of their participation to the darpa challenge, \citeauthor{atkensondarpa}
+In an analysis of their participation to the darpa challenge, \citeauthor{atkensondarpa}
 noted: ``Except for egress, no robots in the DRC Finals used
 the  stair  railings  or  any  form  of  bracing.   Even  drunk  people  are  smart  enough  to  use  nearby  supports.
 Full body locomotion (handholds,  bracing,  leaning against a wall or obstacles) should be easier than our
@@ -12,8 +12,20 @@ Indeed, the current approach to locomotion planning is to avoid obstacles as muc
 to faciliate locomotion. The reason for this, as the authors state, is that ``More contacts make tasks
 mechanically easier, but algorithmically more complicated for planning, and the transitions are difficult to
 both plan and control[...].  We have seen very few robot planners that are  capable of  generating this  behavior."
-
 The difficulty of addressing such a problem comes both in practice from the proximity to the obstacles (that tends to make the sampling of valid configuration tedious) and in theory from the foliation of the configuration space, where zero-measure manifolds intersect in a combinatorial manner \citep{simeon-manipulation-04}.
+
+Previous contributions that embrace the combinatorial provide complete approaches, not applicable in practice because they require hours of computations \citep{conf/iser/BretlRLKA04}.
+More recent successes use a local solution, resulting in more reasonnable performances (still far from real time), at the cost of dynamically inconsistent behaviors \citep{Mordatch:2012:DCB:2185520.2185539}.
+Neither global or local methods presents satifying performances, because planning simultaneously the robot trajectory and the contacts that allow
+its execution is too costly. 
+
+As suggested by \citeauthor{Bouyarmane2009}, we believe that these two tasks can be treated sequentially within a global planner, while preserving the completeness of the search.
+We go further and claim that this can be done at a much smaller cost, provided that necessary and sufficient conditions for contact feasibility can be formulated for the robot trajectory.
+This paper presents a geometrical representation of these conditions, and a concrete implementation of such a decoupled planner.
+This implementation results from a trade-off between a necessary and a sufficient condition for feasibility, allowing us to find solutions extremely rapidly,
+while preserving a success rate superior to TODO \% in the demonstrated scenarios.
+
+In the remainder of this introduction, we discuss further the current state of the art. This allows us to then situate more precisely our contributions.
 
 \subsection{State of the art}
 
@@ -26,7 +38,7 @@ Early contributions in the latter field rely on local adaptation of motion graph
 The issue of planning acyclic contacts was first completely described by \citeauthor{conf/iser/BretlRLKA04}, where  it is proven to require the handling of two simultaneous problems, $\mathcal{P}_1$: a relevant guide trajectory for the root of the robot in $SE(3)$; and $\mathcal{P}_2$: the planning of a discrete sequence of acyclic, balanced contact configurations along the trajectory\endnote{A third non trivial problem, $\mathcal{P}_3$, not adressed in this work, then consists in interpolating a complete motion between two postures of the contact sequence. Noticebly, \citeauthor{Carpentier2016} combine
 our planner with such a method to generate the complete motion.}.  A key issue is to avoid combinatorial explosion when considering at the same time the possible contact configurations and the potential trajectories. This seminal paper proposes a first effective algorithm, able to handle simple situations (such as climbing scenarios), but not scalable to arbitrary environments. Following it, seve\-ral papers have applied this approach in particular situations, typically limiting the combinatorial by imposing a fixed set of possible contacts \citep{Hauser06usingmotion, stilman2010}.
 
-Most of the papers that followed the work of \citeauthor{conf/iser/BretlRLKA04} have explored alternative formulations to handle the combinatorial issue. Two main directions have been explored. \textbf{On one hand, local optimization of both the root trajectory \Pa and the contact positions $\mathcal{P}_2$} has been used, to trade the combinatorial of the complete problem for a differential complexity, at the cost of local convergence. A complete example of the potential offered by such approaches is given by \cite{Mordatch:2012:DCB:2185520.2185539}, followed by a successful adaptation to a real robot \citep{mordatch2015}. To keep reasonable computation times, the method uses a simplified dynamic model for the avatar. Still, the computation time is far from interactive  (about 1 minute of computation for a sequence of 20 contacts). \cite{DBLP:conf/humanoids/DeitsT14} propose to solve contact planning globally as a mixed integer problem, but only cyclic, bipedal locomotion is considered. Aside from the computation cost, a major drawback of these optimization based approaches is thus that they only offer local convergence when applied to acyclic contact planning.
+Most of the papers that followed the work of \citeauthor{conf/iser/BretlRLKA04} have explored alternative formulations to handle the combinatorial issue. Two main directions have been explored. \textbf{On one hand, local optimization of both the root trajectory \Pa and the contact positions $\mathcal{P}_2$} has been used, to trade the combinatorial of the complete problem for a differential complexity, at the cost of local convergence. A complete example of the potential offered by such approaches was propose \citep{Mordatch:2012:DCB:2185520.2185539} and successfully applied to a real robot \citep{mordatch2015}. To keep reasonable computation times, the method uses a simplified dynamic model for the avatar. Still, the computation time is far from interactive  (about 1 minute of computation for a sequence of 20 contacts). \citeauthor{DBLP:conf/humanoids/DeitsT14} propose to solve contact planning globally as a mixed integer problem, but only cyclic, bipedal locomotion is considered. Aside from the computation cost, a major drawback of these optimization based approaches is thus that they only offer local convergence when applied to acyclic contact planning.
 
 \textbf{On the other hand, the two problems \Pa and \Pb might be decoupled} to reduce the complexity. The feasibility and interest of the decoupling is shown by \citeauthor{DBLP:conf/iser/EscandeKMG08} who manually set up a rough guide trajectory (i.e. an ad-hoc solution to $\mathcal{P}_1$). \Pb  is then addressed as the combinatorial computation of a feasible contact sequence in the neighborhood of the guide. A solution can then be found, at the cost of prohibitive computation times (several hours). Furthermore, this approach is suboptimal because the quality of the motion is conditioned by the relevance of the guide trajectory,  which is not evaluated \textit{a priori}. \citeauthor{Bouyarmane2009} precisely focus on automatically computing a guide trajectory with guarantees of contact feasibility, by extending key frames of the trajectory into whole-body, balanced contact configurations. Randomly sampled configurations are projected into the contact submanifold using a generalized inverse kinematics solver, a computationally expensive process (about 15 minutes are required to compute a guide trajectory in the examples presented). Moreover this explicit projection is yet an insufficient condition and does not provide strong guarantees on the feasibility of the path between two key positions in the trajectory.
  
