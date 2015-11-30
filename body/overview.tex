@@ -1,0 +1,88 @@
+\section{Overview}
+\label{overview}
+
+
+%
+\begin{figure}
+  \begin{overpic}[width=0.9\linewidth]{figures/contact_gen}
+		\put (3,3) {1)} 
+		\put (25,3) {2)} 
+		\put (44,3) {3)} 
+		\put (63,3) {4)} 
+		\put (82,3) {5)} 
+	\end{overpic}
+  \caption{Generation of a contact configuration for the right arm of a humanoid robot. 1) Selection of reachable obstacles. 2) A request is performed on a database of configurations. 3) Configurations too far from contact are eliminated. 4) The best candidate according to EFORT is chosen. 5) The final contact is achieved using inverse kinematics.}
+  \label{fig:contact_gen}
+\end{figure}
+\subsection{Computation of a guide path}
+We first consider the problem of planning a relevant guide path. The objective is to compute a path of root placements which will allow contact creation. A desired requirement is to preserve the completeness of the planner: it should be able to explore any possible guide trajectory, but at the same time, any computed guide trajectory must be truly feasible, i.e. must lead to a valid sequence of contacts.
+
+ An intuitive description of such placements is "close, but not too close": close, because a contact surface must be partially included in the Reachable workspace of the robot (represented for the right arm in Fig.~\ref{fig:contact_gen}--1); not too close, because the robot must avoid collision (which is represented by the hull including the torso in Fig.~\ref{fig:contact_gen}--1). We define formally $C_{reach}$, the set of interesting root placements, in which we compute a guide trajectory with a sampling based planner,  the Reachability-Based RRT --RB-RRT-- (Figure~\ref{fig:framework}--A). Planning in $C_{reach}$ boils down to planning in SE(3), which has an acceptable practical complexity.
+%
+Details are presented in Section~\ref{rbprm}.
+
+\subsection{Generating a discrete sequence of contact configurations}
+
+The second stage extends the guide path into a sequence of contact configurations (Fig.~\ref{fig:framework}--B). The true feasibility of the input path is guaranteed by the first step.
+This provides in turn a reasonnable guarantee that a contact configuration can be obtained for any root placement along the path. With a fixed root position, the dimensionality of the 
+contact generation problem is reduced to the number of degrees of freedom of the considered limb. In other words, we consider each limb as a manipulator attached to the root, and select the most relevant contact from a database of precomputed configurations, independent from the environment (Figure~\ref{fig:contact_gen}).
+
+From a given start configuration, the planner proceeds in an iterative fashion along the discretized path: given a new root placement, an inverse kinematics solver 
+is used to maintain the contacts that were previously existing (TODO Figure). Often, these contacts cannot be maintained, because of joint limits or collisions (TODO Figure).
+In such a case the contacts are broken. Conversely, new contacts are created to ensure the quasi static balance of the robot (TODO FIGURE).
+The algorithm is designed so that only one contact can be created or broken between two successive configurations. This can be seen as a heuristic to ensure
+that the interpolation between two configurations is achievable.
+Details are presented in Section~\ref{sec:efort}. 
+
+To select the "most relevant" contact configurations, user defined heuristics can be chosen. In Section~\ref{heuristics} we present extensively two such heuristics, that have been
+used in our experiments.
+
+
+%~ To create a contact, we consider each limb of the robot as a manipulator arm attached to the root. We store a database of configurations for each manipulator. Figure~\ref{fig:contact_gen} -- 2 presents a few configurations for the right arm of the robot. The configurations in the database which are close to contact are considered (Figure~\ref{fig:contact_gen} -- 2 and 3). Among the candidates, 3 criteria are considered to choose the most relevant: the ideal candidate is free of collision, allows to maintain static balance if necessary, and  contributes to the motion in an optimal way. We call the measure of this contribution task efficiency: it represents the ability the limb has to exert a force compatible with the direction of motion. In Figure~\ref{fig:contact_gen} -- 4, the black arrow represents the direction of motion. Among the candidates, the most relevant to achieve a vertical motion is chosen, and projected on the contact surface using an inverse kinematics solver (Figure~\ref{fig:contact_gen} -- 5). The task efficiency is measured using the Extended FORce Transmission ratio (EFORT), proposed by ~\cite{Tonneau:2014:TEC:2619648.2619652}.
+
+\subsection{Notation conventions and definitions} \label{notations}
+
+A vector  $\mathbf{x}$ is denoted with a bold lower case letter.
+A matrix $\mathbf{A}$ is denoted with a bold upper case letter.
+A set $C$ is denoted with a upper case italic letter.
+Scalar variables and functions are denoted with lower case italic letters, such as
+$r$ or $f(\textbf{x})$.
+
+%\subsubsection{Robot description}
+%\label{def}
+
+\begin{figure}[][t]
+  \centering
+  \begin{overpic}[width=0.46\linewidth]{figures/character}
+    \put (7,29) {\tiny{$\in \mathbf{q}^1$}}
+    \put (7,25) {\tiny{effector}}
+  \end{overpic}
+  \caption{
+    Left: Robot in a rest configuration. The right arm is denoted as the limb $R^1$. Each colored dot represents a degree of freedom around an axis. Right: Volumes of the robot. The red geometry denotes $W^0$ and must remain collision-free. The green spheres are the  $W^k$.}
+  \label{fig:character}
+\end{figure}
+
+\medskip
+\textbf{A robot} is a kinematic chain $R$, comprising $n + 6$ degrees of freedom (DOFs).
+$R$ is composed of $l$ limbs $R^k, 1 \leq k \leq l$, attached to a root.
+It is described by a configuration $\mathbf{q} \in SE(3) \times \mathbb{R}^n$.
+We define some relevant projections of $\mathbf{q}$:
+\begin{itemize}
+	\item $\mathbf{q}^k$ denotes the configuration (a vector of joint values) of the limb $R^k$ (Fig.~\ref{fig:character});
+	\item $\mathbf{q}^{\overline{k}}$ denotes the vector of joint values of R \textbf{not} related to $R^k$. We define for convenience $\mathbf{q}= \mathbf{q}^k \oplus \mathbf{q}^{\overline{k}}$; %Abusively, we denote by $\mathbf{q}^0 \oplus \mathbf{q}^k$ any configuration respecting $\mathbf{q}^0$ and $\mathbf{q}^k$;
+	\item $\mathbf{q}^{0}\in SE(3)$ denotes the position and orientation of the root of the robot $R$.
+\end{itemize}
+%Finally, $ \mathbf{q}_{start}$ and  $\mathbf{q}_{goal}$ are the start and goal configurations given as an input of our problem.
+
+%\subsubsection{Environment and other volumes} 
+%\label{sec:A}
+\medskip
+\textbf{The environment} $O$ is defined as the union of the obstacles $O_i$ it contains.
+The volume encompassing the trunk of the robot is denoted $W^0$ (Fig.~\ref{fig:character}-right: central cylinder). The reachable workspace of a limb $R^k$ is denoted $W^k$ (Fig.~\ref{fig:character}-right: the four ellipses). 
+\begin{equation}
+  W^k = \left\{ {\mathbf{x} \in \mathbb{R}^3: \exists \mathbf{q}^k, \mathbf{p}^k(\mathbf{q}^k) = \mathbf{x} } \right\}
+\end{equation}
+where $\mathbf{p}^k$ denotes the end-effector position of $R^k$ (translation only) for $\mathbf{q}^0$ the null displacement. We also define $W = \bigcup_{k=1}^{l}W^k$.
+%
+Finally, we define $W^k(\mathbf{q}^{0}), 0 < k \leq l$ as the volume $W^k$ translated and rotated by the rigid displacement~$\mathbf{q}^{0}$.
+
