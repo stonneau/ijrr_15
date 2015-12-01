@@ -77,12 +77,14 @@ We define some relevant projections of $\mathbf{q}$:
 %\subsubsection{Environment and other volumes} 
 %\label{sec:A}
 \medskip
-\textbf{The environment} $O$ is defined as the union of the obstacles $O_i$ it contains.
 The volume encompassing the trunk of the robot is denoted $W^0$ (Fig.~\ref{fig:character}-right: central cylinder). The reachable workspace of a limb $R^k$ is denoted $W^k$ (Fig.~\ref{fig:character}-right: the four ellipses). 
 \begin{equation}
   W^k = \left\{ {\mathbf{x} \in \mathbb{R}^3: \exists \mathbf{q}^k, \mathbf{p}^k(\mathbf{q}^k) = \mathbf{x} } \right\}
 \end{equation}
 where $\mathbf{p}^k$ denotes the end-effector position of $R^k$ (translation only) for $\mathbf{q}^0$ the null displacement. We also define $W = \bigcup_{k=1}^{l}W^k$.
 %
-Finally, we define $W^k(\mathbf{q}^{0}), 0 < k \leq l$ as the volume $W^k$ translated and rotated by the rigid displacement~$\mathbf{q}^{0}$.
+$W^k(\mathbf{q}^{0}), 0 < k \leq l$ is defined as the volume $W^k$ translated and rotated by the rigid displacement~$\mathbf{q}^{0}$.
 
+\medskip
+\textbf{The environment} $O$ is defined as the union of the obstacles $O_i$ it contains.
+Finally, we define $dist(\mathbf{x}, O)$ as the minimal distance between a point $\mathbf{x}$ and the closest surface of the environment.

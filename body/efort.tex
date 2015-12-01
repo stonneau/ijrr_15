@@ -1,0 +1,111 @@
+\section{From a guide trajectory to a discrete sequence of contact configurations (Stage 2)}
+\label{sec:efort}
+As an input of this stage, we consider a truly feasible guide trajectory $\mathbf{q}^0(t) : [0,1] \longrightarrow SE(3)$ for the root of the robot $R$. We now consider the second problem of computing a trajectory $\mathbf{q}^{\overline{0}}(t)$ for the limbs of the robot. Since we assume true feasibility, we know that such a trajectory exists. Contrary to previous works \cite{DBLP:conf/iser/EscandeKMG08,Bouyarmane2009}, the goal here is not to find any such trajectory but rather to select one with particular properties. Specifically, we show here how to build a contact sequence with a small number of contact variations and  good-efficiency and naturalness of the postures. 
+
+More precisely, any mapping $\pi$ introduced in \eqref{eq:pi} can be used to expand $\mathbf{q}^0(t)$ into a whole-body trajectory. We propose here a particular construction of $\pi$ leading to interesting contact sequences.
+
+%We compute the image of a mapping $f$ along $\mathbf{q}^0(t)$ into a discrete sequence of contacts $ \in C_{contact}$. We first describe the discretization of $\mathbf{q}^0(t)$ and the algorithm used to create or break contacts along it. Then we describe how contacts are explicitely generated along the discretized trajectory.
+
+\subsection{Extension of the guide trajectory} 
+The guide trajectory $\mathbf{q}^0(t)$ is first discretized into a sequence of $j$ key placements:  
+\begin{equation*}
+	\mathbf{Q}^0 = [\mathbf{q}^0_{0}; \mathbf{q}^0_{i}; ..., \mathbf{q}^0_{j-1}]
+\end{equation*} 
+where $\mathbf{q}^0_{0}$ and $\mathbf{q}^0_{j-1}$ respectively correspond to the start and goal configurations.  To ensure continuity in the contact transition phases, we rewrite $\pi$ under the following recursive form for any $0<i<j$:
+\begin{equation*}
+    \pi\colon\left\{
+    \begin{aligned}		
+        \mathbf{Q}^0 \in C_{reach} & \longrightarrow C_{contact} \\
+        %\mathbf{q}^{0}_0 &  \longrightarrow  \mathbf{q}_{start} \\
+        \mathbf{q}^{0}_i &  \longrightarrow  \mathbf{q}^{0}_i \oplus g(\mathbf{q}_{i - 1},\mathbf{q}^{0}_i) 
+    \end{aligned}
+    \right.
+\end{equation*} 
+We initialize the recurrence with $\pi(\mathbf{q}^0_{0}) = \mathbf{q}_0$ the initial configuration of the robot.
+The function $g$ is defined independently by $g^k$ for each limb $R^k$. In defining $g^k$, two aspects must be considered. Is the limb $R^k$ in contact? And which criteria is it optimizing? 
+
+\medskip%\subsection{Maintaining and breaking contact in the sequence}
+\noindent\textbf{Maintaining a contact:} If possible, a limb in contact at time $i-1$ remains in contact at $i$. The contact is broken if an inverse kinematics solver fails to find a collision free limb configuration which satisfies joint limits.
+The solver is a direct implementation of the inverse kinematics solver with task priorities framework proposed in \cite{Baerlocher2004}, which
+handles explicitely joint limits, and allows to integrate collision avoidance as a secondary criterion.
+
+If the solver fails, the contact is broken and a collision free configuration is assigned to the limb.
+%~ The configuration is selected to be the closest to the previous configuration (by minimizing $\| \mathbf{p}^k(\mathbf{q_i}) - \mathbf{p}^k(\mathbf{q_{i-1}}) \|$).
+
+Once a first candidate configuration is taken for all limbs, the quasi-static balance is tested by whether the weight wrench is in the gravito-inertial cone (i.e. there exists valid contact forces that compensate for the weight of the robot), using the geometric approach described in \cite{qiu:dhm:2011}. If the balance is not obtained, new contacts are randomly generated using the following procedure.
+
+%\begin{itemize} 
+%\item If the robot is not statically balanced and $\mathbf{q}_{i-1}^k$ is not in contact, $g$ computes a configuration $\mathbf{q}_{i}^k$ so that a contact is taken with the environment (Fig.~\ref{fig:generate_contact}).
+%\item Else, $g$ computes a configuration $\mathbf{q}_{i}^k$ minimizing $\| \mathbf{p}^k(\mathbf{q_i}) - \mathbf{p}^k(\mathbf{q_{i-1}}) \|$, subject to $R^k(\mathbf{q_i}) \cap O = \emptyset$ and $\mathbf{q_i}^k$ respects the  joint limits of $R^k$.
+%
+%If $\mathbf{q}_{i - 1}^k$ is in contact, this results in trying to maintain the contact for $\mathbf{q}_{i}^k$ (Figure~\ref{fig:break_contact}--1 and 2). The minimum is different than zero if $W^k(\mathbf{q}_i^0) \cap  \mathbf{p}^k(\mathbf{q_{i-1}}) = \emptyset$ (Figure~\ref{fig:break_contact}--3), or collision can not be  prevented (Figure~\ref{fig:break_contact}--4).
+%\end{itemize} 
+
+\begin{figure}[t]
+\centering
+  \begin{overpic}[width=0.6\linewidth]{figures/break_contact}
+		\put (3,15) {1)} 
+		\put (27,15) {2)} 
+		\put (50,15) {3)} 
+		\put (75,15) {4)} 
+		%~ \put (68,58) {3.a)} 
+		%~ \put (5,27) {3.b)} 
+		%~ \put (37,27) {4.a)} 
+		%~ \put (68,27) {4.b)} 
+	\end{overpic}
+\caption{Contacts are maintained unless their position is too far, or the environment prevents it.}
+		   \label{fig:break_contact}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+  \begin{overpic}[width=0.6\linewidth]{figures/generate_contact}
+		%~ \put (5,58) {1)} 
+		%~ \put (37,58) {2)} 
+		%~ \put (68,58) {3.a)} 
+		%~ \put (5,27) {3.b)} 
+		%~ \put (37,27) {4.a)} 
+		%~ \put (68,27) {4.b)} 
+	\end{overpic}
+\caption{Contacts are generated when the configuration is not balanced.}
+		   \label{fig:generate_contact}
+\end{figure}
+
+%\subsection{Generation of a contact configuration}  
+\medskip\noindent\textbf{Creating a contact:} We consider a configuration where some limbs are in contact, some are free and quasi-static balance is not enforced. To enforce balance, we proceed in the following 
+manner:
+we randomly select a contact free limb; if there is no contact free limb, we select
+the limb that made contact first.
+Using the contact generator introduced in~\cite{Tonneau2014}, we project the configuration of this limb into a contact that enhances balance, if it exists (Figure~\ref{fig:generate_contact}); If balance is not achievable and a contact is possible, it is generated anyway;
+If balance is not achieved, the next limb is selected and projected into a contact configuration, and so on.
+This approach can lead to the repositioning of existing contacts, in which case intermediate states are inserted to reposition the contacts.
+This current implementation does not guarantee that the planner will succeed in generating a balanced configuration, because
+true feasibility is not fully guaranteed.
+However in practice the planner is successful in the large majority of cases, as discussed in section~\ref{sec:stat1}.
+%~ A new contact configuration is obtained by projecting a random configuration to the nearest contacts. The sampling is biased by selecting configurations so that the limbs previously in contact are already close to contact and at least one additional limb is close to the environment. The random configuration is then projected onto the contact by iteratively minimizing the distance between the end effectors and the environment, under the constraint of respecting the joint limits and avoiding the collision.
+
+\subsection{Contribution to the global movement: the EFORT criteria}
+\noindent\textbf{EFORT criterion:} If only relying on the random sampling to select new contacts, the planner produces inefficient postures. The resulting contact sequence is then poorly efficient and unnatural. Moreover, the limbs are not well configured and are not able to efficiently follow the general movement: contacts break frequently.
+
+When creating additional contacts, we therefore propose to select particular configurations that allow to exert a force compatible with the direction of motion. This task efficiency is measured  with the Extended FORce Transmission ratio (EFORT)~\cite{Tonneau2014}.
+%
+The measure of EFORT is given by
+\begin{equation}
+\alpha_{EFORT}(\mathbf{q}^k, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}^T)\mathbf{m}]^{-\frac{1}{2}} ( \nu_0 \mathbf{n}^T \mathbf{m})
+\end{equation}
+where $\mathbf{J}$ is the Jacobian matrix of the limb $R^k$ in configuration $\mathbf{q}^k$; $\nu_0$ is the friction coefficient of the contact surface; $\mathbf{n}$ is the normal of the contact surface; and $\mathbf{m}$ is the direction opposite to the motion,
+given by the 3D vector connecting $\mathbf{q}_{i}^0$ and $\mathbf{q}_{i+1}^0$.
+%
+The first part of the equation measures the ratio between the joint  torques and the resulting force applied along $\mathbf{m}$. The second part quantifies the odds of slipping while applying a force along $\mathbf{m}$. 
+
+\noindent\textbf{Optimization at creation:} In practice, a database of configurations is stored for each limb, which can be considered as manipulator arms. The database is implemented  as an octree data structure, indexed by the end-effector positions of the configurations (and additionally storing $\mathbf{J}$). 
+%Fig.~\ref{fig:contact_gen}-2 presents a few configurations for the right arm of the robot.  
+Upon request, the octree returns a set of configurations close to contact (Fig.~\ref{fig:contact_gen}-3). These candidates are sorted based on their task efficiency, given by $\alpha_{EFORT}$. The first candidate in this list satisfying the balance criterion and is collision free is selected and projected on the contact surface using our inverse kinematics solver.
+
+
+
+%Therefore to generate a contact, we want to find a configuration which is collision free, allows to maintain balance, and maximizes EFORT. We choose this configuration among a set of possible candidates, rapidly computed thanks to a contact generator, also proposed in~\cite{Tonneau2014}. We recall the overall idea here. We consider each limb of the robot as a manipulator arm attached to the root. We store a database of configurations for each manipulator. The database is implemented  as an octree data structure, indexed by the end-effector positions of the configurations. The jacobian matrix $\mathbf{J}$ of each configuration is also stored. Figure~\ref{fig:contact_gen} -- 2 presents a few configurations for the right arm of the robot.  
+
+
+%To summarize: given a feasible trajectory for the root of the robot $R$, we are able to generate a discrete sequence of contact configurations  describing a feasible motion for $R$, between a start an goal configurations. The contact configurations are chosen to be statically balanced and task efficient, which means that they can generate a force  contributing to the motion of the root along the trajectory. 
+
