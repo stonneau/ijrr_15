@@ -1,7 +1,7 @@
-\section{Computation of a guide path in $C_{reach}$ (Stage 1)}
+\section{Computing a guide path in $C_{reach}$ ($\mathcal{P}_1$) }
 \label{rbprm}
 
-We consider the problem of computing a normalized guide path $\mathbf{q}^0(t) : [0,1] \longrightarrow SE(3)$ for the geometrical root of a multiped robot, connecting start and goal configurations. As said in the previous section, the goal is to enforce that any configuration $\mathbf{q}^0$ of the guide is truly feasible, i.e. can be mapped to a configuration in contact. We denote by $C_{contact} \subset SE(3) \times \mathbb{R}^n$ the contact submanifold of the robot.
+We consider the issue of computing a normalized guide path $\mathbf{q}^0(t) : [0,1] \longrightarrow SE(3)$ for the geometrical root of a multiped robot, connecting start and goal configurations. As said in the previous section, the goal is to enforce that any configuration $\mathbf{q}^0$ of the guide is truly feasible, i.e. can be mapped to a configuration in contact. We denote by $C_{contact} \subset SE(3) \times \mathbb{R}^n$ the contact submanifold of the robot.
 %~ We say that a root placement $\mathbf{q}^{0}$ is \textit{truly feasible} if there exists $\mathbf{q}^{\overline{0}}$ such that 
 %~ $$\mathbf{q}^{0} \oplus \mathbf{q}^{\overline{0}} \in C_{contact} $$
 %~ The set of all truly-feasible root placements is denoted by $C_{reach}$. By extension, a trajectory $\mathbf{q}^0(t)$ is truly feasible if $\forall t \in [0,1], \mathbf{q}^0(t) \in C_{reach}$. 

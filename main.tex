@@ -7,6 +7,10 @@
 \usepackage{makeidx}         % allows index generation
 \usepackage[percent]{overpic}
 \usepackage{array} 
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{listings}
+\usepackage{color}
 
 \usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=red,urlcolor=red]{hyperref}
 
@@ -49,8 +53,11 @@ France.}
 \input{body/overview}
 \input{body/rbprm}
 \input{body/contact}
+\input{body/equilibrium}
+\input{body/efort}
 \theendnotes
 \bibliographystyle{SageH}
 \bibliography{biblio}
-
+\appendix
+\input{body/appendix_algo}
 \end{document}

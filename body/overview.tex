@@ -1,29 +1,36 @@
 \section{Overview}
 \label{overview}
 
+Figure~\ref{fig:framework} illustrates our workflow.
+\Pa and \Pb are addressed in a sequential fashion.
+The guarantees provided by the truly feasible guide path allow
+us to avoid the combinatorial by generating the contacts in a straightforward manner.
+
+
 
 %
-\begin{figure}
-  \begin{overpic}[width=0.9\linewidth]{figures/contact_gen}
-		\put (3,3) {1)} 
-		\put (25,3) {2)} 
-		\put (44,3) {3)} 
-		\put (63,3) {4)} 
-		\put (82,3) {5)} 
+\begin{figure*}
+  \centering
+  \begin{overpic}[width=0.8\linewidth]{figures/contact_gen}
+		\put (1,1) {1} 
+		\put (22,1) {2} 
+		\put (42,1) {3} 
+		\put (62,1) {4} 
+		\put (83,1) {5} 
 	\end{overpic}
-  \caption{Generation of a contact configuration for the right arm of a humanoid robot. 1) Selection of reachable obstacles. 2) A request is performed on a database of configurations. 3) Configurations too far from contact are eliminated. 4) The best candidate according to EFORT is chosen. 5) The final contact is achieved using inverse kinematics.}
+  \caption{Generation of a contact configuration for the right leg of HRP-2. 1: Selection of reachable obstacles. 2: Entries of the limb samples database (with $N = 4$). 3: With a proximity query on the octree database, configurations too far from obstacles are eliminated. 4: The best candidate according to a user-defined heuristic $h$ is chosen. 5: The final contact is achieved using inverse kinematics.}
   \label{fig:contact_gen}
-\end{figure}
-\subsection{Computation of a guide path}
+\end{figure*}
+\subsection{Computation of a guide path -- \Pa}
 We first consider the problem of planning a relevant guide path. The objective is to compute a path of root placements which will allow contact creation. A desired requirement is to preserve the completeness of the planner: it should be able to explore any possible guide trajectory, but at the same time, any computed guide trajectory must be truly feasible, i.e. must lead to a valid sequence of contacts.
 
- An intuitive description of such placements is "close, but not too close": close, because a contact surface must be partially included in the Reachable workspace of the robot (represented for the right arm in Fig.~\ref{fig:contact_gen}--1); not too close, because the robot must avoid collision (which is represented by the hull including the torso in Fig.~\ref{fig:contact_gen}--1). We define formally $C_{reach}$, the set of interesting root placements, in which we compute a guide trajectory with a sampling based planner,  the Reachability-Based RRT --RB-RRT-- (Figure~\ref{fig:framework}--A). Planning in $C_{reach}$ boils down to planning in SE(3), which has an acceptable practical complexity.
+ An intuitive description of such placements is "close, but not too close": close, because a contact surface must be partially included in the Reachable workspace of the robot (represented for the right arm in Fig.~\ref{fig:contact_gen}--1); not too close, because the robot must avoid collision (which is represented by the hull including the torso in Fig.~\ref{fig:contact_gen}--1). We define formally $C_{reach}$, the set of interesting root placements, in which we compute a guide trajectory with a sampling based planner,  the Reachability-Based RRT --RB-RRT-- (Figure~\ref{fig:framework}--\Pa). Planning in $C_{reach}$ boils down to planning in SE(3), which has an acceptable practical complexity.
 %
 Details are presented in Section~\ref{rbprm}.
 
-\subsection{Generating a discrete sequence of contact configurations}
+\subsection{Generating a discrete sequence of contact configurations -- \Pb}
 
-The second stage extends the guide path into a sequence of contact configurations (Fig.~\ref{fig:framework}--B). The true feasibility of the input path is guaranteed by the first step.
+The second stage extends the guide path into a sequence of contact configurations (Fig.~\ref{fig:framework}--\Pb). The true feasibility of the input path is guaranteed by the first step.
 This provides in turn a reasonnable guarantee that a contact configuration can be obtained for any root placement along the path. With a fixed root position, the dimensionality of the 
 contact generation problem is reduced to the number of degrees of freedom of the considered limb. In other words, we consider each limb as a manipulator attached to the root, and select the most relevant contact from a database of precomputed configurations, independent from the environment (Figure~\ref{fig:contact_gen}).
 
@@ -51,14 +58,14 @@ $r$ or $f(\textbf{x})$.
 %\subsubsection{Robot description}
 %\label{def}
 
-\begin{figure}[][t]
+\begin{figure}
   \centering
-  \begin{overpic}[width=0.46\linewidth]{figures/character}
-    \put (7,29) {\tiny{$\in \mathbf{q}^1$}}
-    \put (7,25) {\tiny{effector}}
+  \begin{overpic}[width=0.8\linewidth]{figures/character}
+    \put (7,29) {\small{$\in \mathbf{q}^1$}}
+    \put (7,25) {\small{effector}}
   \end{overpic}
   \caption{
-    Left: Robot in a rest configuration. The right arm is denoted as the limb $R^1$. Each colored dot represents a degree of freedom around an axis. Right: Volumes of the robot. The red geometry denotes $W^0$ and must remain collision-free. The green spheres are the  $W^k$.}
+    Left: Robot in a rest configuration. The right arm is denoted as the limb $R^1$. Each colored dot represents a degree of freedom around an axis. Right: Volumes of the robot. The red geometry denotes $W^0$ and must remain collision-free. The green spheres are the reachable workspace of each limb, the  $W^k$.}
   \label{fig:character}
 \end{figure}
 

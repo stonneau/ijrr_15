@@ -1,0 +1,154 @@
+\section{Algorithms for discretizing of a path}
+\label{app:contact}
+
+
+First, we define an abtract structure State,
+that describes a contact configuration.
+The use of queues allows a FIFO approach regarding the order 
+in which contacts are tested: we try to replace older contacts first when necessary.
+Thus the algorithm is deterministic even though it can handle acyclic motions.
+
+\begin{lstlisting}]
+Struct Limb
+{
+    // Limb Configuration
+    Configuration qk;
+    // Effector position in
+    // world coordinates
+    vector6 pk;
+};
+
+Struct State
+{
+    // root location
+    Configuration q0;
+    // List of limbs not in contact
+    queue<Limb> freeLimbs;
+    // List of limbs in contact
+    queue<Limb> contactLimbs;
+};
+\end{lstlisting}
+
+From the start configuration, given as an input by the user,
+we create the initial state $s0$.
+Algorithm~\ref{alg:interpolate}  is then called with $s0$, as well as the discretized path 
+$\mathbf{Q}^0$, as input parameters.
+
+\begin{algorithm}
+\caption{Discretization of a path} \label{interpolate}
+	\begin{algorithmic}[1]
+	%~ \Function{GenerateConfiguration}{}
+	\Function{Interpolate}{$s0$,$\mathbf{Q}^0$, $MAX\_TRIES$}
+		\State $list<$State$>$ $states = [s0]$
+		\State $nb\_fail = 0$ 
+		\State $i = 1;$ /*Current index in the list*/
+		\While {$i < length(\mathbf{Q}^0)$}
+			\State State $previous = last\_element(states)$
+			\State State $s = \pi(previous, \mathbf{Q}^0[i])$
+			\If {$s != NULL $}
+				\State $nb\_fail = 0$
+				\State $i += 1$
+				\State \textbf{return} $\mathbf{q}^{0}$
+			\Else
+				\State $nb\_fail += 1$
+				\If {$nb\_fail == MAX\_TRIES$}
+					\State \textbf{return} $FAILURE$
+				\EndIf				
+				\State $s = $\textsc{RepositionContacts}$(previous)$
+			\EndIf
+			\State $push\_back(states, s)$
+		\EndWhile
+		\State \textbf{return} $states$
+	\EndFunction
+\end{algorithmic}
+\label{alg:interpolate}
+\end{algorithm}
+
+At each step, $g$ is called with the previous state as a parameter, as well
+as a new root placement. $g$ returns a new contact configuration, if it suceeded
+in computing a balance configuration with only one contact switch occuring.
+If $g$ failed in achieving this, the method \textsc{RepositionContacts} is called.
+It repositions one end effector (either a free limb, or the oldest active contact) towards a new balanced contact position if possible.
+This repositionning allows to increase the odds that the contact can be maintained at the next step.
+
+The pseudo code for the method $g$ is given by Algorithm~\ref{alg:pi}.
+
+\begin{algorithm}
+\caption{Full body contact generation method} \label{interpolate}
+	\begin{algorithmic}[1]
+	%~ \Function{GenerateConfiguration}{}
+	\Function{$g$}{$pState$,$\mathbf{q}^0$}
+		\State State $newState$
+		\State $newState.q0 = \mathbf{q}^0$
+		\State $newState.freeLimbs = pState.freeLimbs$
+		\State /*First try to maintain previous contacts*/
+		\State $nbContactsBroken = 0$
+		\For {\textbf{each} Limb $k$ in $previous.contactLimbs$}
+			\If {$!$\textsc{MaintainContact}$(pState,\mathbf{q}^0,k)$}
+				\State $nbContactsBroken += 1$
+				\If {$nbContactsBroken > 1$}				
+					\State \textbf{return} $NULL$
+				\EndIf				
+				\State $push(newState.freeLimbs,k)$
+			\Else 					
+				\State $push(newState.contactLimbs,k)$
+			\EndIf
+		\EndFor
+		\For {\textbf{each} Limb $k$ in $previous.freeLimbs$}
+			\State /*Generate a balanced contact*/
+			\If {\textsc{GenerateContact}$(\mathbf{q}^0,k)$}	
+				\State $push(newState.contactLimbs,k)$			
+				\State \textbf{return} $newState$
+			\EndIf
+		\EndFor
+		\State \textbf{return} $NULL$
+	\EndFunction
+\end{algorithmic}
+\label{alg:pi}
+\end{algorithm}
+
+The method \textsc{MaintainContact}$(pState,\mathbf{q}^0,k)$ performs inverse kinematics to reach the previous contact position for the Limb.
+If it succeeds, the new limb configuration is assigned to $k$. If it fails, a random collision free configuration is assigned to $k$.
+
+\textsc{GenerateContact}$(\mathbf{q}^0,k)$ is a call to the contact generator presented in Section~\ref{sec:single_contact}. It generates a balanced contact configuration, and assigns the corresponding configuration to $k$.
+If it fails, $k$ remains unchanged if it is collision free, otherwise it is assigned a random collision free configuration.
+
+
+The pseudo code for the method \textsc{RepositionContacts} is given by Algorithm~\ref{alg:repo}.
+
+
+\begin{algorithm}
+\caption{Performs contact repositioning for one limb} \label{interpolate}
+	\begin{algorithmic}[1]
+	\Function{RepositionContacts}{$state$}
+		\State $i=0$
+		\While {$i<length(states.freeLimbs)$}
+			\State Limb $k = pop(states.freeLimbs)$
+			\If {\textsc{GenerateContact}$(state.q0,k)$}	
+				\State $push(newState.contactLimbs,k)$			
+				\State \textbf{return}
+			\Else
+				\State $i+=1$
+				\State $push(states.freeLimbs,k)$		
+			\EndIf
+		\EndWhile
+		\State $i=0$
+		\While {$i<length(states.contactLimbs)$}
+			\State Limb $k = pop(states.contactLimbs)$
+			\State Limb $copy = k$
+			\State $i+=1$
+			\If {\textsc{GenerateContact}$(state.q0,k)$}	
+				\State $push(newState.contactLimbs,k)$			
+				\State \textbf{return}
+			\Else
+				\State $push(newState.contactLimbs,copy)$	
+			\EndIf
+		\EndWhile
+		/*Fails if impossible to relocate any effector*/
+		\State \textbf{return} $FAILURE$
+	\EndFunction
+\end{algorithmic}
+\label{alg:repo}
+\end{algorithm}
+
+

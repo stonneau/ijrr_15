@@ -62,6 +62,21 @@ Then, we propose a concrete implementation of the solution, where the constraint
 The relaxation is justified empirically, with statistics presented for each robot and scenario presented. The complete framework is implemented within
 the open source platform Hpp.
 
+\begin{figure*}
+  \centering
+  \begin{overpic}[width=0.8\linewidth]{figures/workflow}
+    %~ \put (6.4,1.8) {\normalsize{Request}} 
+    \put (30,10.8) {\large{\color{white}\Pa} }
+    %~ \put (31.6,2) {\scriptsize{\color{white}RB-RRT}} 
+    \put (66.4,10.8) {\large{\color{white}\Pb} }
+    %~ \put (72.5,2) {\tiny{\color{white}Contact}} 
+  \end{overpic}
+  \vspace{-1em}
+  \caption{
+    Overview of our 2-stage framework. \Pa: Given a path request between the yellow and blue positions, a guide path is computed in the space of truly feasible guides $C_{reach}$. This is achieved by defining a geometric condition, the reachability condition (abstracted here with the transparent cylinders). \Pb: The trajectory is extended into a discrete sequence of contact configurations using an iterative algorithm.}
+  \label{fig:framework}
+\end{figure*}
+
 To address \Pa we rigorously formulate a geometric condition for the true feasibility of a path, the reachability condition. We claim that this 
 condition can be verified in a low dimensional space, that we call $C_{reach}$. This formulation can make the planning of a guide trajectory more efficient computationally, while providing equivalent guarantees to planning directly in the configuration space.
 In practice, for each considered robot, we compute an approximation of $C_{reach}$. From this approximation,
