@@ -36,7 +36,7 @@ contact generation problem is reduced to the number of degrees of freedom of the
 
 From a given start configuration, the planner proceeds in an iterative fashion along the discretized path: given a new root placement, an inverse kinematics solver 
 is used to maintain the contacts that were previously existing (TODO Figure). Often, these contacts cannot be maintained, because of joint limits or collisions (TODO Figure).
-In such a case the contacts are broken. Conversely, new contacts are created to ensure the quasi static balance of the robot (TODO FIGURE).
+In such a case the contacts are broken. Conversely, new contacts are created to ensure the static equilibrium of the robot (TODO FIGURE).
 The algorithm is designed so that only one contact can be created or broken between two successive configurations. This can be seen as a heuristic to ensure
 that the interpolation between two configurations is achievable.
 Details are presented in Section~\ref{sec:efort}. 

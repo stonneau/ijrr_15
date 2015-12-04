@@ -1,15 +1,15 @@
 \section{Heuristics for relevant contact selection}
 
-\subsection{A heuristic for robust quasi static balance}
-The planner is designed so that any contact configuration it outputs is quasi statically balanced.
-Balance is of course critical in multipedal locomotion. For this reason we are interested in a robust 
+\subsection{A heuristic for robust static equilibrium}
+The planner is designed so that any contact configuration it outputs is in static equilibrium.
+Equilibrium is of course critical in multipedal locomotion. For this reason we are interested in a robust 
 criterion, that ensures that the robot remains balanced in a real world application, regardless of the errors
-that can result from peception and control uncertainties.
+that can result from perception and control uncertainties.
 
-We first give a classic linear program (LP) that asserts that a contact configuration is statically balanced.
-From this formulation we derive a new LP that returns a quantification of the robustness of the configuration regarding balance.
-From this value we can in turn either define a heuristic to choose the more robust candidate, or set a treshold on the required balance robustness
-for any configuration. While the LP we propose is new, it is based on an analysis of the problem we propose in \cite{Prete2016}, where the interested reader
+We first give a linear program (LP) that asserts that a contact configuration is in static equilibrium.
+From this formulation we derive a new LP that quantifies the robustness of the configuration regarding equilibrium.
+From this value we can in turn either define a heuristic to choose the most robust candidate, or set a treshold on the required robustness
+for any configuration. While the LP we propose is original, it is based on an analysis of the problem we proposed in \cite{Prete2016}, where the interested reader
 can find more details.
 
 
@@ -30,46 +30,51 @@ We first define the variables of the problem, for a robot $R$ and $e$ contact po
 	\end{itemize}
 \end{itemize}
 
-According to Coulomb's law, the robot is statically balanced if all contact forces lie in the friction cone defined by the surface.
+According to Coulomb's law, the non slipping condition is verified if all the contact forces lie in the friction cone defined by the surface.
 As classically done, we linearize the friction cone in a conservative fashion with a pyramid, described by four generating rays. We choose for instance:
 \begin{equation*}
 \mathbf{V}_{i} = \mat{\mathbf{n}_{i} + \mu \mathbf{t}_{i1} & \mathbf{n}_{i} -\mu \mathbf{t}_{i1} & \mathbf{n}_{i} + \mu \mathbf{t}_{i2} & \mathbf{n}_{i} - \mu \mathbf{t}_{i2}}^T
 \end{equation*}
 
 Any force belonging to the linearized cone
-can thus be express as a linear combination of its four generating rays.
-Therefore a constraint on the $\mathbf{f}_i$ is given by the relation:
+can thus be express as a convex combination of its four generating rays.
+Therefore we can express the non slipping constraint on $\mathbf{f}_i$ as:
 
 \begin{equation*}
-\forall i  \qquad  \exists \bm{\beta}_i \in \mathbb{R}^{+4} , \mathbf{f}_{i} = \mathbf{V}_{i} \bm{\beta}_i \qquad 
+\forall i  \qquad  \exists \bm{\beta}_i \in \mathbb{R}^{4} , \bm{\beta}_i \ge 0 \wedge \mathbf{f}_{i} = \mathbf{V}_{i} \bm{\beta}_i \qquad 
 \end{equation*}
 
 we can stack the constraints to obtain:
 \begin{equation}\label{eq:gen}
-\exists \bm{\beta} \in \mathbb{R}^{+4e} , \mathbf{f} = \mathbf{V} \bm{\beta} \qquad 
+\exists \bm{\beta} \in \mathbb{R}^{4e} ,  \bm{\beta} \ge 0 \wedge \mathbf{f} = \mathbf{V} \bm{\beta} \qquad 
 \end{equation}
 where $\mathbf{V} = \diag{ \{\mathbf{V}_1, \dots, \mathbf{V}_e\} }$, and $\mathbf{f} = [\mathbf{f}_0,...,\mathbf{f}_e]^T$.
 
-Additional constraints on the forces result from Newton-Euler equations:
+From the Newton-Euler equations, and assuming a null acceleration, we also constrain the sum of contact forces to compensate the gravity at the center of mass:
 
-\begin{align}
-\underbrace{\mat{m (\ddot{\mathbf{c}} - \mathbf{g})  \\ m \mathbf{c} \times (\ddot{\mathbf{c}} - \mathbf{g}) + \dot{\mathbf{L}}}}_\mathbf{w}
-= 
+
+%~ \begin{align}
+%~ \underbrace{\mat{m (\ddot{\mathbf{c}} - \mathbf{g})  \\ m \mathbf{c} \times (\ddot{\mathbf{c}} - \mathbf{g}) + \dot{\mathbf{L}}}}_\mathbf{w}
+%~ = 
+%~ \underbrace{
+%~ \mat{\mathbf{I}_3 & \dots & \mathbf{I}_3 \\
+%~ \hat{\mathbf{p}}_1 & \dots & \hat{\mathbf{p}}_e} \mathbf{V}
+%~ }_\mathbf{G}
+%~ \bm{\beta},
+%~ \end{align}
+%~ where $\mathbf{w}\in \Rv{6}$ is the so-called gravito-inertial wrench (GIW) \citep{qiu:dhm:2011, Caron2015} and $\hat{\mathbf{p}} \in \R{3}{3}$ is the cross-product matrix associated to $\mathbf{p}$.
+
+%~ Static balance assumes zero acceleration thus we can write:
+\begin{align} \label{eq:new_eul}
 \underbrace{
 \mat{\mathbf{I}_3 & \dots & \mathbf{I}_3 \\
 \hat{\mathbf{p}}_1 & \dots & \hat{\mathbf{p}}_e} \mathbf{V}
-}_\mathbf{G}
-\bm{\beta},
-\end{align}
-where $\mathbf{w}\in \Rv{6}$ is the so-called gravito-inertial wrench (GIW) \citep{qiu:dhm:2011, Caron2015} and $\hat{\mathbf{p}} \in \R{3}{3}$ is the cross-product matrix associated to $\mathbf{p}$.
-
-Static balance assumes zero acceleration thus we can write:
-\begin{align} \label{eq:new_eul}
-\mathbf{w}_0 = 
+}_\mathbf{G} \bm{\beta}, = 
 \underbrace{\mat{\mathbf{0}_{3\times 3} \\ m \hat{\mathbf{g}}}}_{\mathbf{D}} \mathbf{c} + 
 \underbrace{\mat{-m\mathbf{g} \\ \mathbf{0}}}_{\mathbf{d}}
 \end{align}
-The wrench $\mathbf{w}_0$ is independent of $c^z$ because of the cross product matrix $\hat{\mathbf{g}}$ inside $\mathbf{D}$, so we can rewrite \eqref{eq:new_eul} as:
+where $\hat{\mathbf{x}} \in \R{3}{3}$ is the cross-product matrix associated to $\mathbf{x}$.
+The right side of \ref{eq:new_eul} is independent from $\mathbf{c}^z$ because of the cross product matrix $\hat{\mathbf{g}}$ inside $\mathbf{D}$, so we can rewrite it as:
 \begin{align} \label{eq:new_eul2d}
 \mathbf{w}_0 = \mathbf{D}^{xy} \mathbf{c}^{xy} + \mathbf{d}
 \end{align}
@@ -78,35 +83,36 @@ If there exists a $\bm{\beta}^*$ satisfying equations \ref{eq:gen} and \ref{eq:n
 The problem can then be formulated as an LP:
 
 \begin{equation} \label{eq:lin_prog} \begin{aligned}
-\find \quad & \bm{\beta} \in \Rv{+4e} \\
+\find \quad & \bm{\beta} \in \Rv{4e} \\
 \st \quad &\mathbf{G} \bm{\beta} = \mathbf{D}^{xy} \mathbf{c}^{xy} + \mathbf{d} \\
 & \bm{\beta} \ge 0 \\
 \end{aligned} \end{equation}
 
 \subsubsection{Formulation of a robust LP:}
-Let $b_0 \in \mathbb{R}$ a scalar value. We now define the following LP:
+Let $b_0 \in \mathbb{R}$ be a scalar value. We now define the following LP:
 
 \begin{equation} \label{eq:lin_prog_rob} \begin{aligned}
-\find \quad & \bm{\beta} \in \Rv{+4e}, b_0 \in \Rv{} \\
+\find \quad & \bm{\beta} \in \Rv{4e}, b_0 \in \Rv{} \\
 \minimize  \quad & -b_0 \\
 \st \quad &\mathbf{G} \bm{\beta} = \mathbf{D}^{xy} \mathbf{c}^{xy} + \mathbf{d} \\
 & \bm{\beta} \ge b_0 \\
 \end{aligned} \end{equation}
 
-We observe that if $b_0$ is positive, LP~\ref{eq:lin_prog} admits a solution. The higher $b_0$, the further away from the cone limits admissible forces can be found. If $b_0$ is negative, the configuration is not balanced, and the value $b_0$ indicates "how far" from static balance
+We observe that if $b_0$ is positive, LP~\ref{eq:lin_prog} admits a solution, and $b_0$ is proportional to the minimum distance of the equilibrium contact forces to the boundaries of the friction cones.
+If $b_0$ is negative, the configuration is not in static equilibrium, and the value $b_0$ indicates "how far" from equilibrium
 the configuration is. $b_0$ can thus be seen as a measure of robustness.
 
 In our implementation, we solve the dual of LP~\ref{eq:lin_prog_rob}.
-after a trivial elimination of Lagrange multipliers the dual problem has lower dimensionality:
+after a trivial elimination of the Lagrange multipliers associated to the inequality constraints, the dual problem has a lower dimensionality:
 \begin{equation} \label{eq:dual} \begin{aligned}
 \find \quad & \bm{\nu} \in \Rv{6}\\
-\minimize  \quad & (\mathbf{D}^{xy} \mathbf{c}^{xy} + \mathbf{d})^T \nu \\
+\maximize  \quad & -(\mathbf{D}^{xy} \mathbf{c}^{xy} + \mathbf{d})^T \nu \\
 \st \quad &\mathbf{G}^T \bm{\nu} \ge 0 \\
 & \mathbf{1}^T \mathbf{G}^T \bm{\nu} = 1 \\
 \end{aligned} \end{equation}
 
-Indeed, from Slater's condition, we know that the optimal values of a LP and its dual are equal. Thus the optimal value of LP~\ref{eq:dual} is indeed the optimal $b_0$.
+Indeed, from Slater's condition \citep{Boyd:2004:CO:993483}, we know that the optimal values of an LP and its dual are equal. Thus the optimal value of LP~\ref{eq:dual} is indeed the optimal $b_0$.
 
-In conclusion, LP~\ref{eq:dual} provides a method to assert rapidly quasi static balance, and returns a robustness value, that can be used as a heuristic for robust static balance.
-Another option to enforce robustness is to set a minimum acceptable value for $b_0$; this avoids ponderating balance robustness with other heuristics,
-but as a result this conservative approach is not complete.
+In conclusion, LP~\ref{eq:dual} provides a method to assert rapidly static equilibrium, and returns a robustness value.
+This robustness criterion can be immediately transformed into a heuristic, and eventually be ponderated with others.
+Another option to enforce robustness is to set a minimum acceptable value for $b_0$, but as a result this conservative approach is not complete.

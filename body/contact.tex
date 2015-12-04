@@ -4,10 +4,10 @@ As an input of this stage, we consider a truly feasible guide path $\mathbf{q}^0
 
 In this Section we first describe a single contact generation process, that is how to generate a contact configuration for a given limb 
 and root location.
-Then, on this method we build an iterative algorithm to generate a discrete sequence of balanced contact configurations along a truly feasible path.
+Then, on this method we build an iterative algorithm to generate a discrete sequence of contact configurations in equilibrium, along a truly feasible path.
 
-In what follows a \textit{valid} contact configuration is understood as being collision free, respecting joint limits, and allowing to maintain the quasi static balance
-of the robot. The first two tests are trivial; our criterion to assert efficiently the quasi static balance of the system
+In what follows a \textit{valid} contact configuration is understood as being collision free, respecting joint limits, and allowing to maintain the static equilibrium
+of the robot. The first two tests are trivial; our criterion to assert efficiently the static equilibrium of the system
 is described in Section TODO.
 
 \subsection{Definition of a contact generator}
@@ -76,14 +76,14 @@ where $\mathbf{q}^0_{0}$ and $\mathbf{q}^0_{j-1}$ respectively correspond to the
 \end{equation*} 
 We initialize the recurrence with $\pi(\mathbf{q}^0_{0}) = \mathbf{q}_0$ the initial configuration of the robot.
 
-At each step, we consider a new root placement $\mathbf{q}^0_{i}$ and try to generate a balanced contact configuration that preserves as much as possible
-the previous contacts.
+At each step, we consider a new root placement $\mathbf{q}^0_{i}$ and try to generate a contact configuration that preserves as much as possible
+the previous contacts, and is in static equilibrium.
 
 %~ The function $g$ is defined independently by $g^k$ for each limb $R^k$. In defining $g^k$, two aspects must be considered. Is the limb $R^k$ in contact? And which criteria is it optimizing? 
 
 \subsubsection{Maintaining a contact in the sequence.}
 
-Figure~\ref{fig:break_contact} illustrates the contact persistence method.
+Figure~\ref{fig:break_contact} illustrates the contact persistence strategy.
 If possible, a limb in contact at time $i-1$ remains in contact at $i$. The contact is broken if an inverse kinematics solver fails to find a collision free limb configuration that satisfies joint limits. The solver is directy provided by the Hpp software.
 
 If the solver fails, the contact is broken and a collision free configuration is assigned to the limb.
@@ -126,13 +126,13 @@ the contacts, before moving.
 Contacts are created using three rules:
 \begin{enumerate}
 \item Only one contact creation can happen between two consecutive states. This increases the odds that the interpolation between the two states will be feasible; 
-\item A contact is validated if and only if the resulting configuration is statically balanced, no matter what user-defined heuristics are used; 
+\item A contact is validated if and only if the resulting configuration is in static equilibrium, no matter what user-defined heuristics are used; 
 \item We use a FIFO approach:  we always try to first create a contact with the limb that has been free for the longest time. If the contact creation
 was not successful for a limb, the limb is pushed on top of the queue, and will only be tried again after the others have been treated.
 \end{enumerate}
 
 These three rules provide a deterministic manner to generate contacts along the discretized guide path.
-FIGURE. For a given truly feasible path, our current implementation does not guarantee that the planner will succeed in generating a balanced configuration, because
+FIGURE. For a given truly feasible path, our current implementation does not guarantee that the planner will succeed in generating a configuration in static equilibrium, because
 of the deterministic approach used to break the combinatorial.
 However, in practice the planner is successful in the large majority of cases, as discussed in section~\ref{sec:stat1}, thanks to 
 the heuristics we use for relevant contact selection.
