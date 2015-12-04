@@ -1,29 +1,112 @@
 \section{Heuristics for relevant contact selection}
 
 \subsection{A heuristic for robust quasi static balance}
-\noindent\textbf{EFORT criterion:} If only relying on the random sampling to select new contacts, the planner produces inefficient postures. The resulting contact sequence is then poorly efficient and unnatural. Moreover, the limbs are not well configured and are not able to efficiently follow the general movement: contacts break frequently.
+The planner is designed so that any contact configuration it outputs is quasi statically balanced.
+Balance is of course critical in multipedal locomotion. For this reason we are interested in a robust 
+criterion, that ensures that the robot remains balanced in a real world application, regardless of the errors
+that can result from peception and control uncertainties.
 
-When creating additional contacts, we therefore propose to select particular configurations that allow to exert a force compatible with the direction of motion. This task efficiency is measured  with the Extended FORce Transmission ratio (EFORT)~\cite{Tonneau2014}.
-%
-The measure of EFORT is given by
-\begin{equation}
-\alpha_{EFORT}(\mathbf{q}^k, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}^T)\mathbf{m}]^{-\frac{1}{2}} ( \nu_0 \mathbf{n}^T \mathbf{m})
+We first give a classic linear program (LP) that asserts that a contact configuration is statically balanced.
+From this formulation we derive a new LP that returns a quantification of the robustness of the configuration regarding balance.
+From this value we can in turn either define a heuristic to choose the more robust candidate, or set a treshold on the required balance robustness
+for any configuration. While the LP we propose is new, it is based on an analysis of the problem we propose in \cite{Prete2016}, where the interested reader
+can find more details.
+
+
+\subsubsection{Conditions for static balance.}
+We first define the variables of the problem, for a robot $R$ and $e$ contact points, expressed in world coordinates:
+\begin{itemize}
+\item $\mathbf{c} \in \mathbb{R}^3$ is the robot center of mass (COM);
+\item $\mathbf{L}  \in \mathbb{R}^3 $ is the angular momentum at the COM;
+\item $\mathbf{m} \in \mathbb{R}$ is the robot mass;
+\item $\mathbf{g} = [0,0,-9.81]^T$ is the gravity acceleration;
+\item $\mu$ is the friction coefficient;
+\item for the i-th contact $1 \leq i \leq e$:
+	\begin{itemize}
+	\item $\mathbf{p_i}$ is the contact position;
+	\item $\mathbf{f_i}$ is the force applied at $\mathbf{p_i}$;
+	\item $\mathbf{n}_i,\mathbf{t}_{i1},\mathbf{t}_{i2}$ form a local cartesian coordinate system centered at $\mathbf{p_i}$. $\mathbf{n}_i$ is aligned
+	with the contact surface normal, and the $\mathbf{t}_i$s are tangent vectors.
+	\end{itemize}
+\end{itemize}
+
+According to Coulomb's law, the robot is statically balanced if all contact forces lie in the friction cone defined by the surface.
+As classically done, we linearize the friction cone in a conservative fashion with a pyramid, described by four generating rays. We choose for instance:
+\begin{equation*}
+\mathbf{V}_{i} = \mat{\mathbf{n}_{i} + \mu \mathbf{t}_{i1} & \mathbf{n}_{i} -\mu \mathbf{t}_{i1} & \mathbf{n}_{i} + \mu \mathbf{t}_{i2} & \mathbf{n}_{i} - \mu \mathbf{t}_{i2}}^T
+\end{equation*}
+
+Any force belonging to the linearized cone
+can thus be express as a linear combination of its four generating rays.
+Therefore a constraint on the $\mathbf{f}_i$ is given by the relation:
+
+\begin{equation*}
+\forall i  \qquad  \exists \bm{\beta}_i \in \mathbb{R}^{+4} , \mathbf{f}_{i} = \mathbf{V}_{i} \bm{\beta}_i \qquad 
+\end{equation*}
+
+we can stack the constraints to obtain:
+\begin{equation}\label{eq:gen}
+\exists \bm{\beta} \in \mathbb{R}^{+4e} , \mathbf{f} = \mathbf{V} \bm{\beta} \qquad 
 \end{equation}
-where $\mathbf{J}$ is the Jacobian matrix of the limb $R^k$ in configuration $\mathbf{q}^k$; $\nu_0$ is the friction coefficient of the contact surface; $\mathbf{n}$ is the normal of the contact surface; and $\mathbf{m}$ is the direction opposite to the motion,
-given by the 3D vector connecting $\mathbf{q}_{i}^0$ and $\mathbf{q}_{i+1}^0$.
-%
-The first part of the equation measures the ratio between the joint  torques and the resulting force applied along $\mathbf{m}$. The second part quantifies the odds of slipping while applying a force along $\mathbf{m}$. 
+where $\mathbf{V} = \diag{ \{\mathbf{V}_1, \dots, \mathbf{V}_e\} }$, and $\mathbf{f} = [\mathbf{f}_0,...,\mathbf{f}_e]^T$.
 
-\noindent\textbf{Optimization at creation:} In practice, a database of configurations is stored for each limb, which can be considered as manipulator arms. The database is implemented  as an octree data structure, indexed by the end-effector positions of the configurations (and additionally storing $\mathbf{J}$). 
-%Fig.~\ref{fig:contact_gen}-2 presents a few configurations for the right arm of the robot.  
-Upon request, the octree returns a set of configurations close to contact (Fig.~\ref{fig:contact_gen}-3). These candidates are sorted based on their task efficiency, given by $\alpha_{EFORT}$. The first candidate in this list satisfying the balance criterion and is collision free is selected and projected on the contact surface using our inverse kinematics solver.
+Additional constraints on the forces result from Newton-Euler equations:
 
+\begin{align}
+\underbrace{\mat{m (\ddot{\mathbf{c}} - \mathbf{g})  \\ m \mathbf{c} \times (\ddot{\mathbf{c}} - \mathbf{g}) + \dot{\mathbf{L}}}}_\mathbf{w}
+= 
+\underbrace{
+\mat{\mathbf{I}_3 & \dots & \mathbf{I}_3 \\
+\hat{\mathbf{p}}_1 & \dots & \hat{\mathbf{p}}_e} \mathbf{V}
+}_\mathbf{G}
+\bm{\beta},
+\end{align}
+where $\mathbf{w}\in \Rv{6}$ is the so-called gravito-inertial wrench (GIW) \citep{qiu:dhm:2011, Caron2015} and $\hat{\mathbf{p}} \in \R{3}{3}$ is the cross-product matrix associated to $\mathbf{p}$.
 
+Static balance assumes zero acceleration thus we can write:
+\begin{align} \label{eq:new_eul}
+\mathbf{w}_0 = 
+\underbrace{\mat{\mathbf{0}_{3\times 3} \\ m \hat{\mathbf{g}}}}_{\mathbf{D}} \mathbf{c} + 
+\underbrace{\mat{-m\mathbf{g} \\ \mathbf{0}}}_{\mathbf{d}}
+\end{align}
+The wrench $\mathbf{w}_0$ is independent of $c^z$ because of the cross product matrix $\hat{\mathbf{g}}$ inside $\mathbf{D}$, so we can rewrite \eqref{eq:new_eul} as:
+\begin{align} \label{eq:new_eul2d}
+\mathbf{w}_0 = \mathbf{D}^{xy} \mathbf{c}^{xy} + \mathbf{d}
+\end{align}
 
-%Therefore to generate a contact, we want to find a configuration which is collision free, allows to maintain balance, and maximizes EFORT. We choose this configuration among a set of possible candidates, rapidly computed thanks to a contact generator, also proposed in~\cite{Tonneau2014}. We recall the overall idea here. We consider each limb of the robot as a manipulator arm attached to the root. We store a database of configurations for each manipulator. The database is implemented  as an octree data structure, indexed by the end-effector positions of the configurations. The jacobian matrix $\mathbf{J}$ of each configuration is also stored. Figure~\ref{fig:contact_gen} -- 2 presents a few configurations for the right arm of the robot.  
+If there exists a $\bm{\beta}^*$ satisfying equations \ref{eq:gen} and \ref{eq:new_eul2d}, it means that the configuration is statically balanced.
+The problem can then be formulated as an LP:
 
+\begin{equation} \label{eq:lin_prog} \begin{aligned}
+\find \quad & \bm{\beta} \in \Rv{+4e} \\
+\st \quad &\mathbf{G} \bm{\beta} = \mathbf{D}^{xy} \mathbf{c}^{xy} + \mathbf{d} \\
+& \bm{\beta} \ge 0 \\
+\end{aligned} \end{equation}
 
-%To summarize: given a feasible trajectory for the root of the robot $R$, we are able to generate a discrete sequence of contact configurations  describing a feasible motion for $R$, between a start an goal configurations. The contact configurations are chosen to be statically balanced and task efficient, which means that they can generate a force  contributing to the motion of the root along the trajectory. 
+\subsubsection{Formulation of a robust LP:}
+Let $b_0 \in \mathbb{R}$ a scalar value. We now define the following LP:
 
+\begin{equation} \label{eq:lin_prog_rob} \begin{aligned}
+\find \quad & \bm{\beta} \in \Rv{+4e}, b_0 \in \Rv{} \\
+\minimize  \quad & -b_0 \\
+\st \quad &\mathbf{G} \bm{\beta} = \mathbf{D}^{xy} \mathbf{c}^{xy} + \mathbf{d} \\
+& \bm{\beta} \ge b_0 \\
+\end{aligned} \end{equation}
 
+We observe that if $b_0$ is positive, LP~\ref{eq:lin_prog} admits a solution. The higher $b_0$, the further away from the cone limits admissible forces can be found. If $b_0$ is negative, the configuration is not balanced, and the value $b_0$ indicates "how far" from static balance
+the configuration is. $b_0$ can thus be seen as a measure of robustness.
 
+In our implementation, we solve the dual of LP~\ref{eq:lin_prog_rob}.
+after a trivial elimination of Lagrange multipliers the dual problem has lower dimensionality:
+\begin{equation} \label{eq:dual} \begin{aligned}
+\find \quad & \bm{\nu} \in \Rv{6}\\
+\minimize  \quad & (\mathbf{D}^{xy} \mathbf{c}^{xy} + \mathbf{d})^T \nu \\
+\st \quad &\mathbf{G}^T \bm{\nu} \ge 0 \\
+& \mathbf{1}^T \mathbf{G}^T \bm{\nu} = 1 \\
+\end{aligned} \end{equation}
+
+Indeed, from Slater's condition, we know that the optimal values of a LP and its dual are equal. Thus the optimal value of LP~\ref{eq:dual} is indeed the optimal $b_0$.
+
+In conclusion, LP~\ref{eq:dual} provides a method to assert rapidly quasi static balance, and returns a robustness value, that can be used as a heuristic for robust static balance.
+Another option to enforce robustness is to set a minimum acceptable value for $b_0$; this avoids ponderating balance robustness with other heuristics,
+but as a result this conservative approach is not complete.

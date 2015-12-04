@@ -1,27 +1,122 @@
-\subsection{Contribution to the global movement: the EFORT criteria}
-\noindent\textbf{EFORT criterion:} If only relying on the random sampling to select new contacts, the planner produces inefficient postures. The resulting contact sequence is then poorly efficient and unnatural. Moreover, the limbs are not well configured and are not able to efficiently follow the general movement: contacts break frequently.
+\subsection{Manipulability-based heuristics for locally optimal contact selection}
+The other kind of heuristics we use are based on the analysis of the motion capabilities
+provided by a candidate configuration regarding the task being achieved.
+These heuristics allow to locally optimize a contact location regarding a particular task.
+For instance, once can be interested in configurations that allow to efficienctly exert a force compatible with the global direction of motion,
+a high velocity in a given direction, or to stay away from singular configurations.
+In these section, three such heuristics are derived in this section from the work on manipulability by \cite{Yoshikawa1984}, that we present first.
 
-When creating additional contacts, we therefore propose to select particular configurations that allow to exert a force compatible with the direction of motion. This task efficiency is measured  with the Extended FORce Transmission ratio (EFORT)~\cite{Tonneau2014}.
-%
-The measure of EFORT is given by
-\begin{equation}
-\alpha_{EFORT}(\mathbf{q}^k, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}^T)\mathbf{m}]^{-\frac{1}{2}} ( \nu_0 \mathbf{n}^T \mathbf{m})
+\subsubsection{The force and velocity ellipsoids.}
+For a limb configuration $\mathbf{q}^k$, the jacobian matrix
+ $\mathbf{J}(\mathbf{q}^k)$   defines the relation:
+ 
+\begin{equation} \label{jac}
+\mathbf{\dot{p}^k} = \mathbf{J}(\mathbf{q}^k) \dot{\mathbf{q}^k}
 \end{equation}
-where $\mathbf{J}$ is the Jacobian matrix of the limb $R^k$ in configuration $\mathbf{q}^k$; $\nu_0$ is the friction coefficient of the contact surface; $\mathbf{n}$ is the normal of the contact surface; and $\mathbf{m}$ is the direction opposite to the motion,
-given by the 3D vector connecting $\mathbf{q}_{i}^0$ and $\mathbf{q}_{i+1}^0$.
-%
-The first part of the equation measures the ratio between the joint  torques and the resulting force applied along $\mathbf{m}$. The second part quantifies the odds of slipping while applying a force along $\mathbf{m}$. 
 
-\noindent\textbf{Optimization at creation:} In practice, a database of configurations is stored for each limb, which can be considered as manipulator arms. The database is implemented  as an octree data structure, indexed by the end-effector positions of the configurations (and additionally storing $\mathbf{J}$). 
-%Fig.~\ref{fig:contact_gen}-2 presents a few configurations for the right arm of the robot.  
-Upon request, the octree returns a set of configurations close to contact (Fig.~\ref{fig:contact_gen}-3). These candidates are sorted based on their task efficiency, given by $\alpha_{EFORT}$. The first candidate in this list satisfying the balance criterion and is collision free is selected and projected on the contact surface using our inverse kinematics solver.
+For clarity in the rest of the section we omit the $k$ indices and write $\mathbf{J}(\mathbf{q}^k)$ as $\mathbf{J}$.
+ 
+As a linear approximation of the forward kinematics function $f$ , $\mathbf{J}$ describes how small
+variations from the configuration $\mathbf{q}$ affect the position vector $\mathbf{p}$.
+It can be seen as the transformation mapping a velocity in the configuration space into a velocity in
+the euclidian space.
+
+Now we consider the unit ball in the configuration space $C$ defined by the set of joint velocities
+for which the norm is inferior or equal to 1:
+\begin{equation} \label{ball}
+||\dot{\mathbf{q}}||^2 \leq 1
+\end{equation}
+
+From Equation~\ref{jac} we can obtain the following equality:
+\begin{equation} \label{jaceq}
+\mathbf{\dot{p}}^T(\mathbf{J}\mathbf{J}^T)^{-1}\mathbf{\dot{p}} = \dot{\mathbf{q}}^T \dot{\mathbf{q}}
+\end{equation}
+
+We can use Equation~\ref{jaceq} to map the ball into an ellipsoid in the euclidian space $\mathbb{R}^m$:
+
+\begin{equation} \label{ellipsoid}
+\mathbf{\dot{p}}^T(\mathbf{J}\mathbf{J}^T)^{-1}\mathbf{\dot{p}} \leq 1
+\end{equation}
+This ellipsoid is called the manipulability ellipsoid, or velocity ellipsoid, introduced by \cite{Yoshikawa1984}. It describes the set of velocities that can
+be reached under the constraints of Equation~\ref{ball} for the current configuration.
+The longer an axis of the ellipsoid is, the faster the configuration can move along the direction of the axis.
+Figure~\ref{sec:efort_ellipsoid} - left shows the velocity ellipsoid for different configurations of a manipulator with two degrees of freedom.
+
+\begin{figure}[htb]
+  \centering
+	\begin{overpic}[width=1\linewidth]{figures/EFORT/ellipsoid}
+		\put (8.5,1.2) {\small{Velocity ellipsoid}}
+		\put (62.5,1.2) {\small{Force ellipsoid} \tiny{(scale 0.5)}}
+	\end{overpic}
+  % \includegraphics[width=1\linewidth]{ressources/screens/sampling/canap/bd2_cmyk}
+  \caption{Examples of velocity and force ellipsoids for a manipulator composed of 2 dofs and 2 segments.
+Only the horizontal and vertical speeds are shown (not the rotation speeds), since it would require being able to draw in four dimensions.}
+		   \label{sec:efort_ellipsoid}
+\end{figure}
 
 
+Similarly to the velocity ellipsoid, \citeauthor{Yoshikawa1984} also defines the force ellipsoid.
+Considering: a force vector $\mathbf{f}$ expressed in the task space $\mathbb{R}^m$;
+the equivalent joint torque vector $\mathbf{\tau}$;
+we can define the mechanical work in both spaces:
+\begin{equation*} \label{power}
+\dot{\mathbf{q}}^T \mathbf{\tau} = \dot{\mathbf{p}}^T \mathbf{f}
+\end{equation*}
 
-%Therefore to generate a contact, we want to find a configuration which is collision free, allows to maintain balance, and maximizes EFORT. We choose this configuration among a set of possible candidates, rapidly computed thanks to a contact generator, also proposed in~\cite{Tonneau2014}. We recall the overall idea here. We consider each limb of the robot as a manipulator arm attached to the root. We store a database of configurations for each manipulator. The database is implemented  as an octree data structure, indexed by the end-effector positions of the configurations. The jacobian matrix $\mathbf{J}$ of each configuration is also stored. Figure~\ref{fig:contact_gen} -- 2 presents a few configurations for the right arm of the robot.  
+
+Deriving from Equation~\ref{jac}, we define that the set of achievable force in $\mathbb{R}^m$  subject to the constraint:
+\begin{equation*} \label{ballforce}
+||\mathbf{\tau}||^2 \leq 1
+\end{equation*}
+is the force ellipsoid (Figure~\ref{sec:efort_ellipsoid} - right) defined by:
+\begin{equation} \label{ellipsoidforce}
+\mathbf{f}^T (\mathbf{J}\mathbf{J}^T) \mathbf{f} \leq 1
+\end{equation}
+
+\subsubsection{Manipulability based heuristics.}
+From these definitions, we can derive three useful heuristics, that all account from the environment and the task being performed.
+The first one, EFORT, is introduced by \cite{Tonneau2014}; the other two are new minor contributions, derived from these previous works.
+
+With EFORT, we define the efficiency of a configuration as the ability a limb has to exert a force in a given direction.
+We thus consider the force ellipsoid as a basis for our heuristic.
+In a given direction $\mathbf{m}$, the length of the ellispoid is given by the force transmission ratio \citep{1087795}:
+\begin{equation*}
+f_\mathsf{T}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(JJ^{T})\mathbf{m}]^{-\frac{1}{2}}
+\end{equation*}
+
+In our problem, to compare candidate configurations, we include the quality of the contact surface, and choose $\mathbf{m}$ as the direction
+opposite to the local motion (thus given by the difference between two consecutive root positions):
+
+\begin{equation}
+h_{EFORT}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}^T)\mathbf{m}]^{-\frac{1}{2}} ( \mu_0 \mathbf{n}^T \mathbf{m})
+\end{equation}
+where $\mu_0$ and $\mathbf{n}$ are respectively the friction coefficient and the normal vector of the contact surface.
 
 
-%To summarize: given a feasible trajectory for the root of the robot $R$, we are able to generate a discrete sequence of contact configurations  describing a feasible motion for $R$, between a start an goal configurations. The contact configurations are chosen to be statically balanced and task efficient, which means that they can generate a force  contributing to the motion of the root along the trajectory. 
+If the ability to apply important velocities at the effector is considered, we define a new heuristic $h_{vel}$ with a similar reasonning on the velocity ellispoid:
+\begin{equation}
+h_{vel}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}^T)^{-1}\mathbf{m}]^{-\frac{1}{2}} ( \mu_0 \mathbf{n}^T \mathbf{m})
+\end{equation}
+
+$h_{EFORT}$ and $h_{vel}$ will favor contacts that allow important efforts or fast modifications in the velocity.
+$EFORT$ in particular is useful for tasks such as standing up, pushing / pulling.
+In other less demanding cases, manipulability can also be considered regarding its original purpose, that means to avoid singularties.
+To do so, we can consider the manipulability measure $w$, also given by \citeauthor{Yoshikawa1984}:
+
+\begin{equation*} \label{ellipsoid}
+w(\mathbf{q}) = \sqrt{\mathbf{J}\mathbf{J}^T}
+\end{equation*}
+$w$ measures the ``distance" between a given configuration and a singular configuration. When $w$ is equal to 0, the configuration is in a singular state;
+the greater $w$ is, the further away the configuration is from singularity.
+We then derive:
+\begin{equation}
+h_{w}(\mathbf{q}, \mathbf{m}) = \sqrt{\mathbf{J}\mathbf{J}^T} ( \mu_0 \mathbf{n}^T \mathbf{m})
+\end{equation}
+
+$h_{EFORT}$, $h_{vel}$ and $h_{w}$ define three kinematic heuristics, fast to compute (indeed, thanks to our sampling based approach, the jacobian an inverse products
+can be precomputed offline), that allow the planner to select the more relevant
+candidates regarding the local motion task along the guide path.
+This result in faster computation times, and a reduced number of contact switches overall.
 
 
 
