@@ -21,126 +21,212 @@ to refer to the previous paper for a discussion on these results.
 		%~ \put (37,27) {4.a)} 
 		%~ \put (68,27) {4.b)} 
 	\end{overpic}
-\caption{Virtual avatars and associated volumes used in our conference paper: in red $W^0_{s}$; in green the range of motion of each limb.}
+\caption{Virtual avatars in various scenarios demonstrated in our conference paper.}
 		   \label{fig:robots_old}
 \end{figure}
 
 \subsection{Description of the scenarios}
 In all the scenarios considered, the formulation of the problem is always the same:
 a start and goal root placements are provided as an input of the scenario.
-The framework computes the initial balanced contact configuration, and outputs a sequence of statically balanced contact configurations connecting it to the goal.
-A companion video available at TODO \url{http://youtu.be/LmLAHgGQJGA} (anonymous link) displays the complete contact sequence obtained in all these scenarios. The video only renders the contact configurations. Again, the interpolation between contact configurations is out of the scope of this paper~\citep{Carpentier2016}.
+The framework computes the initial contact configuration, and outputs a sequence of contact configurations connecting it to the goal.
+In each scenario we detail the parameters chosen: the heuristics, and the constraints on the reachable workspaces (for instance in all the scenarios,
+the reachable workspaces of the legs of HRP-2 are always required to intersect with the environment). 
+A companion video available at TODO \url{http://youtu.be/LmLAHgGQJGA} (anonymous link) displays the complete contact sequence obtained in all these scenarios.
 
 % \subsubsection*{Truck egress (Figure~\ref{res_truck_pres} and Figure~\ref{res_truck_bd}) -- Humanoid and insectoid robots.}
 %\subsubsection*{Truck egress -- Humanoid and insectoid robots (Figure~\ref{res_truck_bd}).}
-\noindent\textbf{Truck egress (humanoid and insectoid):}
-The robot must leave a truck the doors of which are blocked: it has to crawl through the front window.
-Figure~\ref{res_truck_bd} presents the sequence of contacts obtained for both robots: RB-PRM can find solutions in highly cluttered environments with narrow passages.
+\subsubsection{HRP-2 -- Steep staircase (Figure~\ref{fig:standing}):}
 
-\begin{figure}[h!]
+\begin{figure*}
   \centering
-  \includegraphics[width=1\linewidth]{figures/climballlow}
+  \includegraphics[width=0.5\linewidth]{figures/stair}
   \caption{
-           The computed contact sequences for the truck egress scenario. Only selected postures are shown for the insect.}
-		   \label{res_truck_bd}
-\end{figure}
+           HRP-2 in the steep stair climbing scenario. }
+		   \label{fig:stair_robust}
+\end{figure*}
 
-% \subsubsection*{Climbing (Figure~\ref{res_climb}) -- Humanoid and insectoid robots.}
-%\subsubsection*{Climbing -- Humanoid and insectoid robots.}
-\noindent\textbf{Climbing (humanoid and insectoid):}
-The robot has to climb on a wall with several grasps disposed along it. In this scenario, we give stronger conditions for the sampled root placements: we require that more than one range of motion $W^k$ collide with obstacles of the environment. Fig.~\ref{res_climb} presents the contact sequence obtained for the 
-humanoid robot.
+The goal is to cross a set of stairs of a height of 20 cm. This height requires HRP-2 to use a ramp to be able to perform the task.
+
+\noindent\textbf{Contacts involved:} Both feet and right arm.
+
+\noindent\textbf{Heuristics:} The extended manipulability $h_w$ is chosen for the feet; $h_{EFORT}$ is chosen for the right arm.
+Regarding equilibrium, the video demonstrates two sequences computed for two different treshold values of $b_0$: $0$ and $2$ (Figure~\ref{fig:stair_robust}). 
+
+\noindent\textbf{Observations:}
+This scenario illustrates best the importance of the equilibrium robustness criterion.
+With a robust approach, more states are required to reach the last step (15 against 13 in average).
+However, when the last step is reached by both feet, in the non robust case, the contacts are extremely close to 
+the cone limits, and we believe this can be seen visually (Figure~\ref{fig:stair_comp}).
+
+
+The geometry of the environment is easily addressed by our planner, and the contact planning is several times faster than real time in this scenario.
+
+Again, the interpolation motion between the contact stances is out of the scope of this paper. However it should be noted that the computed plan in this scenario has been executed successfully on the robot~\citep{Carpentier2016}.
 
 \begin{figure}[h!]
   \centering
-  %\includegraphics[width=0.6\linewidth]{figures/climb}
-  \includegraphics[width=1\linewidth]{figures/climb_line}
-  \caption{The computed sequence for the climbing scenario.}
-		   \label{res_climb}
-\end{figure}
-
-
-%~ \subsection{Implementation details}
-%~ The test application was developed using the C++ language.
-%~ The volumes describing the Range Of Motions of the robots $A_{ROM}$ are computed using the Matlab mpt toolbox~\footnote{http://people.ee.ethz.ch/\~mpt/3/}.
-%~ They are exported to the obj format using a custom Matlab script.
-%~ 
-%~ The robot is described using the urdf file format~\footnote{http://wiki.ros.org/urdf}, used as a standard by the popular ROS platform.
-%~ The scenarios where described using a custom text file format.
-%~ Environments are described in the obj format. Rendering is achieved using Blender~\footnote{http://www.blender.org}.
-%~ The runs were performed on a laptop with an Intel Core i7-2760QM 2.40GHz processor and 4 GB of memory. The application is not multi-threaded.
-
-\noindent\textbf{Manipulation of a pen (3-finger hand):}
-This scenario is proposed to illustrate the genericity of our approach: we consider a manipulation task for a robotic hand and use
-our contact planner to compute a guide trajectory for the fingers, considered as effectors (Figure \ref{fig:penrot}).
-Although we do not address the hard issue of accounting for rolling motions, the planner is able to compute the shown sequences, this in less than 5 seconds.
-
-\begin{figure}[t]
-\centering
-  \begin{overpic}[width=1\linewidth]{figures/penrot}
-	\end{overpic}
-\caption{Contact sequence found for a pen manipulation in a zero gravity environment.}
-		   \label{fig:penrot}
-\end{figure}
- 
-%\subsubsection*{Other scenarios}
-\noindent\textbf{Other scenarios (humanoids): }
-%Two additional scenarios were considered for the humanoid robot. A crouching scenario, and a standing up scenario (already presented in Figure~\ref{fig:framework} -- right) -- Humanoid robot). 
-The standing-up scenario (already presented in Fig.~\ref{fig:framework}) is a setup taken from \cite{DBLP:conf/iser/EscandeKMG08}: it corresponds to a long narrow passage in the configuration space.
-In the crouching scenario, demonstrated in the companion video, the character automatically goes from a standing to a crouching position to crawl under an obstacle.
-
-
-
-\subsection{Parametrization of the reachability condition} \label{sec:stat1}
-
-
-To find the appropriate $C_{reach}^s$ in which to sample the guide trajectory,
-we computed the rejection rate for various values of $s$ for each robot in the most cluttered truck scenario.
-For a given value of $s$, $10^6$ root positions and orientations are computed
-in $C_{reach}^s$. In each case we try to generate a collision free contact configuration, with a database
-comprising $N=10^5$ sample configurations for each limb. The rejection rate
-is the ratio between the number of failures  and the number of trials. From Figure~\ref{fig:rejection} $s$ is empirically chosen
-as the smallest value for which the rejection rate is minimal.
-For the humanoid, we thus chose $s=2.2$, and for the insect, $s=2.8$.
-
-\begin{figure}[t]
-\centering
-  \begin{overpic}[width=0.6\linewidth]{figures/rejectionnotext}
-		 \put (1.1,24){\rotatebox{90}{\tiny{Rejection rate}}}
-		 \put (4.8,52) {\tiny{20} }
-		 \put (4.8,48) {\tiny{18} }
-		 \put (4.8,43) {\tiny{16} }
-		 \put (4.8,38) {\tiny{14} }
-		 \put (4.8,34) {\tiny{12} }
-		 \put (4.8,29) {\tiny{10} }
-		 \put (4.8,24.5) {\tiny{8} }
-		 \put (4.8,20) {\tiny{6} }
-		 \put (4.8,15) {\tiny{4} }
-		 \put (4.8,10) {\tiny{2} }
-		 \put (11.5,5) {\tiny{1} }
-		 \put (24.5,5) {\tiny{1.5} }
-		 \put (39,5) {\tiny{2} }
-		 \put (52,5) {\tiny{2.5} }
-		 \put (45,3) {\tiny{s} }
-		 \put (66,5) {\tiny{3} }
-		 \put (79,5) {\tiny{3.5} }
-		%~ \put (37,58) {2)} 
+  %~ \includegraphics[width=0.6\linewidth]{figures/stair_robust}
+  \begin{overpic}[width=0.5\linewidth]{figures/stair_robust}
+		\put (17,5) {\small{\color{red}$b_0 = 0.23$}} 
+		\put (79,5) {\small{\color{green}$b_0 = 6.16$}} 
 		%~ \put (68,58) {3.a)} 
 		%~ \put (5,27) {3.b)} 
 		%~ \put (37,27) {4.a)} 
 		%~ \put (68,27) {4.b)} 
 	\end{overpic}
-\caption{Truck scenario rejection rates(\%) for the humanoid(orange) and insectoid(blue), given $s$.}
-		   \label{fig:rejection}
+  \caption{
+           Evaluation of the robustness $b_0$ of two contact configurations. Although in equilibrium, the left configuration is on the verge of slipping.}
+		   \label{fig:stair_comp}
 \end{figure}
 
+\subsubsection{HRP-2 -- Standing up (Figure~\ref{fig:standing}):}
+From a bent configuration, a standing up motion is computed in a cluttered environment.
+The resulting motion involves using a wall as support, and crossing a 25 cm high stair.
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.5\linewidth]{figures/standing}
+  \caption{
+           HRP-2 in the standing scenario. }
+		   \label{fig:standing}
+\end{figure*}
 
 
+\noindent\textbf{Contacts involved:} All (both feet and hands).
 
-\subsection{Performance}\label{sec:stat2}
-The number of samples used for generating the contacts of each limb is 10000.
-Table~\ref{tab:requestime} presents the average time (seconds) spent in the phases of the planner, for 
-each phase and each scenario, and the number of contact phases of the sequence.
+\noindent\textbf{Heuristics:} $h_w$ is used for the feet, $h_{EFORT}$ is used for the hands.
+
+\noindent\textbf{Observations:} The scenario illustrates well the acyclic aspect of the planning. For instance, in the 4 first frames of Figure~\ref{fig:standing}, we can see that the right foot
+is moved twice, with the left foot in between, before the configuration allows HRP-2 to move its hand.
+Because the contacts are tried in a FIFO manner, the fact that the output contact sequence is acyclic shows that a cyclic approach (with a finite state machine for instance) is not sufficient
+for the computed trajectory. The reason for this is not reachability, but equilibrium. The planning is slower than for the stair scenario (because the contact generation fails more),
+though it remains compatible with interactive performances.
+
+\subsubsection{HRP-2 -- Truck egress (Figure~\ref{fig:TODO}):}
+HRP-2 stands half sitted in a truck, and is required to exit through the front window.
+
+%~ \begin{figure*}
+  %~ \centering
+  %~ \includegraphics[width=0.5\linewidth]{figures/standing}
+  %~ \caption{
+           %~ HRP-2 in the standing scenario. }
+		   %~ \label{fig:standing}
+%~ \end{figure*}
+
+
+\noindent\textbf{Contacts involved:} All (both feet and hands).
+
+\noindent\textbf{Heuristics:} $h_w$ is used for the feet, $h_{EFORT}$ is used for the hands.
+
+\noindent\textbf{Observations:} This scenario demonstrates the ability of the planner to compute a path in an extremely constrained environment. In this case,
+the scenario is not always real time (TODO or is it ?): while the planner is often able to compute a guide path rapidly, in the worst case up to one minute can be spent
+in the planning.
+
+
+\subsubsection{HyQ -- Darpa style rubble (Figure~\ref{fig:darpa})}
+The quadruped robot is given the task to cross a rubble composed of bricks rotated at different angles and directions.
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.5\linewidth]{figures/darpa}
+  \caption{
+           Robust crossing of rubbles by HyQ ($b_0 > 20$). }
+		   \label{fig:darpa}
+\end{figure*}
+
+
+\noindent\textbf{Contacts involved:} All (the 4 legs).
+
+\noindent\textbf{Heuristics:} $h_w$ is used for the all legs. The robustness treshold $b_0$ is set to $20$.
+
+\noindent\textbf{Observations:} In this context, setting up a really important minimum value for $b_0$ is possible due to the high
+stability of the HyQ robot, and results in more contact switches, in exchange for safety. The path planning time is higher than for the previous HRP-2 robots due to the constraint that the 4 reachable workspace of all legs must
+collide with the environment at all times. Again, the computed time remains however interactive.
+
+\subsubsection{HyQ -- Obstacle race:}
+In this long scene, HyQ is first required to cross a 55 cm large hole; then, to cross a narrow "bridge", only large of 25 cm,
+while maintaining equilibrium
+
+%~ \begin{figure*}
+  %~ \centering
+  %~ \includegraphics[width=0.5\linewidth]{figures/stair}
+  %~ \caption{
+           %~ HRP-2 in the steep stair climbing scenario. }
+		   %~ \label{fig:stair_robust}
+%~ \end{figure*}
+
+
+\noindent\textbf{Contacts involved:} All (the 4 legs).
+
+\noindent\textbf{Heuristics:} $h_w$ is used for the all legs. The robustness treshold $b_0$ is set to $4$.
+
+\noindent\textbf{Observations:} Despite the apparent simplicity of the scene, this scenario is the harder to compute for our planner.
+While finding a guide path above the hole is easy for the planner, finding a relevant sequence of contacts that remain in equilibrium is not trivial.
+Secondly, the narrow bridge is hard both for the planner and the contact generator: To make sure that equilibrium is preserved along the traversal,
+the bridge must be approached with the right angle.
+This can be seen in Figure (TODO), where several feet repositionning are required to cross both obstacles (although the video shows this best).
+The planner however suceeds in finding a feasible sequence in the end, again with interactive computation times.
+
+\subsubsection{HRP-2 -- Path replanning(Figure~\ref{figures/replanning}):}
+In this long scene, HRP-2 plans a path through through several obstacles. the scene is edited during the execution of the motion: a stair is added,
+some stepping stones are removed, and part of the final staircase is deleted. All these modifications involve replanning.
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\linewidth]{figures/replanning}
+  \caption{
+           HRP-2 in the replanning scenario. After the red step stones are removed, a new sequence of contacts is replanned. Hand contacts
+           are not presented here for readability.}
+		   \label{fig:replanning}
+\end{figure}
+
+\noindent\textbf{Contacts involved:} Both feet and the right arm.
+
+\noindent\textbf{Heuristics:} $h_w$ is used for the all legs. $h_{EFORT}$ is used for the right arm. The robustness treshold is set to $2$.
+
+\noindent\textbf{Observations:} This scenario is designed to illustrate concretely the computation times of the planner.
+In the video, the footsteps indicating the contact sequence appear at the average speed of their computation (including the guide path planning).
+
+
+\subsubsection{3-fingered hand -- Manipulation of a pen (Figure~\ref{figures/penrot}):}
+This scenario is proposed to illustrate the genericity of our approach: we consider a manipulation task for a robotic hand and use
+our contact planner to compute a guide trajectory for the fingers, considered as effectors (Figure \ref{fig:penrot}).
+Although we do not address the hard issue of accounting for rolling motions, the planner is able to compute the shown sequences, this in less than 5 seconds.
+
+\begin{figure*}[t]
+\centering
+  \begin{overpic}[width=1\linewidth]{figures/penrot}
+	\end{overpic}
+\caption{Contact sequence found for a pen manipulation in a zero gravity environment.}
+		   \label{fig:penrot}
+\end{figure*}
+
+ 
+\noindent\textbf{Contacts involved:} Three finger-tips.
+
+\noindent\textbf{Heuristics:} $h_{EFORT}$ is used for the all fingers.
+ 
+ 
+\subsection{Performance analysis} \label{sec:perf}
+To analyze performance, for each considered scenario, we ran the simulation 100 times.
+We measured the computation time spent in each aspect of the algorithm, and also analyzed the success
+rate obtained for each scenario.
+
+Table TODO summarizes the performance measurement obtained, in terms of computation times.
+
+For each scenario, one can observe that average computation time for one single step is largely below the second,
+thus allowing to consider interactive applications. In some cases such as the stair climbing, this computation time is actually negligeable. 
+Considering the repartition of the computation time, it appears that the majority of the time is spent performing inverse kinematics.
+This is not surprising considering the number of calls to the methods: IK is used intensively to maintain contact continuity between two postures; 
+it is also applied every time a new candidate needs to be evaluated. However regarding state of the art IK solutions, we believe there is room
+for improving the performances of the algorithm.
+
+The other important piece of information to consider is the success rate obtained for each scenario.
+With the exception of the truck egress scenario, this rate is really high.
+From a pragmatic point of view, these results allow us to claim that our approach is the best current compromise between completeness and efficiency:
+Indeed, the advantage of the framework is that when the contact generation fails, it does so rapidly, which allows us to replan a new contact sequence also rapidly with 
+a reasonable chance of success.
 
 \begin{table}[b]
 \centering
