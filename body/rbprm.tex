@@ -70,7 +70,18 @@ C_{reach}^s = \{ \mathbf{q}^0 : W(\mathbf{q}^{0}) \cap O \neq \emptyset \wedge W
 \end{equation}
 %
 The higher $s$ is, the closer this "reachability condition" is to being sufficient, and if $s=1$, the planner is complete. The parametrization of $s$ allows to find a trade-off between these two desirable properties.
-Section~\ref{sec:results} shows that in practice, it is easy to adjust $s$ to keep most of the interesting guides without introducing incorrect guides.
+As an example, Figure~\ref{fig:hyq_roms} presents the volumes $W$ computed for the HyQ robot.
+In Appendix~\ref{app:rom}, we give a generic method to compute these volumes, with the example of HRP-2.
+%~ Section~\ref{sec:results} shows that in practice, it is easy to adjust $s$ to keep most of the interesting guides without introducing incorrect guides.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.95\linewidth]{figures/hyq_roms}
+  \caption{
+           $W$ volumes for HyQ. The green shapes represent the reachable workspace $W^k$ of each limb. The red shape is $W^0$, a scaling of the convex hull
+           of the torso of the robot.}
+		   \label{fig:hyq_roms}
+\end{figure}
 
 \subsection{Computing the guide trajectory in $C_{reach}^s$}
 Once a value of $s$ has been fixed, any sampling-based motion planner can be used to plan a trajectory in $C_{reach}^s$. 
@@ -84,43 +95,3 @@ First, a configuration is set to a random point on the surface of one randomly c
 Our current implementation of these modifications is based on the Bi-RRT planner provided by the hpp software.
 
 Thanks to this small set of modifications, the high dimensional truly feasible path planning problem is reduced to a standard geometry and collision checking problem, in a much lower dimension (6 for Hyq, 8 for HRP-2 that has a flexible torso). In so doing we make the problem tractable for sampling based approaches, with extremely efficient computation times.
-
-%~ Algorithm~\ref{alg:generate} describe the sampling process for one configuration.
-
-%~ Two user defined numeric values, $LIMIT1$ and $LIMIT2$ are used to ensure that the generation will not loop
-%~ infinitely around areas of the workspace where the reachability condition cannot be met.
-%~ Two configurations are connected if a linearly interpolated path between them also belongs to 
-%~ $C_{reach}$.
-
-%~ \begin{algorithm}
-%~ \caption{Generation of a configuration $\mathbf{q}^{0} \in C_{reach}^s$} \label{euclid}
-	%~ \begin{algorithmic}[1]
-	%~ \Function{GenerateConfiguration}{}
-		%~ \State $\mathbf{q}^{0} \gets [0,...,0]^T$ /*Set all DOFs to 0*/
-		%~ \State $\textit{ntry1} \gets 0; \textit{ntry2} \gets 0;$
-		%~ \While {$\textit{ntry1} < \textit{LIMIT1}$}
-			%~ \State Select an obstacle $O_i \in O$
-			%~ \While {$\textit{ntry2} < \textit{LIMIT2}$}				
-				%~ \State Translate $\mathbf{q}^{0}$ to a random point on the surface of $O_i$
-				%~ \State $\mathbf{d} \gets $ Random unit direction
-				%~ \While {$W(\mathbf{q}^{0}) \cap O_i \ne \emptyset$}
-					%~ \State $\epsilon \gets$ random number, $ 0 < \epsilon \leq 1$
-					%~ \State Translate $\mathbf{q}^{0}$ by $\mathbf{u} = \epsilon \mathbf{d}$
-					%~ \If {$W^0_s(\mathbf{q}^{0}) \cap O = \emptyset$}
-						%~ \State \textbf{return} $\mathbf{q}^{0}$
-					%~ \Else
-						%~ \State Rotate $\mathbf{q}^{0}$ randomly
-						%~ \State $\textit{ntry2} \gets \textit{ntry2} + 1$
-					%~ \EndIf
-				%~ \EndWhile
-			%~ \EndWhile
-			%~ \State $\textit{ntry1} \gets \textit{ntry1} + 1$
-		%~ \EndWhile
-		%~ \State \textbf{return} failure
-	%~ \EndFunction
-%~ \end{algorithmic}
-%~ \label{alg:generate}
-%~ \end{algorithm}
-
-%To summarize, in this section we define a class of spaces $C_{reach}^s$.We  propose to use RB-PRM, a sampling based motion planner, to compute guide trajectories entirely contained in $C_{reach}^s$. Such trajectories provide a guaranty that a robot will be able to create contacts along them with a probability depending on a parameter $s$. 
-

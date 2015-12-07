@@ -143,17 +143,26 @@ The quadruped robot is given the task to cross a rubble composed of bricks rotat
 stability of the HyQ robot, and results in more contact switches, in exchange for safety. The path planning time is higher than for the previous HRP-2 robots due to the constraint that the 4 reachable workspace of all legs must
 collide with the environment at all times. Again, the computed time remains however interactive.
 
-\subsubsection{HyQ -- Obstacle race:}
+\subsubsection{HyQ -- Obstacle race (Figure~\ref{fig:hyq_bridge} and~\ref{fig:hyq_obs}):}
 In this long scene, HyQ is first required to cross a 55 cm large hole; then, to cross a narrow "bridge", only large of 25 cm,
-while maintaining equilibrium
+while maintaining equilibrium.
 
-%~ \begin{figure*}
-  %~ \centering
-  %~ \includegraphics[width=0.5\linewidth]{figures/stair}
-  %~ \caption{
-           %~ HRP-2 in the steep stair climbing scenario. }
-		   %~ \label{fig:stair_robust}
-%~ \end{figure*}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.4\linewidth]{figures/hyq_bridge}
+  \caption{
+           HyQ crossing a narrow bridge. }
+		   \label{fig:hyq_bridge}
+\end{figure}
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.5\linewidth]{figures/hyq_obs}
+  \caption{
+           Crossing a hole contact sequence for HyQ ($b_0 > 4$). }
+		   \label{fig:hyq_obs}
+\end{figure*}
+
 
 
 \noindent\textbf{Contacts involved:} All (the 4 legs).
@@ -167,7 +176,7 @@ the bridge must be approached with the right angle.
 This can be seen in Figure (TODO), where several feet repositionning are required to cross both obstacles (although the video shows this best).
 The planner however suceeds in finding a feasible sequence in the end, again with interactive computation times.
 
-\subsubsection{HRP-2 -- Path replanning(Figure~\ref{figures/replanning}):}
+\subsubsection{HRP-2 -- Path replanning(Figure~\ref{fig:replanning}):}
 In this long scene, HRP-2 plans a path through through several obstacles. the scene is edited during the execution of the motion: a stair is added,
 some stepping stones are removed, and part of the final staircase is deleted. All these modifications involve replanning.
 
@@ -215,7 +224,7 @@ rate obtained for each scenario.
 
 Table TODO summarizes the performance measurement obtained, in terms of computation times.
 
-For each scenario, one can observe that average computation time for one single step is largely below the second,
+For each scenario, one can observe that the average computation time for one single step is largely below the second,
 thus allowing to consider interactive applications. In some cases such as the stair climbing, this computation time is actually negligeable. 
 Considering the repartition of the computation time, it appears that the majority of the time is spent performing inverse kinematics.
 This is not surprising considering the number of calls to the methods: IK is used intensively to maintain contact continuity between two postures; 
@@ -228,7 +237,7 @@ From a pragmatic point of view, these results allow us to claim that our approac
 Indeed, the advantage of the framework is that when the contact generation fails, it does so rapidly, which allows us to replan a new contact sequence also rapidly with 
 a reasonable chance of success.
 
-\begin{table}[b]
+\begin{table*}
 \centering
 \begin{tabular}{ l | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | c}
   &  Generate RB-PRM (offline) & Generating the contact sequence & Number of contact states\\
@@ -242,21 +251,5 @@ a reasonable chance of success.
 \caption{\textbf{Average time} (in seconds) spent in RB-PRM generation, and the online generation of the contact sequence.}
 \label{tab:requestime}
 \quad
- \end{table}
+ \end{table*}
 
- We observe that many contacts are required for the insect, which can be explained by its restricted range of motion.
- The time spent generating the navigation graph is about one minute. The time spent in generating the graph of the climbing scenario,
- despite the relatively open environment, is explained by the additional restrictions imposed on the reachability condition.
- The difficulty to find a balanced configuration essentially influences the time spent generating the contacts.
- 
-The number of contacts in the sequence gives a rough estimation of its duration in seconds. Except for the robots crawling out of the truck, all the contact generation are real-time. Additionaly to the quality of the generated trajectories shown in the video, these computation times are a major practical achievement. 
-
-
-%~ \subsection{Early results: manipulating scenario in zero gravity}
-%~ In this scenario, we suggest an extension of our framework to manipulation.
-%~ We consider the task of rotating a pen using a robotic hand.
-%~ A start and goal configurations for the pen are expressed in the world coordinate system.
-%~ The problem is automatically reformulated into an equivalent motion planning one for the robotic hand, by expressing its start
-%~ and goal configurations in the coordinate system of the pen. In other words, for the planning the pen is considered as a static object, and a feasible motion for the hand
-%~ is computed along the pen. Figure {penrot} presents the results obtained with this approach.
-%~ Additional work is required to generate feasible manipulation motions.
