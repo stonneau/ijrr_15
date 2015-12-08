@@ -1,0 +1,17 @@
+\section{Source code of our planner}
+\label{app:hpp}
+Our planner is implemented using the Humanoid Path Planner (HPP) software.
+HPP is an open source motion planning framework developed by the Gepetto team at LAAS-CNRS, that can be found at \url{http://projects.laas.fr/gepetto/index.php/Software/Main}.
+The HPP modules implement the standard tools and algorithms used in motion planning,
+such as the Bi-RRT planner from which RB-RRT is derived.
+
+The robot models used in our experiments are described using the standard urdf file format, that is 
+compatible with HPP.
+
+Our implementation of the planner is also open source, and can be found at \url{https://github.com/stonneau/hpp-rbprm}. 
+Contrary to the mature HPP, at the time of submitting this article,
+our planner is not officialy released, mostly for lack of a complete documentation and a tutorial.
+
+However a reader familiar with HPP should be able to use the library.
+Our goal is to make our code useful for the community, and we are working on releasing a stable 
+version of our planner as soon as possible.

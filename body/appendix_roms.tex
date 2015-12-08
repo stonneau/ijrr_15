@@ -2,7 +2,54 @@
 \label{app:rom}
 
 In this Appendix,
-we detail our generic method to generate the volumes $W$ used
-in RB-RRT; with the example of HRP-2.
+we detail our method to generate the volumes $W$ used
+in RB-RRT, with the example of HRP-2.
 
+We consider the robot HRP-2, and proceed to the decomposition 
+of its kinematic chain into four limbs $R^k$.
+The arms are connected to the shoulders, and the legs to the root.
+The obtained volumes $W$ are shown in Figure~\ref{fig:hrp2_w}.
+
+\begin{figure}
+\centering
+  \begin{overpic}[width=1\linewidth]{figures/hrp2_w}
+	\end{overpic}
+\caption{The $W$ volumes computed for HRP-2. The red shapes are $W^0$. The green shapes represent the $W^k$.}
+		   \label{fig:hrp2_w}
+\end{figure}
+
+\subsection{Step 1: computing the reachable workspace $W^k$ of a limb}
+
+
+To generate a volume $W^k$, we proceed as follows:
+\begin{enumerate}
+\item Generate randomly $N$ valid limb configurations for $R^k$, for $N$ really large (say $100000$);
+\item For each configuration, store the 3D position of the end effector joint relatively to the root of $R^k$; then compute the convex hull of the resulting point cloud;
+\item The resulting polytope can contain a very large number of faces. A last step is thus to simplify it in a conservative way with the blender decimate tool (\url{http://wiki.blender.org/index.php/Doc:2.4/Manual/Modifiers/Generate/Decimate}). For HRP-2 we apply the operator with a ratio of $0.06$, resulting in a polytope of 38 faces for the arms and the legs.
+\end{enumerate}
+  
+\begin{figure}
+\centering
+  \begin{overpic}[width=1\linewidth]{figures/roms}
+	\end{overpic}
+\caption{Different approximations of the range of motion of the right arm HRP-2. Left: non convex-hull, computed with the powercrust algorithm~\citep{Amenta:2001:PC:376957.376986}. Middle:
+convex hull of the reachable workspace. Right: Simplified hull used in our experiments.}
+		   \label{fig:hrp2_roms}
+\end{figure}
+
+Figure~\ref{fig:hrp2_roms} illustrate the obtained $W^k$ for HRP-2.
+Regarding the procedure, we can see that step 2 is conservative (Figure~\ref{fig:hrp2_roms}--right), which 
+is acceptable, especially because the lost set essentially relates to configurations close to singularity (they are close to the boundaries of the reachable workspace). We choose again to be less complete
+but more efficient, regarding the number of collision tests to be performed by RB-RRT.
+In step 1 on the other hand, selecting the convex hull (Figure~\ref{fig:hrp2_roms}--middle) instead of a minimum encompassing shape (Figure~\ref{fig:hrp2_roms}--left) may introduce false positives.
+Concretely, because the false positive set intersects with $W^0$, the scaling volume of the robot torso, the induced error is compensated,
+as verified by the date of Table~\ref{tab:requestpercent}.
+
+\subsection{Step 2: computing the trunk scaling workspace $W^0$ of the robot}
+To define the volume $W^0$ of HRP-2, we proceed in an empirical manner.
+First, we compute the bounding boxes of the robot trunk, head, and upper legs (Figure~\ref{fig:hrp2_w} -- red shapes).
+Then, we perform a scaling of these boxes by a factor $s$. For different values of $s$, we verify the true feasibility condition:
+For a large number of configurati
+ons that verify the reachability condition, we try to generate contact configurations. We plot 
+the success rates obtained depending on $s$ (Figure~\ref{hrp2_w}). We then choose the minimal satisfying value of $s$.
 

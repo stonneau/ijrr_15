@@ -84,7 +84,7 @@ the previous contacts, and is in static equilibrium.
 \subsubsection{Maintaining a contact in the sequence.}
 
 Figure~\ref{fig:break_contact} illustrates the contact persistence strategy.
-If possible, a limb in contact at time $i-1$ remains in contact at $i$. The contact is broken if an inverse kinematics solver fails to find a collision free limb configuration that satisfies joint limits. The solver is directy provided by the Hpp software.
+If possible, a limb in contact at time $i-1$ remains in contact at $i$. The contact is broken if an inverse kinematics solver fails to find a collision free limb configuration that satisfies joint limits. The solver is directy provided by the HPP software.
 
 If the solver fails, the contact is broken and a collision free configuration is assigned to the limb.
 If more than one contacts are broken for a single step, intermediate steps are added to reposition, one at a time,

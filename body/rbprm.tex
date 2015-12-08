@@ -92,6 +92,6 @@ that drawn configurations and associated local paths are valid.
 
 However, to improve the sampling efficiency while remaining probabilistically complete, we bias the sampling process to generate near obstacle configurations, similarly to~\cite{Amato98choosinggood}.
 First, a configuration is set to a random point on the surface of one randomly chosen obstacle. The root location is then translated and rotated randomly until the reachability condition is satisfied.
-Our current implementation of these modifications is based on the Bi-RRT planner provided by the hpp software.
+Our current implementation of these modifications is based on the Bi-RRT planner provided by the HPP software.
 
 Thanks to this small set of modifications, the high dimensional truly feasible path planning problem is reduced to a standard geometry and collision checking problem, in a much lower dimension (6 for Hyq, 8 for HRP-2 that has a flexible torso). In so doing we make the problem tractable for sampling based approaches, with extremely efficient computation times.
