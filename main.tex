@@ -15,6 +15,11 @@
 
 \input{./math_commands.tex}
 
+\newcommand{\commentt}[2]{\textcolor{#1}{\textbf{\textit{[#2]}}}} 	% make sure no comments left in the paper
+%\newcommand{\commentt}[2]{}							% using this line rather than the previous one you remove all comments
+\newcommand{\adnote}[1]{\commentt{red}{AD: #1}}
+\newcommand{\nmnote}[1]{\commentt{OliveGreen}{NM: #1}}
+
 \usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=red,urlcolor=red]{hyperref}
 
 \newcommand\BibTeX{{\rmfamily B\kern-.05em \textsc{i\kern-.025em b}\kern-.08em
