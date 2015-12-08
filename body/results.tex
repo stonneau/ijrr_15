@@ -218,18 +218,23 @@ Although we do not address the hard issue of accounting for rolling motions, the
  
  
 \subsection{Performance analysis} \label{sec:perf}
-To analyze performance, for each considered scenario, we ran the simulation 100 times.
+To analyze performance, for each considered scenario, we ran the simulation 1000 times.
 We measured the computation time spent in each aspect of the algorithm, and also analyzed the success
 rate obtained for each scenario.
 
 Table TODO summarizes the performance measurement obtained, in terms of computation times.
 
+
+\subsection{Computation times}
 For each scenario, one can observe that the average computation time for one single step is largely below the second,
 thus allowing to consider interactive applications. In some cases such as the stair climbing, this computation time is actually negligeable. 
 Considering the repartition of the computation time, it appears that the majority of the time is spent performing inverse kinematics.
 This is not surprising considering the number of calls to the methods: IK is used intensively to maintain contact continuity between two postures; 
 it is also applied every time a new candidate needs to be evaluated. However regarding state of the art IK solutions, we believe there is room
 for improving the performances of the algorithm.
+
+\subsection{Success rates times}
+TODO contact generation 95 %.
 
 The other important piece of information to consider is the success rate obtained for each scenario.
 With the exception of the truck egress scenario, this rate is really high.
@@ -251,5 +256,5 @@ a reasonable chance of success.
 \caption{\textbf{Average time} (in seconds) spent in RB-PRM generation, and the online generation of the contact sequence.}
 \label{tab:requestime}
 \quad
- \end{table*}
+\end{table*}
 
