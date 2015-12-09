@@ -35,7 +35,7 @@ A companion video available at TODO \url{http://youtu.be/LmLAHgGQJGA} (anonymous
 
 % \subsubsection*{Truck egress (Figure~\ref{res_truck_pres} and Figure~\ref{res_truck_bd}) -- Humanoid and insectoid robots.}
 %\subsubsection*{Truck egress -- Humanoid and insectoid robots (Figure~\ref{res_truck_bd}).}
-\subsubsection{HRP-2 -- Steep staircase (Figure~\ref{fig:standing}):}
+\subsubsection{HRP-2 -- Steep staircase (Figure~\ref{fig:stair_robust}):}
 
 \begin{figure*}
   \centering
@@ -63,7 +63,7 @@ The geometry of the environment is easily addressed by our planner, and the cont
 
 Again, the interpolation motion between the contact stances is out of the scope of this paper. However it should be noted that the computed plan in this scenario has been executed successfully on the robot~\citep{Carpentier2016}.
 
-\begin{figure}[h!]
+\begin{figure}
   \centering
   %~ \includegraphics[width=0.6\linewidth]{figures/stair_robust}
   \begin{overpic}[width=0.5\linewidth]{figures/stair_robust}
@@ -198,12 +198,12 @@ some stepping stones are removed, and part of the final staircase is deleted. Al
 In the video, the footsteps indicating the contact sequence appear at the average speed of their computation (including the guide path planning).
 
 
-\subsubsection{3-fingered hand -- Manipulation of a pen (Figure~\ref{figures/penrot}):}
+\subsubsection{3-fingered hand -- Manipulation of a pen (Figure~\ref{fig:penrot}):}
 This scenario is proposed to illustrate the genericity of our approach: we consider a manipulation task for a robotic hand and use
-our contact planner to compute a guide trajectory for the fingers, considered as effectors (Figure \ref{fig:penrot}).
+our contact planner to compute a guide trajectory for the fingers, considered as effectors (Figure~\ref{fig:penrot}).
 Although we do not address the hard issue of accounting for rolling motions, the planner is able to compute the shown sequences, this in less than 5 seconds.
 
-\begin{figure*}[t]
+\begin{figure*}
 \centering
   \begin{overpic}[width=1\linewidth]{figures/penrot}
 	\end{overpic}
@@ -218,38 +218,60 @@ Although we do not address the hard issue of accounting for rolling motions, the
  
  
 \subsection{Performance analysis} \label{sec:perf}
-To analyze performance, for each considered scenario, we ran the simulation 100 times.
+To analyze performance, for each considered scenario, we ran the simulation 1000 times.
 We measured the computation time spent in each aspect of the algorithm, and also analyzed the success
 rate obtained for each scenario.
 
-Table TODO summarizes the performance measurement obtained, in terms of computation times.
+\subsection{Computation times}
+Table~\ref{tab:requestime} summarizes the performance measurement obtained, in terms of computation times.
 
-For each scenario, one can observe that the average computation time for one single step is largely below the second,
-thus allowing to consider interactive applications. In some cases such as the stair climbing, this computation time is actually negligeable. 
+\begin{table*}
+\centering
+\begin{tabular}{ l | >{\centering\arraybackslash}m{60pt} | >{\centering\arraybackslash}m{60pt} | >{\centering\arraybackslash}m{60pt} | >{\centering\arraybackslash}m{60pt} | >{\centering\arraybackslash}m{60pt} | c}
+  &  Complete guide generation & Collision & Static equilibrium & ik  & Total generation time & Time per step\\
+ \hline
+   Steep stairs & 22 -- \textbf{33} --  76 & 1 --  \textbf{4} -- 61   & 22 --  \textbf{52} -- 534 & 108 --  \textbf{1069} -- 10550 & 267 --  \textbf{1337} -- 11484 & \textbf{66} \\
+   %Standing up & $70$ & 23 & 48\\
+ \end{tabular}
+\caption{minimum, \textbf{average} and worst time (in ms) spent in the generation process for each scenario and each critical part of the generation process. The last
+column indicates the average time necessary to compute one contact transition.}
+\label{tab:requestime}
+\quad
+\end{table*}
+
+In most scenarios, one can observe that the average computation time for one single step is largely below the second,
+thus allowing to consider interactive applications. 
 Considering the repartition of the computation time, it appears that the majority of the time is spent performing inverse kinematics.
 This is not surprising considering the number of calls to the methods: IK is used intensively to maintain contact continuity between two postures; 
 it is also applied every time a new candidate needs to be evaluated. However regarding state of the art IK solutions, we believe there is room
 for improving the performances of the algorithm.
 
-The other important piece of information to consider is the success rate obtained for each scenario.
-With the exception of the truck egress scenario, this rate is really high.
-From a pragmatic point of view, these results allow us to claim that our approach is the best current compromise between completeness and efficiency:
+\subsection{Success rates}
+Table~\ref{tab:requestpercent} summarizes the success rates obtained for each scenario.
+\begin{table*}
+\centering
+\begin{tabular}{ l | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | c}
+  &  Path planning & True feasibility & Kinematic failure & Equilibrium failure \\
+ \hline
+   Steep stairs & 100\%  & 99.5\% & 0.11\% & 0.39\% \\
+   Standing up & 100\% & 89\% & 7\% & 4\% \\
+   Truck egress & \% & \% & \% &  \% \\
+   Rubble & \% & \% & \% & \% \\
+   Obstacle race & \% & \% & \% & \% \\
+ \end{tabular}
+\caption{Success rates for each scenario. The first value indicates the percentage of sucessfull complete path plannings for 1000 tests; The second value
+indicates the percentage of truly feasible root configurations: considering each limb individually, indicates the percentage of root placements of the guide trajectory that
+led to a feasible contact. Kinematic failure is the percentage of contact generations that failed because no collision-free candidate was found. Equilibrium failure is the percentage of contact
+generations that failed because no candidate respected the static equilibrium condition.}
+\label{tab:requestpercent}
+\quad
+\end{table*}
+
+We observe that, as expected, our planner does not succeed systematically, because of the approximations made in the implementation
+of our theoritical formulation. 
+From a pragmatic point of view, regarding the computation times, we claim that our approach is the best current compromise between completeness and efficiency:
 Indeed, the advantage of the framework is that when the contact generation fails, it does so rapidly, which allows us to replan a new contact sequence also rapidly with 
 a reasonable chance of success.
 
-\begin{table*}
-\centering
-\begin{tabular}{ l | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | c}
-  &  Generate RB-PRM (offline) & Generating the contact sequence & Number of contact states\\
- \hline
-   Truck egress (humanoid) & $ 73 $ & 15 & 10 \\
-   Truck egress (insectoid) & $70$ & 23 & 48\\
-   Climbing (humanoid)& $25$ &  5 & 15\\
-   Climbing (insectoid)  & $ 21 $ & 27 & 51\\
-   Crouching (humanoid)& $5$ & 6 & 22 \\
- \end{tabular}
-\caption{\textbf{Average time} (in seconds) spent in RB-PRM generation, and the online generation of the contact sequence.}
-\label{tab:requestime}
-\quad
- \end{table*}
+
 
