@@ -1,14 +1,15 @@
- \section{Results}
+% !TEX root =  ../main.tex
+\section{Results}
 \label{sec:results}
 In this Section we present some of the results obtained with our planner. The complete sequences computed are shown in the companion video, TODO.
-Specifically, we demonstrate the planner for two really different robots, in a large vartiety of environments: the humanoid HRP-2 and the quadriped Hyq.
-For each scenario we indicate the heuristics chosen. We also provide a performance analysis, that shows that the planner is compatible with interactive applications,
+Specifically, we demonstrate the planner for two really different robots, in a large variety of environments: the humanoid HRP-2 and the quadruped HyQ~\cite{Semini}.
+For each scenario we indicate the chosen heuristics. We also provide a performance analysis, which shows that the planner is compatible with interactive applications,
 and present the success rates obtained in each scenario.
-We also demonstrate the interest of our robustness criterion in the different computed poses.
+Moreover, we demonstrate the interest of our robustness criterion in the different computed poses.
 Finally, a last example suggests possible applications to dextrous manipulation.
 
-In our ISRR conference paper~\citep{tonneauisrr15}, additional results are demonstrated with various virtual avatars (Figure~\ref{fig:robots_old}).
-In this extension we choose to focus on results obtained with actual robots. We invite the interested reader to watch the ISRR video\endnote{https://www.youtube.com/watch?v=LmLAHgGQJGA}, and 
+In our previous work~\citep{tonneauisrr15} additional results are demonstrated with various virtual avatars (Fig.~\ref{fig:robots_old}).
+In this extension we choose to focus on \deleted{results obtained with} actual robots. We invite the interested reader to watch the ISRR video\endnote{https://www.youtube.com/watch?v=LmLAHgGQJGA}, and 
 to refer to the previous paper for a discussion on these results.
 
 \begin{figure}[t]
@@ -45,18 +46,18 @@ A companion video available at TODO \url{http://youtu.be/LmLAHgGQJGA} (anonymous
 		   \label{fig:stair_robust}
 \end{figure*}
 
-The goal is to cross a set of stairs of a height of 20 cm. This height requires HRP-2 to use a ramp to be able to perform the task.
+The goal is to climb three 20-cm high steps. This height requires HRP-2 to use a ramp to \deleted{be able to} perform the task.
 
-\noindent\textbf{Contacts involved:} Both feet and right arm.
+\noindent\textbf{Contacts involved:} \deleted{Both} Feet and right arm.
 
 \noindent\textbf{Heuristics:} The extended manipulability $h_w$ is chosen for the feet; $h_{EFORT}$ is chosen for the right arm.
-Regarding equilibrium, the video demonstrates two sequences computed for two different treshold values of $b_0$: $0$ and $2$ (Figure~\ref{fig:stair_robust}). 
+Regarding equilibrium, the video demonstrates two sequences computed for two different threshold values of $b_0$: $0$ and $2$ (Fig.~\ref{fig:stair_robust}). 
 
 \noindent\textbf{Observations:}
-This scenario illustrates best the importance of the equilibrium robustness criterion.
-With a robust approach, more states are required to reach the last step (15 against 13 in average).
-However, when the last step is reached by both feet, in the non robust case, the contacts are extremely close to 
-the cone limits, and we believe this can be seen visually (Figure~\ref{fig:stair_comp}).
+This scenario illustrates best the importance of the equilibrium-robustness criterion.
+With a robust approach, more states are required to reach the last step (15 \replaced{rather than}{against} 13 in average).
+However, when the last step is reached by both feet, in the nonrobust case the contacts are extremely close to 
+the cone limits\deleted{, and we believe this can be seen visually} (Fig.~\ref{fig:stair_comp}).
 
 
 The geometry of the environment is easily addressed by our planner, and the contact planning is several times faster than real time in this scenario.
@@ -79,9 +80,9 @@ Again, the interpolation motion between the contact stances is out of the scope 
 		   \label{fig:stair_comp}
 \end{figure}
 
-\subsubsection{HRP-2 -- Standing up (Figure~\ref{fig:standing}):}
-From a bent configuration, a standing up motion is computed in a cluttered environment.
-The resulting motion involves using a wall as support, and crossing a 25 cm high stair.
+\subsubsection{HRP-2 -- Standing up (Fig.~\ref{fig:standing}):}
+From a bent configuration, a standing-up motion is computed in a cluttered environment.
+The resulting motion involves using a wall as support, and climbing a 25-cm high step.
 
 \begin{figure*}
   \centering
@@ -94,16 +95,16 @@ The resulting motion involves using a wall as support, and crossing a 25 cm high
 
 \noindent\textbf{Contacts involved:} All (both feet and hands).
 
-\noindent\textbf{Heuristics:} $h_w$ is used for the feet, $h_{EFORT}$ is used for the hands.
+\noindent\textbf{Heuristics:} $h_w$ \deleted{is used} for the feet, $h_{EFORT}$ \deleted{is used} for the hands.
 
-\noindent\textbf{Observations:} The scenario illustrates well the acyclic aspect of the planning. For instance, in the 4 first frames of Figure~\ref{fig:standing}, we can see that the right foot
+\noindent\textbf{Observations:} The scenario illustrates well the acyclic aspect of the planning. For instance, in the four first frames of Fig.~\ref{fig:standing}, we can see that the right foot
 is moved twice, with the left foot in between, before the configuration allows HRP-2 to move its hand.
 Because the contacts are tried in a FIFO manner, the fact that the output contact sequence is acyclic shows that a cyclic approach (with a finite state machine for instance) is not sufficient
-for the computed trajectory. The reason for this is not reachability, but equilibrium. The planning is slower than for the stair scenario (because the contact generation fails more),
-though it remains compatible with interactive performances.
+for the computed path. The reason for this is not reachability, but equilibrium. The planning is slower than for the stair scenario (because the contact generation fails more),
+though it remains compatible with interactive performances. \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
 
-\subsubsection{HRP-2 -- Truck egress (Figure~\ref{fig:TODO}):}
-HRP-2 stands half sitted in a truck, and is required to exit through the front window.
+\subsubsection{HRP-2 -- Truck egress (Fig.~\ref{fig:TODO}):}
+HRP-2 stands half seated in a truck, and \replaced{is required to}{it must} \replaced{get out}{exit} through the front window.
 
 %~ \begin{figure*}
   %~ \centering
@@ -116,14 +117,14 @@ HRP-2 stands half sitted in a truck, and is required to exit through the front w
 
 \noindent\textbf{Contacts involved:} All (both feet and hands).
 
-\noindent\textbf{Heuristics:} $h_w$ is used for the feet, $h_{EFORT}$ is used for the hands.
+\noindent\textbf{Heuristics:} $h_w$ \deleted{is used} for the feet, $h_{EFORT}$ \deleted{is used} for the hands.
 
-\noindent\textbf{Observations:} This scenario demonstrates the ability of the planner to compute a path in an extremely constrained environment. In this case,
+\noindent\textbf{Observations:} This scenario demonstrates the ability of the planner to compute a path in an extremely-constrained environment. In this case,
 the scenario is not always real time (TODO or is it ?): while the planner is often able to compute a guide path rapidly, in the worst case up to one minute can be spent
 in the planning.
 
 
-\subsubsection{HyQ -- Darpa style rubble (Figure~\ref{fig:darpa})}
+\subsubsection{HyQ -- Darpa-style rubble (Fig.~\ref{fig:darpa})}
 The quadruped robot is given the task to cross a rubble composed of bricks rotated at different angles and directions.
 
 \begin{figure*}
@@ -137,15 +138,15 @@ The quadruped robot is given the task to cross a rubble composed of bricks rotat
 
 \noindent\textbf{Contacts involved:} All (the 4 legs).
 
-\noindent\textbf{Heuristics:} $h_w$ is used for the all legs. The robustness treshold $b_0$ is set to $20$.
+\noindent\textbf{Heuristics:} $h_w$ \deleted{is used} for all legs. The robustness threshold $b_0$ is set to $20$.
 
 \noindent\textbf{Observations:} In this context, setting up a really important minimum value for $b_0$ is possible due to the high
-stability of the HyQ robot, and results in more contact switches, in exchange for safety. The path planning time is higher than for the previous HRP-2 robots due to the constraint that the 4 reachable workspace of all legs must
-collide with the environment at all times. Again, the computed time remains however interactive.
+stability of the HyQ robot, and results in more contact switches, in exchange for safety. The path-planning time is higher than for the previous HRP-2 robots due to the constraint that the 4 reachable workspace of all legs must
+collide with the environment at all times. \adnote{Why do not relax this constraint and require only 3 legs?} Again, the computed time remains however interactive.
 
 \subsubsection{HyQ -- Obstacle race (Figure~\ref{fig:hyq_bridge} and~\ref{fig:hyq_obs}):}
-In this long scene, HyQ is first required to cross a 55 cm large hole; then, to cross a narrow "bridge", only large of 25 cm,
-while maintaining equilibrium.
+In this long scene, HyQ is first required to cross a 55-cm large hole; then, to cross a narrow "bridge",  only 25-cm large\deleted{,
+while maintaining equilibrium}.
 
 \begin{figure}
   \centering
@@ -167,18 +168,18 @@ while maintaining equilibrium.
 
 \noindent\textbf{Contacts involved:} All (the 4 legs).
 
-\noindent\textbf{Heuristics:} $h_w$ is used for the all legs. The robustness treshold $b_0$ is set to $4$.
+\noindent\textbf{Heuristics:} $h_w$ \deleted{is used} for all legs. The robustness threshold $b_0$ is set to $4$.
 
-\noindent\textbf{Observations:} Despite the apparent simplicity of the scene, this scenario is the harder to compute for our planner.
-While finding a guide path above the hole is easy for the planner, finding a relevant sequence of contacts that remain in equilibrium is not trivial.
-Secondly, the narrow bridge is hard both for the planner and the contact generator: To make sure that equilibrium is preserved along the traversal,
+\noindent\textbf{Observations:} Despite the apparent simplicity of the scene, this scenario is the hardest \deleted{to compute} for our planner.
+While finding a guide path above the hole is easy for the planner, finding a \deleted{relevant} sequence of contacts that \replaced{allows for}{remain in} equilibrium is not trivial.
+Second, the narrow bridge is hard both for the planner and the contact generator: to make sure that equilibrium is preserved along the traversal,
 the bridge must be approached with the right angle.
-This can be seen in Figure (TODO), where several feet repositionning are required to cross both obstacles (although the video shows this best).
-The planner however suceeds in finding a feasible sequence in the end, again with interactive computation times.
+This can be seen in Fig.~(TODO), where several feet \replaced{rearrangements}{repositioning} are required to cross both obstacles (although the video shows this best).
+The planner however succeeds in finding a feasible sequence in the end, again with interactive computation times.
 
 \subsubsection{HRP-2 -- Path replanning(Figure~\ref{fig:replanning}):}
 In this long scene, HRP-2 plans a path through through several obstacles. the scene is edited during the execution of the motion: a stair is added,
-some stepping stones are removed, and part of the final staircase is deleted. All these modifications involve replanning.
+some stepping stones are removed, and part of the final staircase is deleted. All these modifications \replaced{demands}{involve} replanning.
 
 
 \begin{figure}
@@ -190,18 +191,18 @@ some stepping stones are removed, and part of the final staircase is deleted. Al
 		   \label{fig:replanning}
 \end{figure}
 
-\noindent\textbf{Contacts involved:} Both feet and the right arm.
+\noindent\textbf{Contacts involved:} \replaced{F}{Both f}eet and the right arm.
 
-\noindent\textbf{Heuristics:} $h_w$ is used for the all legs. $h_{EFORT}$ is used for the right arm. The robustness treshold is set to $2$.
+\noindent\textbf{Heuristics:} $h_w$ \deleted{is used} for all legs. $h_{EFORT}$ \deleted{is used} for the right arm. The robustness threshold is set to $2$.
 
 \noindent\textbf{Observations:} This scenario is designed to illustrate concretely the computation times of the planner.
-In the video, the footsteps indicating the contact sequence appear at the average speed of their computation (including the guide path planning).
+In the video, the footsteps indicating the contact sequence appear at the average speed of their computation (including the guide-path planning).
 
 
-\subsubsection{3-fingered hand -- Manipulation of a pen (Figure~\ref{fig:penrot}):}
-This scenario is proposed to illustrate the genericity of our approach: we consider a manipulation task for a robotic hand and use
-our contact planner to compute a guide trajectory for the fingers, considered as effectors (Figure~\ref{fig:penrot}).
-Although we do not address the hard issue of accounting for rolling motions, the planner is able to compute the shown sequences, this in less than 5 seconds.
+\subsubsection{3-fingered hand -- Manipulation of a pen (Fig.~\ref{fig:penrot}):}
+This scenario is proposed to illustrate the generality of our approach: we consider a manipulation task for a robotic hand and use
+our contact planner to compute a guide trajectory for the fingers, considered as effectors (Fig.~\ref{fig:penrot}).
+Although we do not address the hard issue of accounting for rolling motions, the planner is able to compute the shown sequences\deleted{, this} in less than 5 seconds.
 
 \begin{figure*}
 \centering
@@ -214,7 +215,7 @@ Although we do not address the hard issue of accounting for rolling motions, the
  
 \noindent\textbf{Contacts involved:} Three finger-tips.
 
-\noindent\textbf{Heuristics:} $h_{EFORT}$ is used for the all fingers.
+\noindent\textbf{Heuristics:} $h_{EFORT}$ \deleted{is used} for all fingers.
  
  
 \subsection{Performance analysis} \label{sec:perf}
@@ -241,9 +242,9 @@ column indicates the average time necessary to compute one contact transition.}
 
 In most scenarios, one can observe that the average computation time for one single step is largely below the second,
 thus allowing to consider interactive applications. 
-Considering the repartition of the computation time, it appears that the majority of the time is spent performing inverse kinematics.
+Considering the repartition of the computation time, it appears that \replaced{most}{the majority} of the time is spent performing inverse kinematics.
 This is not surprising considering the number of calls to the methods: IK is used intensively to maintain contact continuity between two postures; 
-it is also applied every time a new candidate needs to be evaluated. However regarding state of the art IK solutions, we believe there is room
+it is also applied every time a new candidate needs to be evaluated. However regarding state-of-the-art IK solutions, we believe there is room
 for improving the performances of the algorithm.
 
 \subsection{Success rates}
@@ -268,10 +269,7 @@ generations that failed because no candidate respected the static equilibrium co
 \end{table*}
 
 We observe that, as expected, our planner does not succeed systematically, because of the approximations made in the implementation
-of our theoritical formulation. 
+of our theoretical formulation. 
 From a pragmatic point of view, regarding the computation times, we claim that our approach is the best current compromise between completeness and efficiency:
-Indeed, the advantage of the framework is that when the contact generation fails, it does so rapidly, which allows us to replan a new contact sequence also rapidly with 
+Indeed, the advantage of the framework is that when the contact generation fails, it does so rapidly, which allows us to rapidly replan a new contact sequence with 
 a reasonable chance of success.
-
-
-

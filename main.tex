@@ -17,8 +17,19 @@
 
 \newcommand{\commentt}[2]{\textcolor{#1}{\textbf{\textit{[#2]}}}} 	% make sure no comments left in the paper
 %\newcommand{\commentt}[2]{}							% using this line rather than the previous one you remove all comments
-\newcommand{\adnote}[1]{\commentt{red}{AD: #1}}
+\newcommand{\adnote}[1]{\commentt{blue}{AD: #1}}
 \newcommand{\nmnote}[1]{\commentt{OliveGreen}{NM: #1}}
+
+% Another method to track changes
+% Examples of usage:
+% - This is \added[id=per,remark={we need this}]{new} text.
+% - This is \deleted[id=per,remark=obsolete]{unnecessary}text.
+% - This is \replaced[id=per]{nice}{bad} text.
+% To print the list of change use: \listofchanges
+\usepackage{changes}	% use this for the working version
+%\usepackage[final]{changes} % use this for the final version
+\definechangesauthor[name={Andrea Del Prete}, color=orange]{adp}
+
 
 \usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=red,urlcolor=red]{hyperref}
 

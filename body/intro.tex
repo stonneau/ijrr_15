@@ -53,15 +53,15 @@ This paper presents a pragmatic approach to break the complexity of multi-contac
 we believe that the separation between the \adnote{generation of the} guide trajectory and the contact sequence is the most promising direction \citep{DBLP:conf/iser/EscandeKMG08}.
 However, this direction raises two theoretical questions that remain to be solved, or even to be properly formulated:
 \begin{itemize}
-\item The guide trajectory must satisfy a property guaranteeing \adnote{replace 'satisfy a property guaranteeing' with 'guarantee'} the existence of a contact sequence to actuate it\endnote{This property is related to the controllability of the root actuated by the contact forces, but for discrete bounded properties.}. We call this property \textit{true feasibility}. This property has not been studied yet; the only way to validate a waypoint in the trajectory is to explicitly compute the contacts, which is computationally not reasonable \citep{Bouyarmane2009}, unless the scenario is limited to cyclic, quasi-flat cases \citep{zucker2010optimization}.
-\item There is an infinite combination \adnote{There are infinite combinations} of possible contact sequences for a given root trajectory. The selection of one particular contact sequence with interesting properties (minimum number of contact change, robustness, efficiency or naturalness) has been studied for cyclic cases \citep{Hauser06usingmotion}, but has not been efficiently applied to cluttered environments (\citeauthor{bouyarmane:lirmm-00777727, DBLP:conf/iser/EscandeKMG08} mostly randomly picked one contact sequence, leading to possibly very tedious contact sequences \adnote{repetition of 'contact sequence'}).
+\item The guide trajectory must satisfy a property guaranteeing \adnote{replace 'satisfy a property guaranteeing' with 'guarantee'} the existence of a contact sequence to actuate it\adnote{Are you sure that you wanna use an 'endnote' here rather than a 'footnote'?}\endnote{This property is related to the controllability of the root actuated by the contact forces, but for discrete bounded properties. \adnote{not clear what 'discrete bounded properties' means}}. We call this property \textit{true feasibility}. This property has not been studied yet; the only way to validate a waypoint in the trajectory is to explicitly compute the contacts\adnote{ forces?}, which is computationally not reasonable \citep{Bouyarmane2009}, unless the scenario is limited to cyclic, quasi-flat cases \citep{zucker2010optimization}.
+\item There is an infinite combination \adnote{There are infinite combinations} of possible contact sequences for a given root trajectory. The selection of one particular contact sequence with interesting properties (minimum number of contact changes, robustness, efficiency or naturalness) has been studied for cyclic cases \citep{Hauser06usingmotion}, but has not been efficiently applied to cluttered environments (\citeauthor{bouyarmane:lirmm-00777727, DBLP:conf/iser/EscandeKMG08} mostly randomly picked one contact sequence, leading to possibly very tedious contact sequences \adnote{repetition of 'contact sequence'}).
 \end{itemize}
 
 By tackling these issues, our method proposes contributions to both problems \Pa and \Pb.
 For each problem, we introduce an original formulation of the related theoretical issues.
 Then, we propose a concrete implementation of the solution, where the constraints of the problem are relaxed in favor of efficiency.
-The relaxation is justified empirically, with statistics presented for each robot and scenario presented\adnote{several robots and scenario, or even better, for N robots and M scenarios}. The complete framework is implemented within
-the open source platform HPP.
+The relaxation is justified empirically, with statistics presented for each robot and scenario presented\adnote{several robots and scenarios, or even better, for N robots and M scenarios}. The complete framework is implemented within
+the open-source platform HPP.
 
 \begin{figure*}
   \centering
@@ -78,16 +78,16 @@ the open source platform HPP.
   \label{fig:framework}
 \end{figure*}
 
-To address \Pa we rigorously formulate a geometric condition for the true feasibility of a path, the reachability condition. We claim that this 
-condition can be verified in a low-dimensional space, that we call $C_{reach}$. This formulation can make the planning of a guide trajectory more efficient computationally, while providing equivalent guarantees to planning directly in the configuration space.
+To address \Pa we rigorously formulate a geometric condition \replaced{that approximates}{for} the true feasibility of a path, the reachability condition. We claim that this 
+condition can be verified in a low-dimensional space, which we call $C_{reach}$. This formulation can make the planning of a guide path more efficient computationally, while providing \replaced[remark={planning in $C_{reach}$ you don't account for equilibrium}]{simular}{equivalent} guarantees to planning directly in the configuration space.
 In practice, for each considered robot, we compute an approximation of $C_{reach}$. From this approximation,
-an efficient trade-off between a necessary and a sufficient condition for true feasibility is obtained. This trade-off allows the implementation of a low-dimensional, Reachability-Based RRT planner (RB-RRT), able to find truly-feasible paths for the root of the robot within a few milliseconds to a few seconds depending on the scenario.
+an efficient trade-off between a necessary and a sufficient condition for true feasibility is obtained. This trade-off allows the implementation of a low-dimensional, Reachability-Based RRT planner (RB-RRT), able to find truly-feasible paths for the root of the robot \replaced{in a timespan ranging from}{within} a few milliseconds to a few seconds, depending on the scenario.
 
 To address \Pb, we consider a truly-feasible path as an input, and generate new contact configurations along it using a sampling approach.
 The true feasibility of the path provides guarantees that the contacts can be created, and reduce the dimensionality of the problem (at each step the root position is fixed). The theoretical completeness of the approach is partially traded for efficiency: instead of sampling online
 limb configurations and projecting them onto contact, we precompute offline a large database of limb configurations, stored in a spatial structure optimized
 for proximity queries. At runtime, this framework allows to obtain extremely rapidly \adnote{again, extremely rapidly} a set of candidate configurations for contact.
-These candidates are sorted using a criterion to evaluate the static equilibrium of the configuration, and ranked according to user-defined heuristics.
+These candidates are sorted using a criterion to evaluate the static equilibrium of the configuration, and ranked according to user-defined heuristics. \adnote{Not clear, first you say the candidates are sorted based on static equilibrium, then you say they are ranked based on user-defined heuristics. What's the difference between sorting and ranking?}
 In all our experiments we used two such heuristics: a measurement of robustness of a configuration to errors in the contact forces, and a manipulability-based heuristic,
 the Extended FORce Transmission ratio (EFORT).
 

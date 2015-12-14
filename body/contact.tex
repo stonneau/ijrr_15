@@ -1,55 +1,55 @@
+% !TEX root =  ../main.tex
 \section{From a guide path to a discrete sequence of contact configurations ($\mathcal{P}_2$)}
 \label{sec:contact}
-As an input of this stage, we consider a truly feasible guide path $\mathbf{q}^0(t) : [0,1] \longrightarrow SE(3)$ for the root of the robot $R$. We now consider the second problem of computing a discrete sequence of contact configurations $\mathbf{Q}^{\overline{0}}$ for the limbs of the robot along $\mathbf{q}^0(t)$. From true feasibility we know that such a trajectory exists. 
+As an input of this stage, we consider a truly feasible guide path $\mathbf{q}^0(t) : [0,1] \longrightarrow SE(3)$ for the root of the robot $R$. We now consider the second problem of computing a discrete sequence of contact configurations $\mathbf{Q}^{\overline{0}}$ for the limbs of the robot along $\mathbf{q}^0(t)$. \deleted[remark={the input is not truly feasible, actually it is not even geometrically feasible, it is only approximately geometrically feasible}]{From true feasibility we know that such a trajectory exists.}
 
-In this Section we first describe a single contact generation process, that is how to generate a contact configuration for a given limb 
+In this Section we first describe a single contact-generation process, that is how to generate a contact configuration for a given limb 
 and root location.
-Then, on this method we build an iterative algorithm to generate a discrete sequence of contact configurations in equilibrium, along a truly feasible path.
+Then, on this method we build an iterative algorithm to generate a discrete sequence of contact configurations in equilibrium\deleted{, along a truly feasible path}.
 
-In what follows a \textit{valid} contact configuration is understood as being collision free, respecting joint limits, and allowing to maintain the static equilibrium
+In what follows a \textit{valid} contact configuration is understood as being collision free, satisfying joint limits, and allowing to maintain the static equilibrium
 of the robot. The first two tests are trivial; our criterion to assert efficiently the static equilibrium of the system
 is described in Section TODO.
 
 \subsection{Definition of a contact generator}
 \label{sec:single_contact}
-We consider a limb $R^k$  and a root configuration $\mathbf{q}^0$ truly feasible regarding $R^k$. FIGURE
-From true feasibility we know that there exists an infinite list of mappings $P = [\pi_0,..,\pi_i, ...]$ that verify Eq.~\eqref{eq:pi} for $\mathbf{q}^0$.
+We consider a limb $R^k$  and a root configuration $\mathbf{q}^0$\deleted{ truly feasible regarding $R^k$}. FIGURE
+From true feasibility we know that there exists an infinite list of mappings $P = [\pi_0,..,\pi_i, ...]$ that verify \eqref{eq:pi} for $\mathbf{q}^0$.
 The issue is then to evaluate locally at least one element of $P$ at $\mathbf{q}^0$.
 
 While exhibiting analytically a $\pi_i$ does not seem tractable, we can iteratively evaluate $\pi_i(\mathbf{q}^0)$ as follows:
 \begin{enumerate}
-\item Generate randomly a valid limb configuration;
+\item Generate randomly a \replaced{collision-free}{valid} limb configuration;
 \item Project the end-effector onto the closest surface with inverse kinematics;
 \item If a valid solution is found, stop. Otherwise repeat from step 1.
 \end{enumerate}
 
 
-We partially trade the completeness property of this approach for a more efficient solution previously introduced \citep{Tonneau2014}, that we describe
+We partially trade the completeness property of this approach for a more efficient solution introduced in our previous work~\citep{Tonneau2014}, which we describe
 here for completeness.
 
 We first define $C_{Contact}^{\epsilon} \supset C_{Contact}$ as the set of configurations almost in contact. This means that the minimal distance 
-between an effector and a surface of the environment is lesser than a small value $\epsilon$.
+between an effector and a surface of the environment is less than a small value $\epsilon$.
 We then apply the following steps:
 \begin{enumerate}
 \item Generate offline $N$ valid sample limb configurations $\mathbf{q}^k_i,  0 \leq i < N$;
 \item Using the end-effector positions $\mathbf{p}(\mathbf{q}^k_i)$ as indices, store each sample in an octree stata structure;
-\item Figure~\ref{fig:contact_gen}--2 and 3--: At runtime, when contact creation is required, retrieve from the octree the list of samples $S \subset C_{Contact}^{\epsilon}$ close to contact;
+\item Figure~\ref{fig:contact_gen}--2 and 3--:\adnote{This notation for subfigures is not clear, consider using subfigures, e.g. 2a, 2b} At runtime, when contact creation is required, retrieve from the octree the list of samples $S \subset C_{Contact}^{\epsilon}$ close to contact;
 \item According to a user-defined heuristic $h$, sort the elements of $S$;
 \item Figure~\ref{fig:contact_gen}--4 and 5--: Select the first configuration of $S$ (or fail if $S$ is empty). Project the configuration onto contact with inverse kinematics;
-\item If a valid solution is found, stop. Otherwise remove the element from $S$ and go back step 5.
+\item If a valid \adnote{being valid depends also on the other contacts because it regards also equilibrium, doesn't it? Then this assessment depends on the other contacts previously generated. Doesn't this have implications on the completeness? Even if it doesn't, isn't it worth to talk about it?} solution is found, stop. Otherwise remove the element from $S$ and go back step 5.
 \end{enumerate}
 
-This approach has two main advantages:
+This approach has two main advantages.
 First, this allows us to select a large number of candidates in a single proximity request.
-Having several candidates is interesting, because it allows to compare them regarding a user selected heuristic $h$, thus obtaining
-a locally optimal candidate.
-Furthermore, the fact that the candidates are already close to contact increases the odds that the inverse kinematics will converge to a valid solution,
-and this in a small number of iterations.
+Having several candidates is interesting, because it allows to compare them \replaced{using}{regarding} a user-selected heuristic $h$, thus obtaining
+a locally-optimal candidate.
+Furthermore, the fact that the candidates are already close to contact increases the odds that the inverse kinematics will converge to a valid solution in a small number of iterations.
 Regarding completeness, it is immediate to verify that as $N$ and $\epsilon$ grow, the completeness of the method is restored.
 $N$ is a parameter that allows us to specify the trade-off between completeness and efficiency.
 The reader is invited to refer to our previous work for an extensive discussion on the optimal value of $N$ \citep{Tonneau2014}.
 
-We thus have defined a real time, extremely efficient contact generator, that can be as complete as required by the context.
+We thus have defined a real-time\deleted{, extremely efficient} contact generator that can be as complete as required by the context.
 %We compute the image of a mapping $f$ along $\mathbf{q}^0(t)$ into a discrete sequence of contacts $ \in C_{contact}$. We first describe the discretization of $\mathbf{q}^0(t)$ and the algorithm used to create or break contacts along it. Then we describe how contacts are explicitely generated along the discretized trajectory.
 
 \subsection{Extension of the guide trajectory}
@@ -74,22 +74,21 @@ where $\mathbf{q}^0_{0}$ and $\mathbf{q}^0_{j-1}$ respectively correspond to the
     \end{aligned}
     \right.
 \end{equation*} 
+\adnote{Not clear, what is g?}
 We initialize the recurrence with $\pi(\mathbf{q}^0_{0}) = \mathbf{q}_0$ the initial configuration of the robot.
 
 At each step, we consider a new root placement $\mathbf{q}^0_{i}$ and try to generate a contact configuration that preserves as much as possible
-the previous contacts, and is in static equilibrium.
+the previous contacts while allowing for static equilibrium.
 
 %~ The function $g$ is defined independently by $g^k$ for each limb $R^k$. In defining $g^k$, two aspects must be considered. Is the limb $R^k$ in contact? And which criteria is it optimizing? 
 
 \subsubsection{Maintaining a contact in the sequence.}
 
-Figure~\ref{fig:break_contact} illustrates the contact persistence strategy.
-If possible, a limb in contact at time $i-1$ remains in contact at $i$. The contact is broken if an inverse kinematics solver fails to find a collision free limb configuration that satisfies joint limits. The solver is directy provided by the HPP software.
+Fig.~\ref{fig:break_contact} illustrates the contact-persistence strategy.
+If possible, a limb in contact at time $i-1$ remains in contact at time $i$. The contact is broken if an inverse-kinematics solver fails to find a collision-free limb configuration that satisfies joint limits. The solver is directly provided by the HPP software.
 
-If the solver fails, the contact is broken and a collision free configuration is assigned to the limb.
-If more than one contacts are broken for a single step, intermediate steps are added to reposition, one at a time,
-the contacts, before moving.
-
+If the solver fails, the contact is broken and a collision-free configuration is assigned to the limb.
+If two or more contacts are broken in a single time step, intermediate steps are added to reposition the contacts one at a time, before moving.
 
 \begin{figure}[t]
 \centering
@@ -125,14 +124,14 @@ the contacts, before moving.
 \subsection{Creating contacts.}
 Contacts are created using three rules:
 \begin{enumerate}
-\item Only one contact creation can happen between two consecutive states. This increases the odds that the interpolation between the two states will be feasible; 
+\item Only one contact creation can happen between two consecutive states. This increases the odds that the interpolation between the two states \deleted[remark={not 100\% sure}]{will} be feasible; \adnote{Before you said that you ensured that transition between two states is feasible...}
 \item A contact is validated if and only if the resulting configuration is in static equilibrium, no matter what user-defined heuristics are used; 
-\item We use a FIFO approach:  we always try to first create a contact with the limb that has been free for the longest time. If the contact creation
+\item We use a FIFO approach:  we always try first to create a contact with the limb that has been contact-free the longest. If the contact creation
 was not successful for a limb, the limb is pushed on top of the queue, and will only be tried again after the others have been treated.
 \end{enumerate}
 
 These three rules provide a deterministic manner to generate contacts along the discretized guide path.
 FIGURE. For a given truly feasible path, our current implementation does not guarantee that the planner will succeed in generating a configuration in static equilibrium, because
 of the deterministic approach used to break the combinatorial.
-However, in practice the planner is successful in the large majority of cases, as discussed in section~\ref{sec:stat1}, thanks to 
-the heuristics we use for relevant contact selection.
+However, in practice the planner is successful in the large majority of cases, as discussed in Section~\ref{sec:stat1}, thanks to 
+the heuristics that we use for contact selection.

@@ -1,46 +1,47 @@
-\subsection{Manipulability-based heuristics for locally optimal contact selection}
-The other kind of heuristics we use are based on the analysis of the motion capabilities
+% !TEX root =  ../main.tex
+\subsection{Manipulability-based heuristics for locally-optimal contact selection}
+The other kind of heuristics that we use are based on the analysis of the motion capabilities
 provided by a candidate configuration regarding the task being achieved.
-These heuristics allow to locally optimize a contact location regarding a particular task.
-For instance, once can be interested in configurations that allow to efficienctly exert a force compatible with the global direction of motion,
+These heuristics allow to locally optimize a contact location with respect to a particular task.
+For instance, one can be interested in configurations that allow to efficiently exert a force compatible with the global direction of motion,
 a high velocity in a given direction, or to stay away from singular configurations.
-In these section, three such heuristics are derived in this section from the work on manipulability by \cite{Yoshikawa1984}, that we present first.
+In this section, we derive three such heuristics from the work on manipulability by \cite{Yoshikawa1984}, that we present first.
 
 \subsubsection{The force and velocity ellipsoids.}
-For a limb configuration $\mathbf{q}^k$, the jacobian matrix
+For a limb configuration $\mathbf{q}^k$, the Jacobian matrix
  $\mathbf{J}(\mathbf{q}^k)$   defines the relation:
  
 \begin{equation} \label{jac}
-\mathbf{\dot{p}^k} = \mathbf{J}(\mathbf{q}^k) \dot{\mathbf{q}^k}
+\mathbf{\dot{p}^k} = \mathbf{J}(\mathbf{q}^k) \dot{\mathbf{q}}^k
 \end{equation}
 
 For clarity in the rest of the section we omit the $k$ indices and write $\mathbf{J}(\mathbf{q}^k)$ as $\mathbf{J}$.
  
-As a linear approximation of the forward kinematics function $f$ , $\mathbf{J}$ describes how small
+As a linear approximation of the forward-kinematics function $f$ , $\mathbf{J}$ describes how small
 variations from the configuration $\mathbf{q}$ affect the position vector $\mathbf{p}$.
 It can be seen as the transformation mapping a velocity in the configuration space into a velocity in
-the euclidian space.
+the Euclidian space.
 
 Now we consider the unit ball in the configuration space $C$ defined by the set of joint velocities
-for which the norm is inferior or equal to 1:
+for which the norm is at most 1:
 \begin{equation} \label{ball}
 ||\dot{\mathbf{q}}||^2 \leq 1
 \end{equation}
 
-From Equation~\ref{jac} we can obtain the following equality:
+From \eqref{jac} we can obtain the following equality: \adnote{how?}
 \begin{equation} \label{jaceq}
 \mathbf{\dot{p}}^T(\mathbf{J}\mathbf{J}^T)^{-1}\mathbf{\dot{p}} = \dot{\mathbf{q}}^T \dot{\mathbf{q}}
 \end{equation}
 
-We can use Equation~\ref{jaceq} to map the ball into an ellipsoid in the euclidian space $\mathbb{R}^m$:
+We can use \eqref{jaceq} to map the ball into an ellipsoid in the Euclidian space $\mathbb{R}^m$:
 
 \begin{equation} \label{ellipsoid}
 \mathbf{\dot{p}}^T(\mathbf{J}\mathbf{J}^T)^{-1}\mathbf{\dot{p}} \leq 1
 \end{equation}
 This ellipsoid is called the manipulability ellipsoid, or velocity ellipsoid, introduced by \cite{Yoshikawa1984}. It describes the set of velocities that can
-be reached under the constraints of Equation~\ref{ball} for the current configuration.
+be reached under the constraint \eqref{ball} for the current configuration.
 The longer an axis of the ellipsoid is, the faster the configuration can move along the direction of the axis.
-Figure~\ref{sec:efort_ellipsoid} - left shows the velocity ellipsoid for different configurations of a manipulator with two degrees of freedom.
+Fig.~\ref{sec:efort_ellipsoid} - left shows the velocity ellipsoid for different configurations of a manipulator with two degrees of freedom.
 
 \begin{figure}[htb]
   \centering
@@ -64,22 +65,22 @@ we can define the mechanical work in both spaces:
 \end{equation*}
 
 
-Deriving from Equation~\ref{jac}, we define that the set of achievable force in $\mathbb{R}^m$  subject to the constraint:
+Exploiting \eqref{jac}, we can easily see that the set of achievable forces in $\mathbb{R}^m$ subject to the constraint:
 \begin{equation*} \label{ballforce}
 ||\mathbf{\tau}||^2 \leq 1
 \end{equation*}
-is the force ellipsoid (Figure~\ref{sec:efort_ellipsoid} - right) defined by:
+is the so-called force ellipsoid (Fig.~\ref{sec:efort_ellipsoid} - right), defined by:
 \begin{equation} \label{ellipsoidforce}
 \mathbf{f}^T (\mathbf{J}\mathbf{J}^T) \mathbf{f} \leq 1
 \end{equation}
 
-\subsubsection{Manipulability based heuristics.}
-From these definitions, we can derive three useful heuristics, that all account from the environment and the task being performed.
-The first one, EFORT, is introduced by \cite{Tonneau2014}; the other two are new minor contributions, derived from these previous works.
+\subsubsection{Manipulability-based heuristics.}
+From these definitions, we can derive three useful heuristics, that all account \replaced{for}{from} the environment and the task being performed.
+The first one, EFORT, was introduced by \cite{Tonneau2014}; the other two are new minor contributions, derived from these previous works.
 
-With EFORT, we define the efficiency of a configuration as the ability a limb has to exert a force in a given direction.
+With EFORT, we define the efficiency of a configuration as the ability of a limb to exert a force in a given direction.
 We thus consider the force ellipsoid as a basis for our heuristic.
-In a given direction $\mathbf{m}$, the length of the ellispoid is given by the force transmission ratio \citep{1087795}:
+In a given direction $\mathbf{m}$, the length of the ellipsoid is given by the force-transmission ratio \citep{1087795}:
 \begin{equation*}
 f_\mathsf{T}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(JJ^{T})\mathbf{m}]^{-\frac{1}{2}}
 \end{equation*}
@@ -93,30 +94,30 @@ h_{EFORT}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}^T)\math
 where $\mu_0$ and $\mathbf{n}$ are respectively the friction coefficient and the normal vector of the contact surface.
 
 
-If the ability to apply important velocities at the effector is considered, we define a new heuristic $h_{vel}$ with a similar reasonning on the velocity ellispoid:
+If the ability to generate large velocities at the effector is considered, we define a new heuristic $h_{vel}$ with a similar reasoning on the velocity ellipsoid:
 \begin{equation}
 h_{vel}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}^T)^{-1}\mathbf{m}]^{-\frac{1}{2}} ( \mu_0 \mathbf{n}^T \mathbf{m})
 \end{equation}
 
-$h_{EFORT}$ and $h_{vel}$ will favor contacts that allow important efforts or fast modifications in the velocity.
+$h_{EFORT}$ and $h_{vel}$ will favor contacts that allow large efforts or fast modifications in the velocity.
 $EFORT$ in particular is useful for tasks such as standing up, pushing / pulling.
-In other less demanding cases, manipulability can also be considered regarding its original purpose, that means to avoid singularties.
+In other less demanding cases, manipulability can also be considered \deleted{regarding its original purpose, that means} to avoid singularities.
 To do so, we can consider the manipulability measure $w$, also given by \citeauthor{Yoshikawa1984}:
 
 \begin{equation*} \label{ellipsoid}
 w(\mathbf{q}) = \sqrt{\mathbf{J}\mathbf{J}^T}
-\end{equation*}
-$w$ measures the ``distance" between a given configuration and a singular configuration. When $w$ is equal to 0, the configuration is in a singular state;
+\end{equation*} \adnote{Didn't you forget something in this equation? I guess $w$ is a scalar, but the right side is a matrix.}
+$w$ measures the ``distance'' between a given configuration and a singular configuration. When $w$ is equal to 0, the configuration is in a singular state;
 the greater $w$ is, the further away the configuration is from singularity.
 We then derive:
 \begin{equation}
 h_{w}(\mathbf{q}, \mathbf{m}) = \sqrt{\mathbf{J}\mathbf{J}^T} ( \mu_0 \mathbf{n}^T \mathbf{m})
 \end{equation}
 
-$h_{EFORT}$, $h_{vel}$ and $h_{w}$ define three kinematic heuristics, fast to compute (indeed, thanks to our sampling based approach, the jacobian an inverse products
-can be precomputed offline), that allow the planner to select the more relevant
-candidates regarding the local motion task along the guide path.
-This result in faster computation times, and a reduced number of contact switches overall.
+$h_{EFORT}$, $h_{vel}$ and $h_{w}$ define three kinematic heuristics, fast to compute (indeed, thanks to our sampling-based approach, the Jacobian and inverse products
+can be precomputed offline), that allow the planner to select the \replaced{best}{more relevant}
+candidates \replaced{with respect to}{regarding} the local motion task along the guide path.
+This results in faster computation times, and a reduced number of overall contact switches.
 
 
 

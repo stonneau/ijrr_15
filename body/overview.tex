@@ -23,27 +23,37 @@ us to avoid the combinatorial by generating the contacts in a straightforward ma
   \label{fig:contact_gen}
 \end{figure*}
 \subsection{Computation of a guide path --- \Pa}
-We first consider the problem of planning a relevant guide path. The objective is to compute a path of root placements which will allow contact creation. A desired requirement is to preserve the completeness of the planner: it should be able to explore any possible guide trajectory, but at the same time, any computed guide trajectory must be truly feasible, i.e. must lead to a valid sequence of contacts.
+We first consider the problem of planning a relevant guide path. The objective is to compute a path of root placements that will allow contact creation. A desired requirement is to preserve the completeness of the planner: it should be able to explore any possible guide trajectory, but at the same time, any computed guide trajectory must be truly feasible, i.e. must lead to a valid sequence of contacts.
 
- An intuitive description of such placements is ``close, but not too close'': close, because a contact surface must be partially included in the Reachable workspace of the robot (represented for the right arm in Fig.~\ref{fig:contact_gen}--1); not too close, because the robot must avoid collision (which is represented by the hull including the torso in Fig.~\ref{fig:contact_gen}--1). We define formally $C_{reach}$, the set of interesting \adnote{'interesting' is vague, consider replacing with 'the set of root placements that allow the robot not to be in collision and be in contact with the environment'; alternatively you can even be more precise I write this in math, but maybe that's not the right place to be formal}  root placements, in which we compute a guide trajectory with a sampling based planner,  the Reachability-Based RRT --RB-RRT-- (Figure~\ref{fig:framework}--\Pa). Planning in $C_{reach}$ boils down to planning in SE(3), which has an acceptable practical complexity.
+\added
+{
+More precisely, a root placement is truly feasible if and only if there exist at least one joint configuration such that the robot satisfies three conditions: }
+\begin{description}
+\item[C1] is not in collision with the environment, 
+\item[C2] has at least one end-effector in contact with the environment, 
+\item[C3] is in static equilibrium. 
+\end{description}
+\added{
+The conditions C1 and C2 are purely geometrical and can be efficiently approximated even without computing the contact points. Instead C3 is difficult to approximate and it requires the computation of the contact points, and the resolution of a linear program to compute the contact forces~\cite{DelPrete2016}. Moreover our intuition suggests us that, for cluttered environment, C3 is not critical, meaning that, most of the times, root placements satisfying C1 and C2 would satisfy also C3. For this reason we neglect C3 during the resolution of \Pa, and we worry about it only when solving \Pb.
+}
+
+An intuitive description of root placements satisfying C1 and C2 is ``close, but not too close'': close, because a contact surface must be partially included in the Reachable workspace of the robot (represented for the right arm in Fig.~\ref{fig:contact_gen}--1); not too close, because the robot must avoid collision (which is represented by the hull including the torso in Fig.~\ref{fig:contact_gen}--1). We define formally $C_{reach}$, the set of \replaced{root placements satisfying C1 and C2}{interesting root placements}, in which we compute a guide trajectory with a sampling-based planner, the Reachability-Based RRT---RB-RRT--- (Fig.~\ref{fig:framework}---\Pa). Planning in $C_{reach}$ boils down to planning in SE(3), which has an acceptable practical complexity.
 %
 Details are presented in Section~\ref{rbprm}.
 
 \subsection{Generating a discrete sequence of contact configurations --- \Pb}
 
-The second stage extends the guide path into a sequence of contact configurations (Fig.~\ref{fig:framework}--\Pb). The true feasibility of the input path is guaranteed by the first step.
-This provides in turn a reasonable \adnote{FYI: you always wrote 'reasonable' as 'reasonnable'} guarantee that a contact configuration can be obtained for any root placement along the path. With a fixed root position, the dimensionality of the 
+The second stage extends the guide path into a sequence of contact configurations (Fig.~\ref{fig:framework}--\Pb). \deleted{The true feasibility of the input path is guaranteed by the first step. This provides in turn a reasonable guarantee that a contact configuration can be obtained for any root placement along the path. }
+With a fixed root position, the dimensionality of the 
 contact generation problem is reduced to the number of degrees of freedom of the considered limb. In other words, we consider each limb as a manipulator attached to the root, and select the most relevant contact from a database of precomputed configurations, which is independent from the environment (Figure~\ref{fig:contact_gen}).
 
 From a given start configuration, the planner proceeds in an iterative fashion along the discretized path: given a new root placement, an inverse-kinematics solver 
 is used to maintain the contacts that were previously existing (TODO Figure). Often, these contacts cannot be maintained, because of joint limits or collisions (TODO Figure).
 In such a case the contacts are broken. Conversely, new contacts are created to ensure the static equilibrium of the robot (TODO FIGURE).
-The algorithm is designed so that only one contact can be created or broken between two successive configurations. This can be seen as a heuristic \adnote{why heuristic?} to ensure
-that the interpolation between two configurations is achievable.
+The algorithm is designed so that only one contact can be created or broken between two successive configurations. This \replaced{ensures}{can be seen as a heuristic to ensure} that the interpolation between two configurations is achievable.
 Details are presented in Section~\ref{sec:efort}. 
 
-To select the ``most relevant'' contact configurations, user-defined heuristics can be chosen. In Section~\ref{heuristics} we present extensively two such heuristics, that have been
-used in our experiments.
+To select the ``most relevant'' contact configurations, user-defined heuristics can be chosen. In Section~\ref{heuristics} we present extensively two such heuristics, which have been used in our experiments.
 
 
 %~ To create a contact, we consider each limb of the robot as a manipulator arm attached to the root. We store a database of configurations for each manipulator. Figure~\ref{fig:contact_gen} -- 2 presents a few configurations for the right arm of the robot. The configurations in the database which are close to contact are considered (Figure~\ref{fig:contact_gen} -- 2 and 3). Among the candidates, 3 criteria are considered to choose the most relevant: the ideal candidate is free of collision, allows to maintain static balance if necessary, and  contributes to the motion in an optimal way. We call the measure of this contribution task efficiency: it represents the ability the limb has to exert a force compatible with the direction of motion. In Figure~\ref{fig:contact_gen} -- 4, the black arrow represents the direction of motion. Among the candidates, the most relevant to achieve a vertical motion is chosen, and projected on the contact surface using an inverse kinematics solver (Figure~\ref{fig:contact_gen} -- 5). The task efficiency is measured using the Extended FORce Transmission ratio (EFORT), proposed by ~\cite{Tonneau:2014:TEC:2619648.2619652}.

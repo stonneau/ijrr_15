@@ -1,7 +1,8 @@
+% !TEX root =  ../main.tex
 \section{Computing a guide path in $C_{reach}$ ($\mathcal{P}_1$) }
 \label{rbprm}
 
-We consider the issue of computing a normalized guide path $\mathbf{q}^0(t) : [0,1] \longrightarrow SE(3)$ for the geometrical root of a multiped robot, connecting start and goal configurations. As said in the previous section, the goal is to enforce that any configuration $\mathbf{q}^0$ of the guide is truly feasible, i.e. can be mapped to a configuration in contact. We denote by $C_{contact} \subset SE(3) \times \mathbb{R}^n$ the contact submanifold of the robot.
+We consider the issue of computing a normalized guide path $\mathbf{q}^0(t) : [0,1] \longrightarrow SE(3)$ for the geometrical \adnote{why the root is geometrical? Isn't the path to be geometrical?} root of a multiped robot, connecting \adnote{user-defined} start and goal configurations. As said in the previous section, the goal is to enforce that any configuration $\mathbf{q}^0$ of the guide is \replaced{geometrically}{truly} feasible, i.e. can be mapped to a configuration in contact. We denote by $C_{contact} \subset SE(3) \times \mathbb{R}^n$ the contact submanifold of the robot\added{, that is the set of configurations in which the robot is in contact with the environment}.
 %~ We say that a root placement $\mathbf{q}^{0}$ is \textit{truly feasible} if there exists $\mathbf{q}^{\overline{0}}$ such that 
 %~ $$\mathbf{q}^{0} \oplus \mathbf{q}^{\overline{0}} \in C_{contact} $$
 %~ The set of all truly-feasible root placements is denoted by $C_{reach}$. By extension, a trajectory $\mathbf{q}^0(t)$ is truly feasible if $\forall t \in [0,1], \mathbf{q}^0(t) \in C_{reach}$. 
@@ -11,7 +12,7 @@ We consider the issue of computing a normalized guide path $\mathbf{q}^0(t) : [0
     %~ \label{eq:pi}
 %~ \end{equation}
 
-We say that a root placement $\mathbf{q}^{0}$ is \textit{truly feasible} if there exists at least one bijective mapping $\pi$
+We say that a root placement $\mathbf{q}^{0}$ is \textit{\replaced[remark={I don't replace 'truly feasible' with 'geometrically feasible' from now on because I don't know whether you like it}]{geometrically}{truly} feasible} if there exists at least one bijective mapping $\pi$
 such that
 \begin{equation}
     \pi\colon \quad \mathbf{q}^{0} \in  SE(3) \longrightarrow  \mathbf{q}^{0} \oplus \mathbf{q}^{\overline{0}} \in C_{contact} 
@@ -22,7 +23,7 @@ The set of all truly feasible root placements is denoted by $C_{reach}$. By exte
 
 For a two-stage acyclic contact planner to be exact and complete, we need the combination of two conditions on a guide trajectory generator: all the generated trajectories must be \textit{truly feasible} (sufficient condition); the guide planner must be complete, i.e. it must be able to discover any truly feasible trajectory (necessary condition).
 
-In this Section we characterize $C_{reach}$ theoritically with a necessary and a sufficient condition for belonging to the set.
+In this Section we characterize $C_{reach}$ theoretically with a necessary and a sufficient condition for belonging to the set.
 We then describe our implementation of an efficient RRT planner in $C_{reach}$.
 
    
@@ -52,16 +53,16 @@ This inclusion is very important: it directly implies that any motion-planning a
  
 The condition $C_{reach}^1$ is only necessary which means that one such root placement might not be truly feasible: in practice it is not guaranteed to find a valid sequence of contacts for every guide trajectory in $C_{reach}^1$.
 
-\subsubsection*{Sufficient condition for true feasibility}
+\subsubsection*{\replaced[remark={for coherence with previous subsection title}]{True feasibility: sufficient condition}{Sufficient condition for true feasibility}}
 %~ In building $C_{reach}^1$, we directly considered the including hull of the root body $W^{0}$, obtaining a necessary condition. 
-A trivial sufficient condition for true feasibility can be constructed as a variation of $C_{reach}^1$, by replacing $W^0$ with a bounding volume $B^{max}$ encompassing the whole robot in a given pose, except for the effector surfaces to be in contact (This condition is trivial in the sense that the resulting $W$ has a zero measure. For the need of the proof, the trivial sufficient condition is enough. In practice, the construction of a non-trivial including shape $W^0$ was possible for all the robot structures we considered). We denote by $C_{reach}^\infty \subset C_{reach}$ the set of root placements corresponding to the sufficient condition.
+A trivial sufficient condition for true feasibility can be constructed as a variation of $C_{reach}^1$, by replacing $W^0$ with a bounding volume $B^{max}$ encompassing the whole robot in a given pose, except for the effector surfaces to be in contact (This condition is trivial in the sense that the resulting $W$ has a zero measure. For the need of the proof, the trivial sufficient condition is enough. In practice, the construction of a non-trivial including shape $W^0$ was possible for all the robot structures we considered). \adnote{Isn't this parenthesis a bit too long?} We denote by \mbox{$C_{reach}^\infty \subset C_{reach}$} the set of root placements corresponding to the sufficient condition.
 
-In general, the inclusion is strict, which means that we lose the completeness of the two-stage contact planner (i.e. the planner is not able to discover a trajectory inside $C_{reach} \setminus C_{reach}^\infty$). However, the sufficient condition guarantees that any such trajectories leads to a valid sequence of contacts (i.e. $\pi$ is defined).
+In general, the inclusion is strict, which means that we lose the completeness of the two-stage contact planner (i.e. the planner is not able to discover a trajectory inside \mbox{$C_{reach} \setminus C_{reach}^\infty$}). However, the sufficient condition guarantees that any such trajectories leads to a valid sequence of contacts (i.e. $\pi$ is defined).
 
 \subsection{Reachability: a compromise condition}
 The sufficient condition is not  interesting in practice since it leads the solver to lose too many interesting trajectories. The necessary condition is not perfect either, since the first stage of the planner would stop on a guide that is not truly feasible in practice. It might be possible to find a shape $B$ that is necessary and sufficient; however, it seems intuitively very unlikely in general. The construction of a shape $W^0 \subset B \subset B^{max}$ leading to a necessary and sufficient condition (or the proof of its inexistence) is out of the scope of this work.
 
-However between $W^0$ and $B^{max}$, a trade-off can be found between a necessary and a sufficient condition. We define $W^0_s$ as the volume $W^0$ subject to a scaling transformation by a factor $s \in \mathbb{R}^+$. 
+However, between $W^0$ and $B^{max}$, a trade-off can be found between a necessary and a sufficient condition. We define $W^0_s$ as the volume $W^0$ subject to a scaling transformation by a factor $s \in \mathbb{R}^+$. 
 %
 We then consider the spaces $C_{reach}^s$
  \begin{equation}
@@ -69,7 +70,7 @@ C_{reach}^s = \{ \mathbf{q}^0 : W(\mathbf{q}^{0}) \cap O \neq \emptyset \wedge W
  %~ & \wedge & A_{trunk}(\mathbf{q}^{root}) \cap W = \emptyset \}
 \end{equation}
 %
-The higher $s$ is, the closer this "reachability condition" is to being sufficient, and if $s=1$, the planner is complete. The parametrization of $s$ allows to find a trade-off between these two desirable properties.
+The higher $s$, the closer this ``reachability condition'' is to being sufficient, and if $s=1$, the planner is complete. The parametrization of $s$ allows to find a trade-off between these two desirable properties.
 As an example, Figure~\ref{fig:hyq_roms} presents the volumes $W$ computed for the HyQ robot.
 In Appendix~\ref{app:rom}, we give a generic method to compute these volumes, with the example of HRP-2.
 %~ Section~\ref{sec:results} shows that in practice, it is easy to adjust $s$ to keep most of the interesting guides without introducing incorrect guides.
@@ -94,4 +95,4 @@ However, to improve the sampling efficiency while remaining probabilistically co
 First, a configuration is set to a random point on the surface of one randomly chosen obstacle. The root location is then translated and rotated randomly until the reachability condition is satisfied.
 Our current implementation of these modifications is based on the Bi-RRT planner provided by the HPP software.
 
-Thanks to this small set of modifications, the high dimensional truly feasible path planning problem is reduced to a standard geometry and collision checking problem, in a much lower dimension (6 for Hyq, 8 for HRP-2 that has a flexible torso). In so doing we make the problem tractable for sampling based approaches, with extremely efficient computation times.
+Thanks to this small set of modifications, the high dimensional truly feasible path planning problem is reduced to a standard geometry and collision checking problem, in a much lower dimension (6 for Hyq, 8 for HRP-2 that has \replaced{joints in the}{a flexible} torso). \replaced{By doing do}{In so doing} we make the problem tractable for sampling-based approaches, with extremely efficient computation times.
