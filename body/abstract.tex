@@ -10,7 +10,7 @@ guide can be mapped into the contact manifold of the robot. With this condition,
 of a guide path boils down to performing collision tests, thus avoiding the expensive explicit computation of balanced contact configurations, as opposed to previous approaches.
 Then, we propose a sequential algorithm to extend a truly feasible path into a sequence of contacts. For each limb, an offline sampling approach,
 independent from the environment, is run once and for all, and used at run time to provide efficiently candidate configurations for contact.
-The best candidate is chosen according to user-created \adnote{user-defined?} heuristics. We propose two such heuristics, used in all our experiments, and 
+The best candidate is chosen according to user-defined heuristics. We propose two such heuristics, used in all our experiments, and 
 designed for generic robotic applications: a manipulatibily-based heuristic, EFORT, and a robustness criterion regarding the balance of the robot.
 These contributions are implemented within the open-source software Hpp. Our framework allows us to generate complex multi-contact sequences for a large
 variety of robots, including a HRP-2, Hyq, and a dextrous hand, with interactive performances.

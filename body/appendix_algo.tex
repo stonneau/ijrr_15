@@ -2,7 +2,7 @@
 \label{app:contact}
 
 
-First, we define an abtract structure State,
+First, we define an abstract structure State,
 that describes a contact configuration.
 The use of queues allows a FIFO approach regarding the order 
 in which contacts are tested: we try to replace older contacts first when necessary.
@@ -150,4 +150,16 @@ The pseudo code for the method \textsc{RepositionContacts} is given by Algorithm
 \label{alg:repo}
 \end{algorithm}
 
+\section{Derivation of the manipulability ellipsoid}
+\label{app:manipulability}
 
+Again, we assume that $\mathbf{J}$ is full rank. We discard the $k$ indices, and write the pseudo-inverse of $\mathbf{J}$ as $\mathbf{J}^{\dagger}$.
+\begin{eqnarray*}
+\mathbf{\dot{p}} & =  & \mathbf{J} \dot{\mathbf{q}} \\ 
+\mathbf{\dot{q}} & =  & \mathbf{J}^{\dagger} \dot{\mathbf{p}} \\ 
+\mathbf{\dot{q}}^T & =  & \dot{\mathbf{p}}^T \mathbf{J}^{\dagger T} \\ 
+\mathbf{\dot{q}}^T\mathbf{\dot{q}} & =  & \dot{\mathbf{p}}^T \mathbf{J}^{\dagger T} \mathbf{J}^{\dagger} \dot{\mathbf{p}}\\ 
+\end{eqnarray*}
+
+Then, proving that $\mathbf{J}^{\dagger T} \mathbf{J}^{\dagger} = (\mathbf{J}\mathbf{J}^T)^{-1}$ is straight-forward,
+using the SVD decomposition of each term.

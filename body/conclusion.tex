@@ -2,7 +2,7 @@
 \label{sec:conclusion}
 
 In this paper we consider acyclic contact planning in cluttered environments, formulated as two sub problems that we address sequentially.
-The first problem is \Pa, that consists in computing a guide path for the root of the robot\deleted{ that can be extended}; the second problem is \Pb, that is the computation of a discrete sequence of contacts along the root path.
+The first problem is \Pa, that consists in computing a guide path for the root of the robot that can be extended; the second problem is \Pb, that is the computation of a discrete sequence of contacts along the root path.
 Our contribution to \Pa is a generic characterization of the properties that the guide path must satisfy, in particular to enforce the completeness of the acyclic contact planner. We introduced a low-dimensional space $C_{reach}$ that can be mapped 
 into the contact submanifold of the robot, approximated, and efficiently sampled by our Reachability-Based planner.
 Our contribution to \Pb is a pragmatic contact generation scheme that can take into
@@ -16,18 +16,18 @@ planner compatible with interactive applications.
 allows the method to address arbitrary multiped robots. The only pre-requisite is the specification 
 of the volumes $W^0$.
 %
-\textbf{Regarding performance}, our framework outperforms existing methods in addressing either \Pa or \Pb, \adnote{saying you outperform existing methods when you do not show any comparison is risky, the reviewers might ask for comparisons} leading to computation costs close to real-time in
-\replaced{known static}{statically known} environments.
+\textbf{Regarding performance}, our framework is really efficient in addressing both \Pa and \Pb. This results in computation costs close to real-time in
+known static environments.
 %
 \textbf{Regarding the quality of the paths}, a parametrization of the reachability condition allows us to compute
 relevant paths in all the presented scenarios, with low rejection rates.
 As for \cite{Bouyarmane2009}, failures can still occur, due to the compromise criterion used in computing the guide path.
-The low computational burden of our framework however allows for fast replanning \replaced{in case of failure}{when the solution fails}.
+The low computational burden of our framework however allows for fast replanning in case of failure.
 
 One direction for future work is to focus on a more accurate formulation of $C_{reach}$ to address 
 this limitation.
 Our main objective is of course to generate the complete interpolation between the contact sequences.
-We have already been able to achieve this for HRP-2 for some of the computed sequences~\citep{Carpentier2016}, but we \replaced{admit}{concede} that additional
+We have already been able to achieve this for HRP-2 for some of the computed sequences~\citep{Carpentier2016}, but we admit that additional
 work is required on the planning side to obtain a seamless workflow. To achieve this, we are currently working on the notion of transition certificate, i.e. formulating
 conditions that guarantee that the interpolation between two contact configurations is dynamically feasible. We are also
 working on new heuristics more closely related to the dynamics of the systems (for instance, choose the contacts that minimize the jerk between two contact configurations).

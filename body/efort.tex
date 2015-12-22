@@ -28,7 +28,8 @@ for which the norm is at most 1:
 ||\dot{\mathbf{q}}||^2 \leq 1
 \end{equation}
 
-From \eqref{jac} we can obtain the following equality: \adnote{how?}
+We assume that $J$ is full rank (this is reasonable since singular configurations are discarded by our algorithm).
+From \eqref{jac} we can thus obtain the following equality (Appendix~\ref{app:manipulability}):
 \begin{equation} \label{jaceq}
 \mathbf{\dot{p}}^T(\mathbf{J}\mathbf{J}^T)^{-1}\mathbf{\dot{p}} = \dot{\mathbf{q}}^T \dot{\mathbf{q}}
 \end{equation}
@@ -41,7 +42,7 @@ We can use \eqref{jaceq} to map the ball into an ellipsoid in the Euclidian spac
 This ellipsoid is called the manipulability ellipsoid, or velocity ellipsoid, introduced by \cite{Yoshikawa1984}. It describes the set of velocities that can
 be reached under the constraint \eqref{ball} for the current configuration.
 The longer an axis of the ellipsoid is, the faster the configuration can move along the direction of the axis.
-Fig.~\ref{sec:efort_ellipsoid} - left shows the velocity ellipsoid for different configurations of a manipulator with two degrees of freedom.
+Figure~\ref{sec:efort_ellipsoid} - left shows the velocity ellipsoid for different configurations of a manipulator with two degrees of freedom.
 
 \begin{figure}[htb]
   \centering
@@ -69,13 +70,13 @@ Exploiting \eqref{jac}, we can easily see that the set of achievable forces in $
 \begin{equation*} \label{ballforce}
 ||\mathbf{\tau}||^2 \leq 1
 \end{equation*}
-is the so-called force ellipsoid (Fig.~\ref{sec:efort_ellipsoid} - right), defined by:
+is the so-called force ellipsoid (Figure~\ref{sec:efort_ellipsoid} - right), defined by:
 \begin{equation} \label{ellipsoidforce}
 \mathbf{f}^T (\mathbf{J}\mathbf{J}^T) \mathbf{f} \leq 1
 \end{equation}
 
 \subsubsection{Manipulability-based heuristics.}
-From these definitions, we can derive three useful heuristics, that all account \replaced{for}{from} the environment and the task being performed.
+From these definitions, we can derive three useful heuristics, that all account for the environment and the task being performed.
 The first one, EFORT, was introduced by \cite{Tonneau2014}; the other two are new minor contributions, derived from these previous works.
 
 With EFORT, we define the efficiency of a configuration as the ability of a limb to exert a force in a given direction.
@@ -101,22 +102,22 @@ h_{vel}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}^T)^{-1}\m
 
 $h_{EFORT}$ and $h_{vel}$ will favor contacts that allow large efforts or fast modifications in the velocity.
 $EFORT$ in particular is useful for tasks such as standing up, pushing / pulling.
-In other less demanding cases, manipulability can also be considered \deleted{regarding its original purpose, that means} to avoid singularities.
+In other less demanding cases, manipulability can also be considered to avoid singularities.
 To do so, we can consider the manipulability measure $w$, also given by \citeauthor{Yoshikawa1984}:
 
 \begin{equation*} \label{ellipsoid}
-w(\mathbf{q}) = \sqrt{\mathbf{J}\mathbf{J}^T}
-\end{equation*} \adnote{Didn't you forget something in this equation? I guess $w$ is a scalar, but the right side is a matrix.}
+w(\mathbf{q}) = \sqrt{det(\mathbf{J}\mathbf{J}^T)}
+\end{equation*}
 $w$ measures the ``distance'' between a given configuration and a singular configuration. When $w$ is equal to 0, the configuration is in a singular state;
 the greater $w$ is, the further away the configuration is from singularity.
 We then derive:
 \begin{equation}
-h_{w}(\mathbf{q}, \mathbf{m}) = \sqrt{\mathbf{J}\mathbf{J}^T} ( \mu_0 \mathbf{n}^T \mathbf{m})
+h_{w}(\mathbf{q}, \mathbf{m}) = w(\mathbf{q})  (\mu_0 \mathbf{n}^T \mathbf{m})
 \end{equation}
 
 $h_{EFORT}$, $h_{vel}$ and $h_{w}$ define three kinematic heuristics, fast to compute (indeed, thanks to our sampling-based approach, the Jacobian and inverse products
-can be precomputed offline), that allow the planner to select the \replaced{best}{more relevant}
-candidates \replaced{with respect to}{regarding} the local motion task along the guide path.
+can be precomputed offline), that allow the planner to select the best
+candidates with respect to the local motion task along the guide path.
 This results in faster computation times, and a reduced number of overall contact switches.
 
 
