@@ -65,8 +65,8 @@ $\mathbf{Q}^0$, as input parameters.
 \end{algorithm}
 
 At each step, $g$ is called with the previous state as a parameter, as well
-as a new root placement. $g$ returns a new contact configuration, if it suceeded
-in computing a configuration with only one contact switch occuring.
+as a new root placement. $g$ returns a new contact configuration, if it succeeded
+in computing a configuration with only one contact switch occurring.
 If $g$ failed in achieving this, the method \textsc{RepositionContacts} is called.
 It repositions one end effector (either a free limb, or the oldest active contact) towards a new contact position if possible.
 This repositionning allows to increase the odds that the contact can be maintained at the next step.

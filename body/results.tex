@@ -5,7 +5,7 @@ In this Section we present some of the results obtained with our planner. The co
 Specifically, we demonstrate the planner for two really different robots, in a large variety of environments: the humanoid HRP-2 and the quadruped HyQ TODO~\cite{Semini}.
 For each scenario we indicate the chosen heuristics. We also provide a performance analysis, which shows that the planner is compatible with interactive applications,
 and present the success rates obtained in each scenario. Moreover, we demonstrate the interest of our robustness criterion in the different computed poses.
-Finally, a last example suggests possible applications to dextrous manipulation.
+Finally, a last example suggests possible applications to dexterous manipulation.
 
 In our previous work~\citep{tonneauisrr15} additional results are demonstrated with various virtual avatars (Figure~\ref{fig:robots_old}).
 In this extension we choose to focus on actual robots. We invite the interested reader to watch the ISRR video\endnote{https://www.youtube.com/watch?v=LmLAHgGQJGA}, and 
@@ -179,18 +179,18 @@ the bridge must be approached with the right angle.
 This can is illustrated in Figure~\ref{fig:hyq_obs}, where several feet rearrangements are required to cross both obstacles (although the video shows this best).
 The planner however succeeds in finding a feasible sequence in the end, again with interactive computation times.
 
-\subsubsection{HRP-2 -- Path replanning(Figure~\ref{fig:replanning}):}
+\subsubsection{HRP-2 -- Path re-planning(Figure~\ref{fig:re-planning}):}
 In this long scene, HRP-2 plans a path through through several obstacles. the scene is edited during the execution of the motion: a stair is added,
-some stepping stones are removed, and part of the final staircase is deleted. All these modifications require replanning.
+some stepping stones are removed, and part of the final staircase is deleted. All these modifications require re-planning.
 
 
 \begin{figure}
   \centering
   \includegraphics[width=0.7\linewidth]{figures/replanning}
   \caption{
-           HRP-2 in the replanning scenario. After the red step stones are removed, a new sequence of contacts is replanned. Hand contacts
+           HRP-2 in the re-planning scenario. After the red step stones are removed, a new sequence of contacts is re-planned. Hand contacts
            are not presented here for readability.}
-		   \label{fig:replanning}
+		   \label{fig:re-planning}
 \end{figure}
 
 \noindent\textbf{Contacts involved:} Feet and the right arm.
@@ -262,7 +262,7 @@ Table~\ref{tab:requestpercent} summarizes the success rates obtained for each sc
    Rubble & \% & \% & \% & \% \\
    Obstacle race & \% & \% & \% & \% \\
  \end{tabular}
-\caption{Success rates for each scenario. The first value indicates the percentage of sucessfull complete path plannings for 1000 tests; The second value
+\caption{Success rates for each scenario. The first value indicates the percentage of successfull complete path plannings for 1000 tests; The second value
 indicates the percentage of truly feasible root configurations: considering each limb individually, indicates the percentage of root placements of the guide trajectory that
 led to a feasible contact. Kinematic failure is the percentage of contact generations that failed because no collision-free candidate was found. Equilibrium failure is the percentage of contact
 generations that failed because no candidate respected the static equilibrium condition.}
@@ -273,5 +273,5 @@ generations that failed because no candidate respected the static equilibrium co
 We observe that, as expected, our planner does not succeed systematically, because of the approximations made in the implementation
 of our theoretical formulation. 
 From a pragmatic point of view, regarding the computation times, we claim that our approach is the best current compromise between completeness and efficiency:
-Indeed, the advantage of the framework is that when the contact generation fails, it does so rapidly, which allows us to rapidly replan a new contact sequence with 
+Indeed, the advantage of the framework is that when the contact generation fails, it does so rapidly, which allows us to rapidly re-plan a new contact sequence with 
 a reasonable chance of success.

@@ -4,7 +4,7 @@
 In this paper we consider acyclic contact planning in cluttered environments, formulated as two sub problems that we address sequentially.
 The first problem is \Pa, that consists in computing a guide path for the root of the robot that can be extended; the second problem is \Pb, that is the computation of a discrete sequence of contacts along the root path.
 Our contribution to \Pa is a generic characterization of the properties that the guide path must satisfy, in particular to enforce the completeness of the acyclic contact planner. We introduced a low-dimensional space $C_{reach}$ that can be mapped 
-into the contact submanifold of the robot, approximated, and efficiently sampled by our Reachability-Based planner.
+into the contact sub-manifold of the robot, approximated, and efficiently sampled by our Reachability-Based planner.
 Our contribution to \Pb is a pragmatic contact generation scheme that can take into
 account criteria to enforce interesting properties on the generated contacts (such as robustness, energy efficiency or naturalness).
 
@@ -22,7 +22,7 @@ known static environments.
 \textbf{Regarding the quality of the paths}, a parametrization of the reachability condition allows us to compute
 relevant paths in all the presented scenarios, with low rejection rates.
 As for \cite{Bouyarmane2009}, failures can still occur, due to the compromise criterion used in computing the guide path.
-The low computational burden of our framework however allows for fast replanning in case of failure.
+The low computational burden of our framework however allows for fast re-planning in case of failure.
 
 One direction for future work is to focus on a more accurate formulation of $C_{reach}$ to address 
 this limitation.
