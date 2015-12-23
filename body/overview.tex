@@ -4,7 +4,7 @@
 
 Figure~\ref{fig:framework} illustrates our workflow.
 \Pa and \Pb are addressed in a sequential fashion.
-The guarantees provided by the truly-feasible guide path allow
+The guarantees provided by the \textit{geometrically feasible} guide path allow
 us to avoid the combinatorial by generating the contacts in a straightforward manner.
 
 
@@ -23,24 +23,25 @@ us to avoid the combinatorial by generating the contacts in a straightforward ma
   \label{fig:contact_gen}
 \end{figure*}
 \subsection{Computation of a guide path --- \Pa}
-We first consider the problem of planning a relevant guide path. The objective is to compute a path of root placements that will allow contact creation. A desired requirement is to preserve the completeness of the planner: it should be able to explore any possible guide trajectory, but at the same time, any computed guide trajectory must be truly feasible, i.e. must lead to a valid sequence of contacts.
+We first consider the problem of planning a relevant guide path. The objective is to compute a path of root placements that will allow contact creation. A desired requirement is to preserve the completeness of the planner: it should be able to explore any possible guide trajectory, but at the same time, any computed guide trajectory must be \textit{truly feasible}, i.e. must lead to a valid sequence of contacts.
 
-More precisely, a root placement is truly feasible if and only if there exists at least one joint configuration such that the robot satisfies three conditions:
+More precisely, a root placement is \textit{truly feasible} if and only if there exists at least one joint configuration such that the robot satisfies three conditions:
 \begin{description}
 \item[C1] is not in collision with the environment, 
 \item[C2] has at least one end-effector in contact with the environment, 
 \item[C3] is in static equilibrium. 
 \end{description}
-The conditions C1 and C2 are purely geometrical and can be efficiently approximated even without computing the contact points. Instead C3 is difficult to approximate and it requires the computation of the contact points, and the resolution of a linear program to compute the contact forces~\citep{Prete2016}. Moreover our intuition suggests us that, for cluttered environment, C3 is not critical, meaning that, most of the times, root placements satisfying C1 and C2 would satisfy also C3. For this reason we neglect C3 during the resolution of \Pa, and we worry about it only when solving \Pb.
+C1 and C2 define \textit{geometrical feasibility}, and can be efficiently approximated even without computing the contact points. C3 defines \textit{equilibrium feasibility}. C3 is difficult to approximate and requires the computation of the contact points, as well as the resolution of a linear program to compute the contact forces~\citep{Prete2016}. 
+However our intuition suggests us that, for cluttered environments, verifying C3 is not critical for $\mathcal{P}_1$, meaning that, most of the times, root placements satisfying C1 and C2 would satisfy also C3. For this reason we neglect C3 during the resolution of \Pa, and we worry about it only when solving \Pb.
 
-An intuitive description of root placements satisfying C1 and C2 is ``close, but not too close'': close, because a contact surface must be partially included in the Reachable workspace of the robot (represented for the right arm in Figure~\ref{fig:contact_gen}--a); not too close, because the robot must avoid collision. We define formally $C_{reach}$, the set of root placements satisfying C1 and C2, in which we compute a guide trajectory with a sampling-based planner, the Reachability-Based RRT---RB-RRT--- (Figure~\ref{fig:framework}---\Pa). Planning in $C_{reach}$ boils down to planning in SE(3), which has an acceptable practical complexity.
+An intuitive description of root placements satisfying C1 and C2 is ``close, but not too close'': close, because a contact surface must be partially included in the reachable workspace of the robot (represented for the right arm in Figure~\ref{fig:contact_gen}--a); not too close, because the robot must avoid collision. We define formally $C_{reach}$, the set of root placements satisfying C1 and C2, in which we compute a guide trajectory with a sampling-based planner, the Reachability-Based RRT---RB-RRT--- (Figure~\ref{fig:framework}---\Pa). Planning in $C_{reach}$ boils down to planning in SE(3), which has an acceptable practical complexity.
 %
 Details are presented in Section~\ref{rbprm}.
 
 \subsection{Generating a discrete sequence of contact configurations --- \Pb}
 
 The second stage extends the guide path into a sequence of contact configurations (Figure~\ref{fig:framework}--\Pb). In this
-step we assume that the input guide path is truly feasible.
+step the input guide path is \textit{geometrically feasible}.
 With a fixed root position, the dimensionality of the 
 contact generation problem is reduced to the number of degrees of freedom of the considered limb. In other words, we consider each limb as a manipulator attached to the root, and select the most relevant contact from a database of precomputed configurations, which is independent from the environment (Figure~\ref{fig:contact_gen}).
 

@@ -28,7 +28,7 @@ for which the norm is at most 1:
 ||\dot{\mathbf{q}}||^2 \leq 1
 \end{equation}
 
-We assume that $J$ is full rank (this is reasonable since singular configurations are discarded by our algorithm).
+We assume that $\mathbf{J}$ is full rank (we are not interested in singular configurations that we discard).
 From \eqref{jac} we can thus obtain the following equality (Appendix~\ref{app:manipulability}):
 \begin{equation} \label{jaceq}
 \mathbf{\dot{p}}^T(\mathbf{J}\mathbf{J}^T)^{-1}\mathbf{\dot{p}} = \dot{\mathbf{q}}^T \dot{\mathbf{q}}
@@ -70,7 +70,7 @@ Exploiting \eqref{jac}, we can easily see that the set of achievable forces in $
 \begin{equation*} \label{ballforce}
 ||\mathbf{\tau}||^2 \leq 1
 \end{equation*}
-is the so-called force ellipsoid (Figure~\ref{sec:efort_ellipsoid} - right), defined by:
+is the so-called force ellipsoid (Figure~\ref{sec:efort_ellipsoid} - right):
 \begin{equation} \label{ellipsoidforce}
 \mathbf{f}^T (\mathbf{J}\mathbf{J}^T) \mathbf{f} \leq 1
 \end{equation}
