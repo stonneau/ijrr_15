@@ -180,7 +180,7 @@ This can is illustrated in Figure~\ref{fig:hyq_obs}, where several feet rearrang
 The planner however succeeds in finding a feasible sequence in the end, again with interactive computation times.
 
 \subsubsection{HRP-2 -- Path re-planning(Figure~\ref{fig:re-planning}):}
-In this long scene, HRP-2 plans a path through through several obstacles. the scene is edited during the execution of the motion: a stair is added,
+In this long scene, HRP-2 plans a path through several obstacles. the scene is edited during the execution of the motion: a stair is added,
 some stepping stones are removed, and part of the final staircase is deleted. All these modifications require re-planning.
 
 
@@ -230,10 +230,14 @@ Table~\ref{tab:requestime} summarizes the performance measurement obtained, in t
 
 \begin{table*}
 \centering
-\begin{tabular}{ l | >{\centering\arraybackslash}m{60pt} | >{\centering\arraybackslash}m{60pt} | >{\centering\arraybackslash}m{60pt} | >{\centering\arraybackslash}m{60pt} | >{\centering\arraybackslash}m{60pt} | c}
-  &  Complete guide generation & Collision & Static equilibrium & ik  & Total generation time & Time per step\\
+\small
+\begin{tabular}{ l | >{\centering\arraybackslash}m{57pt} | >{\centering\arraybackslash}m{70pt} | >{\centering\arraybackslash}m{75pt} | >{\centering\arraybackslash}m{77pt} | >{\centering\arraybackslash}m{85pt} | c}
+  &  Complete guide generation & Static equilibrium & Collision & ik  & Total generation time & 1 step\\
  \hline
-   Steep stairs & 22 -- \textbf{33} --  76 & 1 --  \textbf{4} -- 61   & 22 --  \textbf{52} -- 534 & 108 --  \textbf{1069} -- 10550 & 267 --  \textbf{1337} -- 11484 & \textbf{66} \\
+   Stairs & 6 -- \textbf{13} --  24 & 13 --  \textbf{32} -- 329   & 1 --  \textbf{4} -- 38 & 26 --  \textbf{127} -- 1345 & 92 --  \textbf{261} -- 2174 & \textbf{14} \\
+   Standing & 4 -- \textbf{451} --  985 & 27 --  \textbf{144} -- 338   & 2 --  \textbf{12} -- 37 & 144 --  \textbf{1046} -- 2374 & 310 --  \textbf{1622} -- 3429 & \textbf{66} \\
+   Rubble & 3 -- \textbf{524} --  993 & 242 --  \textbf{511} -- 3480   & 233 --  \textbf{505} -- 4564 & 180 --  \textbf{414} -- 3518 & 1400 --  \textbf{3058} -- 13126 & \textbf{43} \\
+   Race & 1 -- \textbf{501} --  995 & 266 --  \textbf{449} -- 3956   & 824 --  \textbf{1061} -- 2130 & 666 --  \textbf{874} -- 1613 & 2530 --  \textbf{3722} -- 10030 & \textbf{33} \\
    %Standing up & $70$ & 23 & 48\\
  \end{tabular}
 \caption{minimum, \textbf{average} and worst time (in ms) spent in the generation process for each scenario and each critical part of the generation process. The last
@@ -257,12 +261,12 @@ Table~\ref{tab:requestpercent} summarizes the success rates obtained for each sc
   &  Path planning & True feasibility & Kinematic failure & Equilibrium failure \\
  \hline
    Steep stairs & 100\%  & 99.5\% & 0.11\% & 0.39\% \\
-   Standing up & 100\% & 89\% & 7\% & 4\% \\
-   Truck egress & \% & \% & \% &  \% \\
-   Rubble & \% & \% & \% & \% \\
-   Obstacle race & \% & \% & \% & \% \\
+   Standing up & 68\% & 88\% & 6\% & 6\% \\
+   %~ Truck egress & \% & \% & \% &  \% \\
+   Rubble & 74\% & 97.87\% & 0.13\% & 2\% \\
+   Obstacle race & 58\% & 95.7\% & 1.8\% & 2.5\% \\
  \end{tabular}
-\caption{Success rates for each scenario. The first value indicates the percentage of successfull complete path plannings for 1000 tests; The second value
+\caption{Success rates for each scenario. The first value indicates the percentage of successfull complete contact plannings for 1000 tests; The second value
 indicates the percentage of truly feasible root configurations: considering each limb individually, indicates the percentage of root placements of the guide trajectory that
 led to a feasible contact. Kinematic failure is the percentage of contact generations that failed because no collision-free candidate was found. Equilibrium failure is the percentage of contact
 generations that failed because no candidate respected the static equilibrium condition.}
