@@ -33,7 +33,7 @@ between an effector and a surface of the environment is less than a small value 
 We then apply the following steps:
 \begin{enumerate}
 \item Generate off-line $N$ valid sample limb configurations $\mathbf{q}^k_i,  0 \leq i < N$;
-\item Using the end-effector positions $\mathbf{p}(\mathbf{q}^k_i)$ as indices, store each sample in an octree stata structure;
+\item Using the end-effector positions $\mathbf{p}(\mathbf{q}^k_i)$ as indices, store each sample in an octree data structure;
 \item Figure~\ref{fig:contact_gen}--b and c--: At runtime, when contact creation is required, retrieve from the octree the list of samples $S \subset C_{Contact}^{\epsilon}$ close to contact;
 \item According to a user-defined heuristic $h$, sort the elements of $S$;
 \item Figure~\ref{fig:contact_gen}--d and e--: Select the first configuration of $S$ (or fail if $S$ is empty). Project the configuration onto contact with inverse kinematics;

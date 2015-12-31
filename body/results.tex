@@ -105,25 +105,7 @@ Because the contacts are tried in a FIFO manner, the fact that the output contac
 for the computed path. The reason for this is not reachability, but equilibrium. The planning is slower than for the stair scenario (because the contact generation fails more),
 though it remains compatible with interactive performances. % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
 
-%~ \subsubsection{HRP-2 -- Truck egress (Figure~\ref{fig:TODO}):}
-%~ HRP-2 stands half seated in a truck, and \replaced{is required to}{it must} \replaced{get out}{exit} through the front window.
 
-%~ \begin{figure*}
-  %~ \centering
-  %~ \includegraphics[width=0.5\linewidth]{figures/standing}
-  %~ \caption{
-           %~ HRP-2 in the standing scenario. }
-		   %~ \label{fig:standing}
-%~ \end{figure*}
-
-%~ 
-%~ \noindent\textbf{Contacts involved:} All (both feet and hands).
-%~ 
-%~ \noindent\textbf{Heuristics:} $h_w$ \deleted{is used} for the feet, $h_{EFORT}$ \deleted{is used} for the hands.
-%~ 
-%~ \noindent\textbf{Observations:} This scenario demonstrates the ability of the planner to compute a path in an extremely-constrained environment. In this case,
-%~ the scenario is not always real time (TODO or is it ?): while the planner is often able to compute a guide path rapidly, in the worst case up to one minute can be spent
-%~ in the planning.
 
 
 \subsubsection{HyQ -- Darpa-style rubble (Figure~\ref{fig:darpa})}
@@ -147,23 +129,23 @@ stability of the HyQ robot, and results in more contact switches, in exchange fo
 collide with the environment at all times. %\adnote{Why do not relax this constraint and require only 3 legs?} 
 Again, the computed time remains however interactive.
 
-\subsubsection{HyQ -- Obstacle race (Figure~\ref{fig:hyq_bridge} and~\ref{fig:hyq_obs}):}
+\subsubsection{HyQ -- Obstacle race (Figure~\ref{fig:HyQ_bridge} and~\ref{fig:HyQ_obs}):}
 In this long scene, HyQ is first required to cross a 55-cm large hole; then, to cross a narrow "bridge",  only 25-cm large.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.4\linewidth]{figures/hyq_bridge}
+  \includegraphics[width=0.4\linewidth]{figures/HyQ_bridge}
   \caption{
            HyQ crossing a narrow bridge. }
-		   \label{fig:hyq_bridge}
+		   \label{fig:HyQ_bridge}
 \end{figure}
 
 \begin{figure*}
   \centering
-  \includegraphics[width=0.5\linewidth]{figures/hyq_obs}
+  \includegraphics[width=0.5\linewidth]{figures/HyQ_obs}
   \caption{
            Crossing a hole contact sequence for HyQ ($b_0 > 4$). }
-		   \label{fig:hyq_obs}
+		   \label{fig:HyQ_obs}
 \end{figure*}
 
 
@@ -176,7 +158,7 @@ In this long scene, HyQ is first required to cross a 55-cm large hole; then, to 
 While finding a guide path above the hole is easy for the planner, finding a sequence of contacts that allows for equilibrium is not trivial.
 Second, the narrow bridge is hard both for the planner and the contact generator: to make sure that equilibrium is preserved along the traversal,
 the bridge must be approached with the right angle.
-This can is illustrated in Figure~\ref{fig:hyq_obs}, where several feet rearrangements are required to cross both obstacles (although the video shows this best).
+This can is illustrated in Figure~\ref{fig:HyQ_obs}, where several feet rearrangements are required to cross both obstacles (although the video shows this best).
 The planner however succeeds in finding a feasible sequence in the end, again with interactive computation times.
 
 \subsubsection{HRP-2 -- Path re-planning(Figure~\ref{fig:re-planning}):}
@@ -230,14 +212,14 @@ Table~\ref{tab:requestime} summarizes the performance measurement obtained, in t
 
 \begin{table*}
 \centering
-\small
-\begin{tabular}{ l | >{\centering\arraybackslash}m{57pt} | >{\centering\arraybackslash}m{70pt} | >{\centering\arraybackslash}m{75pt} | >{\centering\arraybackslash}m{77pt} | >{\centering\arraybackslash}m{85pt} | c}
-  &  Complete guide generation & Static equilibrium & Collision & ik  & Total generation time & 1 step\\
+\footnotesize
+\begin{tabular}{ >{\centering\arraybackslash}m{37pt} | >{\centering\arraybackslash}m{57pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{70pt} | >{\centering\arraybackslash}m{73pt} | >{\centering\arraybackslash}m{80pt} | >{\centering\arraybackslash}m{10pt}}
+  Scenario (nb steps) &  Complete guide generation & Static equilibrium & Collision & Inverse Kinematics  & Total generation time & Time per step\\
  \hline
-   Stairs & 6 -- \textbf{13} --  24 & 13 --  \textbf{32} -- 329   & 1 --  \textbf{4} -- 38 & 26 --  \textbf{127} -- 1345 & 92 --  \textbf{261} -- 2174 & \textbf{14} \\
-   Standing & 4 -- \textbf{451} --  985 & 27 --  \textbf{144} -- 338   & 2 --  \textbf{12} -- 37 & 144 --  \textbf{1046} -- 2374 & 310 --  \textbf{1622} -- 3429 & \textbf{66} \\
-   Rubble & 3 -- \textbf{524} --  993 & 242 --  \textbf{511} -- 3480   & 233 --  \textbf{505} -- 4564 & 180 --  \textbf{414} -- 3518 & 1400 --  \textbf{3058} -- 13126 & \textbf{43} \\
-   Race & 1 -- \textbf{501} --  995 & 266 --  \textbf{449} -- 3956   & 824 --  \textbf{1061} -- 2130 & 666 --  \textbf{874} -- 1613 & 2530 --  \textbf{3722} -- 10030 & \textbf{33} \\
+   Stairs (18) & 6 -- \textbf{13} --  24 & 13 --  \textbf{32} -- 329   & 1 --  \textbf{4} -- 38 & 26 --  \textbf{127} -- 1345 & 92 --  \textbf{261} -- 2174 & \textbf{14} \\
+   Standing (24)& 4 -- \textbf{451} --  985 & 27 --  \textbf{144} -- 338   & 2 --  \textbf{12} -- 37 & 144 --  \textbf{1046} -- 2374 & 310 --  \textbf{1622} -- 3429 & \textbf{66}  \\
+   Rubble (71)& 3 -- \textbf{524} --  993 & 242 --  \textbf{511} -- 3480   & 233 --  \textbf{505} -- 4564 & 180 --  \textbf{414} -- 3518 & 1400 --  \textbf{3058} -- 13126 & \textbf{43} \\
+   Race (112)& 1 -- \textbf{501} --  995 & 266 --  \textbf{449} -- 3956   & 824 --  \textbf{1061} -- 2130 & 666 --  \textbf{874} -- 1613 & 2530 --  \textbf{3722} -- 10030 & \textbf{33} \\
    %Standing up & $70$ & 23 & 48\\
  \end{tabular}
 \caption{minimum, \textbf{average} and worst time (in ms) spent in the generation process for each scenario and each critical part of the generation process. The last
@@ -246,12 +228,18 @@ column indicates the average time necessary to compute one contact transition.}
 \quad
 \end{table*}
 
-In most scenarios, one can observe that the average computation time for one single step is largely below the second,
+Considering the repartition of the computation time, for HRP-2, most of the time is spent performing inverse kinematics.
+This is not surprising considering the number of calls to the methods: IK projection is used intensively to maintain contact continuity between two postures; 
+it is also applied every time a new candidate needs to be evaluated. In particular for the standing up scenario,
+the kinematic constraints are really strong. Therefore a large number of projections fail because of joint limits violation.
+
+For HyQ, there is a more regular repartition of the performances for the rubble scenario. For the obstacle scenario,
+we observe a large increase of the time spent performing collision checking and inverse kinematics. This is explained
+by the complexity of crossing the bridge: the robot has to stand high and create contacts close to each other because
+the bridge is narrow. In many cases this results in collisions, thus a large number of contacts have to be evaluated.
+
+In all scenarios, one can observe that the average computation time for one single step is largely below the second,
 thus allowing to consider interactive applications. 
-Considering the repartition of the computation time, it appears that most of the time is spent performing inverse kinematics.
-This is not surprising considering the number of calls to the methods: IK is used intensively to maintain contact continuity between two postures; 
-it is also applied every time a new candidate needs to be evaluated. However regarding state-of-the-art IK solutions, we believe there is room
-for improving the performances of the algorithm.
 
 \subsubsection{Success rates}
 Table~\ref{tab:requestpercent} summarizes the success rates obtained for each scenario.
@@ -266,7 +254,7 @@ Table~\ref{tab:requestpercent} summarizes the success rates obtained for each sc
    Rubble & 74\% & 97.87\% & 0.13\% & 2\% \\
    Obstacle race & 58\% & 95.7\% & 1.8\% & 2.5\% \\
  \end{tabular}
-\caption{Success rates for each scenario. The first value indicates the percentage of successfull complete contact plannings for 1000 tests; The second value
+\caption{Success rates for each scenario. The first value indicates the percentage of successful complete contact plannings for 1000 tests; The second value
 indicates the percentage of truly feasible root configurations: considering each limb individually, indicates the percentage of root placements of the guide trajectory that
 led to a feasible contact. Kinematic failure is the percentage of contact generations that failed because no collision-free candidate was found. Equilibrium failure is the percentage of contact
 generations that failed because no candidate respected the static equilibrium condition.}
@@ -276,6 +264,6 @@ generations that failed because no candidate respected the static equilibrium co
 
 We observe that, as expected, our planner does not succeed systematically, because of the approximations made in the implementation
 of our theoretical formulation. 
-From a pragmatic point of view, regarding the computation times, we claim that our approach is the best current compromise between completeness and efficiency:
-Indeed, the advantage of the framework is that when the contact generation fails, it does so rapidly, which allows us to rapidly re-plan a new contact sequence with 
-a reasonable chance of success.
+From a pragmatic point of view, regarding the computation times, we claim that our approach is the best current compromise between completeness and efficiency.
+Indeed, the advantage of the framework is that when the contact generation fails, it does so rapidly, which allows us to rapidly re-plan a new contact sequence with a reasonable chance of success.
+The most efficient (and immediate) approach is probably to launch in parallel several instances of the planner for a given problem (our current implementation is single threaded) and to apply any successful result.

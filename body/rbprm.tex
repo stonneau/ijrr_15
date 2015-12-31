@@ -49,7 +49,7 @@ Therefore we can approximate $C_{reach}$ with a set $C_{reach} \subset C_{reach}
 C_{reach}^1 = \{ \mathbf{q}^0 : W(\mathbf{q}^{0}) \cap O \neq \emptyset \wedge W^0(\mathbf{q}^{0}) \cap O = \emptyset \} % \\ }
  %~ & \wedge & A_{trunk}(\mathbf{q}^{root}) \cap W = \emptyset \}
 \end{equation}
-It is straighforward to prove that  $C_{reach} \subset C_{reach}^1$ (by construction of the included set). 
+It is straightforward to prove that  $C_{reach} \subset C_{reach}^1$ (by construction of the included set). 
 This inclusion is very important: it directly implies that any motion-planning algorithm with a guaranty of completeness in $SE(3) \times \mathbb{R}^n$ is complete  in $C_{reach} \times \mathbb{R}^n$. This is a strong reduction of the search space, which can be directly applied to any existing method.
  
 The condition $C_{reach}^1$ is only necessary which means that one such root placement might not be truly feasible: in practice it is not guaranteed to find a valid sequence of contacts for every guide trajectory in $C_{reach}^1$.
@@ -72,28 +72,28 @@ C_{reach}^s = \{ \mathbf{q}^0 : W(\mathbf{q}^{0}) \cap O \neq \emptyset \wedge W
 \end{equation}
 %
 The higher $s$, the closer this ``reachability condition'' is to being sufficient, and if $s=1$, the planner is complete. The parametrization of $s$ allows to find a trade-off between these two desirable properties.
-As an example, Figure~\ref{fig:hyq_roms} presents the volumes $W$ computed for the HyQ robot.
+As an example, Figure~\ref{fig:HyQ_roms} presents the volumes $W$ computed for the HyQ robot.
 In Appendix~\ref{app:rom}, we give a generic method to compute these volumes, with the example of HRP-2.
 %~ Section~\ref{sec:results} shows that in practice, it is easy to adjust $s$ to keep most of the interesting guides without introducing incorrect guides.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.95\linewidth]{figures/hyq_roms}
+  \includegraphics[width=0.95\linewidth]{figures/HyQ_roms}
   \caption{
            $W$ volumes for HyQ. The green shapes represent the reachable workspace $W^k$ of each limb. The red shape is $W^0$, a scaling of the convex hull
            of the torso of the robot.}
-		   \label{fig:hyq_roms}
+		   \label{fig:HyQ_roms}
 \end{figure}
 
 \subsection{Computing the guide trajectory in $C_{reach}^s$}
 Once a value of $s$ has been fixed, any sampling-based motion planner can be used to plan a trajectory in $C_{reach}^s$. 
 Indeed, contrary to $C_{Contact}$,  $C_{reach}^s$ has a non zero measure in the configuration space $C$. Therefore a standard uniform sampling approach
 can work, in spite of a high rejection rate. 
-Thus, the only significant change regarding a classical planner is to replace the classical collision checking method with a test of appartenance to $C_{reach}^s$ when verifying
+Thus, the only significant change regarding a classical planner is to replace the classical collision checking method with a test of belonging to $C_{reach}^s$ when verifying
 that drawn configurations and associated local paths are valid.
 
 However, to improve the sampling efficiency while remaining probabilistically complete, we bias the sampling process to generate near obstacle configurations, similarly to~\cite{Amato98choosinggood}.
 First, a configuration is set to a random point on the surface of one randomly chosen obstacle. The root location is then translated and rotated randomly until the reachability condition is satisfied.
 Our current implementation of these modifications is based on the Bi-RRT planner provided by the HPP software.
 
-Thanks to this small set of modifications, the high dimensional truly feasible path planning problem is reduced to a standard geometry and collision checking problem, in a much lower dimension (6 for Hyq, 8 for HRP-2 that has joints in the torso). In so doing we make the problem tractable for sampling-based approaches, with extremely efficient computation times.
+Thanks to this small set of modifications, the high dimensional truly feasible path planning problem is reduced to a standard geometry and collision checking problem, in a much lower dimension (6 for HyQ, 8 for HRP-2 that has joints in the torso). In so doing we make the problem tractable for sampling-based approaches, with extremely efficient computation times.

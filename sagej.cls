@@ -311,7 +311,7 @@ centering]{geometry}
 \hbox{}Reprints and permission:\\
 \hbox{}sagepub.co.uk/journalsPermissions.nav\\
 \hbox{}DOI: 10.1177/ToBeAssigned\\
-\hbox{}www.sagepub.com/\\[2.3pt]
+\hbox{}ijr.sagepub.com/\\[2.3pt]
 \hbox{}\includegraphics[height=4mm]{SAGE_Logo}
 \end{minipage}
 {\par\large%
@@ -350,7 +350,8 @@ centering]{geometry}
 \def\volumeyear{0000}
 \def\volumenumber{XX}
 \def\issuenumber{X}
-\def\journalname{Journal Title}
+\def\journalname{The International Journal of
+Robotics Research}
 
 \def\runninghead#1{\markboth{{#1}}{}}
 
