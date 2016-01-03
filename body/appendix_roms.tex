@@ -43,13 +43,13 @@ is acceptable, especially because the lost set essentially relates to configurat
 but more efficient, regarding the number of collision tests to be performed by RB-RRT.
 In step 1 on the other hand, selecting the convex hull (Figure~\ref{fig:hrp2_roms}--middle) instead of a minimum encompassing shape (Figure~\ref{fig:hrp2_roms}--left) may introduce false positives.
 Concretely, because the false positive set intersects with $W^0$, the scaling volume of the robot torso, the induced error is compensated,
-as verified by the date of Table~\ref{tab:requestpercent}.
+as verified by the results shown by Table~\ref{tab:requestpercent}.
 
 \subsection{Step 2: computing the trunk scaling workspace $W^0$ of the robot}
 To define the volume $W^0$ of HRP-2, we proceed in an empirical manner.
 First, we compute the bounding boxes of the robot trunk, head, and upper legs (Figure~\ref{fig:hrp2_w} -- red shapes).
-Then, we perform a scaling of these boxes by a factor $s$. For different values of $s$, we verify the true feasibility condition:
-For a large number of configurati
-ons that verify the reachability condition, we try to generate contact configurations. We plot 
-the success rates obtained depending on $s$ (Figure~\ref{hrp2_w}). We then choose the minimal satisfying value of $s$.
+Then, we perform a scaling of these boxes by a factor $s$. For different values of $s$, we verify the geometrical feasibility condition:
+For a large number of configurations that verify the reachability condition, we try to generate contact configurations. We then
+empirically select the lowest value of $s$ that provides a reasonnable success rate in all scenarios.
+For HRP-2, we choose $s=1.2$. This leads to a success rate higher than 86 \% for all scenarios.
 

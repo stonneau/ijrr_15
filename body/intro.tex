@@ -47,7 +47,7 @@ A major drawback of these optimization based approaches is thus that they only o
 
 It thus appears that an integrated optimization-based approach \citep{Mordatch:2012:DCB:2185520.2185539}, able to generate a locally-optimal, complete trajectory within minutes, currently outperforms
 existing planners, decoupled or not. However, recent contributions are able to interpolate dynamically-feasible
-trajectories between contact configurations \citep{herzog2015trajectory, Carpentier2016}. \citeauthor{Carpentier2016} are able to achieve this with real-time performances.
+trajectories between contact configurations \citep{herzog2015trajectory, Park116, Carpentier2016}. \citeauthor{Carpentier2016} are able to achieve this with real-time performances on the real robot.
 To generate the input contact configurations, there is a need for an efficient contact planner, able to break the combinatorial to generate discrete contact sequences rapidly. 
 Such a planner holds the promise of a complete real-time multi-contact locomotion system.
 
@@ -78,7 +78,7 @@ Then we address \Pb by extending the path into a \textit{truly feasible} sequenc
 This second step requires computing contact configurations verifying a condition for \textit{static equilibrium feasibility}, that requires
 explicit contact computation.
 
-This sequential approach is the key to the efficiency of our method, though it can
+This sequential approach is the key to the efficiency of our method, though it
 can result in failures because our assumption is not always true. However, we demonstrate empirically the validity of the approach: the high success rate of our method, combined with the low computation times we obtain, allows us to plan (and re-plan upon failure) multi contact sequences at interactive rates.
 
 \subsection{Paper contribution and organization}
@@ -118,5 +118,5 @@ The present paper is an extension of a conference paper to appear in the proceed
 The conference paper focuses on the theoretical formulation of the problem, and presents results obtained with virtual avatars.
 This extension completes this work with a discussion on the implementation of this theory to real-world robots and problems.
 In particular, we introduce a robust balance criterion, designed to ensure the equilibrium of the robot despite bounded error in the contact forces. We also provide details on the HPP implementation
-of our contact generation algorithm. Furthermore, our experiments are now applied to real-robot models, namely HRP-2 and HyQ\adnote{cite Semini}. Appendix~\ref{app:rom} describes the generation process
+of our contact generation algorithm. Furthermore, our experiments are now applied to real-robot models, namely HRP-2 and HyQ~\citep{semini11hyqdesignjsce}. Appendix~\ref{app:rom} describes the generation process
 for the robot.

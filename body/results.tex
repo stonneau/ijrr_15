@@ -17,9 +17,9 @@ time to execute it. We arbitrarily approximate this time to one second.
 \begin{figure}[t]
 \centering
   \begin{overpic}[width=1\linewidth]{figures/robots_old}
-		%~ \put (5,58) {1)} 
-		%~ \put (37,58) {2)} 
-		%~ \put (68,58) {3.a)} 
+		%~ \put (5,) {1)} 
+		%~ \put (37,) {2)} 
+		%~ \put (68,) {3.a)} 
 		%~ \put (5,27) {3.b)} 
 		%~ \put (37,27) {4.a)} 
 		%~ \put (68,27) {4.b)} 
@@ -72,7 +72,7 @@ Again, the interpolation motion between the contact stances is out of the scope 
   \begin{overpic}[width=0.5\linewidth]{figures/stair_robust}
 		\put (17,5) {\small{\color{red}$b_0 = 0.23$}} 
 		\put (79,5) {\small{\color{green}$b_0 = 6.16$}} 
-		%~ \put (68,58) {3.a)} 
+		%~ \put (68,) {3.a)} 
 		%~ \put (5,27) {3.b)} 
 		%~ \put (37,27) {4.a)} 
 		%~ \put (68,27) {4.b)} 
@@ -106,6 +106,29 @@ for the computed path. The reason for this is not reachability, but equilibrium.
 though it remains compatible with interactive performances. % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
 
 
+\subsubsection{HRP-2 -- Car egress (Figure~\ref{fig:car}):}
+This scenario is inspired from the Darpa challenge car egress scenario (\url{http://cpc.cx/edH}). HRP-2 has 
+to find the contact sequence that allows it to step out of a car.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\linewidth]{figures/car}
+  \caption{
+           Selected frames the car egress scenario. }
+		   \label{fig:car}
+\end{figure}
+
+
+\noindent\textbf{Contacts involved:} All (both feet and hands).
+
+\noindent\textbf{Heuristics:} $h_w$.
+
+\noindent\textbf{Observations:} The difficulty of this scenario lies in the strong reduction of the reachable workspace induced 
+by the extreme proximity of all obstacles. The planner is able to find a sequence, that consists in many stances.
+The proximity of the obstacles invalidate a large number of contact candidates because of collisions. To respect the condition
+that only one contact must be broken between each phase, the motion has to be decomposed into a large number of stances (61 in average).
+While this scenario is the slower to solve, the planner still computes a solution interactively.
+ % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
 
 
 \subsubsection{HyQ -- Darpa-style rubble (Figure~\ref{fig:darpa})}
@@ -130,7 +153,7 @@ collide with the environment at all times. %\adnote{Why do not relax this constr
 Again, the computed time remains however interactive.
 
 \subsubsection{HyQ -- Obstacle race (Figure~\ref{fig:HyQ_bridge} and~\ref{fig:HyQ_obs}):}
-In this long scene, HyQ is first required to cross a 55-cm large hole; then, to cross a narrow "bridge",  only 25-cm large.
+In this long scene, HyQ is first required to cross a 55-cm large hole; then, to cross a narrow ``bridge'', large of only 25-cm.
 
 \begin{figure}
   \centering
@@ -154,14 +177,14 @@ In this long scene, HyQ is first required to cross a 55-cm large hole; then, to 
 
 \noindent\textbf{Heuristics:} $h_w$ for all legs. The robustness threshold $b_0$ is set to $4$.
 
-\noindent\textbf{Observations:} Despite the apparent simplicity of the scene, this scenario is the hardest for our planner.
-While finding a guide path above the hole is easy for the planner, finding a sequence of contacts that allows for equilibrium is not trivial.
+\noindent\textbf{Observations:} Despite the apparent simplicity of the scene, this scenario is a hard case for a contact planner.
+While finding a guide path above the hole is easy for the guide planner, finding a sequence of contacts that allows for equilibrium is not trivial.
 Second, the narrow bridge is hard both for the planner and the contact generator: to make sure that equilibrium is preserved along the traversal,
 the bridge must be approached with the right angle.
-This can is illustrated in Figure~\ref{fig:HyQ_obs}, where several feet rearrangements are required to cross both obstacles (although the video shows this best).
+The difficulty is illustrated in Figure~\ref{fig:HyQ_obs}, where several feet rearrangements are required to cross the hole (although the video shows this best).
 The planner however succeeds in finding a feasible sequence in the end, again with interactive computation times.
 
-\subsubsection{HRP-2 -- Path re-planning(Figure~\ref{fig:re-planning}):}
+\subsubsection{HRP-2 -- Path re-planning (Figure~\ref{fig:re-planning}):}
 In this long scene, HRP-2 plans a path through several obstacles. the scene is edited during the execution of the motion: a stair is added,
 some stepping stones are removed, and part of the final staircase is deleted. All these modifications require re-planning.
 
@@ -207,8 +230,6 @@ To analyze performance, for each considered scenario, we ran the simulation 1000
 We measured the computation time spent in each aspect of the algorithm, and also analyzed the success
 rate obtained for each scenario.
 
-\subsubsection{Computation times}
-Table~\ref{tab:requestime} summarizes the performance measurement obtained, in terms of computation times.
 
 \begin{table*}
 \centering
@@ -218,8 +239,9 @@ Table~\ref{tab:requestime} summarizes the performance measurement obtained, in t
  \hline
    Stairs (18) & 6 -- \textbf{13} --  24 & 13 --  \textbf{32} -- 329   & 1 --  \textbf{4} -- 38 & 26 --  \textbf{127} -- 1345 & 92 --  \textbf{261} -- 2174 & \textbf{14} \\
    Standing (24)& 4 -- \textbf{451} --  985 & 27 --  \textbf{144} -- 338   & 2 --  \textbf{12} -- 37 & 144 --  \textbf{1046} -- 2374 & 310 --  \textbf{1622} -- 3429 & \textbf{66}  \\
-   Rubble (71)& 3 -- \textbf{524} --  993 & 242 --  \textbf{511} -- 3480   & 233 --  \textbf{505} -- 4564 & 180 --  \textbf{414} -- 3518 & 1400 --  \textbf{3058} -- 13126 & \textbf{43} \\
-   Race (112)& 1 -- \textbf{501} --  995 & 266 --  \textbf{449} -- 3956   & 824 --  \textbf{1061} -- 2130 & 666 --  \textbf{874} -- 1613 & 2530 --  \textbf{3722} -- 10030 & \textbf{33} \\
+   Car (61)& 1 -- \textbf{529} --  995 & 64 --  \textbf{85} -- 144   & 394 --  \textbf{735} -- 1422 & 3947 --  \textbf{13069} -- 36262 & 6775 --  \textbf{20890} -- 52963 & \textbf{342} \\
+   Rubble (71)& 3 -- \textbf{524} --  993 & 242 --  \textbf{511} -- 3480   & 233 --  \textbf{505} -- 4564 & 180 --  \textbf{414} -- 3518 & 1400 --  \textbf{30} -- 13126 & \textbf{43} \\
+   Race (112)& 1 -- \textbf{501} --  995 & 266 --  \textbf{449} -- 3956   & 824 --  \textbf{1061} -- 2130 & 666 --  \textbf{874} -- 1613 & 2530 --  \textbf{3722} -- 10030 & \textbf{33}
    %Standing up & $70$ & 23 & 48\\
  \end{tabular}
 \caption{minimum, \textbf{average} and worst time (in ms) spent in the generation process for each scenario and each critical part of the generation process. The last
@@ -228,21 +250,7 @@ column indicates the average time necessary to compute one contact transition.}
 \quad
 \end{table*}
 
-Considering the repartition of the computation time, for HRP-2, most of the time is spent performing inverse kinematics.
-This is not surprising considering the number of calls to the methods: IK projection is used intensively to maintain contact continuity between two postures; 
-it is also applied every time a new candidate needs to be evaluated. In particular for the standing up scenario,
-the kinematic constraints are really strong. Therefore a large number of projections fail because of joint limits violation.
 
-For HyQ, there is a more regular repartition of the performances for the rubble scenario. For the obstacle scenario,
-we observe a large increase of the time spent performing collision checking and inverse kinematics. This is explained
-by the complexity of crossing the bridge: the robot has to stand high and create contacts close to each other because
-the bridge is narrow. In many cases this results in collisions, thus a large number of contacts have to be evaluated.
-
-In all scenarios, one can observe that the average computation time for one single step is largely below the second,
-thus allowing to consider interactive applications. 
-
-\subsubsection{Success rates}
-Table~\ref{tab:requestpercent} summarizes the success rates obtained for each scenario.
 \begin{table*}
 \centering
 \begin{tabular}{ l | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | c}
@@ -250,7 +258,7 @@ Table~\ref{tab:requestpercent} summarizes the success rates obtained for each sc
  \hline
    Steep stairs & 100\%  & 99.5\% & 0.11\% & 0.39\% \\
    Standing up & 68\% & 88\% & 6\% & 6\% \\
-   %~ Truck egress & \% & \% & \% &  \% \\
+   Car egress & 39\% & 77\% & 21\% &  2\% \\
    Rubble & 74\% & 97.87\% & 0.13\% & 2\% \\
    Obstacle race & 58\% & 95.7\% & 1.8\% & 2.5\% \\
  \end{tabular}
@@ -262,8 +270,28 @@ generations that failed because no candidate respected the static equilibrium co
 \quad
 \end{table*}
 
+\subsubsection{Computation times}
+Table~\ref{tab:requestime} summarizes the performance measurement obtained, in terms of computation times.
+
+Considering the repartition of the computation time, for HRP-2, most of the time is spent performing inverse kinematics.
+This is not surprising considering the number of calls to the methods: IK projection is used intensively to maintain contact continuity between two postures; 
+it is also applied every time a new candidate needs to be evaluated. In particular for the car egress scenario,
+the kinematic constraints are really strong. Therefore a large number of projections fail because of joint limits violation.
+
+For HyQ, there is a more regular repartition of the performances for the rubble scenario. For the obstacle scenario,
+we observe a large increase of the time spent performing collision checking and inverse kinematics. This is explained
+by the complexity of crossing the bridge: the robot has to stand high and create contacts close to each other because
+the bridge is narrow. In many cases this results in collisions, thus a large number of contacts have to be evaluated.
+
+In all scenarios, one can observe that the average computation time for one single step is largely below the second,
+thus allowing to consider interactive applications. 
+
+Table~\ref{tab:requestpercent} summarizes the success rates obtained for each scenario.
+
+\subsubsection{Success rates}
 We observe that, as expected, our planner does not succeed systematically, because of the approximations made in the implementation
-of our theoretical formulation. 
-From a pragmatic point of view, regarding the computation times, we claim that our approach is the best current compromise between completeness and efficiency.
+of our theoretical formulation. The extreme situation of the car egress scenario provides the less satisfying results in terms of kinematic failure. This is not
+suprising considering the narrowness of the scene.
+From a pragmatic point of view, regarding the computation times, we claim that our approach provides a satisfying compromise between completeness and efficiency.
 Indeed, the advantage of the framework is that when the contact generation fails, it does so rapidly, which allows us to rapidly re-plan a new contact sequence with a reasonable chance of success.
 The most efficient (and immediate) approach is probably to launch in parallel several instances of the planner for a given problem (our current implementation is single threaded) and to apply any successful result.
