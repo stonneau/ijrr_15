@@ -1,0 +1,97 @@
+\documentclass[a4paper]{article}
+ \usepackage{fullpage}
+\usepackage{amsfonts} % pour les lettres maths creuses \mathbb
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[frenchb]{babel}
+\usepackage{aeguill}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{pdfpages}
+
+\newcommand\dx{\dot{x}}
+\newcommand\dy{\dot{y}}
+\newcommand\ddx{\ddot{x}}
+\newcommand\ddy{\ddot{y}}
+\def\real{{\mathbb R}}
+\frenchbsetup%
+{%
+StandardItemLabels=true,%
+ItemLabels=\ding{43},%
+}%
+
+\author {}
+\title {Cover letter for the IJRR submission \\ ``An efficient acyclic contact planner for multiped robots''}
+\date {}
+\begin{document}
+\maketitle
+
+Dear editor and reviewers, \\ \\
+
+The current submission is an extension to our conference paper ``A reachability-based planner for sequences of acyclic contacts in
+cluttered environments'', accepted to ISRR 15 (\url{http://stevetonneau.fr/files/publications/isrr15/isrr15.pdf}).
+
+In these two papers, our objective is to propose automatic methods
+to compute the contact sequence that characterize a robot motion in
+cluttered environment.
+
+We joined to the present submission the reviews that were made on the
+conference paper. They follow the cover letter.
+
+The extension of our work addresses the main comments of the reviewers:
+
+\begin{itemize}
+\item They were concerned by the fact that our demonstrations were
+considering virtual avatars and not actual robots. In the present
+submission, all our examples are applied to the HRP-2 and HyQ robots (Section 6).
+To achieve this, a new contribution is proposed in our paper:
+We introduce a robustness criterion for asserting the static equilibrium
+of a configuration (Section 5.1). We use it in combination with new heuristics that we
+propose to bias the contact generation process towards configurations
+relevant for the motion being performed (Section 5.2).
+With the exception of the dextrous hand, all the demonstrations shown in
+the paper and the video are entirely new.
+
+\item They also judged that the conference paper provided a theoretical
+description of our approach, but lacked the details on how to apply
+the method on an actual robot. We did not have the room to describe
+this process in the conference paper, and explain the complete process
+for the HRP-2 in the present submission (Appendix A).
+
+\item Concerning remarks made on the reproducibility of the method,
+we now provide the complete pseudo code of the algorithm, as well as the
+source code of our application (Appendix B).
+
+\item The paper has been largely re written: we provide a clearer
+comparison to the state of the art (Section 1.1); we clarify our statement regarding
+our computation times (Section 6 and 6.1.6); we make a clear distinction between the
+theoretical concepts we propose and their approximation (Section 2).
+
+\item Regarding the performances, compared to our conference paper, the planner is much more efficient.
+A fundamental change is the reimplementation of the algorithm as a Bi-RRT planner instead of the PRM
+approach. The code is also more efficient thanks to its complete rewriting into the HPP platform.
+
+\item Finally, we propose an analysis of the performances of our method and
+the success rates we obtained for each scenario (Section 6.2). This analysis provides
+a support for our argumentation on the strong choices made in the design
+of our planner (Section 1.2 and 2).
+\end{itemize}
+
+We are convinced that these points not only provide a complete answer to
+the reviews of the conference paper, but also bring new contributions to
+the community, that justify a journal publication.
+
+We thank the editor and the reviewers for their time.
+
+
+Sincerely, \\
+
+The authors
+
+\includepdf[pages=-]{reviewisrr.pdf}
+
+
+\end{document}
