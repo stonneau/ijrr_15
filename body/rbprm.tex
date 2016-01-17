@@ -22,7 +22,7 @@ such that
 The set of all \textit{geometrically feasible} root placements is denoted by $C_{reach}$. By extension, a path $\mathbf{q}^0(t)$ is \textit{geometrically feasible} if $\forall t \in [0,1], \mathbf{q}^0(t) \in C_{reach}$.
 
 For this stage, and for this stage only, we make the assumption that in cluttered environments, a \textit{geometrically feasible} path can be transformed into a \textit{truly feasible} path.
-Under this assumption, for a two-stage acyclic contact planner to be exact and complete, we need the combination of two conditions on a guide trajectory generator: all the generated trajectories must be \textit{geometrically feasible} (sufficient condition); the guide planner must be complete, i.e. it must be able to discover any \textit{geometrically feasible} trajectory (necessary condition).
+Under this assumption, for a two-stage acyclic contact planner to be exact and complete, we need the combination of two conditions on a guide path generator: all the generated paths must be \textit{geometrically feasible} (sufficient condition); the guide planner must be complete, i.e. it must be able to discover any \textit{geometrically feasible} path (necessary condition).
 
 In this Section we characterize $C_{reach}$ theoretically with a necessary and a sufficient condition for belonging to the set.
 We then describe our implementation of an efficient RRT planner in $C_{reach}$.
@@ -52,16 +52,16 @@ C_{reach}^1 = \{ \mathbf{q}^0 : W(\mathbf{q}^{0}) \cap O \neq \emptyset \wedge W
 It is straightforward to prove that  $C_{reach} \subset C_{reach}^1$ (by construction of the included set). 
 This inclusion is very important: it directly implies that any motion-planning algorithm with a guaranty of completeness in $SE(3) \times \mathbb{R}^n$ is complete  in $C_{reach} \times \mathbb{R}^n$. This is a strong reduction of the search space, which can be directly applied to any existing method.
  
-The condition $C_{reach}^1$ is only necessary which means that one such root placement might not be truly feasible: in practice it is not guaranteed to find a valid sequence of contacts for every guide trajectory in $C_{reach}^1$.
+The condition $C_{reach}^1$ is only necessary which means that one such root placement might not be truly feasible: in practice it is not guaranteed to find a valid sequence of contacts for every guide path in $C_{reach}^1$.
 
 \subsubsection*{Geometrical feasibility: sufficient condition}
 %~ In building $C_{reach}^1$, we directly considered the including hull of the root body $W^{0}$, obtaining a necessary condition. 
 A trivial sufficient condition for \textit{geometrical feasibility} can be constructed as a variation of $C_{reach}^1$, by replacing $W^0$ with a bounding volume $B^{max}$ encompassing the whole robot in a given pose, except for the effector surfaces to be in contact. We denote by \mbox{$C_{reach}^\infty \subset C_{reach}$} the set of root placements corresponding to the sufficient condition.
 
-In general, the inclusion is strict, which means that we lose the completeness of the two-stage contact planner (i.e. the planner is not able to discover a trajectory inside \mbox{$C_{reach} \setminus C_{reach}^\infty$}). However, the sufficient condition guarantees that any such trajectories leads to a valid sequence of contacts (i.e. $\pi$ is defined).
+In general, the inclusion is strict, which means that we lose the completeness of the two-stage contact planner (i.e. the planner is not able to discover a path inside \mbox{$C_{reach} \setminus C_{reach}^\infty$}). However, the sufficient condition guarantees that any such path leads to a valid sequence of contacts (i.e. $\pi$ is defined).
 
 \subsection{Geometrical feasibility: a compromise reachability condition}
-The sufficient condition is not interesting in practice since it leads the solver to lose too many interesting trajectories. The necessary condition is not perfect either, since the first stage of the planner would stop on a guide that is not \textit{geometrically feasible} in practice. It might be possible to find a shape $B$ that is necessary and sufficient; however, it seems intuitively very unlikely in general. The construction of a shape $W^0 \subset B \subset B^{max}$ leading to a necessary and sufficient condition (or the proof of its nonexistence) is out of the scope of this work.
+The sufficient condition is not interesting in practice since it leads the solver to lose too many interesting paths. The necessary condition is not perfect either, since the first stage of the planner would stop on a guide that is not \textit{geometrically feasible} in practice. It might be possible to find a shape $B$ that is necessary and sufficient; however, it seems intuitively very unlikely in general. The construction of a shape $W^0 \subset B \subset B^{max}$ leading to a necessary and sufficient condition (or the proof of its nonexistence) is out of the scope of this work.
 
 However, between $W^0$ and $B^{max}$, a trade-off can be found between a necessary and a sufficient condition. We define $W^0_s$ as the volume $W^0$ subject to a scaling transformation by a factor $s \in \mathbb{R}^+$. 
 %
@@ -85,8 +85,8 @@ In Appendix~\ref{app:rom}, we give a generic method to compute these volumes, wi
 		   \label{fig:HyQ_roms}
 \end{figure}
 
-\subsection{Computing the guide trajectory in $C_{reach}^s$}
-Once a value of $s$ has been fixed, any sampling-based motion planner can be used to plan a trajectory in $C_{reach}^s$. 
+\subsection{Computing the guide path in $C_{reach}^s$}
+Once a value of $s$ has been fixed, any sampling-based motion planner can be used to plan a path in $C_{reach}^s$. 
 Indeed, contrary to $C_{Contact}$,  $C_{reach}^s$ has a non zero measure in the configuration space $C$. Therefore a standard uniform sampling approach
 can work, in spite of a high rejection rate. 
 Thus, the only significant change regarding a classical planner is to replace the classical collision checking method with a test of belonging to $C_{reach}^s$ when verifying
