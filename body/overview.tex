@@ -58,7 +58,8 @@ Planning in $C_{Contact}^0$ boils down to planning in $\mathbb{R}^r$, which has 
 
 An intuitive description of \gls{contact feasible} configurations is ``close, but not too close'': close, because a contact surface must be partially included in the reachable workspace of the robot (represented for the right leg in Figure~\ref{fig:contact_gen}--a); not too close, because the robot must avoid collision.
 We approximate $C_{Contact}^0$ with a set $C_{reach}^0$, defined by the \textit{reachability condition}, a geometrical criterion based on this intuitive description.
-In Section~\ref{rbprm} we detail how  $C_{reach}^0$ is sampled to compute a guide path with a dedicated planner, the Reachability-Based RRT---RB-RRT--- (Figure~\ref{fig:framework}---\Pa).
+Our objective is to find a root path such that the root (scaled by a factor $s>1$) is not in collision, while the reachable workspace is in collision with the environment.
+In Section~\ref{rbprm} we detail how  $C_{reach}^0$ is designed and sampled to compute a guide path with a dedicated planner, the Reachability-Based RRT---RB-RRT--- (Figure~\ref{fig:framework}---\Pa).
 
 \subsection{Generating a discrete sequence of contact configurations --- \Pb}
 
