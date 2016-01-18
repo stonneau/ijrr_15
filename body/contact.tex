@@ -1,23 +1,25 @@
 % !TEX root =  ../main.tex
 \section{From a guide path to a discrete sequence of contact configurations ($\mathcal{P}_2$)}
 \label{sec:contact}
-As an input of this stage, we consider a \textit{geometrically feasible} guide path $\mathbf{q}^0(t) : [0,1] \longrightarrow SE(3)$ for the root of the robot $R$. We now consider the second problem of computing a discrete sequence of contact configurations $\mathbf{Q}^{\overline{0}}$ for the limbs of the robot along $\mathbf{q}^0(t)$.
+Our planner computes guide paths in \gls{creach0}, an over-approximation of the set of \gls{equilibrium feasible} paths, \gls{ccequil0}.
+As an input of this stage, we however assume an \gls{equilibrium feasible} guide path $\mathbf{q}^0(t) : [0,1] \longrightarrow \mathbb{R}^r$ for the root of the robot $R$.
+If this is not the case, our planner will fail rapidly, thus allowing replanning, as discussed in Section TODO.
+We now consider the second problem of computing a discrete sequence of contact configurations $\mathbf{Q}^{\overline{0}}$ for the limbs of the robot along $\mathbf{q}^0(t)$.
 
 In this Section we first describe a single contact-generation process, that is how to generate a contact configuration for a given limb 
 and root location.
-Then, on this method we build an iterative algorithm to generate a discrete sequence of contact configurations in equilibrium.
+Then, we propose an iterative algorithm to generate a discrete sequence of contact configurations in static equilibrium.
 
-In what follows a \textit{valid} contact configuration is understood as being collision free, satisfying joint limits, and allowing to maintain the static equilibrium
-of the robot. The first two tests are trivial; our criterion to assert efficiently the static equilibrium of the system
+Our criterion to assert efficiently the static equilibrium of the system
 is described in Section~\ref{sec:heuristics}.
 
 \subsection{Definition of a contact generator}
 \label{sec:single_contact}
 We consider a limb $R^k$  and a root configuration $\mathbf{q}^0$.
-From \textit{geometrical feasibility} we know that there exists an infinite list of mappings $P = [\pi_0,..,\pi_i, ...]$ that verify \eqref{eq:pi} for $\mathbf{q}^0$.
-The issue is then to evaluate locally at least one element of $P$ at $\mathbf{q}^0$.
+From \glslink{contact feasible}{\textit{contact feasibility}} we know that there exists at least one $\mathbf{q}^{\overline{0}}$ that verifies $\mathbf{q}^k \oplus \mathbf{q}^{\overline{k}} \in$ \gls{ccontact}.
+The issue is then to exhibit locally this $\mathbf{q}^{\overline{0}}$.
 
-While exhibiting analytically a $\pi_i$ does not seem tractable, we can iteratively evaluate $\pi_i(\mathbf{q}^0)$ as follows:
+While exhibiting analytically a $\mathbf{q}^{\overline{0}}$ does not seem tractable, we can iteratively try to generate one as follows:
 \begin{enumerate}
 \item Generate randomly a collision-free limb configuration;
 \item Project the end-effector onto the closest surface with inverse kinematics;
@@ -34,10 +36,10 @@ We then apply the following steps:
 \begin{enumerate}
 \item Generate off-line $N$ valid sample limb configurations $\mathbf{q}^k_i,  0 \leq i < N$;
 \item Using the end-effector positions $\mathbf{p}(\mathbf{q}^k_i)$ as indices, store each sample in an octree data structure;
-\item Figure~\ref{fig:contact_gen}--b and c--: At runtime, when contact creation is required, retrieve from the octree the list of samples $S \subset C_{Contact}^{\epsilon}$ close to contact;
+\item At runtime, when contact creation is required, retrieve from the octree the list of samples $S \subset C_{Contact}^{\epsilon}$ close to contact (Figure~\ref{fig:contact_gen} (b) and (c));
 \item According to a user-defined heuristic $h$, sort the elements of $S$;
-\item Figure~\ref{fig:contact_gen}--d and e--: Select the first configuration of $S$ (or fail if $S$ is empty). Project the configuration onto contact with inverse kinematics;
-\item If a valid solution is found, stop. Otherwise remove the element from $S$ and go back step 5.
+\item Select the first configuration of $S$. Project the configuration onto contact with inverse kinematics. If $S$ is empty, stop (failure case) (Figure~\ref{fig:contact_gen} (d) and (e));
+\item If a valid solution is found, stop (success case). Otherwise remove the element from $S$ and go back step 5.
 \end{enumerate}
 
 This approach has two main advantages.
@@ -45,9 +47,13 @@ First, this allows us to select a large number of candidates in a single proximi
 Having several candidates is interesting, because it allows to compare them using a user-selected heuristic $h$, thus obtaining
 a locally-optimal candidate.
 Furthermore, the fact that the candidates are already close to contact increases the odds that the inverse kinematics will converge to a valid solution in a small number of iterations.
-Regarding completeness, it is immediate to verify that as $N$ grows, the completeness of the method is restored.
-$N$ is a parameter that allows us to specify the trade-off between completeness and efficiency.
+Regarding convergence, it is immediate to verify that as $N$ grows, the probability of finding a solution if it exists converges to 1.
+$N$ is a parameter that allows us to specify the trade-off between exhaustiveness and efficiency.
 The reader is invited to refer to our previous work for an extensive discussion on the optimal value of $N$ \citep{Tonneau2014}.
+
+It should be noted that a failure case for our contact generator does not necessarily mean that the planner will globally fail. Indeed,
+for a given root configuration, if contact configurations are found for other limbs, resulting in static equilibrium, the configuration will be accepted despite
+the failure to generate a contact.
 
 We thus have defined a real-time contact generator. For a given configuration, the generator can be as complete as required by the context (by increasing the number of samples).
 
@@ -59,15 +65,15 @@ the contacts are created, allowing it to break the combinatorial.
 The complete algorithm can be found in Appendix~\ref{app:contact}.
 In the remainder of the section we provide an intuition of it.
 
-As an input, we consider the guide path $\mathbf{q}^0(t)$, automatically discretized into a sequence of $j$ key placements:  
+As an input, we consider the guide path $\mathbf{q}^0(t)$, automatically discretized into a sequence of $j$ key configurations:  
 \begin{equation*}
 	\mathbf{Q}^0 = [\mathbf{q}^0_{0}; \mathbf{q}^0_{i}; ..., \mathbf{q}^0_{j-1}]
 \end{equation*} 
-where $\mathbf{q}^0_{0}$ and $\mathbf{q}^0_{j-1}$ respectively correspond to the start and goal configurations. To ensure continuity in the contact transition phases, we rewrite $\pi$ under the following recursive form for any $0<i<j$:
+where $\mathbf{q}^0_{0}$ and $\mathbf{q}^0_{j-1}$ respectively correspond to the start and goal configurations. To ensure continuity in the contact transition phases, we propose a recursive mapping $\pi$, for any $0<i<j$:
 \begin{equation*}
     \pi\colon\left\{
     \begin{aligned}		
-        \mathbf{Q}^0 \in C_{reach} & \longrightarrow C_{contact} \\
+        \mathbf{Q}^0 \in C_{equil}^0 & \longrightarrow C_{equil} \\
         %\mathbf{q}^{0}_0 &  \longrightarrow  \mathbf{q}_{start} \\
         \mathbf{q}^{0}_i &  \longrightarrow  \mathbf{q}^{0}_i \oplus g(\mathbf{q}_{i - 1},\mathbf{q}^{0}_i) 
     \end{aligned}
@@ -129,7 +135,7 @@ was not successful for a limb, the limb is pushed on top of the queue, and will 
 \end{enumerate}
 
 These three rules provide a deterministic manner to generate contacts along the discretized guide path.
-For a given truly feasible path, our current implementation does not guarantee that the planner will succeed in generating a configuration in static equilibrium, because
+For a given \gls{equilibrium feasible} path, our current implementation does not guarantee that the planner will succeed in generating a configuration in static equilibrium, because
 of the deterministic approach used to break the combinatorial.
 However, in practice the planner is successful in the large majority of cases, as discussed in Section~\ref{sec:perf}, thanks to 
 the heuristics that we use for contact selection.

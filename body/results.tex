@@ -3,7 +3,7 @@
 \label{sec:results}
 In this Section we present some of the results obtained with our planner. The complete sequences computed are shown in the companion video.
 Specifically, we demonstrate the planner for two really different robots, in a large variety of environments: the humanoid HRP-2 and the quadruped HyQ.
-For each scenario we indicate the chosen heuristics. We also provide a performance analysis, which shows that the planner is compatible with interactive applications,
+For each scenario we indicate the chosen heuristics. We also provide a performance analysis, which shows that the planner is compatible with \gls{interactive} applications,
 and present the success rates obtained in each scenario. Moreover, we demonstrate the interest of our robustness criterion in the different computed poses.
 Finally, a last example suggests possible applications to dexterous manipulation.
 
@@ -11,7 +11,7 @@ In our previous work~\citep{tonneauisrr15} additional results are demonstrated w
 In this extension we choose to focus on actual robots. We invite the interested reader to watch the ISRR video\endnote{https://www.youtube.com/watch?v=LmLAHgGQJGA}, and 
 to refer to the previous paper for a discussion on these results.
 
-We say that the planning is interactive when the computation time for one step is lesser than the
+We say that the planning is \gls{interactive} when the computation time for one step is lesser than the
 time to execute it. We arbitrarily approximate this time to one second.
 
 \begin{figure}[t]
@@ -30,7 +30,7 @@ time to execute it. We arbitrarily approximate this time to one second.
 
 \subsection{Description of the scenarios}
 In all the scenarios considered, the formulation of the problem is always the same:
-a start and goal root placements are provided as an input of the scenario.
+a start and goal root configurations are provided as an input of the scenario.
 The framework computes the initial contact configuration, and outputs a sequence of contact configurations connecting it to the goal.
 In each scenario we detail the parameters chosen: the heuristics, and the constraints on the reachable workspaces (for instance in all the scenarios,
 the reachable workspaces of the legs of HRP-2 are always required to intersect with the environment). 
@@ -103,7 +103,7 @@ The resulting motion involves using a wall as support, and climbing a 25-cm high
 is moved twice, with the left foot in between, before the configuration allows HRP-2 to move its hand.
 Because the contacts are tried in a FIFO manner, the fact that the output contact sequence is acyclic shows that a cyclic approach (with a finite state machine for instance) is not sufficient
 for the computed path. The reason for this is not reachability, but equilibrium. The planning is slower than for the stair scenario (because the contact generation fails more),
-though it remains compatible with interactive performances. % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
+though it remains compatible with \gls{interactive} performances. % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
 
 
 \subsubsection{HRP-2 -- Car egress (Figure~\ref{fig:car}):}
@@ -150,7 +150,7 @@ The quadruped robot is given the task to cross a rubble composed of bricks rotat
 \noindent\textbf{Observations:} In this context, setting up a really important minimum value for $b_0$ is possible due to the high
 stability of the HyQ robot, and results in more contact switches, in exchange for safety. The path-planning time is higher than for the previous HRP-2 robots due to the constraint that the 4 reachable workspace of all legs must
 collide with the environment at all times. %\adnote{Why do not relax this constraint and require only 3 legs?} 
-Again, the computed time remains however interactive.
+Again, the computed time remains however \gls{interactive}.
 
 \subsubsection{HyQ -- Obstacle race (Figure~\ref{fig:HyQ_bridge} and~\ref{fig:HyQ_obs}):}
 In this long scene, HyQ is first required to cross a 55-cm large hole; then, to cross a narrow ``bridge'', large of only 25-cm.
@@ -182,7 +182,7 @@ While finding a guide path above the hole is easy for the guide planner, finding
 Second, the narrow bridge is hard both for the planner and the contact generator: to make sure that equilibrium is preserved along the traversal,
 the bridge must be approached with the right angle.
 The difficulty is illustrated in Figure~\ref{fig:HyQ_obs}, where several feet rearrangements are required to cross the hole (although the video shows this best).
-The planner however succeeds in finding a feasible sequence in the end, again with interactive computation times.
+The planner however succeeds in finding a feasible sequence in the end, again with \gls{interactive} computation times.
 
 \subsubsection{HRP-2 -- Path re-planning (Figure~\ref{fig:re-planning}):}
 In this long scene, HRP-2 plans a path through several obstacles. the scene is edited during the execution of the motion: a stair is added,
@@ -208,7 +208,7 @@ In the video, the footsteps indicating the contact sequence appear at the averag
 
 \subsubsection{3-fingered hand -- Manipulation of a pen (Figure~\ref{fig:penrot}):}
 This scenario is proposed to illustrate the generality of our approach: we consider a manipulation task for a robotic hand and use
-our contact planner to compute a guide trajectory for the fingers, considered as effectors (Figure~\ref{fig:penrot}).
+our contact planner to compute a guide path for the fingers, considered as effectors (Figure~\ref{fig:penrot}).
 Although we do not address the hard issue of accounting for rolling motions, the planner is able to compute the shown sequences in less than 5 seconds.
 
 \begin{figure*}
@@ -254,7 +254,7 @@ column indicates the average time necessary to compute one contact transition.}
 \begin{table*}
 \centering
 \begin{tabular}{ l | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | c}
-  &  Path planning & True feasibility & Kinematic failure & Equilibrium failure \\
+  &  Path planning & Equilibrium feasibility & Kinematic failure & Equilibrium failure \\
  \hline
    Steep stairs & 100\%  & 99.5\% & 0.11\% & 0.39\% \\
    Standing up & 68\% & 88\% & 6\% & 6\% \\
@@ -263,7 +263,7 @@ column indicates the average time necessary to compute one contact transition.}
    Obstacle race & 58\% & 95.7\% & 1.8\% & 2.5\% \\
  \end{tabular}
 \caption{Success rates for each scenario. The first value indicates the percentage of successful complete contact plannings for 1000 tests; The second value
-indicates the percentage of truly feasible root configurations: considering each limb individually, indicates the percentage of root placements of the guide trajectory that
+indicates the percentage of equilibrium feasible root configurations: considering each limb individually, indicates the percentage of root configurations of the guide path that
 led to a feasible contact. Kinematic failure is the percentage of contact generations that failed because no collision-free candidate was found. Equilibrium failure is the percentage of contact
 generations that failed because no candidate respected the static equilibrium condition.}
 \label{tab:requestpercent}
@@ -284,7 +284,7 @@ by the complexity of crossing the bridge: the robot has to stand high and create
 the bridge is narrow. In many cases this results in collisions, thus a large number of contacts have to be evaluated.
 
 In all scenarios, one can observe that the average computation time for one single step is largely below the second,
-thus allowing to consider interactive applications. 
+thus allowing to consider \gls{interactive} applications. 
 
 Table~\ref{tab:requestpercent} summarizes the success rates obtained for each scenario.
 

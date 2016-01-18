@@ -49,7 +49,7 @@ as verified by the results shown by Table~\ref{tab:requestpercent}.
 To define the volume $W^0$ of HRP-2, we proceed in an empirical manner.
 First, we compute the bounding boxes of the robot trunk, head, and upper legs (Figure~\ref{fig:hrp2_w} -- red shapes).
 Then, we perform a scaling of these boxes by a factor $s$. For different values of $s$, we verify the geometrical feasibility condition:
-For a large number of configurations that verify the reachability condition, we try to generate contact configurations. We then
+For a large number of configurations that verify the \gls{reachc}, we try to generate contact configurations. We then
 empirically select the lowest value of $s$ that provides a reasonnable success rate in all scenarios.
 For HRP-2, we choose $s=1.2$. This leads to a success rate higher than 86 \% for all scenarios.
 
