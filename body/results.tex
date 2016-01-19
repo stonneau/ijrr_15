@@ -225,6 +225,70 @@ Although we do not address the hard issue of accounting for rolling motions, the
 \noindent\textbf{Heuristics:} $h_{EFORT}$ for all fingers.
  
  
+\subsection{Influence of the parameters} \label{sec:influence}
+We discuss the several factors can influence the outcome of our planner: the root scaling factor $s$, the choice of heuristics for
+contact generation, the parametrization of the static equilibrium robustness, and lastly, the discretization 
+of the guide path.
+ 
+\subsubsection{Choosing the scaling factor $s$} \label{sec:params}
+To find a convenient value $s^*$ of $s$, we proceeded as follows. 
+For several values of $s$, we generated $10 000$ configurations. 
+We then computed the rates of false positives (ie the resulting configuration satisfies
+the reachability condition, but does not belong to \gls{ccontact0}) and false negatives (ie the resulting configuration does not satisfy the 
+reachability condition, but belongs to \gls{ccequil0}).
+
+The obtained results for HRP-2 are summarized in Table~\ref{tab:scale}, averaged over all scenes (except for the car egress: in this scenario, 
+statistical tests are not really conclusive since we are only interested in a small area of the environment).
+As it can be expected, the scaling results in a high increase of the false negative, while the false positive decreases.
+For HRP-2 we decided to set $s^*=1.2$, that results in less than 3 \% of false positives, and was also effective
+for the car egress scenario. 
+
+\begin{table}
+\centering
+\footnotesize
+\begin{tabular}{c | c | c}
+   Value of $s$ &  False positive & False negative\\
+ \hline
+   1   & 24\% & 0 \%\\
+   1.1& 12\% & 4\% \\
+   1.15& 07\% & 6\%\\
+   1.2 & 03\% & 7.5\%\\
+   1.25& 02\% & 8.3\%\\
+   1.5 & 01\% & 9.5\%\\
+ \end{tabular}
+\caption{Percentage of true and false positive in the reachability condition, depending on the scaling value of $W^0$.}
+\label{tab:scale}
+\quad
+\end{table}
+
+\subsubsection{On the choice of heuristics} \label{sec:heuristics}
+In our conference paper, the computed motions were only generated using the EFORT heuristic.
+EFORT is designed for tasks requiring to exert important forces (such as pushing / pulling / climbing). 
+Regarding locomotion tasks, such as the stair scenario, one issue with EFORT is that it tends to generate
+configurations close to singularities (and joint limits). While this does not significantly impact
+the generation of the plan, the resulting interpolation on the real robot turned out to be harder \citep{Carpentier2016}.
+For this reason, we now prefer to use our manipulability based heuristic for the legs of the robot, but we still
+use EFORT for the arm, that results in lesser contact repositionning.
+
+\subsubsection{parametrization of the robustness equilibrium criterion} \label{sec:parrob}
+Robustness is really important when considering practical applications on the robot, to account 
+for the various uncertainties that result from environment and state estimator. However,
+maximizing the robustness criterion is not necessarily optimal, because the resulting contacts will stay close to the center
+of mass, thus not favoring the motion. In our experiments, we choose not to maximize the robustness,
+but to empirically set a robustness treshold value under which a configuration is not considered to be in
+static equilibrium (If no candidate reaches the treshold, instead of failing, the algorithm can eventually return the ``more robust'' configuration
+found). Currently for HRP-2, a treshold value of 2 subjectively gives the best results in the considered scenarios, while 10 seems to be a good choice for HyQ. Both values do not
+significantly slow down the planning times.
+
+\subsubsection{Discretization of the guide path} \label{sec:disc}
+Currently, to discretize the path, the user defines a fixed step size. The step size
+has an influence on the output of the planner: if too large steps are taken,
+the planner may fail since we impose the constraint that only one contact change might occur
+between two consecutive stances. For instance, in most scenarios the torso of HRP-2 translates by about 15 cm between two postures, but about only 3 cm
+for the car egress scenario for instance, where we had to lower the step size because of the many contact breaks, induced by the extremely constrained geometry.
+For future work, we would like to automatically adapt the size of the discretization step to the complexity of the planning, for instance
+by reducing the step size when in the areas where failure occur.
+
 \subsection{Performance analysis} \label{sec:perf}
 To analyze performance, for each considered scenario, we ran the simulation 1000 times.
 We measured the computation time spent in each aspect of the algorithm, and also analyzed the success
@@ -256,13 +320,13 @@ column indicates the average time necessary to compute one contact transition.}
 \begin{tabular}{ l | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | c}
   &  Path planning & Equilibrium feasibility & Kinematic failure & Equilibrium failure \\
  \hline
-   Steep stairs & 100\%  & 99.5\% & 0.11\% & 0.39\% \\
-   Standing up & 68\% & 88\% & 6\% & 6\% \\
-   Car egress & 39\% & 77\% & 21\% &  2\% \\
-   Rubble & 74\% & 97.87\% & 0.13\% & 2\% \\
-   Obstacle race & 58\% & 95.7\% & 1.8\% & 2.5\% \\
+   Steep stairs & 100\%  & 99.5\% & 0.1\% & 0.4\% \\
+   Standing up & 68\% & 87.8\% & 6.1\% & 6.1\% \\
+   Car egress & 39\% & 77.0\% & 21.0\% &  2.0\% \\
+   Rubble & 74\% & 97.9\% & 0.1\% & 2.0\% \\
+   Obstacle race & 58.0\% & 95.7\% & 1.8\% & 2.5\% \\
  \end{tabular}
-\caption{Success rates for each scenario. The first value indicates the percentage of successful complete contact plannings for 1000 tests; The second value
+\caption{Success rates for each scenario, rounded to the first decimal. The first value indicates the percentage of successful complete contact plannings for 1000 tests; The second value
 indicates the percentage of equilibrium feasible root configurations: considering each limb individually, indicates the percentage of root configurations of the guide path that
 led to a feasible contact. Kinematic failure is the percentage of contact generations that failed because no collision-free candidate was found. Equilibrium failure is the percentage of contact
 generations that failed because no candidate respected the static equilibrium condition.}
@@ -295,3 +359,47 @@ suprising considering the narrowness of the scene.
 From a pragmatic point of view, regarding the computation times, we claim that our approach provides a satisfying compromise between completeness and efficiency.
 Indeed, the advantage of the framework is that when the contact generation fails, it does so rapidly, which allows us to rapidly re-plan a new contact sequence with a reasonable chance of success.
 The most efficient (and immediate) approach is probably to launch in parallel several instances of the planner for a given problem (our current implementation is single threaded) and to apply any successful result.
+
+\begin{table*}
+\centering
+\begin{tabular}{ c | c | c | c | c }
+ Scenario & Method  & Guide Path & Contact sequence & Interpolation \\
+ \hline
+   \multirow{3}{*}{Stair 20 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{5.42 min}  \\
+							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{2 to 10 min} \\
+							 & \textbf{Ours} + \citeauthor{Carpentier2016}  & $\mathbf{<}$ \textbf{2 ms} & $\mathbf{<}$ \textbf{14 ms} & $ <$ 2s \\
+ \hline
+   \multirow{3}{*}{Stair 30 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{4.08 min}  \\
+							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{2 to 10 min} \\
+							 & \textbf{Ours}  & $\mathbf{<}$ \textbf{2 ms} & $\mathbf{<}$ \textbf{14 ms} & X \\
+ \hline
+   \multirow{3}{*}{Stair 40 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{10.08 min}  \\
+							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{2 to 10 min} \\
+							 & \textbf{Ours}  & \textbf{5 s} & \textbf{3 s} & X \\
+ \hline
+   \multirow{2}{*}{Table (car) egress} & \citeauthor{Bouyarmane2009, DBLP:conf/iser/EscandeKMG08} & 10 min & \multicolumn{2}{c}{3.5 hours}  \\
+							 & \textbf{Ours}  & \textbf{529 ms} & \textbf{$<$ 21 s} & X \\
+ \end{tabular}
+\caption{TODO VERIFIE STATS A LA MAISON.}
+\label{tab:compprev}
+\quad
+\end{table*}
+\subsection{Comparison with previous work} \label{sec:compa}
+Comparing our method with others is not trivial. Indeed, we focus on the contact planning aspect of the problem, and do not address
+the interpolation in this paper, nor provide a strong guaranty that our sequence can be interpolated.
+Papers in the state of the art, when they indicate the computation times, often only provide an overall computation
+time, and we can not afford the important development resources required to reimplement them.
+
+Furthermore, the interpolation itself is a problem that is far from being solved. For instance in \cite{DBLP:conf/iser/EscandeKMG08}, the end-effector trajectories are computed automatically with splines, but are manually corrected if they enter in collision. In \citep{Mordatch:2012:DCB:2185520.2185539}, internal joint collisions can occur in the resulting motion.
+Recent methods suffer from similar issues \citep{Carpentier2016}.
+
+
+Regardless, we indicate in Table~\ref{tab:compprev} what is actually computed by the method and in how much time.
+We compare motions obtained in previous works with HRP-2 (or a humanoid avatar) with ours: the two scenarios we selected consist in:  climbing one step, high of 20, 30 or 40 centimeters; 
+moving out of a table, that we consider of a complexity similar to the car egress scenario (or inferior since the feet location remain on the ground in the former case).
+For scenarios that apply, we also indicate the interpolation time that we obtain by feeding the plan to our interpolation method presented in \cite{Carpentier2016}.
+
+Despite the difficulty of comparing the methods, we believe the results presented in Table~\ref{tab:compprev} indicate that our planner holds the promise of planning complete trajectories significantly faster than previous works.
+
+
+

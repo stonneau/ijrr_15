@@ -3,7 +3,7 @@
 \label{sec:contact}
 Our planner computes guide paths in \gls{creach0}, an over-approximation of the set of \gls{equilibrium feasible} paths, \gls{ccequil0}.
 As an input of this stage, we however assume an \gls{equilibrium feasible} guide path $\mathbf{q}^0(t) : [0,1] \longrightarrow \mathbb{R}^r$ for the root of the robot $R$.
-If this is not the case, our planner will fail rapidly, thus allowing replanning, as discussed in Section TODO.
+If this is not the case, our planner will fail rapidly, thus allowing replanning, as discussed in Section~\ref{sec:perf}.
 We now consider the second problem of computing a discrete sequence of contact configurations $\mathbf{Q}^{\overline{0}}$ for the limbs of the robot along $\mathbf{q}^0(t)$.
 
 In this Section we first describe a single contact-generation process, that is how to generate a contact configuration for a given limb 
