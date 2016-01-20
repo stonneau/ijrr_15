@@ -41,7 +41,19 @@ cluttered environment.
 We joined to the present submission the reviews that were made on the
 conference paper. They follow the cover letter.
 
-The extension of our work addresses the main comments of the reviewers:
+Regarding the conference paper, this apper paper presents new contributions that we first highlight:
+
+\begin{itemize}
+\item We introduce a new criterion for asserting the static equilibrium of a robot configuration. It works for arbitrary
+legged robots, and handles any kind of contact configurations and surface orientation. It is formulated as a really efficient Linear Program, and 
+can be used to compute a value of robustness of the configuration. This robustness is useful for real robots applications, where many uncertainties
+in the state estimation of the robot can lead to incorrect evaluations of the equilibrium.
+\item We present two new heuristics that we use to bias our contact planner framework towards configurations relevant for the task being performed.
+\item We present a complete algorithm for contact planning that integrates the robust equilibrium criterion.
+\end{itemize}
+
+The extension of our work also addresses the main comments of the reviewers, and proposes lesser contributions,
+that we detail in the following lines.
 
 \begin{itemize}
 \item They were concerned by the fact that our demonstrations were
@@ -66,7 +78,7 @@ source code of our application (Appendix B).
 
 \item The paper has been largely re-written: we provide a clearer
 comparison to the state of the art (Section 1.1); we clarify our statement regarding
-our computation times (Section 6 and 6.1.6); we make a clear distinction between the
+our computation times and compare our method with the state of the art (Section 6); we make a clear distinction between the
 theoretical concepts we propose and their approximation (Section 2).
 
 \item Regarding the computation time performances, compared to our conference paper, the planner is much more efficient.
