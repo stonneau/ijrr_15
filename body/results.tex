@@ -114,7 +114,7 @@ to find the contact sequence that allows it to step out of a car.
   \centering
   \includegraphics[width=0.5\linewidth]{figures/car}
   \caption{
-           Selected frames the car egress scenario. }
+           Selected frames from the car egress scenario. }
 		   \label{fig:car}
 \end{figure}
 
@@ -275,9 +275,9 @@ Robustness is really important when considering practical applications on the ro
 for the various uncertainties that result from environment and state estimator. However,
 maximizing the robustness criterion is not necessarily optimal, because the resulting contacts will stay close to the center
 of mass, thus not favoring the motion. In our experiments, we choose not to maximize the robustness,
-but to empirically set a robustness treshold value under which a configuration is not considered to be in
-static equilibrium (If no candidate reaches the treshold, instead of failing, the algorithm can eventually return the ``more robust'' configuration
-found). Currently for HRP-2, a treshold value of 2 subjectively gives the best results in the considered scenarios, while 10 seems to be a good choice for HyQ. Both values do not
+but to empirically set a robustness threshold value under which a configuration is not considered to be in
+static equilibrium (If no candidate reaches the threshold, instead of failing, the algorithm can eventually return the ``more robust'' configuration
+found). Currently for HRP-2, a threshold value of 2 subjectively gives the best results in the considered scenarios, while 10 seems to be a good choice for HyQ. Both values do not
 significantly slow down the planning times.
 
 \subsubsection{Discretization of the guide path} \label{sec:disc}
@@ -299,7 +299,7 @@ rate obtained for each scenario.
 \centering
 \footnotesize
 \begin{tabular}{ >{\centering\arraybackslash}m{37pt} | >{\centering\arraybackslash}m{57pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{70pt} | >{\centering\arraybackslash}m{73pt} | >{\centering\arraybackslash}m{80pt} | >{\centering\arraybackslash}m{10pt}}
-  Scenario (nb steps) &  Complete guide generation & Static equilibrium & Collision & Inverse Kinematics  & Total generation time & Time per step\\
+  Scenario (nb steps) &  Complete guide generation (ms) & Static equilibrium (ms) & Collision (ms) & Inverse Kinematics (ms) & Total generation time (ms) & Time per step (ms)\\
  \hline
    Stairs (18) & 6 -- \textbf{13} --  24 & 13 --  \textbf{32} -- 329   & 1 --  \textbf{4} -- 38 & 26 --  \textbf{127} -- 1345 & 92 --  \textbf{261} -- 2174 & \textbf{14} \\
    Standing (24)& 4 -- \textbf{451} --  985 & 27 --  \textbf{144} -- 338   & 2 --  \textbf{12} -- 37 & 144 --  \textbf{1046} -- 2374 & 310 --  \textbf{1622} -- 3429 & \textbf{66}  \\
@@ -355,7 +355,7 @@ Table~\ref{tab:requestpercent} summarizes the success rates obtained for each sc
 \subsubsection{Success rates}
 We observe that, as expected, our planner does not succeed systematically, because of the approximations made in the implementation
 of our theoretical formulation. The extreme situation of the car egress scenario provides the less satisfying results in terms of kinematic failure. This is not
-suprising considering the narrowness of the scene.
+surprising considering the narrowness of the scene.
 From a pragmatic point of view, regarding the computation times, we claim that our approach provides a satisfying compromise between completeness and efficiency.
 Indeed, the advantage of the framework is that when the contact generation fails, it does so rapidly, which allows us to rapidly re-plan a new contact sequence with a reasonable chance of success.
 The most efficient (and immediate) approach is probably to launch in parallel several instances of the planner for a given problem (our current implementation is single threaded) and to apply any successful result.
@@ -386,7 +386,7 @@ The most efficient (and immediate) approach is probably to launch in parallel se
 \end{table*}
 \subsection{Comparison with previous work} \label{sec:compa}
 Comparing our method with others is not trivial. Indeed, we focus on the contact planning aspect of the problem, and do not address
-the interpolation in this paper, nor provide a strong guaranty that our sequence can be interpolated.
+the interpolation in this paper, nor provide a strong guarantee that our sequence can be interpolated.
 Papers in the state of the art, when they indicate the computation times, often only provide an overall computation
 time, and we can not afford the important development resources required to reimplement them.
 
