@@ -20,7 +20,7 @@ More recent successes use a local solution, resulting in more reasonable computa
 Neither global nor local methods present satisfying performances, because planning simultaneously the robot trajectory and the contacts that allow
 its execution is a very hard problem. 
 
-As suggested in \cite{Bouyarmane2009}, we believe that these two tasks can be treated sequentially within a global planner, while preserving the completeness of the search.
+As suggested in \cite{Bouyarmane2009}, we believe that these two tasks can be treated sequentially within a global planner.
 We go further and claim that this can be done at a much smaller cost, provided that necessary and sufficient conditions for contact feasibility can be formulated for the robot path.
 This paper presents a geometrical representation of these conditions, and a concrete implementation of such a decoupled planner.
 This implementation results from a trade-off between a necessary and a sufficient condition for feasibility, allowing us to find solutions extremely rapidly.
@@ -50,11 +50,12 @@ as the car egress scenario we address here, we believe that including collision 
 
 For completeness, we lastly mention a new kind of approach, recently proposed from the computer graphics field \citep{hamalainen_cpbp_2015}. The authors
 use black box physics simulators to perform Model Predictive Control for the motion of a humanoid character, and manage to obtain dynamically consistent motions
-at \gls{interactive} frame rates. While this new approach provides an exciting direction of research, currently the resulting motions
+at \gls{interactive} frame rates (We say that a planning method is interactive when the computation time for one step is lesser than the
+time to execute it). While this new approach provides an exciting direction of research, currently the resulting motions
 look unnatural, and do not seem applicable to real robots.
 
 Regarding robotics applications, it thus appears that optimization based approaches outperform existing planners,
-partly because the interpolation between contact poses ($\mathcal{P}_3$) remains an unsolved problem.
+partly because the real-time interpolation between contact poses ($\mathcal{P}_3$) remains an unsolved problem.
 However recent contributions have been able to bring partial solutions to it \citep{Hauser2014, herzog2015trajectory, Park116, Carpentier2016}. \citeauthor{Carpentier2016} are able to achieve this with \gls{interactive} performances on the real robot.
 To generate the input contact configurations, there is a need for an efficient contact planner, able to break the combinatorial to generate discrete contact sequences rapidly. Such a planner holds the promise of a complete real-time multi-contact locomotion system.
 
@@ -129,6 +130,6 @@ The conference paper focuses on the theoretical formulation of the problem, and 
 This extension completes this work and brings new contributions, resulting from the implementation of our approach real-world robots and problems.
 In particular, a strong contribution is the introduction of a robust equilibrium criterion, designed to ensure the equilibrium of the robot despite bounded errors in the contact forces, coupled
 with heuristics for relevant contact selection. These two contributions were required to apply our method to real-robot models, namely HRP-2 and HyQ~\citep{semini11hyqdesignjsce}.
-As opposed to the conference paper, the complete algorithm for the contact planner is provided, and an access to the source code of our implementation is provided.
+In the present paper, a complete algorithm for the contact planner is given, and an access to the source code of our implementation is provided.
 Furthermore, our experiments are supported by a an in-depth analysis of our performance, as well as a discussion on the influence of the parameters to the method.
 

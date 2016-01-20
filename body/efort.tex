@@ -59,16 +59,16 @@ Only the horizontal and vertical speeds are shown (not the rotation speeds), sin
 
 Similarly to the velocity ellipsoid, \citeauthor{Yoshikawa1984} also defines the force ellipsoid.
 Considering: a force vector $\mathbf{f}$ expressed in the task space $\mathbb{R}^m$;
-the equivalent joint torque vector $\mathbf{\tau}$;
+the equivalent joint torque vector $\bm{\tau}$;
 we can define the mechanical work in both spaces:
 \begin{equation*} \label{power}
-\dot{\mathbf{q}}^T \mathbf{\tau} = \dot{\mathbf{p}}^T \mathbf{f}
+\dot{\mathbf{q}}^T \bm{\tau} = \dot{\mathbf{p}}^T \mathbf{f}
 \end{equation*}
 
 
 Exploiting \eqref{jac}, we can easily see that the set of achievable forces in $\mathbb{R}^m$ subject to the constraint:
 \begin{equation*} \label{ballforce}
-||\mathbf{\tau}||^2 \leq 1
+||\bm{\tau}||^2 \leq 1
 \end{equation*}
 is the so-called force ellipsoid (Figure~\ref{sec:efort_ellipsoid} - right):
 \begin{equation} \label{ellipsoidforce}
@@ -83,7 +83,7 @@ With EFORT, we define the efficiency of a configuration as the ability of a limb
 We thus consider the force ellipsoid as a basis for our heuristic.
 In a given direction $\mathbf{m}$, the length of the ellipsoid is given by the force-transmission ratio \citep{1087795}:
 \begin{equation*}
-f_\mathsf{T}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(JJ^{T})\mathbf{m}]^{-\frac{1}{2}}
+f_\mathsf{T}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}	^{T})\mathbf{m}]^{-\frac{1}{2}}
 \end{equation*}
 
 In our problem, to compare candidate configurations, we include the quality of the contact surface, and choose $\mathbf{m}$ as the direction

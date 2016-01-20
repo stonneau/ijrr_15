@@ -51,7 +51,7 @@ The sets we introduce are illustrated in Figure~\ref{fig:dedefeas}.
 		%~ \put (37,27) {4.a)} 
 		%~ \put (68,27) {4.b)} 
 	\end{overpic}
-\caption{Illustration of several configurations sets used in this paper in a 2D scene. Obstacles are violet, and units are in meters. To show the sets in a 2D representation, all the rotational joints of HRP-2 are locked in the shown configuration, such that a torso configuration
+\caption{Illustration of several root configurations sets used in this paper in a 2D scene. Obstacles are violet, and units are in meters. To show the sets in a 2D representation, all the rotational joints of HRP-2 are locked in the shown configuration, such that a torso configuration
 is only described by two positional parameters (x and y). $C_{Equil}^0$ is included in $C_{Contact}^0$. $C_{Reach}^0$ approximates $C_{Contact}^0$. Depending on a parametrization, we can obtain $C_{Contact}^0 \subset C_{Reach}^0$. Considering the configurations around the top obstacle, we can observe a dramatic
 divergence between  $C_{Equil}^0$  and $C_{Contact}^0$ when the problem is not \textit{\gls{cluttered}}.}
 		   \label{fig:dedefeas}
@@ -68,14 +68,14 @@ C1 and C3 define \glslink{contact feasible}{\textit{contact feasibility}}, and c
 
 We make the assumption that for the \textit{\gls{cluttered} contact planning problem} (that we define as admitting a solution where every configuration contains at least one contact
 is \gls{quasi-flat}) verifying C2 is not critical for $\mathcal{P}_1$.
-This means that root configurations satisfying C1 and C3 also satisfy C2. For this reason we neglect C2 during the resolution of \Pa, and we worry about it only when solving \Pb.
+This means that root configurations satisfying C1 and C3 also satisfy C2. For this reason we neglect C2 during the resolution of \Pa, and we consider it only when solving \Pb.
 
 We define $C_{Contact}^0$ (Figure~\ref{fig:dedefeas} -- Orange) as the set of \gls{contact feasible} root configurations (that can satisfy C1 and C2).
 Planning in $C_{Contact}^0$ boils down to planning in $\mathbb{R}^r$, which has an acceptable practical complexity.
 
 An intuitive description of \gls{contact feasible} configurations is ``close, but not too close'': close, because a contact surface must be partially included in the reachable workspace of the robot (represented for the right leg in Figure~\ref{fig:contact_gen}--a); not too close, because the robot must avoid collision.
 We approximate $C_{Contact}^0$ with a set $C_{reach}^0$, defined by the \textit{reachability condition}, a geometrical criterion based on this intuitive description (Figure~\ref{fig:dedefeas} -- Red).
-Our objective is to find a root path such that the root (scaled by a factor $s>1$) is not in collision, while the reachable workspace is in collision with the environment.
+Our objective is to find a root path such that the root (scaled by a factor $s \geq 1$) is not in collision, while the reachable workspace is in collision with the environment.
 In Section~\ref{rbprm} we detail how  $C_{reach}^0$ is designed and sampled to compute a guide path with a dedicated planner, the Reachability-Based RRT---RB-RRT--- (Figure~\ref{fig:framework}---\Pa).
 
 \subsection{Generating a discrete sequence of contact configurations --- \Pb}
@@ -87,7 +87,7 @@ contact generation problem is reduced to the number of degrees of freedom of the
 From a given start configuration, the planner proceeds in an iterative fashion along the discretized path: given a new root configuration, an inverse-kinematics solver 
 is used to maintain the contacts that were previously existing. Possibly, some of these contacts cannot be maintained (because of joint limits or collisions).
 Then the contacts are broken. Conversely, new contacts are created to ensure the static equilibrium of the robot.
-The algorithm is designed so that only one contact can be created or broken between two successive configurations. While does not provide guarantees that the interpolation between two configurations is achievable, it appears empirically as a reasonable heuristic.
+The algorithm is designed so that only one contact can be created or broken between two successive configurations. While it does not provide guarantees that the interpolation between two configurations is achievable, it appears empirically as a reasonable heuristic.
 Details are presented in Section~\ref{sec:contact}. 
 
 There is a combinatorial issue in the choice of which contact to create,
@@ -147,4 +147,4 @@ $W^k(\mathbf{q}^{0})$ (for $1 \leq k \leq l$) as the volume $W^k$ translated and
 
 \medskip
 \textbf{The environment} $O$ is defined as the union of the obstacles $O_i$ that it contains.
-Finally, we define $dist(\mathbf{x}, O)$ as the minimal distance between a point $\mathbf{x}$ and the closest surface of the environment.
+%~ Finally, we define $dist(\mathbf{x}, O)$ as the minimal distance between a point $\mathbf{x}$ and the closest surface of the environment.
