@@ -93,7 +93,7 @@ where in every configuration at least one contact is \gls{quasi-flat}~\citep{Pre
 %~ This definition includes motions on flat or uneven terrains, but also more complex ones such as stair climbing, car egress, or standing up scenarios, that might require noncoplanar contacts.
 %Under this assumption we can take advantage of the decoupling approach to find a solution rapidly.
 
-To address \Pa, we first use the \textit{reachability condition} to plan the guide path. This step is fast because the planning happens
+To address $\mathcal{P}_1$, we first use the \textit{reachability condition} to plan the guide path. This step is fast because the planning happens
 in a low-dimensional space, and does not require explicit contact computations.
 
 Then we address \Pb by extending the path into a sequence of whole-body configurations in static equilibrium.
@@ -104,7 +104,7 @@ can result in failures because our hypothesis is not always true. However, we de
 Similarly, in this paper we do not  prove that all the contact sequences produced by our planner can be interpolated ($\mathcal{P}_3$), although we have been able to do this for some of the demonstrated sequences~\citep{Carpentier2016}. 
 
 \subsection{Paper contribution and organization}
-We propose contributions to both problems \Pa and \Pb~.
+We propose contributions to both problems \Pa and $\mathcal{P}_2$.
 \begin{itemize}
 \item A low-dimensional, efficient sampling-based approach to plan guide paths.
 \item A very efficient and general implementation of an acyclic contact planner, the first one compatible with \gls{interactive} applications.
@@ -117,7 +117,7 @@ more efficient with respect to the task.
 %Since the interpolation of a complete path between such configurations can be solved within \gls{interactive} constraints \citep{Carpentier2016}, we claim that our planner is the fastest multi-contact planning solution to our knowledge.
 
 
-In Section~\ref{overview}, we present an overview of our method. Section~\ref{rbprm} and Section~\ref{sec:contact} present respectively our answer to \Pa and \Pb. In Section~\ref{sec:heuristics}, we present heuristics used for the selection of a contact configuration. Finally, in Section 6 we propose a complete experimental validation of the planner with three very different kinematic chains (the HRP-2 and HyQ robots, and a three-finger manipulator) in various scenarios.
+In Section~\ref{overview}, we present an overview of our method. Section~\ref{rbprm} and Section~\ref{sec:contact} present respectively our answer to \Pa and $\mathcal{P}_2$. In Section~\ref{sec:heuristics}, we present heuristics used for the selection of a contact configuration. Finally, in Section 6 we propose a complete experimental validation of the planner with three very different kinematic chains (the HRP-2 and HyQ robots, and a three-finger manipulator) in various scenarios.
 %that complete those presented in the conference paper.
 
 \subsection*{Comparison with our previous work.}

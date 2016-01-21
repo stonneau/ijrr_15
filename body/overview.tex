@@ -52,7 +52,7 @@ We first consider the problem of planning a root guide path.
 		%~ \put (68,27) {4.b)} 
 	\end{overpic}
 \caption{Illustration of several root configurations sets used in this paper in a 2D scene. Obstacles are violet, and units are in meters. To show the sets in a 2D representation, all the rotational joints of HRP-2 are locked in the shown configuration, such that a torso configuration
-is only described by two positional parameters (x and y). $C_{Equil}^0$ is included in $C_{Contact}^0$. $C_{Reach}^0$ approximates $C_{Contact}^0$. Depending on a parametrization, we can obtain $C_{Contact}^0 \subset C_{Reach}^0$. Considering the configurations around the top obstacle, we can observe a dramatic
+is only described by two positional parameters (x and y). The root of the robot is indicated with a black cross. To compute the reachable workspace, the point on the ankle indicated by a green cross was used. $C_{Equil}^0$ is included in $C_{Contact}^0$. $C_{Reach}^0$ approximates $C_{Contact}^0$. Depending on a parametrization, we can obtain $C_{Contact}^0 \subset C_{Reach}^0$. Considering the configurations around the top obstacle, we can observe a dramatic
 divergence between  $C_{Equil}^0$  and $C_{Contact}^0$ when the problem is not \textit{\gls{cluttered}}.}
 		   \label{fig:dedefeas}
 \end{figure}
@@ -125,8 +125,9 @@ $r$ or $f(\textbf{x})$.
 
 \medskip
 \textbf{A robot} is a kinematic chain $R$, comprising \mbox{$n + r$} degrees of freedom (DOFs), with $r \geq 6$. $r$ denotes the world coordinates of the root of the robot,
-as well as extra DOFs not related to the limbs (for instance, HRP-2 has two extra DOFS in the torso, such that we have $r=8$). 
-$R$ is composed of $l$ limbs $R^k, 1 \leq k \leq l$, attached to a root.
+as well as extra DOFs not related to the limbs (for instance, HRP-2 has two extra DOFS in the torso, such that we have $r=8$). Abusively, for simplicity,
+we refer to the root as the kinematic chain described by all these DOFS.
+$R$ is composed of $l$ limbs $R^k, 1 \leq k \leq l$, attached to the root.
 It is described by a configuration $\mathbf{q} \in  \mathbb{R}^r \times \mathbb{R}^n$.
 We define some relevant projections of $\mathbf{q}$:
 \begin{itemize}
@@ -139,16 +140,16 @@ We define some relevant projections of $\mathbf{q}$:
 %\subsubsection{Environment and other volumes} 
 %\label{sec:A}
 \medskip
-The volume encompassing the trunk of the robot is denoted $W^0$.
+The volume encompassing the root of the robot is denoted $W^0$.
  %~ (Figure~\ref{fig:character}-right: central cylinder). 
  The reachable workspace of a limb $R^k$ is denoted $W^k$: %(Figure~\ref{fig:character}-right: the four ellipses). 
 \begin{equation}
   W^k = \left\{ {\mathbf{x} \in \mathbb{R}^3: \exists \, \mathbf{q}^k \in C^k_{jl}, \mathbf{p}^k(\mathbf{q}^k) = \mathbf{x} } \right\},
 \end{equation}
 %~ \adnote{in this definition you don't account for joint limits}
-where $\mathbf{p}^k$ denotes the end-effector position of $R^k$ (translation only) for $\mathbf{q}^0$ being the null displacement, and  $C^k_{jl}$ is the space
+where $\mathbf{p}^k$ denotes the end-effector position of $R^k$ (translation only) for $\mathbf{q}^0 = \mathbf{0}$ being the null displacement, and  $C^k_{jl}$ is the space
 of admissible limb joint configurations. We also define $W = \bigcup_{k=1}^{l}W^k$, and
-$W^k(\mathbf{q}^{0})$ (for $1 \leq k \leq l$) as the volume $W^k$ translated and rotated by the rigid displacement~$\mathbf{q}^{0}$.
+$W^k(\mathbf{q}^{0})$ (for $1 \leq k \leq l$) as the volume $W^k$ translated and rotated according to the root configuration $\mathbf{q}^{0}$.
 
 \medskip
 \textbf{The environment} $O$ is defined as the union of the obstacles $O_i$ that it contains.
