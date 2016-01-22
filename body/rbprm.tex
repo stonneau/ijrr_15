@@ -1,24 +1,40 @@
 % !TEX root =  ../main.tex
-\section{Computing a guide path in $C_{reach}$ ($\mathcal{P}_1$) }
+\section{Computing a guide path in $C^0_{reach}$ ($\mathcal{P}_1$) }
 \label{rbprm}
 
-We consider the issue of computing a normalized guide path $\mathbf{q}^0(t) : [0,1] \longrightarrow \mathbb{R}^r$ for the root of a multiped robot, connecting user-defined start and goal configurations. As said in the previous section, the goal is to enforce that the guide can be discretized into a sequence of \gls{contact feasible} configurations. We denote by \gls{ccontact} the contact sub-manifold of the robot.
+We consider the issue of computing an \gls{equilibrium feasible} guide path $\mathbf{q}^0(t) : [0,1] \longrightarrow$ \gls{ccequil0} for the root of a multiped robot, connecting user-defined start and goal configurations.
 
-We say that a root configuration $\mathbf{q}^{0}$ is \gls{contact feasible} if it belongs to the set:
-\begin{equation}
-      C_{contact}^0= \{ \mathbf{q}^{0}: \exists \mathbf{q}^{\overline{0}}, \mathbf{q}^{0} \oplus \mathbf{q}^{\overline{0}} \in C_{contact} \}
-    \label{eq:pi}
-\end{equation}
+Again, we assume that, for \gls{cluttered} problems, most of the times \contactfeasibility\, implies \equilibriumfeasibility.
+Under this assumption, our goal is to find a \gls{contact feasible} guide path.
+
+To generate such a path efficiently, ideally we need to only sample \gls{contact feasible} root configurations.
+This requires exhibiting a necessary and sufficient condition for \contactfeasibility\,that does not need to compute the whole-body configuration.
+Since we do not know such a condition, we may turn our attention towards either an only-necessary or an only-sufficient condition.
+
+Only-necessary conditions are appealing because they preserve the completeness of the search, while reducing 
+the search space: they provide an outer-approximation of \gls{ccontact0}.
+On the other hand, only-sufficient conditions provide the guarantee that any configuration that satisfies them is indeed \gls{contact feasible}:
+they provide an inner-approximation of \gls{ccontact0}.
+
+In practice, the only-necessary and only-sufficient conditions that we can provide are trivial and provide rather inaccurate approximations of \gls{ccontact0}.
+Therefore, we propose a compromise between them: the \textit{reachability condition}, which is computationally efficient
+and it provides a rather accurate approximation of \gls{ccontact0}. % for \gls{cluttered} problems.
+
+%~ As said in the previous section, the goal is to enforce that the guide can be discretized into a sequence of \gls{equilibrium feasible} configurations. We denote by \gls{ccequil} the equilibrium sub-manifold of the robot.
+
+%~ We say that a root configuration $\mathbf{q}^{0}$ is \gls{equilibrium feasible} if it belongs to the set:
+%~ \begin{equation}
+      %~ C_{Equil}^0= \{ \mathbf{q}^{0}: \exists \mathbf{q}^{\overline{0}}, \mathbf{q}^{0} \oplus \mathbf{q}^{\overline{0}} \in C_{Equil} \}
+    %~ \label{eq:pi}
+%~ \end{equation}
 
 %~ The set of all \textit{geometrically feasible} root configurations is denoted by $C_{reach}$.
-By extension, a path $\mathbf{q}^0(t)$ is \gls{contact feasible} if $\forall t \in [0,1], \mathbf{q}^0(t) \in C_{contact}^0$.
+%~ By extension, a path $\mathbf{q}^0(t)$ is \gls{equilibrium feasible} if $\forall t \in [0,1], \mathbf{q}^0(t) \in C_{contact}^0$.
 
-For this stage, and for this stage only, we make the assumption that for \gls{cluttered} problems, a \gls{contact feasible} path can be transformed into a \gls{equilibrium feasible} path.
-Under this assumption, for a two-stage acyclic contact planner to be exact and complete, we need the combination of two conditions on a guide path generator: all the generated paths must be \gls{contact feasible} (sufficient condition); the guide planner must be complete, i.e. it must be able to discover any \textit{contact feasible} path (necessary condition).
 
-In this Section we characterize \gls{ccontact0} theoretically with a necessary and a sufficient condition for belonging to the set.
-We then approximate \gls{ccontact0} as a space $C_{reach}$, where we can efficiently sample configurations.
-We finally describe our implementation of an efficient RRT planner in $C_{reach}$.
+%~ In this Section we characterize \gls{ccontact0} theoretically with a necessary and a sufficient condition for belonging to the set.
+%~ We then approximate \gls{ccontact0} as a space $C_{reach}$, where we can efficiently sample configurations.
+%~ We finally describe our implementation of an efficient RRT planner in $C_{reach}$.
 
    
 %~ We want all the configurations of $q^0(t)$ to belong to a set $C_{reach}$ defined as:
