@@ -104,6 +104,15 @@ Details are presented in Section~\ref{sec:contact}.
 
 %~ To create a contact, we consider each limb of the robot as a manipulator arm attached to the root. We store a database of configurations for each manipulator. Figure~\ref{fig:contact_gen} -- 2 presents a few configurations for the right arm of the robot. The configurations in the database which are close to contact are considered (Figure~\ref{fig:contact_gen} -- 2 and 3). Among the candidates, 3 criteria are considered to choose the most relevant: the ideal candidate is free of collision, allows to maintain static balance if necessary, and  contributes to the motion in an optimal way. We call the measure of this contribution task efficiency: it represents the ability the limb has to exert a force compatible with the direction of motion. In Figure~\ref{fig:contact_gen} -- 4, the black arrow represents the direction of motion. Among the candidates, the most relevant to achieve a vertical motion is chosen, and projected on the contact surface using an inverse kinematics solver (Figure~\ref{fig:contact_gen} -- 5). The task efficiency is measured using the Extended FORce Transmission ratio (EFORT), proposed by ~\cite{Tonneau:2014:TEC:2619648.2619652}.
 
+\begin{figure}
+  \centering
+  \includegraphics[width=0.95\linewidth]{figures/HyQ_roms}
+  \caption{
+           Reachable workspace and torso bounding box of HyQ. The green shapes represent the reachable workspace $W^k$ of each limb. The red shape is $W^0$.}
+		   \label{fig:HyQ_roms}
+\end{figure}
+
+
 \subsection{Notation conventions and definitions} \label{notations}
 
 A vector  $\mathbf{x}$ is denoted with a bold lower-case letter.
@@ -141,7 +150,7 @@ We define some relevant projections of $\mathbf{q}$:
 %\subsubsection{Environment and other volumes} 
 %\label{sec:A}
 \medskip
-The volume encompassing $R^0$ is denoted $W^0$.
+The volume encompassing $R^0$ is denoted $W^0$ (Figure~\ref{fig:HyQ_roms}).
  %~ (Figure~\ref{fig:character}-right: central cylinder). 
  The reachable workspace of a limb $R^k$ is denoted $W^k$: %(Figure~\ref{fig:character}-right: the four ellipses). 
 \begin{equation}

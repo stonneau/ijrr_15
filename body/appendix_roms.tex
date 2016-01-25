@@ -45,9 +45,9 @@ In step 1 on the other hand, selecting the convex hull (Figure~\ref{fig:hrp2_rom
 Concretely, because the false positive set intersects with $W^0$, the scaling volume of the robot torso, the induced error is compensated,
 as verified by the results shown by Table~\ref{tab:requestpercent}.
 
-\subsection{Step 2: computing the trunk scaling workspace $W^0$ of the robot}
+\subsection{Step 2: computing the torso scaling workspace $W^0$ of the robot}
 To define the volume $W^0$ of HRP-2, we proceed in an empirical manner.
-First, we compute the bounding boxes of the robot trunk, head, and upper legs (Figure~\ref{fig:hrp2_w} -- red shapes).
+First, we compute the bounding boxes of the robot torso, head, and upper legs (Figure~\ref{fig:hrp2_w} -- red shapes).
 Then, we perform a scaling of these boxes by a factor $s$. 
 The higher $s$ is, the more likely sampled configurations are to be feasible, but the less complete is the approach.
 To compute the appropriate value of $s$, we proceed as described in Section~\ref{sec:params}, and choose empirically
