@@ -43,8 +43,8 @@ $\mathbf{Q}^0$, as input parameters.
 		\State $nb\_fail = 0$ 
 		\State $i = 1;$ /*Current index in the list*/
 		\While {$i < length(\mathbf{Q}^0)$}
-			\State State $previous = last\_element(states)$
-			\State State $s = \pi(previous, \mathbf{Q}^0[i])$
+			\State State $pState = last\_element(states)$
+			\State State $s =$ \textsc{GenFullBody}$(pState, \mathbf{Q}^0[i])$
 			\If {$s != NULL $}
 				\State $nb\_fail = 0$
 				\State $i += 1$
@@ -54,7 +54,7 @@ $\mathbf{Q}^0$, as input parameters.
 				\If {$nb\_fail == MAX\_TRIES$}
 					\State \textbf{return} $FAILURE$
 				\EndIf				
-				\State $s = $\textsc{RepositionContacts}$(previous)$
+				\State $s = $\textsc{RepositionContacts}$(pState)$
 			\EndIf
 			\State $push\_back(states, s)$
 		\EndWhile
@@ -64,26 +64,26 @@ $\mathbf{Q}^0$, as input parameters.
 \label{alg:interpolate}
 \end{algorithm}
 
-At each step, $g$ is called with the previous state as a parameter, as well
-as a new root placement. $g$ returns a new contact configuration, if it succeeded
+At each step, \textsc{GenFullBody} is called with the previous state as a parameter, as well
+as a new root configuration. \textsc{GenFullBody} returns a new contact configuration, if it succeeded
 in computing a configuration with only one contact switch occurring.
-If $g$ failed in achieving this, the method \textsc{RepositionContacts} is called.
+If \textsc{GenFullBody} failed in achieving this, the method \textsc{RepositionContacts} is called.
 It repositions one end effector (either a free limb, or the oldest active contact) towards a new contact position if possible.
 This repositioning allows to increase the odds that the contact can be maintained at the next step.
 
-The pseudo code for the method $g$ is given by Algorithm~\ref{alg:pi}.
+The pseudo code for the method \textsc{GenFullBody} is given by Algorithm~\ref{alg:pi}.
 
 \begin{algorithm}
 \caption{Full body contact generation method} \label{interpolate}
 	\begin{algorithmic}[1]
 	%~ \Function{GenerateConfiguration}{}
-	\Function{$g$}{$pState$,$\mathbf{q}^0$}
+	\Function{\textsc{GenFullBody}}{$pState$,$\mathbf{q}^0$}
 		\State State $newState$
 		\State $newState.q0 = \mathbf{q}^0$
 		\State $newState.freeLimbs = pState.freeLimbs$
 		\State /*First try to maintain previous contacts*/
 		\State $nbContactsBroken = 0$
-		\For {\textbf{each} Limb $k$ in $previous.contactLimbs$}
+		\For {\textbf{each} Limb $k$ in $pState.contactLimbs$}
 			\If {$!$\textsc{MaintainContact}$(pState,\mathbf{q}^0,k)$}
 				\State $nbContactsBroken += 1$
 				\If {$nbContactsBroken > 1$}				
@@ -94,13 +94,18 @@ The pseudo code for the method $g$ is given by Algorithm~\ref{alg:pi}.
 				\State $push(newState.contactLimbs,k)$
 			\EndIf
 		\EndFor
-		\For {\textbf{each} Limb $k$ in $previous.freeLimbs$}
+		\For {\textbf{each} Limb $k$ in $pState.freeLimbs$}
 			\If {\textsc{GenerateContact}$(\mathbf{q}^0,k)$}	
-				\State $push(newState.contactLimbs,k)$			
+				\State $push(newState.contactLimbs,k)$
+				\State $remove(newState.freeLimbs,k)$		
 				\State \textbf{return} $newState$
 			\EndIf
 		\EndFor
-		\State \textbf{return} $NULL$
+		\If {\textsc{IsInStaticEquilibrium}$(newState)$}
+			\State \textbf{return} $newState$
+		\Else
+			\State \textbf{return} $NULL$
+		\EndIf
 	\EndFunction
 \end{algorithmic}
 \label{alg:pi}
@@ -108,6 +113,8 @@ The pseudo code for the method $g$ is given by Algorithm~\ref{alg:pi}.
 
 The method \textsc{MaintainContact}$(pState,\mathbf{q}^0,k)$ performs inverse kinematics to reach the previous contact position for the Limb.
 If it succeeds, the new limb configuration is assigned to $k$. If it fails, a random collision free configuration is assigned to $k$.
+
+The method \textsc{IsInStaticEquilibrium} returns whether a given state is in static equilibrium.
 
 \textsc{GenerateContact}$(\mathbf{q}^0,k)$ is a call to the contact generator presented in Section~\ref{sec:single_contact}. It generates a contact configuration in static equilibrium, and assigns the corresponding configuration to $k$.
 If it fails, $k$ remains unchanged if it is collision free, otherwise it is assigned a random collision free configuration.

@@ -26,19 +26,28 @@ of the volumes $W^0$.
 \gls{equilibrium feasible} paths in all the presented scenarios, with low rejection rates.
 As for \cite{Bouyarmane2009}, failures can still occur, due to the approximate condition used to compute the guide path.
 The low computational burden of our framework however allows for fast re-planning in case of failure.
+Furthermore because of this approximation, the guide search is not complete. The choice is deliberate, because we are convinced
+that it is necessary to trade completeness for efficiency at all stages of the planner.
+However, one direction for future work is to focus on a more accurate formulation of $C_{reach}^0$ to improve
+the approximation.
+
+Another limitation of the method is that it currently only applies to \gls{cluttered} problems.
+However, it should first be noted that many problems belong to this class: for instance all the problems
+at the DRC were \gls{cluttered}. Our method is thus already useful for many cases.
+One way of extending its range of application, that we 
+consider for future work, is to include the equilibrium criterion when solving $\mathcal{P}_1$.
+Considering the set of obstacles intersecting with the reachable workspace for a given root configuration as candidates surfaces, we can use them to verify the equilibrium criterion.
+This would give us a necessary condition for \equilibriumfeasibility.
 
 
-
-One direction for future work is to focus on a more accurate formulation of $C_{reach}^0$ to address 
-this limitation.
-Our main objective is of course to generate the complete interpolation between the contact sequences.
-We have already obtained some success for some of the computed sequences~\citep{Carpentier2016}, but additional
+Regarding the interpolation between the contact sequences ($\mathcal{P}_3$), we have already obtained some success for some of the computed sequences~\citep{Carpentier2016}, but additional
 work is required on the planning side to obtain a seamless workflow. To achieve this, we are currently working on the notion of transition certificate, i.e. formulating
 conditions that guarantee that the interpolation between two contact configurations is dynamically feasible.
 %~ Our current direction is to propose a geometric quantification of both the kinematic and dynamic constraints of the problem, expressed
 %~ at the center of mass of the robot.
  %~ We are also
 %~ working on new heuristics more closely related to the dynamics of the systems (for instance, choose the contacts that minimize the jerk between two contact configurations).
-Lastly, we aim at going beyond static equilibrium and performing kinodynamic planning. We believe that the most promising direction in this regard is to integrate
+A last limitation of our method is that only static equilibrium configurations are considered for contact planning.
+We aim at performing kinodynamic planning to overcome this limitation. We believe that the most promising direction in this regard is to integrate
 the notion of Admissible Velocity Propagation in our current work \citep{DBLP:conf/rss/PhamCN13}.
-Addressing these two issues is essential to bridge the gap between the planning and control aspects of multiped locomotion.
+Addressing these two last issues is essential to bridge the gap between the planning and control aspects of multiped locomotion.

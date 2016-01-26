@@ -39,8 +39,9 @@ convex hull of the reachable workspace. Right: Simplified hull used in our exper
 
 Figure~\ref{fig:hrp2_roms} illustrate the obtained $W^k$ for HRP-2.
 Regarding the procedure, we can see that step 2 is conservative (Figure~\ref{fig:hrp2_roms}--right), which 
-is acceptable, especially because the lost set essentially relates to configurations close to singularity (they are close to the boundaries of the reachable workspace). We choose again to be less complete
-but more efficient, regarding the number of collision tests to be performed by RB-RRT.
+is acceptable, especially because the lost set essentially relates to configurations close to singularity (they are close to the boundaries of the reachable workspace, and
+often not \gls{contact feasible}, as illustrated in Figure~\ref{fig:dedefeas}, where the exterior boundaries of the reachable workspace appear
+red, thus not belonging to \gls{ccontact0}). We choose again to be less complete but more efficient, regarding the number of collision tests to be performed by RB-RRT.
 In step 1 on the other hand, selecting the convex hull (Figure~\ref{fig:hrp2_roms}--middle) instead of a minimum encompassing shape (Figure~\ref{fig:hrp2_roms}--left) may introduce false positives.
 Concretely, because the false positive set intersects with $W^0$, the scaling volume of the robot torso, the induced error is compensated,
 as verified by the results shown by Table~\ref{tab:requestpercent}.
