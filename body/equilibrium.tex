@@ -1,21 +1,22 @@
 % !TEX root =  ../main.tex
-\section{Heuristics for relevant contact selection}
+\section{Heuristics for contact selection}
 \label{sec:heuristics}
 \subsection{A heuristic for robust static equilibrium}
 The planner is designed so that any generated contact configuration is in static equilibrium.
-Equilibrium is of course critical in multipedal locomotion. For this reason we are interested in a robust 
-criterion, that ensures that the robot remains balanced in a real-world application, regardless of perception and control uncertainties.
+%~ Equilibrium is of course critical in multipedal locomotion. For this reason 
+We are interested in a robust 
+criterion, that ensures that the robot remains in equilibrium in a real-world application, regardless of perception and control uncertainties.
 
-We first give a linear program (LP) that asserts that a contact configuration is in static equilibrium.
-From this formulation we derive a new LP that quantifies the robustness of the configuration regarding equilibrium.
-In turn, from this value we can either define a heuristic to choose the most robust candidate, or set a threshold on the required robustness. While the presented LP is original, it is based on an analysis of the problem that we proposed in \citep{Prete2016}, where the interested reader can find more details.
+We first give a linear program (LP) that verifies whether a contact configuration allows for static equilibrium.
+From this formulation we derive a new LP that quantifies the robustness of the equilibrium to uncertainties in the contact forces.
+In turn, from this value we can either choose the most robust candidate, or set a threshold on the required robustness. While the presented LP is original, it is based on an analysis of the problem that we proposed in \citep{Prete2016}, where the interested reader can find more details.
 
 
 \subsubsection{Conditions for static equilibrium.}
-We first define the variables of the problem, for a robot $R$ and $e$ contact points, expressed in world coordinates:
+We first define the variables of the problem, for $e$ contact points, expressed in world coordinates:
 \begin{itemize}
 \item $\mathbf{c} \in \mathbb{R}^3$ is the robot center of mass (COM);
-\item $\mathbf{L}  \in \mathbb{R}^3 $ is the angular momentum at the COM;
+%~ \item $\mathbf{L}  \in \mathbb{R}^3 $ is the angular momentum at the COM;
 \item $\mathbf{m} \in \mathbb{R}$ is the robot mass;
 \item $\mathbf{g} = [0,0,-9.81]^T$ is the gravity acceleration;
 \item $\mu$ is the friction coefficient;
@@ -28,7 +29,7 @@ We first define the variables of the problem, for a robot $R$ and $e$ contact po
 	\end{itemize}
 \end{itemize}
 
-According to Coulomb's law, the non slipping condition is verified if all the contact forces lie in the friction cone defined by the surface.
+According to Coulomb's law, the nonslipping condition is verified if all the contact forces lie in the friction cone defined by the surface.
 As classically done, we linearize the friction cone in a conservative fashion with a pyramid, described by four generating rays of unit length. We choose for instance:
 \begin{equation*}
 \mathbf{V}_{i} = \mat{\mathbf{n}_{i} + \mu \mathbf{t}_{i1} & \mathbf{n}_{i} -\mu \mathbf{t}_{i1} & \mathbf{n}_{i} + \mu \mathbf{t}_{i2} & \mathbf{n}_{i} - \mu \mathbf{t}_{i2}}^T
@@ -41,14 +42,14 @@ can thus be expressed as a positive combination of its four generating rays.
 \begin{equation*}
 \forall i  \qquad  \exists \bm{\beta}_i \in \mathbb{R}^{4} : \bm{\beta}_i \ge 0 \text{ and } \mathbf{f}_{i} = \mathbf{V}_{i} \bm{\beta}_i,
 \end{equation*}
-where $\bm{\beta}_i$ contains the coefficient of the cone generators.
+where $\bm{\beta}_i$ contains the coefficients of the cone generators.
 We can then stack all the constraints to obtain:
 \begin{equation}\label{eq:gen}
 \exists \bm{\beta} \in \mathbb{R}^{4e} ,  \bm{\beta} \ge 0 \text{ and } \mathbf{f} = \mathbf{V} \bm{\beta},
 \end{equation}
 where $\mathbf{V} = \diag{ \{\mathbf{V}_1, \dots, \mathbf{V}_e\} }$, and $\mathbf{f} = (\mathbf{f}_0,...,\mathbf{f}_e)$.
 
-From the Newton-Euler equations, and assuming a null acceleration of the COM, we want the contact forces to compensate the gravity at the center of mass:
+From the Newton-Euler equations, to be in static equilibrium the contact forces have to compensate the gravitational forces:
 
 
 %~ \begin{align}
@@ -77,8 +78,8 @@ where $\hat{\mathbf{x}} \in \R{3}{3}$ is the cross-product matrix associated to 
 %~ \mathbf{w}_0 = \mathbf{D}^{xy} \mathbf{c}^{xy} + \mathbf{d}
 %~ \end{align}
 
-If there exists a $\bm{\beta}^*$ satisfying \eqref{eq:gen} and \eqref{eq:new_eul}, it means that the configuration is statically balanced.
-The problem can then be formulated as a LP:
+If there exists a $\bm{\beta}^*$ satisfying \eqref{eq:gen} and \eqref{eq:new_eul}, it means that the configuration is in static equilibrium.
+The problem can then be formulated as an LP:
 
 \begin{equation} \label{eq:lin_prog} \begin{aligned}
 \find \quad & \bm{\beta} \in \Rv{4e} \\
@@ -98,7 +99,7 @@ Let $b_0 \in \mathbb{R}$ be a scalar value. We now define the following LP:
 & \bm{\beta} \ge b_0 \bm{1}\\
 \end{aligned} \end{equation}
 
-We observe that if $b_0$ is positive then \eqref{eq:lin_prog} admits a solution, and $b_0$ is proportional to the minimum distance of the equilibrium contact forces to the boundaries of the friction cones.
+We observe that if $b_0$ is positive then \eqref{eq:lin_prog} admits a solution, and $b_0$ is proportional to the minimum distance of the contact forces to the boundaries of the friction cones.
 If $b_0$ is negative, the configuration is not in static equilibrium, and $b_0$ indicates ``how far'' from equilibrium the configuration is. We thus use $b_0$ as a measure of robustness.
 
 In our implementation, rather than solving directly \eqref{eq:lin_prog_rob}, we solve an equivalent problem of smaller dimension that we get by taking the dual of \eqref{eq:lin_prog_rob} and eliminating the Lagrange multipliers associated to the inequality constraints:
@@ -111,6 +112,6 @@ In our implementation, rather than solving directly \eqref{eq:lin_prog_rob}, we 
 
 Indeed, from Slater's conditions \citep{Boyd:2004:CO:993483}, we know that the optimal values of an LP and its dual are equal. Thus the optimal value of the LP~\eqref{eq:dual} is indeed the optimal $b_0$.
 
-In conclusion, the LP~\eqref{eq:dual} provides a method to assert rapidly static equilibrium, and returns a robustness value.
-This robustness criterion can be immediately transformed into a heuristic, and eventually be pondered with others.
-Another option to enforce robustness is to set a minimum acceptable value for $b_0$, but as a result this conservative approach is not complete.
+%~ In conclusion, the LP~\eqref{eq:dual} provides a method to check rapidly static equilibrium, and returns a robustness value.
+%~ This robustness criterion can be immediately transformed into a heuristic, and eventually be weighted with others.
+%~ Another option to enforce robustness is to set a minimum acceptable value for $b_0$, but as a result this conservative approach discards valid solutions.

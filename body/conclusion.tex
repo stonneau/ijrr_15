@@ -1,39 +1,44 @@
  \section{Discussion and future work} 
 \label{sec:conclusion}
 
-In this paper we consider acyclic contact planning in cluttered environments, formulated as two sub problems that we address sequentially.
-The first problem is \Pa, that consists in computing a guide path for the root of the robot that can be extended; the second problem is $\mathcal{P}_2$, that is the computation of a discrete sequence of contacts along the root path.
-Our contribution to \Pa is a generic characterization of the properties that the guide path must satisfy, in particular to enforce the completeness of the acyclic contact planner. We introduced a low-dimensional space $C_{reach}$ that can be mapped 
-into the contact sub-manifold of the robot, approximated, and efficiently sampled by our Reachability-Based planner.
-Our contribution to \Pb is a pragmatic contact generation scheme that can take into
-account criteria to enforce interesting properties on the generated contacts (such as robustness, energy efficiency or naturalness).
+In this paper we consider the \gls{cluttered} contact planning problem, formulated as two sub-problems that we address sequentially.
+The first problem $\mathcal{P}_1$ consists in computing an \gls{equilibrium feasible} guide path for the root of the robot;
+ the second problem $\mathcal{P}_2$ is the computation of a discrete sequence of whole-body configurations along the root path.
 
-Aside from the theoretical contributions, our results demonstrate that our method allows a very interesting compromise between three 
+Our contribution to \Pa is the introduction of a low-dimensional space $C_{reach}$, an approximation of the space of \gls{equilibrium feasible} root configurations.
+Thanks to the computationally efficient verification of the \gls{reachc}, we are able to solve \Pa much faster than previous approaches.
+
+%~ Our contribution to \Pa is a generic characterization of the properties that the guide path must satisfy, in particular to enforce the completeness of the acyclic contact planner. 
+Our contribution to \Pb is a fast contact generation scheme that can take into
+account criteria to optimize user-defined properties.
+
+Our results demonstrate that our method allows a pragmatic compromise between three 
 criteria that are hard to conciliate: generality, performance, and quality of the solution, making it the first acyclic contact
 planner compatible with \gls{interactive} applications.
 %
 \textbf{Regarding generality}, the \gls{reachc}, coupled with an approach based on limb decomposition, 
-allows the method to address arbitrary multiped robots. The only pre-requisite is the specification 
+allows the method to address arbitrary multiped robots in \gls{cluttered} problems. The only pre-requisite is the specification 
 of the volumes $W^0$.
 %
-\textbf{Regarding performance}, our framework is really efficient in addressing both \Pa and $\mathcal{P}_2$. This results in computation costs close to real-time in
-known static environments.
+\textbf{Regarding performance}, our framework is really efficient in addressing both \Pa and $\mathcal{P}_2$. This results in \gls{interactive} computation times.
 %
-\textbf{Regarding the quality of the paths}, a parametrization of the \gls{reachc} allows us to compute
-relevant paths in all the presented scenarios, with low rejection rates.
-As for \cite{Bouyarmane2009}, failures can still occur, due to the compromise criterion used in computing the guide path.
+\textbf{Regarding the quality of the paths}, the \gls{reachc} allows us to compute
+\gls{equilibrium feasible} paths in all the presented scenarios, with low rejection rates.
+As for \cite{Bouyarmane2009}, failures can still occur, due to the approximate condition used to compute the guide path.
 The low computational burden of our framework however allows for fast re-planning in case of failure.
 
-One direction for future work is to focus on a more accurate formulation of $C_{reach}$ to address 
+
+
+One direction for future work is to focus on a more accurate formulation of $C_{reach}^0$ to address 
 this limitation.
 Our main objective is of course to generate the complete interpolation between the contact sequences.
-We have already obtained some successes for some of the computed sequences~\citep{Carpentier2016}, but we admit that additional
+We have already obtained some success for some of the computed sequences~\citep{Carpentier2016}, but additional
 work is required on the planning side to obtain a seamless workflow. To achieve this, we are currently working on the notion of transition certificate, i.e. formulating
 conditions that guarantee that the interpolation between two contact configurations is dynamically feasible.
-Our current direction is to propose a geometric quantification of both the kinematic and dynamic constraints of the problem, expressed
-at the center of mass of the robot.
- We are also
-working on new heuristics more closely related to the dynamics of the systems (for instance, choose the contacts that minimize the jerk between two contact configurations).
-Lastly, we aim at going beyond static equilibrium and to perform kinodynamic planning in the configuration space. We believe that the most promising direction in this regard is to integrate
+%~ Our current direction is to propose a geometric quantification of both the kinematic and dynamic constraints of the problem, expressed
+%~ at the center of mass of the robot.
+ %~ We are also
+%~ working on new heuristics more closely related to the dynamics of the systems (for instance, choose the contacts that minimize the jerk between two contact configurations).
+Lastly, we aim at going beyond static equilibrium and performing kinodynamic planning. We believe that the most promising direction in this regard is to integrate
 the notion of Admissible Velocity Propagation in our current work \citep{DBLP:conf/rss/PhamCN13}.
-Addressing these three issues is essential to bridge the gap between the planning and control aspects of multiped locomotion.
+Addressing these two issues is essential to bridge the gap between the planning and control aspects of multiped locomotion.
