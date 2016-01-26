@@ -90,7 +90,7 @@ The first full body configuration of the sequence is given by the initial state 
 \subsubsection{Maintaining a contact in the sequence.}
 
 Figure~\ref{fig:break_contact} illustrates the contact-persistence strategy.
-If possible, a limb in contact at step $i-1$ remains in contact at step $i$. The contact is broken if an inverse-kinematics solver fails to find a collision-free limb configuration that satisfies joint limits. The solver is directly provided by the Hpp software.
+If possible, a limb in contact at step $i-1$ remains in contact at step $i$. The contact is broken if an inverse-kinematics solver fails to find a collision-free limb configuration that satisfies joint limits. The solver is directly provided by the HPP software.
 
 If the solver fails, the contact is broken and a collision-free configuration is assigned to the limb.
 If two or more contacts are broken in a single step, one or more intermediate steps are added.
