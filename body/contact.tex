@@ -87,7 +87,7 @@ The first full body configuration of the sequence is given by the initial state 
 
 %~ The function $g$ is defined independently by $g^k$ for each limb $R^k$. In defining $g^k$, two aspects must be considered. Is the limb $R^k$ in contact? And which criteria is it optimizing? 
 
-\subsubsection{Maintaining a contact in the sequence.}
+\subsubsection{Maintaining a contact in the sequence:}
 
 Figure~\ref{fig:break_contact} illustrates the contact-persistence strategy.
 If possible, a limb in contact at step $i-1$ remains in contact at step $i$. The contact is broken if an inverse-kinematics solver fails to find a collision-free limb configuration that satisfies joint limits. The solver is directly provided by the HPP software.
@@ -128,7 +128,7 @@ one faulty contact is repositioned, in the hope that it will not be broken at th
 %~ \end{figure}
 
 %\subsection{Generation of a contact configuration}  
-\subsubsection{Creating contacts.}
+\subsubsection{Creating contacts:}
 Contacts are created using three rules:
 \begin{enumerate}
 \item Only one contact creation can happen between two consecutive steps. This increases the odds that the interpolation between the two steps be feasible;

@@ -6,7 +6,7 @@ For instance, one can be interested in configurations that allow to efficiently 
 a high velocity in a given direction, or to stay away from singular configurations.
 In this section, we derive three such heuristics from the work on manipulability by \cite{Yoshikawa1984}, that we present first.
 
-\subsubsection{The force and velocity ellipsoids.}
+\subsubsection{The force and velocity ellipsoids:}
 For a limb configuration $\mathbf{q}^k$, the Jacobian matrix
  $\mathbf{J}^k(\mathbf{q}^k)$   defines the relation:
  
@@ -74,7 +74,7 @@ is the so-called force ellipsoid (Figure~\ref{sec:efort_ellipsoid} - right):
 \mathbf{f}^T (\mathbf{J}\mathbf{J}^T) \mathbf{f} \leq 1
 \end{equation}
 
-\subsubsection{Manipulability-based heuristics.}
+\subsubsection{Manipulability-based heuristics:}
 From these definitions, we can derive three useful heuristics, that all account for the environment and the task being performed.
 The first one, EFORT, was introduced by \cite{Tonneau2014}; the other two are new minor contributions, derived from these previous works.
 
@@ -89,7 +89,7 @@ In our problem, to compare candidate configurations, we include the quality of t
 opposite to the local motion (thus given by the difference between two consecutive root positions):
 
 \begin{equation}
-h_{EFORT}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}^T)\mathbf{m}]^{-\frac{1}{2}} ( \mu \mathbf{n}^T \mathbf{m})
+h_{\textrm{\it EFORT}}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}^T)\mathbf{m}]^{-\frac{1}{2}} ( \mu \mathbf{n}^T \mathbf{m})
 \end{equation}
 where $\mu$ and $\mathbf{n}$ are respectively the friction coefficient and the normal vector of the contact surface.
 
@@ -99,7 +99,7 @@ If the ability to generate large velocities at the effector is considered, we de
 h_{vel}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}^T)^{-1}\mathbf{m}]^{-\frac{1}{2}} ( \mu \mathbf{n}^T \mathbf{m})
 \end{equation}
 
-$h_{EFORT}$ and $h_{vel}$ will favor contacts that allow large efforts or fast modifications in the velocity.
+$h_{\textrm{\it EFORT}}$ and $h_{vel}$ will favor contacts that allow large efforts or fast modifications in the velocity.
 $EFORT$ in particular is useful for tasks such as standing up, pushing / pulling.
 In other less demanding cases, manipulability can also be considered to avoid singularities.
 To do so, we can consider the manipulability measure $h_{w}$, also given by \citeauthor{Yoshikawa1984}:
@@ -114,7 +114,7 @@ the greater $h_{w}$ is, the further away the configuration is from singularity.
 %~ h_{w}(\mathbf{q}, \mathbf{m}) = w(\mathbf{q})  (\mu \mathbf{n}^T \mathbf{m})
 %~ \end{equation}
 
-$h_{EFORT}$, $h_{vel}$ and $h_{w}$ define three kinematic heuristics, fast to compute (indeed, thanks to our sampling-based approach, the Jacobian and inverse products
+$h_{\textrm{\it EFORT}}$, $h_{vel}$ and $h_{w}$ define three kinematic heuristics, fast to compute (indeed, thanks to our sampling-based approach, the Jacobian and inverse products
 can be precomputed off-line), that allow the planner to select the best
 candidates according to user-defined criterion.
 %~ This results in faster computation times, and a reduced number of overall contact switches.

@@ -56,7 +56,7 @@ look unnatural, and do not seem applicable to real robots.
 
 As far as robotics applications are concerned, none of the existing planners is able to solve the problem with \gls{interactive} performances.
 However, recent contributions to the interpolation between contact poses (problem $\mathcal{P}_3$) have brought promising preliminary solutions \citep{Hauser2014, herzog2015trajectory, Park116, Carpentier2016}. In particular, \citeauthor{Carpentier2016} are able to achieve this with \gls{interactive} performances on a real robot.
-Therefore, a planner capable of solving \Pa and \Pb efficiently could outperform all existing planners if coupled with an interpolation method solving $\mathcal{P}_3$.
+Therefore, a planner capable of efficiently solving \Pa and \Pb could outperform all existing planners if coupled with an interpolation method solving $\mathcal{P}_3$.
 The main contribution of this paper is exactly this planner.
 
 \subsection{Rationale}
@@ -80,7 +80,7 @@ This paper presents a pragmatic approach to break the complexity of multi-contac
 we believe that the separation between the generation of the root guide path and the contact sequence is the most promising direction \citep{DBLP:conf/iser/EscandeKMG08}.
 However, this direction raises two theoretical questions that remain to be solved, or even to be properly formulated. \\
 
-\noindent \textbf{Regarding $\mathcal{P}_1$}, the guide path must guarantee the existence of a contact sequence to actuate it. We call this property \glslink{equilibrium feasible}{\textit{equilibrium feasibility}}. This property has not been studied yet; the only way to validate a waypoint in the path is to explicitly compute the contact locations and forces, which is computationally not reasonable \citep{Bouyarmane2009}, unless the scenario is limited to cyclic, quasi-flat cases \citep{zucker2010optimization}. \\
+\noindent \textbf{Regarding $\mathcal{P}_1$}, the guide path must guarantee the existence of a contact sequence to actuate it. We call this property \glslink{equilibrium feasible}{\textit{equilibrium feasibility}}. This property has not been studied yet; the only rigorous way to validate a waypoint in the path is to explicitly compute the contact locations and forces, which is computationally not reasonable \citep{Bouyarmane2009}, unless the scenario is limited to cyclic, quasi-flat cases \citep{zucker2010optimization}. \\
 
 \noindent \textbf{Regarding $\mathcal{P}_2$}, there are infinitely many combinations of possible contact sequences for a given root path. The selection of one particular contact sequence with interesting properties (minimum number of contact changes, robustness, efficiency or naturalness) has been studied for cyclic cases \citep{Hauser06usingmotion}, but has not been efficiently applied to constraining environments (\citeauthor{bouyarmane:lirmm-00777727} and \citeauthor{DBLP:conf/iser/EscandeKMG08} mostly randomly picked one contact sequence, possibly leading to very tedious transitions).  \\
 
@@ -120,7 +120,7 @@ more efficient with respect to the task.
 In Section~\ref{overview}, we present an overview of our method. Section~\ref{rbprm} and Section~\ref{sec:contact} present respectively our answer to \Pa and $\mathcal{P}_2$. In Section~\ref{sec:heuristics}, we present heuristics used for the selection of a contact configuration. Finally, in Section 6 we propose a complete experimental validation of the planner with three very different kinematic chains (the HRP-2 and HyQ robots, and a three-finger manipulator) in various scenarios.
 %that complete those presented in the conference paper.
 
-\subsection*{Comparison with our previous work.}
+\subsection*{Comparison with our previous work}
 The present paper is an extension of a conference paper to appear in the proceedings of the ISRR'15 conference~\citep{tonneauisrr15}.
 The conference paper focuses on the theoretical formulation of the problem, and presents results obtained with virtual avatars.
 This extension completes this work and brings new contributions, resulting from the implementation of our approach on real-world robots and problems.

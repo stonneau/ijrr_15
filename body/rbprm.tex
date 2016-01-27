@@ -51,40 +51,40 @@ and provides a rather accurate approximation of \gls{ccontact0}. % for \gls{clut
 
 
 
-\subsubsection*{Contact feasibility: necessary condition}
+\subsubsection*{Contact feasibility, a necessary condition:}
 For a contact to be possible, a volume $O_i \in O$ necessarily intersects with the reachable workspace $W(\mathbf{q}^{0})$ (Figure~\ref{fig:contact_gen}--1). Furthermore, if $\mathbf{q}^{0}$ is \gls{contact feasible}, then the torso of the robot $W^0(\mathbf{q}^{0})$ is necessarily not colliding  with the environment $O$.
 
-Therefore we can define an outer approximation  $C^0_{Nec} \supset$ \gls{ccontact0} defined as: 
+Therefore we can define an outer approximation  $ \mathcal{C}^0_{\textrm{\it Nec}} \supset$ \gls{ccontact0} defined as: 
 \begin{equation}
-C_{Nec}^0 = \{ \mathbf{q}^0 : W(\mathbf{q}^{0}) \cap O \neq \emptyset \text{ and } W^0(\mathbf{q}^{0}) \cap O = \emptyset \} % \\ }
+\mathcal{C}^0_{\textrm{\it Nec}} = \{ \mathbf{q}^0 : W(\mathbf{q}^{0}) \cap O \neq \emptyset \text{ and } W^0(\mathbf{q}^{0}) \cap O = \emptyset \} % \\ }
  %~ & \text{ and } & A_{torso}(\mathbf{q}^{root}) \cap W = \emptyset \}
 \end{equation}
-%~ The inclusion \gls{ccontact0} $\subset C^0_{Nec}$ is straightforward, but it is very important.
-%~ Planning in $C^0_{Nec}$ allows a strong reduction of the search space, while not discarding 
+%~ The inclusion \gls{ccontact0} $\subset \mathcal{C}^0_{\textrm{\it Nec}}$ is straightforward, but it is very important.
+%~ Planning in $\mathcal{C}^0_{\textrm{\it Nec}}$ allows a strong reduction of the search space, while not discarding 
 %~ any root configuration that could lead to a solution.
  
-%~ The condition defining $C^0_{Nec}$ is only necessary. This means that it might not be possible to extend a guide path planned 
-%~ in $C^0_{Nec}$ into a sequence of contact configurations.
+%~ The condition defining $\mathcal{C}^0_{\textrm{\it Nec}}$ is only necessary. This means that it might not be possible to extend a guide path planned 
+%~ in $\mathcal{C}^0_{\textrm{\it Nec}}$ into a sequence of contact configurations.
 
-\subsubsection*{Contact feasibility: sufficient condition}
+\subsubsection*{Contact feasibility, a sufficient condition:}
 %~ In building $C_{reach}^1$, we directly considered the including hull of the root body $W^{0}$, obtaining a necessary condition. 
-A trivial sufficient condition for \glslink{contact feasible}{\textit{contact feasibility}} can be constructed as a variation of $C^0_{Nec}$, by replacing $W^0$ with a bounding volume $B^{Suf}$ encompassing the whole robot in a given pose, except for the effector surfaces to be in contact. We denote by \mbox{$C_{Suf}^0 \subset $ \gls{ccontact0}} the set of root configurations corresponding to this sufficient condition:
+A trivial sufficient condition for \glslink{contact feasible}{\textit{contact feasibility}} can be constructed as a variation of $\mathcal{C}^0_{\textrm{\it Nec}}$, by replacing $W^0$ with a bounding volume $B^{\textrm{\it Suf}}$ encompassing the whole robot in a given pose, except for the effector surfaces to be in contact. We denote by \mbox{$\mathcal{C}^0_{\textrm{\it Suf}} \subset $ \gls{ccontact0}} the set of root configurations corresponding to this sufficient condition:
 
 \begin{equation}
-C_{Suf}^0 = \{ \mathbf{q}^0 : W(\mathbf{q}^{0}) \cap O \neq \emptyset \text{ and } B^{Suf}(\mathbf{q}^{0}) \cap O = \emptyset \} % \\ }
+\mathcal{C}^0_{\textrm{\it Suf}} = \{ \mathbf{q}^0 : W(\mathbf{q}^{0}) \cap O \neq \emptyset \text{ and } B^{\textrm{\it Suf}}(\mathbf{q}^{0}) \cap O = \emptyset \} % \\ }
  %~ & \text{ and } & A_{torso}(\mathbf{q}^{root}) \cap W = \emptyset \}
 \end{equation}
 
-%~ In general, the inclusion is strict, which means that we lose the completeness of the two-stage contact planner (i.e. the planner is not able to discover a path inside \mbox{$C_{reach} \setminus C_{Suf}^0$}). However, the sufficient condition guarantees that any such path leads to a valid sequence of contacts.
+%~ In general, the inclusion is strict, which means that we lose the completeness of the two-stage contact planner (i.e. the planner is not able to discover a path inside \mbox{$C_{reach} \setminus \mathcal{C}^0_{\textrm{\it Suf}}$}). However, the sufficient condition guarantees that any such path leads to a valid sequence of contacts.
 
 \subsection{Contact feasibility: a compromise \gls{reachc}}
 The sufficient condition is not interesting in practice since it leads the solver to lose too many interesting paths. The necessary condition is not perfect either, since the first stage of the planner would stop on a guide that is not \gls{contact feasible}. 
-An ideal shape $B$ (with $W^0 \subset B \subset B^{Suf}$) that leads to a necessary and sufficient condition may exist---even if it seems intuitively very unlikely in general. 
+An ideal shape $B$ (with $W^0 \subset B \subset B^{\textrm{\it Suf}}$) that leads to a necessary and sufficient condition may exist---even if it seems intuitively very unlikely in general. 
 %~ Its construction is out of the scope of this work.
 
-%~ It might be possible to find an ideal shape $B$ that leads to a necessary and sufficient condition; however, it seems intuitively very unlikely in general. The construction of a shape $W^0 \subset B \subset B^{Suf}$ leading to a necessary and sufficient condition (or the proof of its nonexistence) is out of the scope of this work.
+%~ It might be possible to find an ideal shape $B$ that leads to a necessary and sufficient condition; however, it seems intuitively very unlikely in general. The construction of a shape $W^0 \subset B \subset B^{\textrm{\it Suf}}$ leading to a necessary and sufficient condition (or the proof of its nonexistence) is out of the scope of this work.
 
-However, using a shape between $W^0$ and $B^{Suf}$ leads to a trade-off between a necessary and a sufficient condition. We define $W^0_s$ as the volume $W^0$ subject to a scaling transformation by a factor $s \in \mathbb{R}^+$.
+However, using a shape between $W^0$ and $B^{\textrm{\it Suf}}$ leads to a trade-off between a necessary and a sufficient condition. We define $W^0_s$ as the volume $W^0$ subject to a scaling transformation by a factor $s \in \mathbb{R}^+$.
 %
 We then consider the spaces $C_{s}^0$
  \begin{equation}
@@ -92,7 +92,7 @@ C^0_s = \{ \mathbf{q}^0 : W(\mathbf{q}^{0}) \cap O \neq \emptyset \text{ and } W
  %~ & \text{ and } & A_{torso}(\mathbf{q}^{root}) \cap W = \emptyset \}
 \end{equation}
 %
-If $s=1$, then $W^0_s$ = $W^0$, such that $C_1^0$ = $C_{Nec}$. We thus consider that $s \geq 1$, since smaller values would only worsen the approximation.
+If $s=1$, then $W^0_s$ = $W^0$, such that $C_1^0$ = $\mathcal{C}^0_{\textrm{\it Nec}}$. We thus consider that $s \geq 1$, since smaller values would only worsen the approximation.
 By increasing $s$, the condition can become sufficient.
 %~ The higher $s$, the closer this \gls{reachc} is to being sufficient, and if $s=1$, the search is complete (in the sense that all \gls{contact feasible} configurations can be found). 
 The parametrization of $s$ then defines a trade-off between these two interesting extremes. 

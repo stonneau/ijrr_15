@@ -71,8 +71,8 @@ A requirement for C2 is the condition:
 \end{description}
 C1 and C3 define \glslink{contact feasible}{\textit{contact feasibility}}, which is easier to verify than \glslink{equilibrium feasible}{\textit{equilibrium feasibility}} because it does not require the computation of contact forces.
 We make the assumption that for the \textit{\gls{cluttered} contact planning problem}, most of the times \gls{contact feasible} root configurations are also \gls{equilibrium feasible}.
-For this reason we neglect C2 during the resolution of \Pa, and we consider it only when solving \Pb.
-However, even verifying \glslink{contact feasible}{\textit{contact feasibility}} is too computationally expensive because it requires the projection of the whole-body configuration into a contact posture.
+For this reason we neglect C2 during the resolution of $\mathcal{P}_1$, and we consider it only when solving \Pb.
+However, even verifying \glslink{contact feasible}{\textit{contact feasibility}} is computationally too expensive because it requires the projection of the whole-body configuration into a contact posture.
 
 An intuitive description of \gls{contact feasible} configurations is ``close, but not too close'': close, because a contact surface must be partially included in the reachable workspace of the robot (represented for the right leg in Figure~\ref{fig:contact_gen}--a); not too close, because the robot must avoid collision.
 We approximate \glslink{contact feasible}{\textit{contact feasibility}} with the \textit{reachability condition}, a geometrical criterion based on this intuitive description.

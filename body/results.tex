@@ -8,7 +8,7 @@ and present the success rates obtained in each scenario. Moreover, we demonstrat
 Finally, a last example suggests possible applications to dexterous manipulation.
 
 In our previous work~\citep{tonneauisrr15} additional results are demonstrated with various virtual avatars (Figure~\ref{fig:robots_old}).
-In this extension we choose to focus on actual robots. We invite the interested reader to watch the ISRR video\endnote{https://www.youtube.com/watch?v=LmLAHgGQJGA}, and 
+In this extension we choose to focus on actual robots. We invite the interested reader to watch the ISRR video (\url{http://youtu.be/LmLAHgGQJGA}), and 
 to refer to the previous paper for a discussion on these results.
 
 %~ We say that the planning is \gls{interactive} when the computation time for one step is lesser than the
@@ -40,19 +40,19 @@ the reachable workspaces of the legs of HRP-2 are always required to intersect w
 %\subsubsection*{Truck egress -- Humanoid and insectoid robots (Figure~\ref{res_truck_bd}).}
 \subsubsection{HRP-2 -- Steep staircase (Figure~\ref{fig:stair_robust}):}
 
-\begin{figure*}
+\begin{figure}
   \centering
-  \includegraphics[width=0.5\linewidth]{figures/stair}
+  \includegraphics[width=1\linewidth]{figures/stair}
   \caption{
            HRP-2 in the steep stair climbing scenario. }
 		   \label{fig:stair_robust}
-\end{figure*}
+\end{figure}
 
 The goal is to climb three 15-cm high steps. This height requires HRP-2 to use a ramp to perform the task.
 
 \noindent\textbf{Contacts involved:} Feet and right arm.
 
-\noindent\textbf{Heuristics:} The manipulability $h_w$ is chosen for the feet; $h_{EFORT}$ is chosen for the right arm.
+\noindent\textbf{Heuristics:} The manipulability $h_w$ is chosen for the feet; $h_{\textrm{\it EFORT}}$ is chosen for the right arm.
 Regarding equilibrium, the video demonstrates two sequences computed for two different threshold values of $b_0$: $0$ and $2$ (Figure~\ref{fig:stair_robust}). 
 
 \noindent\textbf{Observations:}
@@ -64,7 +64,7 @@ the cone limits (Figure~\ref{fig:stair_comp}).
 
 The geometry of the environment is easily addressed by our planner, and the contact planning is several times faster than real time in this scenario.
 
-Again, the interpolation motion between the contact steps is out of the scope of this paper. However it should be noted that the computed plan in this scenario has been executed successfully on the robot~\citep{Carpentier2016}.
+Again, the interpolation motion between the contact steps is out of the scope of this paper. However it should be noted that the computed plan in this scenario has been executed successfully on the robot (\url{http://youtu.be/YjL-DBQgXwk#t=0m28s}).
 
 \begin{figure}
   \centering
@@ -86,18 +86,18 @@ Again, the interpolation motion between the contact steps is out of the scope of
 From a bent configuration, a standing-up motion is computed in a constraining environment.
 The resulting motion involves using a wall as support, and climbing a 25-cm high step.
 
-\begin{figure*}
+\begin{figure}
   \centering
-  \includegraphics[width=0.5\linewidth]{figures/standing}
+  \includegraphics[width=1\linewidth]{figures/standing}
   \caption{
            HRP-2 in the standing scenario. }
 		   \label{fig:standing}
-\end{figure*}
+\end{figure}
 
 
 \noindent\textbf{Contacts involved:} All (both feet and hands).
 
-\noindent\textbf{Heuristics:} $h_w$ for the feet, $h_{EFORT}$  for the hands.
+\noindent\textbf{Heuristics:} $h_w$ for the feet, $h_{\textrm{\it EFORT}}$  for the hands.
 
 \noindent\textbf{Observations:} The scenario illustrates well the acyclic aspect of the planning. For instance, in the four first frames of Figure~\ref{fig:standing}, we can see that the right foot
 is moved twice, with the left foot in between, before the configuration allows HRP-2 to move its hand.
@@ -133,13 +133,13 @@ While this scenario is the slowest to solve, the planner still computes a soluti
 \subsubsection{HyQ -- Darpa-style rubble (Figure~\ref{fig:darpa})}
 The quadruped robot is given the task to cross a rubble composed of bricks rotated at different angles and directions.
 
-\begin{figure*}
+\begin{figure}
   \centering
-  \includegraphics[width=0.5\linewidth]{figures/darpa}
+  \includegraphics[width=1\linewidth]{figures/darpa}
   \caption{
            Robust crossing of rubbles by HyQ ($b_0 > 20$). }
 		   \label{fig:darpa}
-\end{figure*}
+\end{figure}
 
 
 \noindent\textbf{Contacts involved:} All (the 4 legs).
@@ -162,13 +162,13 @@ In this long scene, HyQ is first required to cross a 55-cm large hole; then, to 
 		   \label{fig:HyQ_bridge}
 \end{figure}
 
-\begin{figure*}
+\begin{figure}
   \centering
-  \includegraphics[width=0.5\linewidth]{figures/HyQ_obs}
+  \includegraphics[width=1\linewidth]{figures/HyQ_obs}
   \caption{
            Crossing a hole contact sequence for HyQ ($b_0 > 4$). }
 		   \label{fig:HyQ_obs}
-\end{figure*}
+\end{figure}
 
 
 
@@ -199,7 +199,7 @@ some stepping stones are removed, and part of the final staircase is deleted. Al
 
 \noindent\textbf{Contacts involved:} Feet and the right arm.
 
-\noindent\textbf{Heuristics:} $h_w$  for all legs. $h_{EFORT}$  for the right arm. The robustness threshold is set to $2$.
+\noindent\textbf{Heuristics:} $h_w$  for all legs. $h_{\textrm{\it EFORT}}$  for the right arm. The robustness threshold is set to $2$.
 
 \noindent\textbf{Observations:} This scenario is designed to illustrate concretely the computation times of the planner.
 In the video, the footsteps indicating the contact sequence appear at the average speed of their computation (including the guide-path planning).
@@ -221,7 +221,7 @@ Although we do not address the hard issue of accounting for rolling motions, the
  
 \noindent\textbf{Contacts involved:} Three finger-tips.
 
-\noindent\textbf{Heuristics:} $h_{EFORT}$ for all fingers.
+\noindent\textbf{Heuristics:} $h_{\textrm{\it EFORT}}$ for all fingers.
  
  
 \subsection{Influence of the parameters} \label{sec:influence}
@@ -229,7 +229,7 @@ This subsection discusses the several factors that influence the outcome of our 
 contact generation, the desired value of the robustness parameter $b_0$, and lastly, the discretization 
 of the guide path.
  
-\subsubsection{Choosing the scaling factor $s$} \label{sec:params}
+\subsubsection{Choosing the scaling factor $s$:} \label{sec:params}
 To find a convenient value $s^*$ of $s$, we proceeded as follows. 
 For several values of $s$, we generated $10 000$ configurations. 
 We then computed the rates of false positives (i.e. the configuration satisfies
@@ -260,25 +260,25 @@ for the car egress scenario.
 \quad
 \end{table}
 
-\subsubsection{On the choice of heuristics} \label{sec:heuristichoices}
+\subsubsection{On the choice of heuristics:} \label{sec:heuristichoices}
 In our conference paper, the computed motions were only generated using the EFORT heuristic.
 EFORT is designed for tasks requiring to exert important forces (such as pushing / pulling / climbing). 
 Regarding locomotion tasks, such as the stair scenario, one issue with EFORT is that it tends to generate
 configurations close to singularities (and joint limits). While this does not significantly impact
 the generation of the plan, the resulting interpolation on the real robot turned out to be harder \citep{Carpentier2016}.
-For this reason, we now prefer to use our manipulability-based heuristic for the legs of the robot, but we still
+For this reason, we prefer to use our manipulability-based heuristic for the legs of the robot, but we still
 use EFORT for the arms, that results in less contact repositioning.
 
-\subsubsection{On the robustness equilibrium criterion} \label{sec:parrob}
+\subsubsection{On the robustness equilibrium criterion:} \label{sec:parrob}
 Robustness is really important when considering practical applications on the robot, to account 
 for the various uncertainties that result from environment and state estimation. However,
-maximizing the robustness criterion is not necessarily optimal, because the resulting configurations may be too conservative, thus not favoring the motion. In our experiments, we choose not to maximize the robustness,
+maximizing the robustness criterion is often not optimal, because the resulting configurations may be too conservative, thus not favoring the motion. In our experiments, we choose not to maximize the robustness,
 but to empirically set a robustness threshold value under which a configuration is not considered to be in
 static equilibrium (If no candidate reaches the threshold, instead of failing, the algorithm can eventually return the ``more robust'' configuration
 found). Currently for HRP-2, a threshold value of 2 subjectively gives the best results in the considered scenarios, while 10 seems to be a good choice for HyQ. Both values do not
 significantly slow down the planning times.
 
-\subsubsection{Discretization of the guide path} \label{sec:disc}
+\subsubsection{Discretization of the guide path:} \label{sec:disc}
 Currently, to discretize the path, the user defines a fixed step size. The step size
 has an influence on the output of the planner: if too large steps are taken,
 the planner may fail since we impose the constraint that only one contact change might occur
@@ -288,7 +288,7 @@ For future work, we would like to automatically adapt the size of the discretiza
 by reducing the step size when failure occurs.
 
 \subsection{Performance analysis} \label{sec:perf}
-To analyze performance, for each considered scenario, we ran the simulation 1000 times.
+To analyze performance, for each considered scenario, we ran the planner 1000 times.
 We measured the computation time spent in each aspect of the algorithm, and also analyzed the success
 rate obtained for each scenario.
 
@@ -332,13 +332,13 @@ generations that failed because no candidate respected the static equilibrium co
 \quad
 \end{table*}
 
-\subsubsection{Computation times}
+\subsubsection{Computation times:}
 Table~\ref{tab:requestime} summarizes the performance measurements obtained, in terms of computation times.
 
 Considering the repartition of the computation time, for HRP-2, most of the time is spent performing inverse kinematics.
 This is not surprising considering the number of calls to the methods: IK projection is used intensively to maintain contact continuity between two postures; 
 it is also applied every time a new candidate needs to be evaluated. In particular for the car egress scenario,
-the kinematic constraints are really strong. Therefore a large number of projections fail because of joint-limit violations.
+the kinematic constraints are very demanding. Therefore a large number of projections fail because of joint-limit violations.
 
 For HyQ, there is a more uniform repartition of the times for the rubble scenario. For the obstacle scenario,
 we observe a large increase of the time spent performing collision checking and inverse kinematics. This is explained
@@ -349,7 +349,7 @@ In all scenarios, one can observe that the average computation time for one sing
 thus allowing to consider \gls{interactive} applications. 
 
 
-\subsubsection{Success rates}
+\subsubsection{Success rates:}
 Table~\ref{tab:requestpercent} summarizes the success rates obtained for each scenario.
 We observe that, as expected, our planner does not succeed systematically, because of the approximations made in our formulation. The extreme situation of the car egress scenario provides the less satisfying results in terms of kinematic failure. This is not
 surprising considering the narrowness of the scene.
@@ -362,22 +362,23 @@ The most efficient (and immediate) approach is probably to launch in parallel se
 \begin{tabular}{ c | c | c | c | c }
  Scenario & Method  & Guide Path & Contact sequence & Interpolation \\
  \hline
-   \multirow{3}{*}{Stair 20 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{5.42 min}  \\
-							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{2 to 10 min} \\
+   \multirow{3}{*}{Stair 20 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{\cellcolor{blue!25}5.42 min}  \\
 							 & \textbf{Ours} + \citeauthor{Carpentier2016}  & $\mathbf{<}$ \textbf{2 ms} & $\mathbf{<}$ \textbf{14 ms} & $ <$ 2s \\
+							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{\cellcolor{blue!25}2 to 10 min} \\
  \hline
-   \multirow{3}{*}{Stair 30 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{4.08 min}  \\
-							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{2 to 10 min} \\
+   \multirow{3}{*}{Stair 30 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{\cellcolor{blue!25}4.08 min}  \\
 							 & \textbf{Ours}  & $\mathbf{<}$ \textbf{2 ms} & $\mathbf{<}$ \textbf{14 ms} & X \\
+							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{\cellcolor{blue!25}2 to 10 min} \\
  \hline
-   \multirow{3}{*}{Stair 40 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{10.08 min}  \\
-							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{2 to 10 min} \\
+   \multirow{3}{*}{Stair 40 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{\cellcolor{blue!25}10.08 min}  \\
 							 & \textbf{Ours}  & \textbf{5 s} & \textbf{3 s} & X \\
+							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{\cellcolor{blue!25}2 to 10 min} \\
  \hline
-   \multirow{2}{*}{Table (car) egress} & \citeauthor{Bouyarmane2009, DBLP:conf/iser/EscandeKMG08} & 10 min & \multicolumn{2}{c}{3.5 hours}  \\
+   \multirow{2}{*}{Table (car) egress} & \citeauthor{Bouyarmane2009, DBLP:conf/iser/EscandeKMG08} & 10 min & \multicolumn{2}{c}{\cellcolor{blue!25}3.5 hours}  \\
 							 & \textbf{Ours}  & \textbf{529 ms} & \textbf{$<$ 21 s} & X \\
  \end{tabular}
-\caption{TODO VERIFIE STATS A LA MAISON.}
+\caption{Comparison between the computation times obtained by our method and previous ones, for each phase of the planning. Blue cells indicate merged times (because no
+precise time information is available). The X symbol indicates scenarios where we did not address the interpolation of the contact sequence.}
 \label{tab:compprev}
 \quad
 \end{table*}
@@ -385,8 +386,8 @@ The most efficient (and immediate) approach is probably to launch in parallel se
 Comparing our method with others is not trivial. Indeed, we focus on the contact planning aspect of the problem, and do not address
 the interpolation in this paper, nor provide a strong guarantee that our sequences can be interpolated.
 Most papers in the literature only provide the overall computation
-time, without specifying how much is spent in each phase. Due to the complexity
-of the existing approaches,  we cannot afford the development resources required to reimplement them.
+time, without specifying how much is spent in each phase. Moreover, there exists no off-the-shelf implementation
+of the related methods. Due to their complexity, we cannot afford the development resources required to reimplement them.
 
 Furthermore, the interpolation itself is not completely solved. For instance in \cite{DBLP:conf/iser/EscandeKMG08}, the end-effector trajectories are computed automatically with splines, but are manually corrected if they enter in collision. In \citep{Mordatch:2012:DCB:2185520.2185539}, internal joint collisions can occur in the resulting motion.
 Recent methods suffer from similar issues \citep{Carpentier2016}.
