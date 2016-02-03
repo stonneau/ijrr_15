@@ -147,8 +147,8 @@ The quadruped robot is given the task to cross a rubble composed of bricks rotat
 \noindent\textbf{Heuristics:} $h_w$ for all legs. The robustness threshold $b_0$ is set to $20$.
 
 \noindent\textbf{Observations:} In this context, setting up a really important minimum value for $b_0$ is possible due to the high
-stability of the HyQ robot, and results in more contact switches, in exchange for safety. The path-planning takes a few seconds due to the constraint that the 4 reachable workspaces of all legs must
-collide with the environment at all times. %\adnote{Why do not relax this constraint and require only 3 legs?} 
+stability of the HyQ robot, and results in more contact switches, in exchange for safety. The guide path-planning in this scenario takes a few seconds in average, more than
+in any other scenarios. This is explained by the necessity of discovering a safe way to ``climb down'' the rubble. In this part of the planning, the constraint that the 4 reachable workspaces of all legs must collide with the environment at all times is hard to respect, but enforces the equilibrium of HyQ. %\adnote{Why do not relax this constraint and require only 3 legs?} 
 Again, the computation times remain however \gls{interactive}.
 
 \subsubsection{HyQ -- Obstacle race (Figure~\ref{fig:HyQ_bridge} and~\ref{fig:HyQ_obs}):}
@@ -299,15 +299,20 @@ rate obtained for each scenario.
 \begin{tabular}{ >{\centering\arraybackslash}m{37pt} | >{\centering\arraybackslash}m{57pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{70pt} | >{\centering\arraybackslash}m{73pt} | >{\centering\arraybackslash}m{80pt} | >{\centering\arraybackslash}m{10pt}}
   Scenario (nb steps) &  Complete guide generation (ms) & Static equilibrium (ms) & Collision (ms) & Inverse Kinematics (ms) & Total generation time (ms) & Time per step (ms)\\
  \hline
-   Stairs (18) & 6 -- \textbf{13} --  24 & 13 --  \textbf{32} -- 329   & 1 --  \textbf{4} -- 38 & 26 --  \textbf{127} -- 1345 & 92 --  \textbf{261} -- 2174 & \textbf{14} \\
-   Standing (24)& 4 -- \textbf{451} --  985 & 27 --  \textbf{144} -- 338   & 2 --  \textbf{12} -- 37 & 144 --  \textbf{1046} -- 2374 & 310 --  \textbf{1622} -- 3429 & \textbf{66}  \\
-   Car (61)& 1 -- \textbf{529} --  995 & 64 --  \textbf{85} -- 144   & 394 --  \textbf{735} -- 1422 & 3947 --  \textbf{13069} -- 36262 & 6775 --  \textbf{20890} -- 52963 & \textbf{342} \\
-   Rubble (71)& 3 -- \textbf{524} --  993 & 242 --  \textbf{511} -- 3480   & 233 --  \textbf{505} -- 4564 & 180 --  \textbf{414} -- 3518 & 1400 --  \textbf{3058} -- 13126 & \textbf{43} \\
-   Race (112)& 1 -- \textbf{501} --  995 & 266 --  \textbf{449} -- 3956   & 824 --  \textbf{1061} -- 2130 & 666 --  \textbf{874} -- 1613 & 2530 --  \textbf{3722} -- 10030 & \textbf{33}
+   Stairs (18) & 5 -- \textbf{6} --  18 & 13 --  \textbf{32} -- 329   & 1 --  \textbf{4} -- 38 & 26 --  \textbf{127} -- 1345 & 92 --  \textbf{261} -- 2174 & \textbf{15} \\
+   %~ Standing (24)& 4 -- \textbf{451} --  985 & 27 --  \textbf{144} -- 338   & 2 --  \textbf{12} -- 37 & 144 --  \textbf{1046} -- 2374 & 310 --  \textbf{1622} -- 3429 & \textbf{66}  \\
+   Standing (24)& 65 -- \textbf{1086} --  5227 & 27 --  \textbf{144} -- 338   & 2 --  \textbf{12} -- 37 & 144 --  \textbf{1046} -- 2374 & 371 --  \textbf{2257} -- 7671 & \textbf{94}  \\
+   %~ Car (61)& 1 -- \textbf{529} --  995 & 64 --  \textbf{85} -- 144   & 394 --  \textbf{735} -- 1422 & 3947 --  \textbf{13069} -- 36262 & 6775 --  \textbf{20890} -- 52963 & \textbf{342} \\
+   Car (61)& 145 -- \textbf{1055} --  15063 & 64 --  \textbf{85} -- 144   & 394 --  \textbf{735} -- 1422 & 3947 --  \textbf{13069} -- 36262 & 6919 --  \textbf{21416} -- 67031 & \textbf{351} \\
+   %~ Rubble (71)& 3 -- \textbf{524} --  993 & 242 --  \textbf{511} -- 3480   & 233 --  \textbf{505} -- 4564 & 180 --  \textbf{414} -- 3518 & 1400 --  \textbf{3058} -- 13126 & \textbf{43} \\
+   Rubble (71)& 151 -- \textbf{15220} --  125867 & 242 --  \textbf{511} -- 3480   & 233 --  \textbf{505} -- 4564 & 180 --  \textbf{414} -- 3518 & 1548 --  \textbf{18058} -- 13126 & \textbf{254} \\
+   %~ Race (112)& 1 -- \textbf{501} --  995 & 266 --  \textbf{449} -- 3956   & 824 --  \textbf{1061} -- 2130 & 666 --  \textbf{874} -- 1613 & 2530 --  \textbf{3722} -- 10030 & \textbf{33}
+   Race (112)& 267 -- \textbf{966} --  2257 & 266 --  \textbf{449} -- 3956   & 824 --  \textbf{1061} -- 2130 & 666 --  \textbf{874} -- 1613 & 2797 --  \textbf{4187} -- 11292 & \textbf{37}
    %Standing up & $70$ & 23 & 48\\
  \end{tabular}
-\caption{minimum, \textbf{average} and worst time (in ms) spent in the generation process for each scenario and each critical part of the generation process. The last
-column indicates the average time necessary to compute one contact transition.}
+\caption{minimum, \textbf{average} and worst time (in ms) spent in the generation process for each scenario and each critical part of the generation process (not all parts are timed,
+thus the average total computation time is higher than the sum of each part). The last
+column indicates the average time necessary to compute one contact transition. }
 \label{tab:requestime}
 \quad
 \end{table*}
@@ -375,7 +380,7 @@ The most efficient (and immediate) approach is probably to launch in parallel se
 							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{\cellcolor{blue!25}2 to 10 min} \\
  \hline
    \multirow{2}{*}{Table (car) egress} & \citeauthor{Bouyarmane2009, DBLP:conf/iser/EscandeKMG08} & 10 min & \multicolumn{2}{c}{\cellcolor{blue!25}3.5 hours}  \\
-							 & \textbf{Ours}  & \textbf{529 ms} & \textbf{$<$ 21 s} & X \\
+							 & \textbf{Ours}  & \textbf{529 ms} & \textbf{$<$ 22 s} & X \\
  \end{tabular}
 \caption{Comparison between the computation times obtained by our method and previous ones, for each phase of the planning. Blue cells indicate merged times (because no
 precise time information is available). The X symbol indicates scenarios where we did not address the interpolation of the contact sequence.}
