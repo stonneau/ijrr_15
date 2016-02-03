@@ -1,17 +1,6 @@
-We present a framework capable of planning 
-a large variety of contact plans, which describe complex multiped
-motions (including humanoid) such as standing up, as climbing stairs using a handrail, crossing rubble and getting out of a car.
-As this choice of scenarios suggests, our framework answers a need demonstrated at the Darpa Robotics Challenge,
-where the lack of an automatic acyclic contact planner was recognized as a major issue. 
+We present a framework capable of producing contact plans describing complex multiped motions (including humanoid): standing up, climbing stairs using a handrail, crossing rubble and getting out of a car. Our framework answers a need demonstrated at the Darpa Robotics Challenge,
+where the lack of an automatic acyclic contact planner was recognized a major issue. 
 
-The key idea of the framework is the introduction of the reachability condition.
-Informally, it verifies that the root configuration of a robot is ``close, but not too close'' from the obstacles of the environment: 
-close enough to allow contact creation, but not too close to avoid collision.
-This approximation of the space of admissible root configurations allows the decomposition of the high-dimensional, combinatorial contact planning problem into two simpler sub-problems:
-first, to plan a guide path for the root of the robot without considering the whole-body configuration	 of the robot; then, to generate a discrete sequence of whole-body configurations in static equilibrium along this path. The reachability condition turns the computation of the guide path into a low dimensional collision checking problem, which can be solved in less than a few seconds.
-Then, a deterministic contact selection algorithm tackles the combinatorial aspect of the second problem, the generation of a discrete sequence along the guide path.
-Several innovations make it computationally efficient, including a criterion for verifying the static equilibrium of a configuration, and a set of heuristics used 
-to enforce desirable properties on the configuration.
+Our novel key idea is the reachability condition. Informally, it verifies that the root configuration of a robot is ``close, but not too close'' from obstacles: close to allow contact creation, not too close to avoid collision. With this approximation of the space of admissible root configurations we decompose the hard contact planning problem into simpler sub-problems: first, to plan a guide path for the root without considering the whole-body configuration; then, to generate a discrete sequence of whole-body configurations in static equilibrium along this path. The reachability condition turns the high-dimensional computation of the guide into a collision checking problem, solved in less than a few seconds. Then a deterministic contact selection algorithm tackles the combinatorial issue of  generating of a discrete sequence along the guide path. Several innovations make it computationally efficient: a criterion for verifying static equilibrium, and a set of heuristics used to enforce desirable properties on the configuration.
 
-The design of our planner results from the pragmatic choice of favoring efficiency over exhaustiveness, which we justify empirically:
-in a few seconds, with satisfying success rates, we are able to generate complex contact plans for a large variety of scenarios and robots, including HRP-2, HyQ, and a dexterous hand.
+Our approach results from the pragmatic choice of favoring efficiency over exhaustiveness, justified empirically: in a few seconds, with satisfying success rates, we generate complex contact plans for various scenarios and robots, namely HRP-2, HyQ, and a dexterous hand.
