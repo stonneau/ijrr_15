@@ -1,19 +1,8 @@
 % !TEX root =  ../main.tex
-We consider the problem of planning an acyclic sequence of contacts describing the motion of a multiped robot in a constraining environment. Acyclic contact planning is a particular class of motion planning in which the robot must be in contact with the environment at every configuration to maintain the static equilibrium.
 
-Most multipedal locomotion systems focus on cyclic walking gaits \citep{Kajita03a}. However, executing
-this behavior on constraining environments is dangerous, if not impossible.
-In an analysis of their participation to the Darpa Robotics Challenge, \citeauthor{atkensondarpa}
-noted: ``Except for egress, no robots in the DRC Finals used
-the  stair  railings  or  any  form  of  bracing.   Even  drunk  people  are  smart  enough  to  use  nearby  supports.
-Full body locomotion (hand holds,  bracing,  leaning against a wall or obstacles) should be easier than our
-current high performance minimum contact locomotion approaches."
+Planning the locomotion of a multipedal robot in a complex environment - made of stairs, constraining obstacles or uneven surfaces - is still an open issue. Most multipedal locomotion systems focus on cyclic walking gaits \citep{Kajita03a}, but executing this behavior on constraining environments is dangerous if not impossible. In such a context, the robot has to perform a particular class of motion planning called acyclic contact planning, in which the robot must be in contact with the environment at every configuration to maintain the static equilibrium. 
 
-Indeed, the current approach to locomotion planning is to avoid obstacles as much as possible, instead of using them
-to facilitate locomotion. The reason for this, as the authors state, is that ``More contacts make tasks
-mechanically easier, but algorithmically more complicated for planning, and the transitions are difficult to
-both plan and control[...].  We have seen very few robot planners that are  capable of  generating this  behavior."
-The difficulty of addressing such a problem comes both in practice from the proximity to obstacles (which makes tedious the sampling of collision-free configurations) and in theory from the foliation of the configuration space, where zero-measure manifolds intersect in a combinatorial manner \citep{simeon-manipulation-04}.
+The lack of solution to this planning problem has been highlighted by Atkeson \citeauthor{atkensondarpa}. Actually, the current approach to locomotion planning tends to avoid obstacles as much as possible, instead of using them by making contacts to facilitate motion. One main reason is that contact planning is algorithmically difficult, both because of the proximity to obstacles which makes tedious the sampling of collision-free configurations, and because of the foliation of the configuration space where zero-measure manifolds intersect in a combinatorial manner \citep{simeon-manipulation-04}.
 
 Previous contributions that embrace the combinatorial provide complete approaches, not applicable in practice because they require hours of computations \citep{Bretl:2006:MPM:1124573.1124585}.
 More recent successes use a local solution, resulting in more reasonable computation times (still far from real time), at the cost of dynamically inconsistent behaviors \citep{Mordatch:2012:DCB:2185520.2185539}.
@@ -59,7 +48,7 @@ However, recent contributions to the interpolation between contact poses (proble
 Therefore, a planner capable of efficiently solving \Pa and \Pb could outperform all existing planners if coupled with an interpolation method solving $\mathcal{P}_3$.
 The main contribution of this paper is exactly this planner.
 
-\subsection{Rationale}
+\subsection{Situation and Contributions}
 
 \begin{figure*}
   \centering
@@ -76,56 +65,78 @@ The main contribution of this paper is exactly this planner.
     of \textit{equilibrium feasible} root configurations. We achieve this by defining a geometric condition, the \textit{reachability condition} (abstracted with the transparent cylinders on the middle image). \Pb is then the problem of extending the path into a discrete sequence of contact configurations using an iterative algorithm (right image).}
   \label{fig:framework}
 \end{figure*}
-This paper presents a pragmatic approach to break the complexity of multi-contact planning. With that objective in mind,
-we believe that the separation between the generation of the root guide path and the contact sequence is the most promising direction \citep{DBLP:conf/iser/EscandeKMG08}.
-However, this direction raises two theoretical questions that remain to be solved, or even to be properly formulated. \\
 
-\noindent \textbf{Regarding $\mathcal{P}_1$}, the guide path must guarantee the existence of a contact sequence to actuate it. We call this property \glslink{equilibrium feasible}{\textit{equilibrium feasibility}}. This property has not been studied yet; the only rigorous way to validate a waypoint in the path is to explicitly compute the contact locations and forces, which is computationally not reasonable \citep{Bouyarmane2009}, unless the scenario is limited to cyclic, quasi-flat cases \citep{zucker2010optimization}. \\
+Our solution belongs the class of decoupled approaches, because we believe that the separation between the generation of the root guide path and the contact sequence is the most promising direction \citep{DBLP:conf/iser/EscandeKMG08} to break the complexity of multi-contact planning. Compared to previous approaches, our solution has two main novelties: 
 
-\noindent \textbf{Regarding $\mathcal{P}_2$}, there are infinitely many combinations of possible contact sequences for a given root path. The selection of one particular contact sequence with interesting properties (minimum number of contact changes, robustness, efficiency or naturalness) has been studied for cyclic cases \citep{Hauser06usingmotion}, but has not been efficiently applied to constraining environments (\citeauthor{bouyarmane:lirmm-00777727} and \citeauthor{DBLP:conf/iser/EscandeKMG08} mostly randomly picked one contact sequence, possibly leading to very tedious transitions).  \\
-
-\textbf{The key idea of the paper is the \textit{reachability condition}}, a computationally-efficient approximation of the \glslink{equilibrium feasible}{\textit{equilibrium feasibility}}.
-We assume that most of the times the \textit{reachability condition} implies the \glslink{equilibrium feasible}{\textit{equilibrium feasibility}}.
-%root configurations in this approximation can be efficiently extended into full body configurations in static equilibrium.
-This assumption is not always verified, but we provide empirical evidence that it is in the considered class of problems, the \textit{\gls{cluttered} contact planning problems}.
-Such problems can be solved with a contact sequence 
-where in every configuration at least one contact is \gls{quasi-flat}~\citep{Prete2016}. A contact is \textit{quasi-flat} if the friction cone contains the direction opposite to gravity. 
-%~ This definition includes motions on flat or uneven terrains, but also more complex ones such as stair climbing, car egress, or standing up scenarios, that might require noncoplanar contacts.
-%Under this assumption we can take advantage of the decoupling approach to find a solution rapidly.
-
-To address $\mathcal{P}_1$, we first use the \textit{reachability condition} to plan the guide path. This step is fast because the planning happens
+\noindent \textbf{Regarding $\mathcal{P}_1$}, we define and use the \textit{reachability condition} to plan the guide path. The \textit{reachability condition}, a computationally-efficient approximation of the \glslink{equilibrium feasible}{\textit{equilibrium feasibility}}. This step is fast because the planning happens
 in a low-dimensional space, and does not require explicit contact computations.
 
-Then we address \Pb by extending the path into a sequence of whole-body configurations in static equilibrium.
-This second step requires the explicit computation of contact configurations.
+\noindent \textbf{Regarding $\mathcal{P}_2$},  we address \Pb by extending the path into a sequence of whole-body configurations in static equilibrium. This second step requires the explicit computation of contact configurations. It is guided by dedicated heuristics which fastly synthesize relevant configurations.
 
 This sequential approach is the key to the efficiency of our method, though it
 can result in failures because our hypothesis is not always true. However, we demonstrate empirically the validity of the approach: the high success rate, combined with the low computation times, allow us to plan (and re-plan upon failure) multi-contact sequences at \gls{interactive} rates.
-Similarly, in this paper we do not  prove that all the contact sequences produced by our planner can be interpolated ($\mathcal{P}_3$), although we have been able to do this for some of the demonstrated sequences~\citep{Carpentier2016}. 
 
-\subsection{Paper contribution and organization}
-We propose contributions to both problems \Pa and $\mathcal{P}_2$.
+As a result, we propose contributions to both problems \Pa and $\mathcal{P}_2$.
 \begin{itemize}
 \item A low-dimensional, efficient sampling-based approach to plan guide paths.
 \item A very efficient and general implementation of an acyclic contact planner, the first one compatible with \gls{interactive} applications.
 \item Four heuristics for contact generation. They bias the planner towards configurations that are in robust static equilibrium, or 
 more efficient with respect to the task.
-\item Statistical tests that empirically demonstrate the validity of our approach in the considered scenarios. 
 \end{itemize}
 
-%Compared to previous work \citep{Mordatch:2012:DCB:2185520.2185539} our planner does not produce a complete motion, but a discrete sequence of contacts.
-%Since the interpolation of a complete path between such configurations can be solved within \gls{interactive} constraints \citep{Carpentier2016}, we claim that our planner is the fastest multi-contact planning solution to our knowledge.
 
+%
+%
+%% TO BE MOVED IN DISCUSSION 
+%%
+%%the guide path must guarantee the existence of a contact sequence to actuate it. We call this property \glslink{equilibrium feasible}{\textit{equilibrium feasibility}}. This property has not been studied yet; the only rigorous way to validate a waypoint in the path is to explicitly compute the contact locations and forces, which is computationally not reasonable \citep{Bouyarmane2009}, unless the scenario is limited to cyclic, quasi-flat cases \citep{zucker2010optimization}. \\
+%
+%\noindent \textbf{Regarding $\mathcal{P}_2$}, there are infinitely many combinations of possible contact sequences for a given root path. The selection of one particular contact sequence with interesting properties (minimum number of contact changes, robustness, efficiency or naturalness) has been studied for cyclic cases \citep{Hauser06usingmotion}, but has not been efficiently applied to constraining environments (\citeauthor{bouyarmane:lirmm-00777727} and \citeauthor{DBLP:conf/iser/EscandeKMG08} mostly randomly picked one contact sequence, possibly leading to very tedious transitions).  \\
+%
+%
+%\textbf{The key idea of the paper is the \textit{reachability condition}}, a computationally-efficient approximation of the \glslink{equilibrium feasible}{\textit{equilibrium feasibility}}.
+%We assume that most of the times the \textit{reachability condition} implies the \glslink{equilibrium feasible}{\textit{equilibrium feasibility}}.
+%%root configurations in this approximation can be efficiently extended into full body configurations in static equilibrium.
+%This assumption is not always verified, but we provide empirical evidence that it is in the considered class of problems, the \textit{\gls{cluttered} contact planning problems}.
+%Such problems can be solved with a contact sequence 
+%where in every configuration at least one contact is \gls{quasi-flat}~\citep{Prete2016}. A contact is \textit{quasi-flat} if the friction cone contains the direction opposite to gravity. 
+%%~ This definition includes motions on flat or uneven terrains, but also more complex ones such as stair climbing, car egress, or standing up scenarios, that might require noncoplanar contacts.
+%%Under this assumption we can take advantage of the decoupling approach to find a solution rapidly.
+%
+%%Similarly, in this paper we do not  prove that all the contact sequences produced by our planner can be interpolated ($\mathcal{P}_3$), although we have been able to do this for some of the demonstrated sequences~\citep{Carpentier2016}.   
+%
+%
+%To address $\mathcal{P}_1$, we first use the \textit{reachability condition} to plan the guide path. This step is fast because the planning happens
+%in a low-dimensional space, and does not require explicit contact computations.
+%
+%Then we address \Pb by extending the path into a sequence of whole-body configurations in static equilibrium.
+%This second step requires the explicit computation of contact configurations.
 
-In Section~\ref{overview}, we present an overview of our method. Section~\ref{rbprm} and Section~\ref{sec:contact} present respectively our answer to \Pa and $\mathcal{P}_2$. In Section~\ref{sec:heuristics}, we present heuristics used for the selection of a contact configuration. Finally, in Section 6 we propose a complete experimental validation of the planner with three very different kinematic chains (the HRP-2 and HyQ robots, and a three-finger manipulator) in various scenarios.
-%that complete those presented in the conference paper.
-
-\subsection*{Comparison with our previous work}
-The present paper is an extension of a conference paper to appear in the proceedings of the ISRR'15 conference~\citep{tonneauisrr15}.
-The conference paper focuses on the theoretical formulation of the problem, and presents results obtained with virtual avatars.
-This extension completes this work and brings new contributions, resulting from the implementation of our approach on real-world robots and problems.
-In particular, a strong contribution is the introduction of a robust equilibrium criterion, designed to ensure the equilibrium of the robot despite bounded errors in the contact forces, coupled
-with heuristics for relevant contact selection. These two contributions were required to apply our method to real-robot models, namely HRP-2 and HyQ~\citep{semini11hyqdesignjsce}.
-In the present paper, a complete algorithm for the contact planner is given, and an access to the source code of our implementation is provided.
-Furthermore, our experiments are supported by an in-depth analysis of our performances, as well as a discussion on the influence of the parameters to the method.
+%
+%
+%\subsection{Paper contribution and organization}
+%We propose contributions to both problems \Pa and $\mathcal{P}_2$.
+%\begin{itemize}
+%\item A low-dimensional, efficient sampling-based approach to plan guide paths.
+%\item A very efficient and general implementation of an acyclic contact planner, the first one compatible with \gls{interactive} applications.
+%\item Four heuristics for contact generation. They bias the planner towards configurations that are in robust static equilibrium, or 
+%more efficient with respect to the task.
+%\item Statistical tests that empirically demonstrate the validity of our approach in the considered scenarios. 
+%\end{itemize}
+%
+%%Compared to previous work \citep{Mordatch:2012:DCB:2185520.2185539} our planner does not produce a complete motion, but a discrete sequence of contacts.
+%%Since the interpolation of a complete path between such configurations can be solved within \gls{interactive} constraints \citep{Carpentier2016}, we claim that our planner is the fastest multi-contact planning solution to our knowledge.
+%
+%
+%In Section~\ref{overview}, we present an overview of our method. Section~\ref{rbprm} and Section~\ref{sec:contact} present respectively our answer to \Pa and $\mathcal{P}_2$. In Section~\ref{sec:heuristics}, we present heuristics used for the selection of a contact configuration. Finally, in Section 6 we propose a complete experimental validation of the planner with three very different kinematic chains (the HRP-2 and HyQ robots, and a three-finger manipulator) in various scenarios.
+%%that complete those presented in the conference paper.
+%
+%\subsection*{Comparison with our previous work}
+%The present paper is an extension of a conference paper to appear in the proceedings of the ISRR'15 conference~\citep{tonneauisrr15}.
+%The conference paper focuses on the theoretical formulation of the problem, and presents results obtained with virtual avatars.
+%This extension completes this work and brings new contributions, resulting from the implementation of our approach on real-world robots and problems.
+%In particular, a strong contribution is the introduction of a robust equilibrium criterion, designed to ensure the equilibrium of the robot despite bounded errors in the contact forces, coupled
+%with heuristics for relevant contact selection. These two contributions were required to apply our method to real-robot models, namely HRP-2 and HyQ~\citep{semini11hyqdesignjsce}.
+%In the present paper, a complete algorithm for the contact planner is given, and an access to the source code of our implementation is provided.
+%Furthermore, our experiments are supported by an in-depth analysis of our performances, as well as a discussion on the influence of the parameters to the method.
 
