@@ -37,7 +37,7 @@ from datetime import datetime
 from time import sleep
 from math import sqrt
 from tasks import SE3Task, CoMTask, PosturalTask, AngularMomentumTask
-from trajectories import ConstantSE3Trajectory
+from trajectories import ConstantSE3Trajectory, Constant3dTrajectory
 from sot_utils import RIGHT_FOOT_SIZES, LEFT_FOOT_SIZES
 
 EPS = 1e-4;
@@ -49,7 +49,7 @@ def createListOfMatrices(listSize, matrixSize):
     return l;
 
 def createInvDynFormUtil(q, dq):
-    invDynForm = InvDynFormulation('hrp2_inv_dyn'+datetime.now().strftime('%m%d_%H%M%S')+str(np.random.random()), 
+    invDynForm = InvDynFormulation('hrp2_inv_dyn'+datetime.now().strftime('%m%d_%H%M%S'), 
                                    q, dq, conf.dt, conf.model_path, conf.urdfFileName, conf.freeFlyer);
     invDynForm.USE_COM_TRAJECTORY_GENERATOR = False;
     invDynForm.enableCapturePointLimits(conf.ENABLE_CAPTURE_POINT_LIMITS);
@@ -57,15 +57,14 @@ def createInvDynFormUtil(q, dq):
     invDynForm.enableForceLimits(conf.ENABLE_FORCE_LIMITS);
     invDynForm.enableJointLimits(conf.ENABLE_JOINT_LIMITS, conf.IMPOSE_POSITION_BOUNDS, conf.IMPOSE_VELOCITY_BOUNDS, 
                                  conf.IMPOSE_VIABILITY_BOUNDS, conf.IMPOSE_ACCELERATION_BOUNDS);
-    invDynForm.JOINT_POS_PREVIEW = conf.JOINT_POS_PREVIEW;
-    invDynForm.JOINT_VEL_PREVIEW = conf.JOINT_VEL_PREVIEW;
-    invDynForm.MAX_JOINT_ACC = conf.MAX_JOINT_ACC;
-    invDynForm.MAX_MIN_JOINT_ACC = conf.MAX_MIN_JOINT_ACC;
+    invDynForm.JOINT_POS_PREVIEW            = conf.JOINT_POS_PREVIEW;
+    invDynForm.JOINT_VEL_PREVIEW            = conf.JOINT_VEL_PREVIEW;
+    invDynForm.MAX_JOINT_ACC                = conf.MAX_JOINT_ACC;
+    invDynForm.MAX_MIN_JOINT_ACC            = conf.MAX_MIN_JOINT_ACC;
     invDynForm.USE_JOINT_VELOCITY_ESTIMATOR = conf.USE_JOINT_VELOCITY_ESTIMATOR;
-    invDynForm.ACCOUNT_FOR_ROTOR_INERTIAS = conf.ACCOUNT_FOR_ROTOR_INERTIAS;
-#    invDynForm.setComTaskGains(np.ones(3)*conf.kp_com, np.ones(3)*conf.kd_com);
-#    invDynForm.setComPosVelAccDesired(conf.x_com_des, np.zeros(3), np.zeros(3));
+    invDynForm.ACCOUNT_FOR_ROTOR_INERTIAS   = conf.ACCOUNT_FOR_ROTOR_INERTIAS;
     #print invDynForm.r.model
+    
     rf_id = invDynForm.getJointId("RLEG_JOINT5");
     rf_ref_traj = ConstantSE3Trajectory("rf_traj", invDynForm.r.position(q, rf_id));
     rf_constr = SE3Task(invDynForm.r, rf_id, rf_ref_traj, "right_foot");
@@ -89,9 +88,15 @@ def createInvDynFormUtil(q, dq):
                   [-LEFT_FOOT_SIZES[1],  LEFT_FOOT_SIZES[2], 0]]);
     invDynForm.addUnilateralContactConstraint(lf_constr, p, N, conf.fMin, conf.mu);
     
+    com_traj = Constant3dTrajectory("com_traj", invDynForm.r.com(q)+np.matrix([[0.0, 0.1, 0.0]]).T);
+    com_task = CoMTask(invDynForm.r, com_traj);
+    com_task.kp = conf.kp_com;
+    com_task.kv = conf.kd_com;
+    invDynForm.addTask(com_task, conf.w_com);
+    
     posture_task = PosturalTask(invDynForm.r);
     q_des = np.matrix.copy(q);
-    q_des[0] += 0.5;
+    q_des[11] += 2.7;
     posture_task.setPosture(q_des);
     posture_task.kp = conf.kp_posture;
     posture_task.kv = conf.kd_posture;
@@ -128,8 +133,7 @@ def startSimulation(q0, v0, solverId):
     constrViol          = np.empty(conf.MAX_TEST_DURATION).tolist(); #list of lists of lists
     constrViolString    = '';    
 
-#    invDynForm = createInvDynFormUtil(q0, v0);
-#    simulator  = createSimulator(q0, v0);
+    simulator.reset(t, q0, v0, conf.dt);
     solvers[j].changeInequalityNumber(invDynForm.m_in);
     
     for i in range(conf.MAX_TEST_DURATION):
@@ -165,20 +169,7 @@ def startSimulation(q0, v0, solverId):
 #        d_ext = np.hstack((conf.w_com*d, conf.w_posture*d_q, conf.w_force_reg*d_f));
             
         (tau[i,j,:],solver_imode[i,j])    = solvers[j].solve(D.A, d.A, G.A, glb.A, gub.A, lb.A, ub.A, tau[i-1,j,:], maxTime=conf.maxTime);
-          
-        ''' DEBUG '''
-#        (tmp1, tmp2, dv_des) = invDynForm.tasks[0].dyn_value(0, q[j][:,i], dq[j][:,i]);
-#        Mu = invDynForm.M[:6,:];
-#        Ma = invDynForm.M[6:,:];
-#        Jcu = invDynForm.Jc[:,:6];
-#        Jca = invDynForm.Jc[:,6:];
-#        hu = invDynForm.h[:6];        
-#        ha = invDynForm.h[6:];
-#        ff = np.linalg.pinv(Jcu.T) * (hu + Mu * dv_des);
-#        tt = Ma*dv_des + ha - Jca.T * ff;
-#        y_tt = invDynForm.C * tt + invDynForm.c;
-        ''' END DEBUG '''
-        
+
         torques                     = np.matrix.copy(tau[i,j,:]).reshape((na,1));
         y                           = np.dot(invDynForm.C, torques) + invDynForm.c;
         dv[j][:,i]                  = y[:nv];
@@ -298,8 +289,8 @@ final_time_step      = np.zeros(N_SOLVERS, np.int);
 controller_balance   = N_SOLVERS*[False,];
 
 for s in conf.SOLVER_TO_INTEGRATE:
-#    controller_balance[s] = startSimulation(q0, v0, s);
-    cProfile.run('startSimulation(q0, v0, s);');
+    controller_balance[s] = startSimulation(q0, v0, s);
+#    cProfile.run('startSimulation(q0, v0, s);');
 
 #''' compute distance of com from border in direction of capture point '''
 #a = np.dot(B_ch, dx_com[0,s,:2] / norm(dx_com[0,s,:2]));

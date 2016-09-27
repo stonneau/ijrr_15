@@ -18,28 +18,12 @@ class Task:
   def __init__ (self, robot, name = "Task"):
     self.name = name
     self.robot = robot
-    self._kp = 1.
-    self._kv = 1.
+    self.kp = 1.
+    self.kv = 1.
     self._coeff = 1.
 
   def setCoeff(self, value):
     self._coeff = value
-
-  @property
-  def kp(self):
-    return self._kp
-
-  @kp.setter
-  def kp(self, value):
-    self._kp = value
-
-  @property
-  def kv(self):
-    return self._kv
-
-  @kv.setter
-  def kv(self, kv):
-    self._kv = kv
 
   def error_kin(self, t, q):
     error = np.matrix ([]).reshape (0, 0)
@@ -199,9 +183,6 @@ class CoMTask(Task):
 
     # mask over the desired euclidian axis
     self._mask = (np.ones(3)).astype(bool)
-
-    # desired CoM position
-    self.CoM_ref = np.matrix([0., 0., 0.6]).T
 
   #@kp.setter
   #def kp(self, *args):

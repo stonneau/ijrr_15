@@ -6,14 +6,13 @@ import pinocchio as se3
 #from dynamic_graph.sot.hrp2.dynamic_hrp2_14 import DynamicHrp2_14
 #from dynamic_graph.sot.dynamics import *
 from min_jerk_traj_gen import MinimumJerkTrajectoryGenerator
-from acc_bounds_util import computeAccLimits
+from acc_bounds_util_multi_dof import computeAccLimits
 from sot_utils import pinocchio_2_sot
 #from sot_utils import setDynamicProperties, createAndInitializeMetaTaskDyn6D
 from sot_utils import computeContactInequalities, computeRectangularContactInequalities, solveWithNullSpace, crossMatrix
 #from sot_utils import H_FOOT_2_SOLE, LEFT_FOOT_SIZES, RIGHT_FOOT_SIZES, DQ_MAX
 #from sot_utils import H_WRIST_2_GRIPPER, INERTIA_ROTOR, GEAR_RATIO, JOINT_VISCOUS_FRICTION
 #from dynamic_graph.sot.core import RobotSimu
-from acc_bounds_util import computeAccLimitsFromViability
 from dynamic_graph.sot.torque_control.force_torque_estimator import ForceTorqueEstimator
 from first_order_low_pass_filter import FirstOrderLowPassFilter
 from convex_hull_util import compute_convex_hull, plot_convex_hull
@@ -232,7 +231,8 @@ class InvDynFormulation (object):
         self.qMin       = self.r.model.lowerPositionLimit;
         self.qMax       = self.r.model.upperPositionLimit;
         self.dqMax      = self.r.model.velocityLimit;
-        self.ddqMax     = np.array(self.nv*[self.MAX_JOINT_ACC]);
+        self.ddqMax     = np.matlib.zeros((self.na,1)); 
+        self.ddqStop    = np.matlib.zeros((self.na,1));
         if(self.freeFlyer):
             self.qMin[:6]   = -1e100;   # set bounds for the floating base
             self.qMax[:6]   = +1e100;
@@ -449,8 +449,8 @@ class InvDynFormulation (object):
         a = zeros(dim);
         i = 0;
         for k in range(n_tasks):
-            A[i:i+dims[k],:self.nv] = J[k];
-            a[i:i+dims[k]]          = a_des[k] - drift[k];
+            A[i:i+dims[k],:self.nv] = self.task_weights[k]*J[k];
+            a[i:i+dims[k]]          = self.task_weights[k]*(a_des[k] - drift[k]);
             i += dims[k];
         D       = np.dot(A,self.C);
         d       = a - np.dot(A,self.c);
@@ -517,27 +517,21 @@ class InvDynFormulation (object):
 
     def createJointAccInequalitiesViability(self):
         n  = self.na;
-        q  = self.q;
-        v  = self.v;
         B  = zeros((2*n,n));
         b  = zeros(2*n);
-        
-        self.ddqMax     = np.array(self.nv*[self.MAX_JOINT_ACC]);
-        self.ddqStop    = np.array(self.nv*[self.MAX_MIN_JOINT_ACC]);
-        
-        B[0:n,:]    =  np.matlib.identity(n);
-        B[n:2*n,:]  = -np.matlib.identity(n);
+                
+        B[:n,:]  =  np.matlib.identity(n);
+        B[n:,:]  = -np.matlib.identity(n);
 
         # Take the most conservative limit for each joint
-        self.ddqMinFinal = zeros(n)
-        self.ddqMaxFinal = zeros(n);
         dt = max(self.JOINT_POS_PREVIEW,self.JOINT_VEL_PREVIEW)*self.dt;
-        for i in range(n):
-            (ddqLB, ddqUB) = computeAccLimits(q[7+i], v[6+i], self.qMin[7+i], self.qMax[7+i], self.dqMax[6+i], self.ddqMax[6+i], 
-                                              dt, False, self.ddqStop[6+i], self.IMPOSE_POSITION_BOUNDS, self.IMPOSE_VELOCITY_BOUNDS, 
-                                              self.IMPOSE_VIABILITY_BOUNDS, self.IMPOSE_ACCELERATION_BOUNDS);
-            self.ddqMinFinal[i] = ddqLB;
-            self.ddqMaxFinal[i] = ddqUB;
+        self.ddqMax[:,0]  = self.MAX_JOINT_ACC;
+        self.ddqStop[:,0] = self.MAX_MIN_JOINT_ACC;
+        (ddqLB, ddqUB) = computeAccLimits(self.q[7:], self.v[6:], self.qMin[7:], self.qMax[7:], self.dqMax[6:], self.ddqMax, 
+                                          dt, False, self.ddqStop, self.IMPOSE_POSITION_BOUNDS, self.IMPOSE_VELOCITY_BOUNDS, 
+                                          self.IMPOSE_VIABILITY_BOUNDS, self.IMPOSE_ACCELERATION_BOUNDS);
+        self.ddqMinFinal = ddqLB;
+        self.ddqMaxFinal = ddqUB;
         
         b[:n]    = -self.ddqMinFinal;
         b[n:]    = self.ddqMaxFinal;

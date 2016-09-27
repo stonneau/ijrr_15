@@ -11,6 +11,7 @@ velocity and acceleration) in the future.
 @author: adelpret
 """
 import numpy as np
+from math import sqrt
 
 EPS = 1e-10;    # tolerance used to check violations
 
@@ -34,12 +35,12 @@ def isStateViable(q, dq, qMin, qMax, dqMax, ddqMax, verbose=False):
         if(verbose):
             print "State (%f,%f) not viable because |dq|>dqMax" % (q,dq);
         return abs(dq)-dqMax;
-    dqMaxViab =   np.sqrt(max(0,2*ddqMax*(qMax-q)));
+    dqMaxViab =   sqrt(max(0,2*ddqMax*(qMax-q)));
     if(dq>dqMaxViab+EPS):
         if(verbose):
             print "State (%f,%f) not viable because dq>dqMaxViab=%f" % (q,dq,dqMaxViab);
         return dq-dqMaxViab;
-    dqMinViab = - np.sqrt(max(0,2*ddqMax*(q-qMin)));
+    dqMinViab = - sqrt(max(0,2*ddqMax*(q-qMin)));
     if(dq<dqMinViab+EPS):
         if(verbose):
             print "State (%f,%f) not viable because dq<dqMinViab=%f" % (q,dq,dqMinViab);
@@ -86,8 +87,8 @@ def computeAccLimitsFromPosLimits(q, dq, qMin, qMax, ddqMax, dt, verbose=True):
     hitting the position limits.
     
      -sqrt( 2*ddqMax*(q-qMin) ) < dq[t+1] < sqrt( 2*ddqMax*(qMax-q) )
-    ddqMin[2] = (-np.sqrt(max(0.0, 2*MAX_ACC*(q[i]+DT*dq[i]-qMin))) - dq[i])/DT;
-    ddqMax[2] = (np.sqrt(max(0.0, 2*MAX_ACC*(qMax-q[i]-DT*dq[i]))) - dq[i])/DT;    
+    ddqMin[2] = (-sqrt(max(0.0, 2*MAX_ACC*(q[i]+DT*dq[i]-qMin))) - dq[i])/DT;
+    ddqMax[2] = (sqrt(max(0.0, 2*MAX_ACC*(qMax-q[i]-DT*dq[i]))) - dq[i])/DT;    
 '''
 def computeAccLimitsFromViability(q, dq, qMin, qMax, ddqMax, dt, verbose=True):
     dt_square = dt**2;
@@ -104,7 +105,7 @@ def computeAccLimitsFromViability(q, dq, qMin, qMax, ddqMax, dt, verbose=True):
     c = dq_square - two_ddqMax*(qMax - q_plus_dt_dq);
     delta = b**2 - 2*two_a*c;
     if(delta>=0.0):
-        ddq_1 = (-b + np.sqrt(delta))/(two_a);
+        ddq_1 = (-b + sqrt(delta))/(two_a);
     else:
         ddq_1 = minus_dq_over_dt;
         if(verbose):
@@ -114,7 +115,7 @@ def computeAccLimitsFromViability(q, dq, qMin, qMax, ddqMax, dt, verbose=True):
     c = dq_square - two_ddqMax*(q_plus_dt_dq - qMin);
     delta = b**2 - 2*two_a*c;
     if(delta >= 0.0):
-        ddq_2 = (-b - np.sqrt(delta))/(two_a);
+        ddq_2 = (-b - sqrt(delta))/(two_a);
     else:
         ddq_2 = minus_dq_over_dt;
         if(verbose):

@@ -16,8 +16,8 @@ freeFlyer = True;
 
 ''' CONTROLLER CONFIGURATION '''
 ENABLE_CAPTURE_POINT_LIMITS     = False;
-ENABLE_TORQUE_LIMITS            = False;
-ENABLE_FORCE_LIMITS             = False;
+ENABLE_TORQUE_LIMITS            = True;
+ENABLE_FORCE_LIMITS             = True;
 ENABLE_JOINT_LIMITS             = True;
 IMPOSE_POSITION_BOUNDS          = True;
 IMPOSE_VELOCITY_BOUNDS          = True;
@@ -35,8 +35,8 @@ kp_posture  = 30; #1.0;   # proportional gain of postural task
 kd_posture  = 2*sqrt(kp_posture);
 kc_p        = 1000.0;   # constraint proportional feedback gain
 kc_d        = 2*sqrt(kc_p);   # constraint derivative feedback gain
-kp_com      = 0;
-kd_com      = 1.0/dt;
+kp_com      = 10;
+kd_com      = 2*sqrt(kp_com);
 x_com_des   = np.array([ 0.01,  0.  ,  0.78]);
 
 # CONTROLLER WEIGTHS
@@ -81,7 +81,7 @@ INITIAL_CONFIG_FILENAME         = '../data/20160906_hrp2_coplanar';
 ENABLE_VIEWER               = True;
 PLAY_MOTION_WHILE_COMPUTING = True;
 PLAY_REAL_TIME_MOTION       = False;
-DT_VIEWER                   = 0.05;   # timestep used to display motion with viewer
+DT_VIEWER                   = dt;   # timestep used to display motion with viewer
 
 ''' FIGURE PARAMETERS '''
 SAVE_FIGURES     = False;

@@ -45,6 +45,27 @@ class ConstantSE3Trajectory (object):
 
   def __call__ (self, t):
     return (self._Mref, Motion.Zero(), Motion.Zero());
+    
+    
+class Constant3dTrajectory (object):
+
+  def __init__ (self, name, x_ref):
+    self._name = name
+    self._dim = 3
+    self._x_ref = np.matrix.copy(x_ref);
+    self._v_ref = np.matlib.zeros((3,1));
+    self._a_ref = np.matlib.zeros((3,1));
+
+  @property
+  def dim(self):
+    return self._dim
+    
+  def setReference(self, x_ref):
+    self._x_ref = x_ref;
+
+  def __call__ (self, t):
+    return (self._x_ref, self._v_ref, self._a_ref);
+
 
 class DifferentiableEuclidianTrajectory(RefTrajectory):
 

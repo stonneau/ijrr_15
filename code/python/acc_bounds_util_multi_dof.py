@@ -11,23 +11,30 @@ velocity and acceleration) in the future.
 @author: adelpret
 """
 import numpy as np
-from math import sqrt
+import acc_bounds_util
 
-EPS = 1e-10;    # tolerance used to check violations
-
-#IMPOSE_POSITION_BOUNDS = False;
-#IMPOSE_VELOCITY_BOUNDS = True;
-#IMPOSE_VIABILITY_BOUNDS = False;
-#IMPOSE_ACCELERATION_BOUNDS = True;
+EPS = 1e-6;    # tolerance used to check violations
 
 ''' Return True if the state is viable, False otherwise. '''
 def areStatesViable(q, dq, qMin, qMax, dqMax, ddqMax, verbose=False):
     dqMaxViab =   np.sqrt(np.maximum(0.0, 2.0*np.multiply(ddqMax, qMax-q)));
     dqMinViab = - np.sqrt(np.maximum(0.0, 2.0*np.multiply(ddqMax, q-qMin)));
     
-    ind_q       = np.logical_or(q<qMin-EPS, q>qMin+EPS);
+    ind_q       = np.logical_or(q<qMin-EPS, q>qMax+EPS);
     ind_dq      = np.logical_or(dq>dqMax+EPS, dq<-dqMax-EPS);    
     ind_viab    = np.logical_or(dq>dqMaxViab+EPS, dq<dqMinViab+EPS);
+    
+    if(verbose):
+        if(np.sum(ind_q)>0):
+            print "WARNING: some states are not viable because they violate position bounds:", np.where(ind_q)[0], \
+                "qMax-q", qMax[ind_q]-q[ind_q], "q-qMin", q[ind_q]-qMin[ind_q];
+        elif(np.sum(ind_dq)>0):
+            print "WARNING: some states are not viable because they violate velocity bounds:", np.where(ind_dq)[0], \
+                 "dq", dq[ind_dq], "dqMax", dqMax[ind_dq];
+        elif(np.sum(ind_viab)>0):
+            print "WARNING: some states are not viable because they violate viability bounds:", np.where(ind_viab)[0], \
+                "qMax-q", qMax[ind_viab]-q[ind_viab], "q-qMin", q[ind_viab]-qMin[ind_viab], "dq", dq[ind_viab], \
+                "dqMaxViab", dqMaxViab[ind_viab], "dqMinViab", dqMinViab[ind_viab];
 
     return np.logical_or(ind_q, np.logical_or(ind_dq, ind_viab));    
 
@@ -118,7 +125,7 @@ def computeAccLimitsFromViability(q, dq, qMin, qMax, ddqMax, dt, verbose=True):
     ddq_1 = np.matlib.zeros((n,1));
     ddq_1[ind] = (-b[ind] + np.sqrt(delta[ind])) / two_a;
     ddq_1[nind] = minus_dq_over_dt[nind];
-    if(nind.shape[0]>0 and verbose):
+    if(np.sum(nind)>0 and verbose):
         print "Error: state(s) not viable because delta is negative", np.where(nind)[0];
     
     b = dt_two_dq - dt_ddqMax_dt;
@@ -129,7 +136,7 @@ def computeAccLimitsFromViability(q, dq, qMin, qMax, ddqMax, dt, verbose=True):
     ddq_2 = np.matlib.zeros((n,1));
     ddq_2[ind] = (-b[ind] - np.sqrt(delta[ind])) / two_a;
     ddq_2[nind] = minus_dq_over_dt[nind];
-    if(nind.shape[0]>0 and verbose):
+    if(np.sum(nind)>0 and verbose):
         print "Error: state(s) not viable because delta is negative", np.where(nind)[0];
         
     ddqUB = np.maximum(ddq_1, minus_dq_over_dt);
@@ -145,10 +152,11 @@ def computeAccLimitsFromViability(q, dq, qMin, qMax, ddqMax, dt, verbose=True):
     hitting the position limits, whereas ddqMax is the absolute maximum acceleration.
 '''
 def computeAccLimits(q, dq, qMin, qMax, dqMax, ddqMax, dt, verbose=True, ddqStop=None, IMPOSE_POSITION_BOUNDS=True,
-                     IMPOSE_VELOCITY_BOUNDS=True, IMPOSE_VIABILITY_BOUNDS=True, IMPOSE_ACCELERATION_BOUNDS=True):
-    viabViol = areStatesViable(q, dq, qMin, qMax, dqMax, ddqMax);
-    if(np.sum(viabViol)>0 and verbose):
-        print "WARNING: some states are not viable:", np.where(viabViol)[0];
+                     IMPOSE_VELOCITY_BOUNDS=True, IMPOSE_VIABILITY_BOUNDS=True, IMPOSE_ACCELERATION_BOUNDS=True):    
+    if(verbose):
+        viabViol = areStatesViable(q, dq, qMin, qMax, dqMax, ddqMax, verbose);
+#    if(np.sum(viabViol)>0 and verbose):
+#        print "WARNING: some states are not viable:", np.where(viabViol)[0];
         
     if(ddqStop==None):
         ddqStop=ddqMax;
@@ -183,15 +191,53 @@ def computeAccLimits(q, dq, qMin, qMax, dqMax, ddqMax, dt, verbose=True, ddqStop
     ddqUBFinal = np.min(ddqUB, 1);
     
     # In case of conflict give priority to position bounds
-    if((ddqUBFinal<ddqLBFinal).any):
+    ind = (ddqUBFinal<ddqLBFinal).A.squeeze()
+    if(np.sum(ind)>0):        
         if(verbose):
-            print "Conflict between pos/vel/acc bounds ddqMin %f ddqMax %f" % (ddqLBFinal,ddqUBFinal);
-#        if(ddqUBFinal==ddqUB[0]):
-#            ddqLBFinal = ddqUBFinal;
-#        else:
-#            ddqUBFinal = ddqLBFinal;
-        if(verbose):
-            print "                     New bounds are ddqMin %f ddqMax %f" % (ddqLBFinal,ddqUBFinal);
+            print "Conflict between pos/vel/acc bounds (ddqMin, ddqMax)=", (np.where(ind)[0], ddqLBFinal[ind],ddqUBFinal[ind]);
         
-    return (ddqLBFinal,ddqUBFinal);
+        # eliminate acceleration limits and recompute final bounds
+        ddqUB[ind,3] = 1e100;
+        ddqLB[ind,3] = -1e100;
+        ddqLBFinal[ind] = np.max(ddqLB[ind], 1);
+        ddqUBFinal[ind] = np.min(ddqUB[ind], 1);
+        ind2 = (ddqUBFinal<ddqLBFinal).A.squeeze()
+        if(np.sum(ind2)>0):
+            if(verbose):
+                print "Conflict persists after eliminating acc limits (ddqMin, ddqMax)=", (np.where(ind2)[0], ddqLBFinal[ind2],ddqUBFinal[ind2]);
+            
+            # eliminate viability limits and recompute final bounds
+            ddqUB[ind2,2] = 1e100;
+            ddqLB[ind2,2] = -1e100;
+            ddqLBFinal[ind2] = np.max(ddqLB[ind2], 1);
+            ddqUBFinal[ind2] = np.min(ddqUB[ind2], 1);
+            ind3 = (ddqUBFinal<ddqLBFinal).A.squeeze()
+            if(np.sum(ind3)>0):
+                if(verbose):
+                    print "Conflict persists after eliminating viab limits (ddqMin, ddqMax)=", (np.where(ind3)[0], ddqLBFinal[ind3],ddqUBFinal[ind3]);
+                # use position limits 
+                ddqLBFinal[ind3] = ddqLB[ind3,0];
+                ddqUBFinal[ind3] = ddqUB[ind3,0];
+
+        if(verbose):
+            print "                     New bounds are (ddqMin, ddqMax)=", (ddqLBFinal[ind],ddqUBFinal[ind]);
+
+#    ddqLBs = np.matlib.zeros((n,1));
+#    ddqUBs = np.matlib.zeros((n,1));
+#    for i in range(n):
+#        (ddqLBs[i], ddqUBs[i]) = acc_bounds_util.computeAccLimits(q[i], dq[i], qMin[i], qMax[i], dqMax[i], ddqMax[i], 
+#                                                                  dt, verbose, ddqStop[i], IMPOSE_POSITION_BOUNDS, 
+#                                                                  IMPOSE_VELOCITY_BOUNDS, IMPOSE_VIABILITY_BOUNDS, 
+#                                                                  IMPOSE_ACCELERATION_BOUNDS);
+#        if(abs(ddqLBs[i]-ddqLBFinal[i])>EPS or abs(ddqUBs[i]-ddqUBFinal[i])>EPS):
+#            print "Error computing acceleration lower bound for joint", i, ddqLBs[i], ddqLBFinal[i];
+#            print "Error computing acceleration upper bound for joint", i, ddqUBs[i], ddqUBFinal[i];
+#            (ddqLBs[i], ddqUBs[i]) = acc_bounds_util.computeAccLimits(q[i], dq[i], qMin[i], qMax[i], dqMax[i], ddqMax[i], 
+#                                                                  dt, True, ddqStop[i], IMPOSE_POSITION_BOUNDS, 
+#                                                                  IMPOSE_VELOCITY_BOUNDS, IMPOSE_VIABILITY_BOUNDS, 
+#                                                                  IMPOSE_ACCELERATION_BOUNDS);
+#            computeAccLimits(q, dq, qMin, qMax, dqMax, ddqMax, dt, True, ddqStop, IMPOSE_POSITION_BOUNDS,
+#                             IMPOSE_VELOCITY_BOUNDS, IMPOSE_VIABILITY_BOUNDS, IMPOSE_ACCELERATION_BOUNDS)
+    
+    return (ddqLBFinal, ddqUBFinal);
     

@@ -703,34 +703,32 @@ class Simulator (object):
 #                    res = res + [ForceConstraintViolation(self.t*self.dt, self.rigidContactConstraints[i].name+' Fz', f[i*6:i*6+6], zeros(6))];
 #                            
         ''' check for violations of joint limits '''
-        for i in range(self.nv):
-            if( abs(self.v[i]) > self.DQ_MAX):
-                res = res + [VelocityConstraintViolation(self.t*self.dt, i, self.v[i], self.dv[i])];
-                if(self.verb>0):
-                    print "[SIMULATOR] %s" % (res[-1].toString());
-                if(self.ENABLE_JOINT_LIMITS):
-                    self.v[i] = self.DQ_MAX if (self.v[i]>0.0) else -self.DQ_MAX;
+        ind_vel = np.where(np.abs(self.v) > self.DQ_MAX)[0].A.squeeze();
+        ind_vel = np.array([ind_vel]) if len(ind_vel.shape)==0 else ind_vel;
+        for i in ind_vel:
+            res = res + [VelocityConstraintViolation(self.t*self.dt, i-7, self.v[i], self.dv[i])];
+            if(self.verb>0):
+                print "[SIMULATOR] %s" % (res[-1].toString());
+            if(self.ENABLE_JOINT_LIMITS):
+                self.v[i] = self.DQ_MAX if (self.v[i]>0.0) else -self.DQ_MAX;
         
-        for i in range(self.nq):        
-            if( self.q[i]>self.qMax[i]+EPS ):
-                if(i not in [23, 30]):   # neglect joint bounds of gripper
-                    if(self.v[i-1]>self.JOINT_LIMITS_DQ_THR):
-                        res = res + [PositionConstraintViolation(self.t*self.dt, i-7, self.q[i], self.v[i-1], self.dv[i-1])];
-                        if(self.verb>0):
-                            print "[SIMULATOR] %s" % (res[-1].toString());
-                if(self.ENABLE_JOINT_LIMITS):
-                    self.q[i] = self.qMax[i];
-                    self.v[i-1] = 0.0 if(self.v[i-1]>0) else self.v[i-1];
-                        
-            elif( self.q[i]<self.qMin[i]-EPS ):
-                if(i not in [23, 30]):   # neglect joint bounds of gripper
-                    if(self.v[i-1]<-self.JOINT_LIMITS_DQ_THR):
-                        res = res + [PositionConstraintViolation(self.t*self.dt, i-7, self.q[i], self.v[i-1], self.dv[i-1])];
-                        if(self.verb>0):
-                            print "[SIMULATOR] %s" % (res[-1].toString());
-                if(self.ENABLE_JOINT_LIMITS):
-                    self.q[i] = self.qMin[i];
-                    self.v[i-1] = 0.0 if(self.v[i-1]<0) else self.v[i-1];
+        
+        ind_pos_ub = (self.q[7:]>self.qMax[7:]+EPS).A.squeeze();
+        ind_pos_lb = (self.q[7:]<self.qMin[7:]-EPS).A.squeeze();
+        for i in np.where(ind_pos_ub)[0]:
+            res = res + [PositionConstraintViolation(self.t*self.dt, i, self.q[7+i], self.v[6+i], self.dv[6+i])];
+            if(self.verb>0):
+                print "[SIMULATOR] %s" % (res[-1].toString());
+        for i in np.where(ind_pos_lb)[0]:
+            res = res + [PositionConstraintViolation(self.t*self.dt, i, self.q[7+i], self.v[6+i], self.dv[6+i])];
+            if(self.verb>0):
+                print "[SIMULATOR] %s" % (res[-1].toString());
+                
+        if(self.ENABLE_JOINT_LIMITS):
+            self.q[7:][ind_pos_ub] = self.qMax[7:][ind_pos_ub];
+            self.v[6:][ind_pos_ub] = 0.0;
+            self.q[7:][ind_pos_lb] = self.qMin[7:][ind_pos_lb];
+            self.v[6:][ind_pos_lb] = 0.0;
         
         tmp = t/self.VIEWER_DT;
         if(updateViewer and tmp==np.floor(tmp)):
