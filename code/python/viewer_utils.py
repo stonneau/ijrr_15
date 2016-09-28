@@ -56,7 +56,7 @@ class Viewer(object):
             if(USE_GEPETTO_VIEWER):
                 self.robot = Hrp2014Wrapper(HRP2_URDF_MODEL, MODEL_PATH);
                 self.robot.initDisplay("world/"+robotName, loadModel=False);
-#                self.robot.loadDisplayModel("world/"+robotName, robotName); #, MODEL_PATH);
+                self.robot.loadDisplayModel("world/"+robotName, robotName); #, MODEL_PATH);
                 self.robot.viewer.gui.setLightingMode('world/floor', 'OFF');
                 self.robots = {robotName: self.robot};
             else:
@@ -106,8 +106,8 @@ class Viewer(object):
             rate = int(slow_down_factor*trajRate/self.PLAYER_FRAME_RATE);
             lastRefreshTime = time();
             timePeriod = 1.0/self.PLAYER_FRAME_RATE;
-            for t in range(0,q.shape[0],rate):                
-                self.updateRobotConfig(q[t,:], robotName, refresh=False);
+            for t in range(0,q.shape[1],rate):                
+                self.updateRobotConfig(q[:,t], robotName, refresh=False);
                 timeLeft = timePeriod - (time()-lastRefreshTime);
                 if(timeLeft>0.0):
                     sleep(timeLeft);

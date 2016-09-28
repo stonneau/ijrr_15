@@ -161,9 +161,9 @@ def computeContactInequalities(contact_points, contact_normals, mu):
     G4 = np.zeros((c,3,cg));        # contact generators
     G_centr4 = np.zeros((6,c*cg));
     ''' contact positions '''
-    p = contact_points; 
+    p = np.asarray(contact_points); 
     ''' contact normal and tangential directions '''
-    N = contact_normals;
+    N = np.asarray(contact_normals);
     T1 = np.empty((c,3));
     T2 = np.empty((c,3));
     muu = mu/sqrt(2);

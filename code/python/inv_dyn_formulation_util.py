@@ -149,9 +149,17 @@ class InvDynFormulation (object):
         cb = len(self.bilateralContactConstraints); # number of bilateral contacts
         self.k = c*6 + cb*6;   # number of contact force variables
         if(self.ENABLE_FORCE_LIMITS):
-            self.N_WRENCH_IN = 17;   # number of inequality constraints for each contact wrench
-            self.ind_force_in = range(self.m_in,self.m_in + c*self.N_WRENCH_IN); #22); #self.k*N_WRENCH_IN/6);
-            self.m_in += c*self.N_WRENCH_IN; #22; #self.k*N_WRENCH_IN/6;
+            self.rigidContactConstraints_m_in = np.zeros(c, np.int);
+            Bf = zeros((0,self.k));
+            for i in range(c):
+                (Bfi, bfi) = self.createContactForceInequalities(self.rigidContactConstraints_fMin[i], self.rigidContactConstraints_mu[i], \
+                                                               self.rigidContactConstraints_p[i], self.rigidContactConstraints_N[i]);
+                self.rigidContactConstraints_m_in[i] = Bfi.shape[0];
+                tmp = zeros((Bfi.shape[0], self.k));
+                tmp[:,i*6:i*6+6] = Bfi
+                Bf = np.vstack((Bf, tmp));
+            self.ind_force_in = range(self.m_in, self.m_in + np.sum(self.rigidContactConstraints_m_in));
+            self.m_in += np.sum(self.rigidContactConstraints_m_in);
         else:
             self.ind_force_in = [];
 
@@ -183,10 +191,7 @@ class InvDynFormulation (object):
         self.c           = zeros(self.nv+self.k+self.na);
         
         if(self.ENABLE_FORCE_LIMITS):
-            for i in range(c):
-                (self.B[i*self.N_WRENCH_IN:(i+1)*self.N_WRENCH_IN, self.nv+i*6:self.nv+(i+1)*6], self.b[i*self.N_WRENCH_IN:(i+1)*self.N_WRENCH_IN]) = \
-                    self.createContactForceInequalities(self.rigidContactConstraints_fMin[i], self.rigidContactConstraints_mu[i], \
-                                                        self.rigidContactConstraints_p[i], self.rigidContactConstraints_N[i]);
+            self.B[self.ind_force_in, self.nv:self.nv+self.k] = Bf;
         
     
     def __init__(self, name, q, v, dt, mesh_dir, urdfFileName, freeFlyer=True):
@@ -273,7 +278,7 @@ class InvDynFormulation (object):
                     found=True;
                     break;
             if(found==False):
-                print "[InvDynForm] ERROR: contact constraint %s cannot be removed!" % constr_name;
+                raise ValueError("[InvDynForm] ERROR: contact constraint %s cannot be removed!" % constr_name);
         self.updateInequalityData();
         
         
@@ -285,6 +290,9 @@ class InvDynFormulation (object):
         self.rigidContactConstraints_mu     += [mu];
         self.updateInequalityData();
         
+    def existUnilateralContactConstraint(self, constr_name):
+        res = [c.name for c in self.rigidContactConstraints if c.name==constr_name];
+        return True if len(res)>0 else False;
         
     def addTask(self, task, weight):
         self.tasks        += [task];
@@ -411,10 +419,10 @@ class InvDynFormulation (object):
 
         i = 0;
         for constr in self.rigidContactConstraints:
-            (self.Jc[i*6:i*6+6,:], self.dJc_v[i*6:i*6+6], self.ddx_c_des[i*6:i*6+6]) = constr.dyn_value(t*self.dt, q, v);
+            (self.Jc[i*6:i*6+6,:], self.dJc_v[i*6:i*6+6], self.ddx_c_des[i*6:i*6+6]) = constr.dyn_value(t, q, v);
             i = i+1;
         for constr in self.bilateralContactConstraints:
-            (self.Jc[i*6:i*6+6,:], self.dJc_v[i*6:i*6+6], self.ddx_c_des[i*6:i*6+6]) = constr.dyn_value(t*self.dt, q, v);
+            (self.Jc[i*6:i*6+6,:], self.dJc_v[i*6:i*6+6], self.ddx_c_des[i*6:i*6+6]) = constr.dyn_value(t, q, v);
             i = i+1;
         self.Minv        = np.linalg.inv(self.M);
         self.Jc_Minv     = np.dot(self.Jc, self.Minv);
@@ -442,7 +450,7 @@ class InvDynFormulation (object):
         a_des   = n_tasks*[None,];
         dim = 0;
         for k in range(n_tasks):
-            J[k], drift[k], a_des[k] = self.tasks[k].dyn_value(t*self.dt, self.q, self.v);
+            J[k], drift[k], a_des[k] = self.tasks[k].dyn_value(t, self.q, self.v);
             dims[k] = a_des[k].shape[0];
             dim += dims[k];
         A = zeros((dim, self.nv+self.k+self.na));
@@ -543,13 +551,13 @@ class InvDynFormulation (object):
     
     
     def createContactForceInequalities(self, fMin, mu, contact_points, contact_normals):
-        B = zeros((self.N_WRENCH_IN,6));
-        b = zeros(self.N_WRENCH_IN);
+#        B = zeros((self.N_WRENCH_IN,6));
         
-        B[:16,:] = -1*computeContactInequalities(contact_points, contact_normals, mu[0]);
+        B = -1*computeContactInequalities(contact_points.T, contact_normals.T, mu[0]);
+        b = zeros(B.shape[0]);
         # minimum normal force
-        B[-1,2] = 1;
-        b[-1]   = -fMin;
+#        B[-1,2] = 1;
+#        b[-1]   = -fMin;
         
         return (B,b);
         
@@ -559,7 +567,7 @@ class InvDynFormulation (object):
         Before calling this method you should call setNewSensorData to set the current state of 
         the robot.
     '''
-    def createInequalityConstraints(self, t):
+    def createInequalityConstraints(self):
         n = self.na;
         k = self.k;
         
@@ -573,7 +581,7 @@ class InvDynFormulation (object):
             self.b[self.ind_acc_in]             = b_q;
             
         if(self.ENABLE_CAPTURE_POINT_LIMITS):
-            (B_cp, b_cp) = self.createCapturePointInequalities(footSizes);
+            (B_cp, b_cp) = self.createCapturePointInequalities();
             self.B[self.ind_cp_in, :n+6]        = B_cp;
             self.b[self.ind_cp_in]              = b_cp;
         

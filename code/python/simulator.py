@@ -731,7 +731,7 @@ class Simulator (object):
             self.v[6:][ind_pos_lb] = 0.0;
         
         tmp = t/self.VIEWER_DT;
-        if(updateViewer and tmp==np.floor(tmp)):
+        if(updateViewer): # and tmp==np.floor(tmp)):
             self.viewer.updateRobotConfig(self.q);
 #            if(self.DISPLAY_COM):
 #                self.viewer.updateObjectConfig('com', (self.x_com[0], self.x_com[1], 0, 0,0,0,1));

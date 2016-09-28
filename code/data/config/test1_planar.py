@@ -8,17 +8,20 @@ DATA_FILE_NAME              = 'data';
 TEXT_FILE_NAME              = 'results.txt';
 SAVE_DATA                   = True;
 
-MAX_TEST_DURATION           = 1000;
-dt                          = 2e-3;
-model_path   = "/home/adelpret/devel/sot_hydro/install/share";
-urdfFileName = model_path + "/hrp2_14_description/urdf/hrp2_14_reduced.urdf"
-freeFlyer = True;
+''' INITIAL STATE PARAMETERS '''
+SMOOTH_FILTER_WINDOW_LENGTH = 51;
+MAX_TEST_DURATION           = 3000;
+dt                          = 1e-3;
+INPUT_FILE_NAME             = '../data/hrp2/polaris_hrp2_t_var_1f_andrea';
+model_path                  = "/home/adelpret/devel/sot_hydro/install/share";
+urdfFileName                = model_path + "/hrp2_14_description/urdf/hrp2_14_reduced.urdf";
+freeFlyer                   = True;
 
 ''' CONTROLLER CONFIGURATION '''
 ENABLE_CAPTURE_POINT_LIMITS     = False;
-ENABLE_TORQUE_LIMITS            = True;
-ENABLE_FORCE_LIMITS             = True;
-ENABLE_JOINT_LIMITS             = True;
+ENABLE_TORQUE_LIMITS            = False;
+ENABLE_FORCE_LIMITS             = False;
+ENABLE_JOINT_LIMITS             = False;
 IMPOSE_POSITION_BOUNDS          = True;
 IMPOSE_VELOCITY_BOUNDS          = True;
 IMPOSE_VIABILITY_BOUNDS         = True;
@@ -31,17 +34,16 @@ USE_JOINT_VELOCITY_ESTIMATOR    = False;
 ACCOUNT_FOR_ROTOR_INERTIAS      = True;
 
 # CONTROLLER GAINS
-kp_posture  = 30; #1.0;   # proportional gain of postural task
+kp_posture  = 100; #1.0;   # proportional gain of postural task
 kd_posture  = 2*sqrt(kp_posture);
-kc_p        = 1000.0;   # constraint proportional feedback gain
+kc_p        = 100.0;   # constraint proportional feedback gain
 kc_d        = 2*sqrt(kc_p);   # constraint derivative feedback gain
-kp_com      = 10;
+kp_com      = 100;
 kd_com      = 2*sqrt(kp_com);
-x_com_des   = np.array([ 0.01,  0.  ,  0.78]);
 
 # CONTROLLER WEIGTHS
 w_com           = 1;
-w_posture       = 1e-3;  #1e-5;  # weight of postural task
+w_posture       = 1;  #1e-5;  # weight of postural task
 w_force_reg     = 1e-5; # weight of force regularization task
 w_foot          = np.array([1, 1, 1e-3, 2, 2, 2]); # weights of force components in force regularization task
 w_f             = np.append(w_foot, w_foot);
@@ -61,27 +63,14 @@ FORCE_JOINT_LIMITS             = True;
 USE_LCP_SOLVER = False
 
 ''' STOPPING CRITERIA THRESHOLDS '''
-ZERO_JOINT_VEL_THR          = 1e-2;
-ZERO_COM_VEL_THR            = 1e-3;
-ZERO_ANG_MOM_THR            = 1e-2;
 MAX_COM_VELOCITY            = 5;
-
-''' INITIAL STATE PARAMETERS '''
-INITIAL_CONFIG_ID               = 0;
-MAX_INITIAL_JOINT_VEL		    = 1.0;
-ZERO_INITIAL_VERTICAL_COM_VEL   = True;
-ZERO_INITIAL_ANGULAR_MOMENTUM   = True;
-INITIAL_CONFIG_FILENAME         = '../data/20160906_hrp2_coplanar';
-#Q_INITIAL = np.array([ 0.  ,  0.  ,  0.62,  0.  ,  0.  ,  0.  ,  0.  ,  0.  , -0.15,
-#                        0.87, -0.72,  0.  ,  0.  ,  0.  , -0.75,  0.87, -0.12,  0.  ,
-#                        0.  ,  0.  ,  0.  ,  0.  ,  0.26, -0.17,  0.  , -0.52,  0.  ,
-#                        0.  ,  0.1 ,  0.26,  0.17,  0.  , -0.52,  0.  ,  0.  ,  0.1 ]);
 
 ''' VIEWER PARAMETERS '''
 ENABLE_VIEWER               = True;
 PLAY_MOTION_WHILE_COMPUTING = True;
-PLAY_REAL_TIME_MOTION       = False;
-DT_VIEWER                   = dt;   # timestep used to display motion with viewer
+PLAY_REFERENCE_MOTION       = False;
+PLAY_MOTION_AT_THE_END      = True;
+DT_VIEWER                   = 10*dt;   # timestep used to display motion with viewer
 
 ''' FIGURE PARAMETERS '''
 SAVE_FIGURES     = False;

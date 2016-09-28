@@ -5,7 +5,7 @@ from numpy.polynomial.polynomial import polyval
 from  numpy.linalg import pinv
 from pinocchio import SE3, log3, exp3
 from pinocchio import Motion
-#from tools import *
+from derivative_filters import computeSecondOrderPolynomialFitting
 
 def norm(v1, v2):
   return np.linalg.norm(v2.T-v1.T)
@@ -16,6 +16,7 @@ def norm(v):
 def polyder(coeffs):
   return np.polyder(coeffs[::-1])[::-1]
 
+''' Base class for a trajectory '''
 class RefTrajectory (object):
 
   def __init__ (self, name):
@@ -29,6 +30,7 @@ class RefTrajectory (object):
   def __call__ (self, t):
     return np.matrix ([]).reshape (0, 0)
     
+''' An se3 trajectory with constant state and zero velocity/acceleration. '''
 class ConstantSE3Trajectory (object):
 
   def __init__ (self, name, Mref):
@@ -46,25 +48,53 @@ class ConstantSE3Trajectory (object):
   def __call__ (self, t):
     return (self._Mref, Motion.Zero(), Motion.Zero());
     
-    
-class Constant3dTrajectory (object):
+''' An Nd trajectory with constant state and zero velocity/acceleration. '''
+class ConstantNdTrajectory (object):
 
   def __init__ (self, name, x_ref):
     self._name = name
-    self._dim = 3
+    self._dim = x_ref.shape[0]
     self._x_ref = np.matrix.copy(x_ref);
-    self._v_ref = np.matlib.zeros((3,1));
-    self._a_ref = np.matlib.zeros((3,1));
+    self._v_ref = np.matlib.zeros(x_ref.shape);
+    self._a_ref = np.matlib.zeros(x_ref.shape);
 
   @property
   def dim(self):
     return self._dim
     
   def setReference(self, x_ref):
+    assert x_ref.shape[0]==self._x_ref.shape[0]
     self._x_ref = x_ref;
 
   def __call__ (self, t):
     return (self._x_ref, self._v_ref, self._a_ref);
+   
+''' An Nd trajectory computed from a specified discrete-time trajectory
+    by applying a polynomial fitting. 
+''' 
+class SmoothedNdTrajectory (object):
+
+  ''' Constructor.
+      @param x_ref A NxT numpy matrix, where N is the size of the signal and T is the number of time steps
+      @param dt The time step duration in seconds
+      @param window_length An odd positive integer representing the size of the window used for the polynomial fitting
+  '''
+  def __init__ (self, name, x_ref, dt, window_length):
+    self._name = name
+    self._dim = x_ref.shape[0]
+    self._dt  = dt;
+    (self._x_ref, self._v_ref, self._a_ref) = computeSecondOrderPolynomialFitting(x_ref, dt, window_length);
+
+  @property
+  def dim(self):
+    return self._dim
+
+  def __call__ (self, t):
+    assert t>=0.0, "Time must be non-negative"
+    i = int(t/self._dt);
+    if(i>=self._x_ref.shape[1]):
+       raise ValueError("Specified time exceeds the duration of the trajectory: "+str(t));
+    return (self._x_ref[:,i], self._v_ref[:,i], self._a_ref[:,i]);
 
 
 class DifferentiableEuclidianTrajectory(RefTrajectory):
