@@ -25,45 +25,11 @@ class Task:
   def setCoeff(self, value):
     self._coeff = value
 
-  def error_kin(self, t, q):
-    error = np.matrix ([]).reshape (0, 0)
-    r_dot = np.matrix ([]).reshape (0, 0)
-    return error, r_dot
-
-  def error_dyn(self, t, q, qdot):
-    error = np.matrix ([]).reshape (0, 0)
-    error_dot = np.matrix ([]).reshape (0, 0)
-    r_ddot = np.matrix ([]).reshape (0, 0)
-    return error, error_dot, r_ddot
-
   def dyn_value(self, t, q, qdot, update_geometry = False):
     a_des = np.matrix ([]).reshape (0, 0)
     J = np.matrix ([]).reshape (0, 0)
     drift = np.matrix ([]).reshape (0, 0)
     return J, drift, a_des
-
-  def rhs(self, *args):
-    num_args = len(args)
-    assert num_args <= 3 and num_args > 1, "rhs(t, q, (qdot))" 
-
-    if num_args == 2:
-      t = args[0]
-      q = args[1]
-      error, r_dot = self.error_kin(t, q) 
-      #print error
-      rhs_value = -self.kp * error + r_dot
-      #print self._kp * error
-    else:
-      t = args[0]
-      q = args[1]
-      v = args[2]
-      error, error_dot, r_ddot = self.error_dyn(t, q, v) 
-      #if error[0] > 1e-2:
-        #print self.kp
-        #print error
-      rhs_value = -self.kp * error - self.kv * error_dot + r_ddot
-
-    return rhs_value
 
   def jacobian (self):
     jacobian = matrix ([]).reshape (0, robot.nq)
@@ -76,9 +42,9 @@ class Task:
 # Define SE3 Task
 class SE3Task(Task):
 
-  def __init__ (self, robot, link_id, ref_trajectory, name = "SE3 Task"):
+  def __init__ (self, robot, frame_id, ref_trajectory, name = "SE3 Task"):
     Task.__init__ (self, robot, name)
-    self._link_id = link_id
+    self._frame_id = frame_id
     self._ref_trajectory = ref_trajectory
 
     # set default value to M_ref
@@ -86,6 +52,7 @@ class SE3Task(Task):
   
     # mask over the desired euclidian axis
     self._mask = (np.ones(6)).astype(bool)
+    self._gMl = SE3.Identity();
 
   @property
   def dim(self):
@@ -103,72 +70,30 @@ class SE3Task(Task):
     assert isinstance(M_ref, SE3), "M_ref is not an element of class SE3"
     self._M_ref = M_ref
 
-  def error_kin(self, t, q, update_geometry = True):
-    # Get the current configuration of the link
-    self._M = self.robot.position(q, self._link_id, update_geometry)
-    M_ref, v_ref, _  = self._ref_trajectory(t)
-
-    # Compute error
-    self.__error_value = errorInSE3(self._M, M_ref).vector();
-
-    return self.__error_value[self._mask], v_ref.vector()[self._mask]
-
-  def error_dyn(self, t, q, v, update_geometry = False):
-    # Get the current configuration of the link
-    oMi = self.robot.data.oMi[self._link_id]
-
-    # Get the reference trajectory
-    M_ref, v_ref, a_ref  = self._ref_trajectory(t)
-
-    # Transformation from local to world
-    gMl = SE3.Identity()
-    gMl.rotation = oMi.rotation
-    v_frame = self.robot.velocity(q,v,self._link_id, update_geometry)
-
-    # Compute error
-    self.__error_value = errorInSE3(oMi, M_ref).vector;
-    v_error = v_frame - gMl.actInv(v_ref)
-    a_frame = self.robot.acceleration(q,v,0*v,self._link_id, update_geometry)
-    a_coriolis = Motion.Zero()
-    a_coriolis.linear = a_frame.linear
-    a_coriolis.angular = a_frame.angular
-    a_coriolis.linear += np.cross(v_frame.angular.T, v_frame.linear.T).T
-
-    a_tot = gMl.actInv(a_ref) - a_coriolis
-
-    return self.__error_value[self._mask], v_error.vector()[self._mask], a_tot.vector()[self._mask]
-
   def dyn_value(self, t, q, v, update_geometry = False):
     # Get the current configuration of the link
-    oMi = self.robot.data.oMi[self._link_id]
-
+    oMi = self.robot.framePosition(self._frame_id);
+    v_frame = self.robot.frameVelocity(self._frame_id)
+    
     # Get the reference trajectory
     M_ref, v_ref, a_ref  = self._ref_trajectory(t)
 
-    # Transformation from local to world
-    gMl = SE3.Identity()
-    gMl.rotation = oMi.rotation
-    v_frame = self.robot.velocity(q,v,self._link_id, update_geometry)
+    # Transformation from local to world    
+    self._gMl.rotation = oMi.rotation    
 
     # Compute error acceleration desired
     p_error= errorInSE3(oMi, M_ref);
-    v_error = v_frame - gMl.actInv(v_ref)
-    a_frame = self.robot.acceleration(q,v,0*v,self._link_id, update_geometry)
-    a_coriolis = Motion.Zero()
-    a_coriolis.linear = a_frame.linear
-    a_coriolis.angular = a_frame.angular
-    a_coriolis.linear += np.cross(v_frame.angular.T, v_frame.linear.T).T
-    
-    drift = a_coriolis.vector
-    a_des = -self.kp * p_error.vector -self.kv * v_error.vector + gMl.actInv(a_ref).vector
+    v_error = v_frame - self._gMl.actInv(v_ref)
+    drift = self.robot.frameAcceleration(self._frame_id)
+    drift.linear += np.cross(v_frame.angular.T, v_frame.linear.T).T    
+    a_des = -self.kp * p_error.vector -self.kv * v_error.vector + self._gMl.actInv(a_ref).vector
 
-    # Compute jacobian
-    J = self.robot.jacobian(q, self._link_id, update_geometry)
+    J = self.robot.frameJacobian(q, self._frame_id, update_geometry)
 
-    return J[self._mask,:], drift[self._mask], a_des[self._mask]
+    return J[self._mask,:], drift.vector[self._mask], a_des[self._mask]
 
   def jacobian(self, q, update_geometry = False):
-    self.__jacobian_value = self.robot.jacobian(q, self._link_id, update_geometry)
+    self.__jacobian_value = self.robot.frameJacobian(q, self._frame_id, update_geometry)
     
     return self.__jacobian_value[self._mask,:] 
 
@@ -208,31 +133,6 @@ class CoMTask(Task):
   def mask(self, mask):
     assert len(mask) == 3, "The mask must have 3 elements"
     self._mask = mask.astype(bool)
-
-  def error_kin(self, t, q, update_geometry = True):
-    # Get the current CoM position
-    self.CoM = self.robot.com(q)
-
-    p_ref, v_ref, _ = self._ref_trajectory(t)
-
-    # Compute error
-    self.__error_value = self.CoM - p_ref
-
-    return self.__error_value[self._mask], v_ref[self._mask]
-  
-  def error_dyn(self, t, q, v, update_geometry = True):
-    # Get the current CoM position
-    p_com, v_com, a_com = self.robot.com(q,v,0*v)
-    self.CoM = p_com
-    p_ref, v_ref, a_ref = self._ref_trajectory(t)
-
-    # Compute error
-    self.__error_value = p_com - p_ref
-    v_error = v_com - v_ref 
-
-    a_tot = a_ref - a_com 
-
-    return self.__error_value[self._mask], v_error[self._mask], a_tot[self._mask]
     
   def dyn_value(self, t, q, v, update_geometry = False):
     # Get the current CoM position, velocity and acceleration
@@ -253,10 +153,8 @@ class CoMTask(Task):
 
     return J[self._mask,:], drift[self._mask], a_des[self._mask]
 
-  def jacobian(self, q, update_geometry = True):
-    
+  def jacobian(self, q, update_geometry = True):    
     self.__jacobian_value = self.robot.Jcom(q) # TODO - add update geometry option
-    
     return self.__jacobian_value[self._mask,:] 
 
 

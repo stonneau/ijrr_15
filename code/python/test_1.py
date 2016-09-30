@@ -8,7 +8,8 @@ cwd = os.getcwd()[:-7]; # current path without "python"
 if cwd+'/data/config' not in sys.path:
     sys.path += [cwd+'/data/config',];
 
-import test1_planar as conf
+#import test1_planar as conf
+import conf_hyq_hole as conf
 from standard_qp_solver import StandardQpSolver
 #from multi_contact_stability_criterion_utils import can_I_stop
 from simulator import Simulator
@@ -67,7 +68,7 @@ def createInvDynFormUtil(q, v):
     
     return invDynForm;
     
-def updateConstraints(invDynForm, contactJointNames, P, N):
+def updateConstraints(t, q, v, invDynForm, contactJointNames, P, N):
     for active_constr in invDynForm.rigidContactConstraints:
         if(active_constr.name not in contactJointNames):
             invDynForm.removeUnilateralContactConstraint(active_constr.name);
@@ -76,16 +77,25 @@ def updateConstraints(invDynForm, contactJointNames, P, N):
     for (i,name) in enumerate(contactJointNames):
         if(invDynForm.existUnilateralContactConstraint(name)):
             continue;
-#        if("ARM" in name):
-#            continue;
-        jid = invDynForm.getJointId(name);
-        oMi = invDynForm.r.position(invDynForm.q, jid);
-        ref_traj = ConstantSE3Trajectory(name, oMi);
-        constr = SE3Task(invDynForm.r, jid, ref_traj, name);
-        constr.kp = conf.kc_p;
-        constr.kv = conf.kc_d;
 
-        print "Adding constraint", name, invDynForm.r.velocity(invDynForm.q, invDynForm.v, jid);        
+        invDynForm.r.forwardKinematics(q, v, 0 * v);
+        invDynForm.r.framesKinematics(q);
+        
+        fid = invDynForm.getFrameId(name);
+        oMi = invDynForm.r.framePosition(fid);
+        ref_traj = ConstantSE3Trajectory(name, oMi);
+        constr = SE3Task(invDynForm.r, fid, ref_traj, name);
+        constr.kp = conf.kp_constr;
+        constr.kv = conf.kd_constr;
+        constr.mask(conf.constraint_mask);
+
+        i_ee = [j for (j,cn) in enumerate(ee_names) if cn==name][0];
+        (ee_pos_des, ee_vel_des, ee_acc_des) = ee_traj[i_ee](t);
+        pos_err = oMi.translation.T-ee_pos_des.T
+        pos_err2 = oMi.translation.T - ee_ref[i_ee][:,int(t/dt)].T
+        print "Adding contact", name, ", contact vel", invDynForm.r.frameVelocity(fid).vector[conf.constraint_mask].T;        
+        print "                    contact position error ", pos_err, "norm %.3f"%norm(pos_err);
+        print "                    contact position error2", pos_err2, "norm %.3f"%norm(pos_err2);
         
         Pi = P[:,i*4:i*4+4];
         Ni = N[:,i*4:i*4+4];
@@ -103,6 +113,7 @@ def createSimulator(q0, v0):
     simulator.ENABLE_FORCE_LIMITS = conf.ENABLE_FORCE_LIMITS;
     simulator.ENABLE_JOINT_LIMITS = conf.FORCE_JOINT_LIMITS;
     simulator.ACCOUNT_FOR_ROTOR_INERTIAS = conf.ACCOUNT_FOR_ROTOR_INERTIAS;
+    simulator.VIEWER_DT = conf.DT_VIEWER;
     simulator.verb=0;
     return simulator;
         
@@ -124,7 +135,7 @@ def startSimulation(q0, v0, solverId):
     t = 0;
     simulator.reset(t, q0, v0, conf.dt);
     for i in range(conf.MAX_TEST_DURATION):        
-        updateConstraints(invDynForm, data[i]['contacts'], np.matrix(data[i]['P']).T, np.matrix(data[i]['N']).T);
+        updateConstraints(t, simulator.q, simulator.v, invDynForm, contact_names[i], contact_points[i], contact_normals[i]);
         invDynForm.setNewSensorData(t, simulator.q, simulator.v);
         (G,glb,gub,lb,ub) = invDynForm.createInequalityConstraints();
         m_in = glb.size;
@@ -137,7 +148,7 @@ def startSimulation(q0, v0, solverId):
         dx_com[j][:,i]    = np.matrix.copy(invDynForm.dx_com);      # from the solver view-point
 
         if(i%100==0):
-            print "Time %.3f... i %d" % (t, i), "Max joint vel", np.max(np.abs(v[j][:,i]));
+            print "Time %.3f... i %d" % (t, i), "Max joint vel %.2f"%np.max(np.abs(v[j][:,i]));
         
         if(i==conf.MAX_TEST_DURATION-1):
             print "MAX TIME REACHED \n";
@@ -154,13 +165,7 @@ def startSimulation(q0, v0, solverId):
         tau[j][:,i]                 = np.matrix.copy(torques).reshape((na,1));
         y                           = invDynForm.C * tau[j][:,i] + invDynForm.c;
         dv[j][:,i]                  = y[:nv];
-#        if('c_lf' in invDynForm.rigidContactConstraints[0].name):
-#            fc[i,j,:6]             = y[nv:nv+6];  # left
-#            fc[i,j,6:]             = y[nv+6:nv+12]; #right
-#        else:
-#            fc[i,j,:6]             = y[nv+6:nv+12];
-#            fc[i,j,6:]             = y[nv:nv+6];
-        ddx_com[j][:,i]             = invDynForm.J_com * dv[j][:,i] + invDynForm.dJcom_dq;
+        (tmp1, tmp2, ddx_com[j][:,i]) = invDynForm.r.com(q[j][:,i], v[j][:,i], dv[j][:,i]); #J_com * dv[j][:,i] + invDynForm.dJcom_dq;
         n_active_ineq[i,j]          = solvers[j].nActiveInequalities;   # from the solver view-point
         n_violated_ineq[i,j]        = solvers[j].nViolatedInequalities; # from the solver view-point
 #        ineq[i,j,:m_in]             = np.dot(G, tau[i,j,:]) - glb; # from the solver view-point
@@ -168,10 +173,16 @@ def startSimulation(q0, v0, solverId):
         if(np.isnan(torques).any() or np.isinf(torques).any()):
             no_sol_count[j] += 1;
             
-        cost = norm(D*tau[j][:,i]-d);
-        if(cost>1e-1):
-            print "Cost ", cost
+#        cost = norm(D*tau[j][:,i]-d);
+#        if(cost>1e2):
+#            print "Cost ", cost
+            
+        ddx_c = invDynForm.Jc * dv[j][:,i] + invDynForm.dJc_v
+        constr_viol = ddx_c - invDynForm.ddx_c_des;
+        if(norm(constr_viol)>1e-3):
+            print "Time %.3f Constraint violation:"%(t), norm(constr_viol), ddx_c.T, "!=", invDynForm.ddx_c_des.T;
         
+        # impulseDynamics
         constrViol[i] = simulator.integrateAcc(t, dt, dv[j][:,i], fc[j][:,i], tau[j][:,i], conf.PLAY_MOTION_WHILE_COMPUTING);
         
         for cv in constrViol[i]:
@@ -182,7 +193,7 @@ def startSimulation(q0, v0, solverId):
         # Check whether robot is falling
         if(np.sum(n_violated_ineq[:,j]) > 10 or norm(dx_com[j][:,i])>conf.MAX_COM_VELOCITY):
             print "Com velocity", np.linalg.norm(dx_com[j][:,i]);
-            print "Solver violated %d inequalities" % solvers[j].nViolatedInequalities, "max inequality violation", np.min(ineq[i,j,:m_in]);
+            print "Solver violated %d inequalities" % solvers[j].nViolatedInequalities; #, "max inequality violation", np.min(ineq[i,j,:m_in]);
             print "ROBOT FELL AFTER %.1f s\n" % (t);
             final_time[j] = t;
             final_time_step[j] = i;
@@ -211,45 +222,63 @@ SHOW_CONTACT_POINTS_IN_VIEWER = True;
 ''' LOAD INPUT DATA '''
 f = open(conf.INPUT_FILE_NAME, 'rb');
 data = pickle.load(f);
-if(len(data)>conf.MAX_TEST_DURATION):
+if(conf.MAX_TEST_DURATION<=0 or conf.MAX_TEST_DURATION>len(data)):
+    conf.MAX_TEST_DURATION = len(data);
+elif(len(data)>conf.MAX_TEST_DURATION):
     data = data[:conf.MAX_TEST_DURATION];
+
 T = len(data);
 
+''' CREATE CONTROLLER AND SIMULATOR '''
 q0 = np.matrix(data[0]['q']).T;
 nq = q0.shape[0];
 nv = nq-1 if conf.freeFlyer else nq;
 v0 = np.matlib.zeros((nv,1));
 invDynForm = createInvDynFormUtil(q0, v0);
-updateConstraints(invDynForm, data[0]['contacts'], np.matrix(data[0]['P']).T, np.matrix(data[0]['N']).T);
+#updateConstraints(0, q0, v0, invDynForm, data[0]['contacts'], np.matrix(data[0]['P']).T, np.matrix(data[0]['N']).T);
 simulator = createSimulator(q0, v0);
 robot = invDynForm.r;
 dt = conf.dt;
 
+''' COPY INPUT DATA AND COMPUTE REFERENCE COM AND END-EFFECTOR TRAJECTORIES'''
 q_ref = np.matlib.empty((nq,T));
+contact_names   = T*[None,];
+contact_points  = T*[None,];
+contact_normals = T*[None,];
 com_ref = np.matlib.empty((3,T));
-ee_names = ['LARM_JOINT5'];
-ee_indexes = [robot.model.getJointId(e) for e in ee_names];
-ee_ref = createListOfMatrices(len(ee_names), (3, conf.MAX_TEST_DURATION));
+ee_names = data[0]['contacts'];
+ee_indexes = [robot.model.getFrameId(e) for e in ee_names];
+ee_ref        = createListOfMatrices(len(ee_names), (3, conf.MAX_TEST_DURATION));
 for t in range(T):
     q_ref[:,t]   = np.matrix(data[t]['q']).T;
-    com_ref[:,t] = robot.com(q_ref[:,t]);
+    contact_names[t] = data[t]['contacts'];
+    contact_points[t] = np.matrix(data[t]['P']).T;
+    contact_normals[t] = np.matrix(data[t]['N']).T;
+    robot.forwardKinematics(q_ref[:,t]);
+    robot.framesKinematics(q_ref[:,t]);
+    com_ref[:,t] = robot.com(q_ref[:,t]);    
     for (i,ee) in enumerate(ee_indexes):
-        ee_ref[i][:,t] = robot.position(q_ref[:,t], ee).translation;
+        ee_ref[i][:,t] = robot.framePosition(ee).translation;
+del data;
 
-for (i,ee) in enumerate(ee_indexes):
-    f, ax = plot_utils.create_empty_figure(3, 1);
-    ax[0].plot(ee_ref[i][0, :].A.squeeze());
-    ax[1].plot(ee_ref[i][1, :].A.squeeze());
-    ax[2].plot(ee_ref[i][2, :].A.squeeze());
-    ax[0].set_title("ee "+str(i));
-    plt.show();
-    
-posture_traj = SmoothedNdTrajectory("posture_traj", q_ref[7:,:], conf.dt, conf.SMOOTH_FILTER_WINDOW_LENGTH);
+''' CREATE POSTURAL TASK '''   
+posture_traj = SmoothedNdTrajectory("posture_traj", q_ref[7:,:], dt, conf.SMOOTH_FILTER_WINDOW_LENGTH);
 posture_task = JointPostureTask(invDynForm.r, posture_traj);
 posture_task.kp = conf.kp_posture;
 posture_task.kv = conf.kd_posture;
 invDynForm.addTask(posture_task, conf.w_posture);
 
+''' CREATE END-EFFECTOR TASKS '''
+ee_traj       = len(ee_names)*[None,];
+ee_task       = len(ee_names)*[None,];
+for (i,ee) in enumerate(ee_indexes):
+    ee_traj[i] = SmoothedNdTrajectory("ee_traj_"+ee_names[i], ee_ref[i], dt, conf.SMOOTH_FILTER_WINDOW_LENGTH);
+    ee_task[i] = SE3Task(invDynForm.r, ee, ee_traj[i], ee_names[i]);
+    ee_task[i].kp = conf.kp_ee;
+    ee_task[i].kv = conf.kd_ee;
+    ee_task[i].mask(conf.ee_mask);
+    
+''' CREATE COM TASK '''
 com_traj  = SmoothedNdTrajectory("com_traj", com_ref, conf.dt, conf.SMOOTH_FILTER_WINDOW_LENGTH);
 com_task = CoMTask(invDynForm.r, com_traj);
 com_task.kp = conf.kp_com;
@@ -262,26 +291,6 @@ if(conf.PLAY_REFERENCE_MOTION):
     simulator.viewer.play(q_ref, dt, 1.0);
     print "Reference motion finished";
     sleep(1);
-    
-
-if(conf.SHOW_FIGURES):
-    for j in range(3):
-        f, ax = plot_utils.create_empty_figure(3, 1);
-        ax[0].plot(com_ref[j, :].A.squeeze(), 'r--');
-        ax[0].plot(com_traj._x_ref[j, :].A.squeeze());
-        ax[1].plot(com_traj._v_ref[j, :].A.squeeze());
-        ax[2].plot(com_traj._a_ref[j, :].A.squeeze());
-        ax[0].set_title("Com " + str(j));
-        plt.show();
-
-    for j in range(nq-7):
-        f, ax = plot_utils.create_empty_figure(3,1);
-        ax[0].plot(q_ref[7+j,:].A.squeeze(), 'r--');
-        ax[0].plot(posture_traj._x_ref[j,:].A.squeeze());
-        ax[1].plot(posture_traj._v_ref[j,:].A.squeeze());
-        ax[2].plot(posture_traj._a_ref[j,:].A.squeeze());
-        ax[0].set_title("Joint "+str(j));
-        plt.show();
 
 (G,glb,gub,lb,ub) = invDynForm.createInequalityConstraints();
 m_in = glb.size;
@@ -300,7 +309,7 @@ v                    = createListOfMatrices(N_SOLVERS, (nv, conf.MAX_TEST_DURATI
 fc                   = createListOfMatrices(N_SOLVERS, (k, conf.MAX_TEST_DURATION));
 tau                  = createListOfMatrices(N_SOLVERS, (na, conf.MAX_TEST_DURATION));
 dv                   = createListOfMatrices(N_SOLVERS, (nv, conf.MAX_TEST_DURATION));
-ineq                 = createListOfMatrices(N_SOLVERS, (m_in, conf.MAX_TEST_DURATION));
+#ineq                 = createListOfMatrices(N_SOLVERS, (m_in, conf.MAX_TEST_DURATION));
 x_com                = createListOfMatrices(N_SOLVERS, (3, conf.MAX_TEST_DURATION));
 dx_com               = createListOfMatrices(N_SOLVERS, (3, conf.MAX_TEST_DURATION));
 ddx_com              = createListOfMatrices(N_SOLVERS, (3, conf.MAX_TEST_DURATION));
@@ -321,6 +330,58 @@ if(conf.PLAY_MOTION_AT_THE_END):
     sleep(1);
     simulator.viewer.play(q[s], dt, 1.0);
     print "Computed motion finished";
+
+x_ee   = createListOfMatrices(len(ee_names), (3, conf.MAX_TEST_DURATION));
+dx_ee  = createListOfMatrices(len(ee_names), (3, conf.MAX_TEST_DURATION));
+ddx_ee = createListOfMatrices(len(ee_names), (3, conf.MAX_TEST_DURATION));
+for t in range(T):
+    robot.forwardKinematics(q[s][:,t], v[s][:,t], dv[s][:,t]);
+    robot.framesKinematics(q[s][:,t]);
+    robot.computeJacobians(q[s][:,t]);
+    for (i,ee) in enumerate(ee_indexes):
+        oMi = robot.framePosition(ee);
+        x_ee[i][:,t] = oMi.translation;
+        v_ee = robot.frameVelocity(ee).linear
+        dx_ee[i][:,t] = oMi.rotation * v_ee;
+        a_ee = robot.frameClassicAcceleration(ee).linear
+        ddx_ee[i][:,t] = oMi.rotation * a_ee;
+#        dx_ee[i][:,t] = robot.frameVelocity(ee).linear;
+
+if(conf.SHOW_FIGURES and conf.PLOT_EE_TRAJ):
+    for (i,ee) in enumerate(ee_indexes):
+        f, ax = plot_utils.create_empty_figure(3, 3);
+        for j in range(3):
+            ax[j,0].plot(ee_traj[i]._x_ref[j, :].A.squeeze());
+            ax[j,0].plot(ee_ref[i][j, :].A.squeeze(), 'r--');
+            ax[j,0].plot(x_ee[i][j, :].A.squeeze(), 'k:');
+            ax[j,1].plot(ee_traj[i]._v_ref[j, :].A.squeeze());
+            ax[j,1].plot(dx_ee[i][j, :].A.squeeze(), 'k:');
+            ax[j,2].plot(ee_traj[i]._a_ref[j, :].A.squeeze());
+            ax[j,2].plot(ddx_ee[i][j, :].A.squeeze(), 'k:');
+        ax[0,0].set_title("Pos "+ee_names[i].replace('_','\_'));
+        ax[0,1].set_title("Vel");
+        ax[0,2].set_title("Acc");
+        plt.show();    
+
+if(conf.SHOW_FIGURES and conf.PLOT_COM_TRAJ):
+    for j in range(3):
+        f, ax = plot_utils.create_empty_figure(3, 1);
+        ax[0].plot(com_traj._x_ref[j, :].A.squeeze());
+        ax[1].plot(com_traj._v_ref[j, :].A.squeeze());
+        ax[2].plot(com_traj._a_ref[j, :].A.squeeze());
+        ax[0].plot(com_ref[j, :].A.squeeze(), 'r--');
+        ax[0].set_title("Com " + str(j));
+        plt.show();
+
+if(conf.SHOW_FIGURES and conf.PLOT_JOINT_TRAJ):
+    for j in range(nq-7):
+        f, ax = plot_utils.create_empty_figure(3,1);
+        ax[0].plot(posture_traj._x_ref[j,:].A.squeeze());
+        ax[1].plot(posture_traj._v_ref[j,:].A.squeeze());
+        ax[2].plot(posture_traj._a_ref[j,:].A.squeeze());
+        ax[0].plot(q_ref[7+j,:].A.squeeze(), 'r--');
+        ax[0].set_title("Joint "+str(j));
+        plt.show();
 
 #off = 0;
 #f, ax = plot_utils.create_empty_figure(3, 1);

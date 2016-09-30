@@ -10,18 +10,18 @@ SAVE_DATA                   = True;
 
 ''' INITIAL STATE PARAMETERS '''
 SMOOTH_FILTER_WINDOW_LENGTH = 51;
-MAX_TEST_DURATION           = 3000;
+MAX_TEST_DURATION           = 5000;
 dt                          = 1e-3;
 INPUT_FILE_NAME             = '../data/hrp2/polaris_hrp2_t_var_1f_andrea';
-model_path                  = "/home/adelpret/devel/sot_hydro/install/share";
-urdfFileName                = model_path + "/hrp2_14_description/urdf/hrp2_14_reduced.urdf";
+model_path                  = ["/home/adelpret/devel/sot_hydro/install/share"];
+urdfFileName                = model_path[0] + "/hrp2_14_description/urdf/hrp2_14_reduced.urdf";
 freeFlyer                   = True;
 
 ''' CONTROLLER CONFIGURATION '''
 ENABLE_CAPTURE_POINT_LIMITS     = False;
-ENABLE_TORQUE_LIMITS            = False;
+ENABLE_TORQUE_LIMITS            = True;
 ENABLE_FORCE_LIMITS             = False;
-ENABLE_JOINT_LIMITS             = False;
+ENABLE_JOINT_LIMITS             = True;
 IMPOSE_POSITION_BOUNDS          = True;
 IMPOSE_VELOCITY_BOUNDS          = True;
 IMPOSE_VIABILITY_BOUNDS         = True;
@@ -36,17 +36,19 @@ ACCOUNT_FOR_ROTOR_INERTIAS      = True;
 # CONTROLLER GAINS
 kp_posture  = 100; #1.0;   # proportional gain of postural task
 kd_posture  = 2*sqrt(kp_posture);
-kc_p        = 100.0;   # constraint proportional feedback gain
-kc_d        = 2*sqrt(kc_p);   # constraint derivative feedback gain
+kp_constr   = 100.0;   # constraint proportional feedback gain
+kd_constr   = 2*sqrt(kp_constr);   # constraint derivative feedback gain
 kp_com      = 100;
 kd_com      = 2*sqrt(kp_com);
+kp_ee       = 100.0;
+kd_ee       = 2*sqrt(kp_ee);
+constraint_mask = np.array([True, True, True, True, True, True]).T;
+ee_mask         = np.array([True, True, True, True, True, True]).T;
 
 # CONTROLLER WEIGTHS
 w_com           = 1;
-w_posture       = 1;  #1e-5;  # weight of postural task
+w_posture       = 1-2;  #1e-5;  # weight of postural task
 w_force_reg     = 1e-5; # weight of force regularization task
-w_foot          = np.array([1, 1, 1e-3, 2, 2, 2]); # weights of force components in force regularization task
-w_f             = np.append(w_foot, w_foot);
 
 # QP SOLVER PARAMETERS
 maxIter = 300;      # max number of iterations
@@ -68,13 +70,16 @@ MAX_COM_VELOCITY            = 5;
 ''' VIEWER PARAMETERS '''
 ENABLE_VIEWER               = True;
 PLAY_MOTION_WHILE_COMPUTING = True;
-PLAY_REFERENCE_MOTION       = False;
+PLAY_REFERENCE_MOTION       = True;
 PLAY_MOTION_AT_THE_END      = True;
-DT_VIEWER                   = 10*dt;   # timestep used to display motion with viewer
+DT_VIEWER                   = 20*dt;   # timestep used to display motion with viewer
 
 ''' FIGURE PARAMETERS '''
-SAVE_FIGURES     = False;
 SHOW_FIGURES     = False;
+PLOT_JOINT_TRAJ  = False;
+PLOT_COM_TRAJ    = True;
+PLOT_EE_TRAJ     = False;
+SAVE_FIGURES     = False;
 SHOW_LEGENDS     = True;
 LINE_ALPHA       = 0.7;
 LINE_WIDTH_RED   = 2;

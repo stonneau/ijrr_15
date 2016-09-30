@@ -2,18 +2,9 @@ import numpy as np
 from numpy.random import random
 from pinocchio.robot_wrapper import RobotWrapper
 import pinocchio as se3
-#from dynamic_graph.sot.hrp2_14 import robot
-#from dynamic_graph.sot.hrp2.dynamic_hrp2_14 import DynamicHrp2_14
-#from dynamic_graph.sot.dynamics import *
 from min_jerk_traj_gen import MinimumJerkTrajectoryGenerator
 from acc_bounds_util_multi_dof import computeAccLimits
-from sot_utils import pinocchio_2_sot
-#from sot_utils import setDynamicProperties, createAndInitializeMetaTaskDyn6D
 from sot_utils import computeContactInequalities, computeRectangularContactInequalities, solveWithNullSpace, crossMatrix
-#from sot_utils import H_FOOT_2_SOLE, LEFT_FOOT_SIZES, RIGHT_FOOT_SIZES, DQ_MAX
-#from sot_utils import H_WRIST_2_GRIPPER, INERTIA_ROTOR, GEAR_RATIO, JOINT_VISCOUS_FRICTION
-#from dynamic_graph.sot.core import RobotSimu
-from dynamic_graph.sot.torque_control.force_torque_estimator import ForceTorqueEstimator
 from first_order_low_pass_filter import FirstOrderLowPassFilter
 from convex_hull_util import compute_convex_hull, plot_convex_hull
 from tasks import SE3Task, CoMTask, PosturalTask, AngularMomentumTask
@@ -35,10 +26,9 @@ class InvDynFormulation (object):
     ENABLE_CAPTURE_POINT_LIMITS = False;
     ENABLE_TORQUE_LIMITS        = True;
     ENABLE_FORCE_LIMITS         = True;
-    N_WRENCH_IN = 17;   # number of inequality constraints for each contact wrench
     
-    USE_COM_TRAJECTORY_GENERATOR = True;
-    USE_JOINT_VELOCITY_ESTIMATOR = True;
+    USE_COM_TRAJECTORY_GENERATOR = False;
+    USE_JOINT_VELOCITY_ESTIMATOR = False;
     BASE_VEL_FILTER_CUT_FREQ = 5;
     JOINT_VEL_ESTIMATOR_DELAY = 0.02;
     
@@ -58,7 +48,7 @@ class InvDynFormulation (object):
     
     ind_force_in = [];  # indeces of force inequalities
     ind_acc_in = [];    # indeces of acceleration inequalities
-    ind_torque_in = []; # indeces of torque inequalities
+#    ind_torque_in = []; # indeces of torque inequalities
     ind_cp_in = [];     # indeces of capture point inequalities
     
     tauMax=[];  # torque limits
@@ -106,10 +96,6 @@ class InvDynFormulation (object):
     dx_com = [];    # com 3d velocity
     ddx_com = [];   # com 3d acceleration
     cp = None;      # capture point
-    cp_max = None;
-    cp_min = None;
-    ddx_com_max = None;
-    ddx_com_min = None;
 
     mass = 0;
     J_com = [];     # com Jacobian
@@ -131,32 +117,31 @@ class InvDynFormulation (object):
     rigidContactConstraints_fMin = [];
     rigidContactConstraints_mu = [];
     bilateralContactConstraints = [];
+
     tasks = [];
     task_weights = [];
-
-
     
     B_conv_hull = None;     # 2d convex hull of contact points: B_conv_hull*x + b_conv_hull >= 0
     b_conv_hull = None;
-#    x_rfoot = [];            # position of right foot (used for capture point constraints)
-#    x_lfoot = [];            # position of left foot  (used for capture point constraints)
-    
 
     
     def updateInequalityData(self):
         self.m_in = 0;                              # number of inequalities
         c = len(self.rigidContactConstraints);      # number of unilateral contacts
-        cb = len(self.bilateralContactConstraints); # number of bilateral contacts
-        self.k = c*6 + cb*6;   # number of contact force variables
+        self.k = int(np.sum([con.dim for con in self.rigidContactConstraints]));
+        self.k += int(np.sum([con.dim for con in self.bilateralContactConstraints]));
         if(self.ENABLE_FORCE_LIMITS):
             self.rigidContactConstraints_m_in = np.zeros(c, np.int);
             Bf = zeros((0,self.k));
+            ii = 0;
             for i in range(c):
                 (Bfi, bfi) = self.createContactForceInequalities(self.rigidContactConstraints_fMin[i], self.rigidContactConstraints_mu[i], \
                                                                self.rigidContactConstraints_p[i], self.rigidContactConstraints_N[i]);
                 self.rigidContactConstraints_m_in[i] = Bfi.shape[0];
                 tmp = zeros((Bfi.shape[0], self.k));
-                tmp[:,i*6:i*6+6] = Bfi
+                dim = self.bilateralContactConstraints[i].dim();
+                tmp[:,ii:ii+dim] = Bfi
+                ii += dim;
                 Bf = np.vstack((Bf, tmp));
             self.ind_force_in = range(self.m_in, self.m_in + np.sum(self.rigidContactConstraints_m_in));
             self.m_in += np.sum(self.rigidContactConstraints_m_in);
@@ -186,7 +171,12 @@ class InvDynFormulation (object):
         self.b          = zeros(self.m_in);
         self.Jc         = zeros((self.k,self.nv));
         self.dJc_v      = zeros(self.k);
+        self.dx_c       = zeros(self.k);
         self.ddx_c_des  = zeros(self.k);
+        self.Jc_Minv    = zeros((self.k,self.nv));
+        self.Lambda_c   = zeros((self.k,self.k));
+        self.Jc_T_pinv  = zeros((self.k,self.nv));
+        self.Nc_T       = np.matlib.eye(self.nv);
         self.C           = zeros((self.nv+self.k+self.na, self.na));
         self.c           = zeros(self.nv+self.k+self.na);
         
@@ -198,7 +188,7 @@ class InvDynFormulation (object):
         if(freeFlyer):
             self.r = RobotWrapper(urdfFileName, mesh_dir, root_joint=se3.JointModelFreeFlyer());
         else:
-            self.r = RobotWrapper(urdfFileName, mesh_dir, None);
+            self.r = RobotWrapper(urdfFileName, mesh_dir, None);        
         self.freeFlyer = freeFlyer;
         self.nq = self.r.nq;
         self.nv = self.r.nv;
@@ -206,32 +196,15 @@ class InvDynFormulation (object):
         self.k = 0;        # number of constraints
         self.dt = dt;
         self.name = name;
-        self.q = np.matrix.copy(q);
-        self.v = np.matrix.copy(v);
         self.Md = zeros((self.na,self.na)); #np.diag([ g*g*i for (i,g) in zip(INERTIA_ROTOR,GEAR_RATIO) ]); # rotor inertia
         
-        ''' create estimator '''
-        self.estimator = ForceTorqueEstimator("estimator");    
-        self.estimator.base6d_encoders.value = tuple(pinocchio_2_sot(q));
-        self.estimator.init(dt,self.JOINT_VEL_ESTIMATOR_DELAY,self.JOINT_VEL_ESTIMATOR_DELAY,self.JOINT_VEL_ESTIMATOR_DELAY,self.JOINT_VEL_ESTIMATOR_DELAY,True);
-        self.estimator.setUseRawEncoders(True);
-        self.estimator.setUseRefJointVel(False);
-        self.estimator.setUseRefJointAcc(False);
-        
         ''' create low-pass filter for base velocities '''
-        self.baseVelocityFilter = FirstOrderLowPassFilter(dt, self.BASE_VEL_FILTER_CUT_FREQ , np.zeros(6));
-            
-        self.M           = self.r.mass(q);
-        self.mass        = self.M[0][0];
-        self.dJ_com      = zeros((3,self.nv));
-        
-        self.x_c         = zeros(0);
+        self.baseVelocityFilter = FirstOrderLowPassFilter(dt, self.BASE_VEL_FILTER_CUT_FREQ , np.zeros(6));            
         if(freeFlyer):
             self.S_T         = zeros((self.nv,self.na));
             self.S_T[6:, :]  = np.matlib.eye(self.na);
         else:
             self.S_T    = np.matlib.eye(self.na);
-        self.ddx_com    = zeros(3);
     
         self.qMin       = self.r.model.lowerPositionLimit;
         self.qMax       = self.r.model.upperPositionLimit;
@@ -244,19 +217,18 @@ class InvDynFormulation (object):
             self.tauMax     = self.r.model.effortLimit[6:];
         else:
             self.tauMax     = self.r.model.effortLimit;
-        self.qDes       = np.matrix.copy(self.q);
                         
         self.contact_points = zeros((0,3));
         self.updateConvexHull();
         self.updateInequalityData();
+        self.setNewSensorData(0, q, v)
         
         self.com_traj_gen = MinimumJerkTrajectoryGenerator(self.dt, 1);
         
-    def getJointId(self, jointName):
-        if(self.r.model.existJointName(jointName)==False):
-            raise NameError("[InvDynFormUtil] ERROR: joint %s does not exist!"%jointName);
-        return self.r.model.getJointId(jointName);
-#        return self.r.model.frames[jid].parent;
+    def getFrameId(self, frameName):
+        if(self.r.model.existFrame(frameName)==False):
+            raise NameError("[InvDynFormUtil] ERROR: frame %s does not exist!"%frameName);
+        return self.r.model.getFrameId(frameName);
 
     ''' ********** ENABLE OR DISABLE CONTACT CONSTRAINTS ********** '''
 
@@ -378,68 +350,59 @@ class InvDynFormulation (object):
     
     def setVelocities(self, v):
         if(self.USE_JOINT_VELOCITY_ESTIMATOR):
-            if(self.freeFlyer):
-                self.estimator.base6d_encoders.value = tuple(pinocchio_to_sot(self.q));
-            else:
-                q_plus_six_zeros = zeros(self.nq+6);
-                q_plus_six_zeros[6:] = self.q;
-                self.estimator.base6d_encoders.value = tuple(q_plus_six_zeros);
-            t = self.estimator.jointsVelocities.time;
-            self.estimator.jointsVelocities.recompute(t+1);
-            if(self.freeFlyer):
-                self.v[6:] = np.array(self.estimator.jointsVelocities.value);
-                self.v[:6] = self.baseVelocityFilter.filter_data(v[:6]);
-            else:
-                self.v = np.array(self.estimator.jointsVelocities.value);
+            raise Exception("Joint velocity estimator not implemented yet");
         else:
             self.v = np.matrix.copy(v);
         return self.v;
         
     def setNewSensorData(self, t, q, v):
+        k = self.k;
+        nv = self.nv;
+        
         self.setPositions(q, updateConstraintReference=False);
         self.setVelocities(v);
         
-        self.r.computeJacobians(q);
-        self.r.forwardKinematics(q, v, 0 * v);
-        self.x_com    = self.r.com(q);
-        self.J_com    = self.r.Jcom(q);
-        self.M        = self.r.mass(q);
+        self.r.computeAllTerms(q, v);
+        self.r.framesKinematics(q);
+        self.x_com    = self.r.com(q, update_kinematics=False);
+        self.J_com    = self.r.Jcom(q, update_kinematics=False);
+        self.M        = self.r.mass(q, update_kinematics=False);
         if(self.ACCOUNT_FOR_ROTOR_INERTIAS):
             if(self.freeFlyer):
                 self.M[6:,6:]   += self.Md;
             else:
                 self.M   += self.Md;
-        self.h        = self.r.bias(q,v);
+        self.h        = self.r.bias(q,v, update_kinematics=False);
 #        self.h          += self.JOINT_FRICTION_COMPENSATION_PERCENTAGE*np.dot(np.array(JOINT_VISCOUS_FRICTION), self.v);
-        self.g          = self.r.gravity(q);
         self.dx_com     = np.dot(self.J_com, self.v);
         com_z           = self.x_com[2]; #-np.mean(self.contact_points[:,2]);
         self.cp         = self.x_com[:2] + self.dx_com[:2]/np.sqrt(9.81/com_z);
-        self.dJcom_dq = (self.h[:3] - self.g[:3]) / self.M[0,0];
 
         i = 0;
         for constr in self.rigidContactConstraints:
-            (self.Jc[i*6:i*6+6,:], self.dJc_v[i*6:i*6+6], self.ddx_c_des[i*6:i*6+6]) = constr.dyn_value(t, q, v);
-            i = i+1;
+            dim = constr.dim
+            (self.Jc[i:i+dim,:], self.dJc_v[i:i+dim], self.ddx_c_des[i:i+dim]) = constr.dyn_value(t, q, v);
+            i += dim;
         for constr in self.bilateralContactConstraints:
-            (self.Jc[i*6:i*6+6,:], self.dJc_v[i*6:i*6+6], self.ddx_c_des[i*6:i*6+6]) = constr.dyn_value(t, q, v);
-            i = i+1;
+            dim = constr.dim
+            (self.Jc[i:i+dim,:], self.dJc_v[i:i+dim], self.ddx_c_des[i:i+dim]) = constr.dyn_value(t, q, v);
+            i += dim;
         self.Minv        = np.linalg.inv(self.M);
-        self.Jc_Minv     = np.dot(self.Jc, self.Minv);
-        self.Lambda_c    = np.linalg.inv(np.dot(self.Jc_Minv, self.Jc.T) + 1e-10*np.matlib.eye(self.k));
-        self.Jc_T_pinv   = np.dot(self.Lambda_c, self.Jc_Minv);
-        self.Nc_T        = np.matlib.eye(self.nv) - np.dot(self.Jc.T, self.Jc_T_pinv);
-        self.dJc_v      -= self.ddx_c_des;
-        self.dx_c        = np.dot(self.Jc, self.v);
+        if(self.k>0):
+            self.Jc_Minv     = np.dot(self.Jc, self.Minv);
+            self.Lambda_c    = np.linalg.inv(np.dot(self.Jc_Minv, self.Jc.T) + 1e-10*np.matlib.eye(self.k));
+            self.Jc_T_pinv   = np.dot(self.Lambda_c, self.Jc_Minv);
+            self.Nc_T        = np.matlib.eye(self.nv) - np.dot(self.Jc.T, self.Jc_T_pinv);
+            self.dx_c        = np.dot(self.Jc, self.v);
+        else:
+            self.Nc_T        = np.matlib.eye(self.nv);
         
         # Compute C and c such that y = C*tau + c, where y = [dv, f, tau]
-        k = self.k;
-        nv = self.nv;
         self.C[0:nv,:]      = np.dot(self.Minv, np.dot(self.Nc_T, self.S_T));
         self.C[nv:nv+k,:]   = -np.dot(self.Jc_T_pinv, self.S_T);
         self.C[nv+k:,:]     = np.matlib.eye(self.na);
-        self.c[0:nv]        = - np.dot(self.Minv, (np.dot(self.Nc_T,self.h) + np.dot(self.Jc.T, np.dot(self.Lambda_c, self.dJc_v))));
-        self.c[nv:nv+k]     = np.dot(self.Lambda_c, (np.dot(self.Jc_Minv, self.h) - self.dJc_v));
+        self.c[0:nv]        = - np.dot(self.Minv, (np.dot(self.Nc_T,self.h) + np.dot(self.Jc.T, np.dot(self.Lambda_c, self.dJc_v - self.ddx_c_des))));
+        self.c[nv:nv+k]     = np.dot(self.Lambda_c, (np.dot(self.Jc_Minv, self.h) - self.dJc_v + self.ddx_c_des));
 
         
     def computeCostFunction(self, t):
@@ -551,8 +514,6 @@ class InvDynFormulation (object):
     
     
     def createContactForceInequalities(self, fMin, mu, contact_points, contact_normals):
-#        B = zeros((self.N_WRENCH_IN,6));
-        
         B = -1*computeContactInequalities(contact_points.T, contact_normals.T, mu[0]);
         b = zeros(B.shape[0]);
         # minimum normal force
@@ -570,10 +531,6 @@ class InvDynFormulation (object):
     def createInequalityConstraints(self):
         n = self.na;
         k = self.k;
-        
-#            (B_tau, b_tau) = self.createTorqueInequalities(self.tauMax);
-#            self.B[self.ind_torque_in, n+6+k:]          = B_tau;
-#            self.b[self.ind_torque_in]                  = b_tau;
 
         if(self.ENABLE_JOINT_LIMITS):
             (B_q, b_q) = self.createJointAccInequalitiesViability();

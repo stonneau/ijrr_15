@@ -39,7 +39,7 @@ class Simulator (object):
     
     ACCOUNT_FOR_ROTOR_INERTIAS = False;
 
-    VIEWER_DT = 0.05;    
+    VIEWER_DT = 0.05;
     DISPLAY_COM = True;
     DISPLAY_CAPTURE_POINT = True;
     COM_SPHERE_RADIUS = 0.005;
@@ -159,6 +159,7 @@ class Simulator (object):
         self.INITIALIZE_TORQUE_FILTER = True;
         
     def __init__(self, name, q, v, fMin, mu, dt, mesh_dir, urdfFileName, freeFlyer=True, detectContactPoint=True):
+        self.time_step = 0;
         self.DETECT_CONTACT_POINTS = detectContactPoint;
         self.verb = 0;
         self.name = name;
@@ -190,7 +191,7 @@ class Simulator (object):
 #        constr_lf_hl = createAndInitializeMetaTaskDyn6D('c_lf_hl_'+self.name, dt, self.r.dynamic, 'left-ankle', H_LFOOT_2_HL_CORNER, K_C, flags);
 #        self.candidateContactConstraints = [constr_rf_fr, constr_rf_fl, constr_rf_hr, constr_rf_hl, 
 #                                            constr_lf_fr, constr_lf_fl, constr_lf_hr, constr_lf_hl];
-        self.viewer=Viewer(self.name);
+        self.viewer=Viewer(self.name, self.r);
         
         self.reset(0, q, v, dt);
         
@@ -566,6 +567,7 @@ class Simulator (object):
     def integrateAcc(self, t, dt, dv, f, tau, updateViewer=True):
         res = [];
         self.t = t;
+        self.time_step += 1;
         self.dv = np.matrix.copy(dv);
         
         # replace with se3.integrate(robot.model, q, dt*v)
@@ -730,8 +732,7 @@ class Simulator (object):
             self.q[7:][ind_pos_lb] = self.qMin[7:][ind_pos_lb];
             self.v[6:][ind_pos_lb] = 0.0;
         
-        tmp = t/self.VIEWER_DT;
-        if(updateViewer): # and tmp==np.floor(tmp)):
+        if(updateViewer and self.time_step%int(self.VIEWER_DT/dt)==0):
             self.viewer.updateRobotConfig(self.q);
 #            if(self.DISPLAY_COM):
 #                self.viewer.updateObjectConfig('com', (self.x_com[0], self.x_com[1], 0, 0,0,0,1));

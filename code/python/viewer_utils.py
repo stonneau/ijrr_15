@@ -5,11 +5,8 @@ Created on Mon Nov 16 16:34:46 2015
 @author: adelpret
 """
 
-# start robotviewer from bash with 'robotviewer -sXML-RPC'.
-import robotviewer
-from sot_utils import sot_2_pinocchio #, rpyToMatrix
 import pinocchio as se3
-from hrp2014_wrapper import Hrp2014Wrapper
+from pinocchio import RobotWrapper
 from time import sleep
 from time import time
 import os
@@ -17,14 +14,6 @@ import numpy as np
 from first_order_low_pass_filter import FirstOrderLowPassFilter
 
 ENABLE_VIEWER = True;
-USE_GEPETTO_VIEWER = True;
-MODEL_PATH = "/home/adelpret/devel/sot_hydro/install/share/"
-HRP2_URDF_MODEL = MODEL_PATH + "hrp2_14_description/urdf/hrp2_14_reduced.urdf"
-HRP2_URDF_MODEL_RED = MODEL_PATH + "hrp2_14_description/urdf/hrp2_14_reduced_red.urdf"
-HRP2_URDF_MODEL_BLUE = MODEL_PATH + "hrp2_14_description/urdf/hrp2_14_reduced_blue.urdf"
-HRP2_URDF_MODEL_GREEN = MODEL_PATH + "hrp2_14_description/urdf/hrp2_14_reduced_green.urdf"
-#MODEL_PATH = '/home/adelpret/devel/sot_hydro/stacks/'
-#URDF_MODEL_PATH = MODEL_PATH + "hrp2_14_description/urdf/hrp2_14_reduced.urdf"
     
 def xyzRpyToViewerConfig(xyz, rpy):
     R = se3.utils.rpyToMatrix(rpy);
@@ -37,53 +26,45 @@ class Viewer(object):
     viewer = None;
     robots = None;
     robot = None;
-#    robot2 = None;
+
     name = '';
     PLAYER_FRAME_RATE = 20;
 
     CAMERA_LOW_PASS_FILTER_CUT_FREQUENCY = 10.0;
-    CAMERA_FOLLOW_ROBOT = 'hrp2';   # name of the robot to follow with the camera
+    CAMERA_FOLLOW_ROBOT = 'robot1';   # name of the robot to follow with the camera
     CAMERA_LOOK_AT_HEIGHT = 0.5;           # height the camera should look at when following a robot
     CAMERA_REL_POS = [4, 2, 1.75];  # distance from robot to camera
     CAMERA_LOOK_AT_OFFSET = [0, 0]; # offset to robot xy position looked by camera    
     
     objectsAttachedToJoints = [];
 
-    def __init__(self, name, robotName='hrp2'):
+    def __init__(self, name, robotWrapper, robotName='robot1'):
         self.name = name;
         self.filter = FirstOrderLowPassFilter(0.002, self.CAMERA_LOW_PASS_FILTER_CUT_FREQUENCY, np.zeros(2));
         if(ENABLE_VIEWER):
-            if(USE_GEPETTO_VIEWER):
-                self.robot = Hrp2014Wrapper(HRP2_URDF_MODEL, MODEL_PATH);
-                self.robot.initDisplay("world/"+robotName, loadModel=False);
-                self.robot.loadDisplayModel("world/"+robotName, robotName); #, MODEL_PATH);
-                self.robot.viewer.gui.setLightingMode('world/floor', 'OFF');
-                self.robots = {robotName: self.robot};
-            else:
-                self.viewer=robotviewer.client('XML-RPC');
-                self.viewer.updateElementConfig('hrp_device', [0.0,]*46);
+            self.robot = robotWrapper;
+            self.robot.initDisplay("world/"+robotName, loadModel=False);
+            self.robot.loadDisplayModel("world/"+robotName, robotName);
+            self.robot.viewer.gui.setLightingMode('world/floor', 'OFF');
+            self.robots = {robotName: self.robot};                
                 
-                
-    def addRobot(self, robotName, urdfModelPath=HRP2_URDF_MODEL, modelPath=MODEL_PATH):
-        if(ENABLE_VIEWER and USE_GEPETTO_VIEWER):
-            newRobot = Hrp2014Wrapper(urdfModelPath);
+    def addRobot(self, robotName, urdfModelPath, modelPath):
+        if(ENABLE_VIEWER):
+            newRobot = RobotWrapper(urdfModelPath, modelPath);
             newRobot.initDisplay("world/"+robotName, loadModel=False);
             newRobot.viewer.gui.addURDF("world/"+robotName, urdfModelPath, modelPath);
             self.robots[robotName] = newRobot;
                         
-    def updateRobotConfig(self, q, robotName='hrp2', refresh=True):
+    def updateRobotConfig(self, q, robotName='robot1', refresh=True):
         if(ENABLE_VIEWER):
-            if(USE_GEPETTO_VIEWER):
-                self.robots[robotName].display(q);
-                
-                for o in self.objectsAttachedToJoints:
-                    pinocchioConf = se3.utils.se3ToXYZQUAT(self.robots[o['robot']].data.oMi[o['joint']]*o['H']);
-                    viewerConf = se3.utils.XYZQUATToViewerConfiguration(pinocchioConf);
-                    self.updateObjectConfig(o['object'], viewerConf, False);
-                if(refresh):
-                    self.robot.viewer.gui.refresh();
-            else:
-                self.viewer.updateElementConfig('hrp_device', list(q)+[0.0,]*10);
+            self.robots[robotName].display(q);
+            
+            for o in self.objectsAttachedToJoints:
+                pinocchioConf = se3.utils.se3ToXYZQUAT(self.robots[o['robot']].data.oMi[o['joint']]*o['H']);
+                viewerConf = se3.utils.XYZQUATToViewerConfiguration(pinocchioConf);
+                self.updateObjectConfig(o['object'], viewerConf, False);
+            if(refresh):
+                self.robot.viewer.gui.refresh();
                 
             if(self.CAMERA_FOLLOW_ROBOT==robotName):
                 xy = self.filter.filter_data(q[:2]);
@@ -96,11 +77,12 @@ class Viewer(object):
                                 0, 0, 1);
     
     def moveCamera(self, target, cameraPos, upwardDirection=(0,0,1)):
-        self.robot.viewer.gui.moveCamera(self.robot.windowID, target[0], target[1], target[2], \
-                                cameraPos[0], cameraPos[1], cameraPos[2], \
-                                upwardDirection[0], upwardDirection[1], upwardDirection[2]);
+        if(ENABLE_VIEWER):
+            self.robot.viewer.gui.moveCamera(self.robot.windowID, target[0], target[1], target[2], \
+                                             cameraPos[0], cameraPos[1], cameraPos[2], \
+                                             upwardDirection[0], upwardDirection[1], upwardDirection[2]);
                                 
-    def play(self, q, dt, slow_down_factor=1, print_time_every=-1.0, robotName='hrp2'):
+    def play(self, q, dt, slow_down_factor=1, print_time_every=-1.0, robotName='robot1'):
         if(ENABLE_VIEWER):
             trajRate = 1.0/dt
             rate = int(slow_down_factor*trajRate/self.PLAYER_FRAME_RATE);
@@ -141,7 +123,8 @@ class Viewer(object):
             self.robot.viewer.gui.activateMouseCamera(self.robot.windowID);       
             
     def setLightingMode(self, name, mode='OFF'):
-        self.robot.viewer.gui.setLightingMode('world/'+name, mode);
+        if(ENABLE_VIEWER):
+            self.robot.viewer.gui.setLightingMode('world/'+name, mode);
 
     ''' Add a box in the simulation environment
         @param name The name of the box
@@ -193,9 +176,9 @@ class Viewer(object):
             config = xyzRpyToViewerConfig(xyz, rpy);
             self.updateObjectConfig(name, config);
         
-    def attachObjectToJoint(self, objectName, jointName, xyz, rpy, robotName='hrp2'):
+    def attachObjectToJoint(self, objectName, jointName, xyz, rpy, robotName='robot1'):
         if(ENABLE_VIEWER):
-            R = rpyToMatrix(rpy);
+            R = se3.utils.rpyToMatrix(rpy);
             H = se3.SE3(R, xyz.reshape(3,1));
             self.objectsAttachedToJoints += [{'object': objectName, 
                                               'joint': self.robots[robotName].index(jointName),
