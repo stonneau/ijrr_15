@@ -50,7 +50,10 @@ def cone_span_to_face(S, eliminate_redundancies=False):
     P = Polyhedron(V_cdd)
     H_matrix = P.get_inequalities();
     if(eliminate_redundancies):
-        H_matrix.canonicalize();
+        try:
+            H_matrix.canonicalize();
+        except:
+            print "RuntimeError: failed to canonicalize matrix";
     H = array(H_matrix);
     if(H.shape[1]>1):
         b = H[:, 0]

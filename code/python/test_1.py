@@ -10,22 +10,14 @@ if cwd+'/data/config' not in sys.path:
 
 #import test1_planar as conf
 import conf_hyq_hole as conf
+
 from standard_qp_solver import StandardQpSolver
-#from multi_contact_stability_criterion_utils import can_I_stop
 from simulator import Simulator
 import viewer_utils
 from inv_dyn_formulation_util import InvDynFormulation
 from constraint_violations import ConstraintViolationType
-#from sot_utils import compute_nullspace_projector, qpOasesSolverMsg, solveWithNullSpace, solveLeastSquare
-#from sot_utils import pinocchio_2_sot
-#from acc_bounds_util import isStateViable
-#from multi_contact_stability_criterion_utils import compute_GIWC, compute_com_acceleration_polytope
-#from geom_utils import crossMatrix, plot_inequalities
-#from plot_utils import plotNdQuantity
-#from plot_utils import plotNdQuantityPerSolver
-#from plot_utils import plotQuantityPerSolver
 import plot_utils
-#from plot_utils import create_empty_figure
+from geom_utils import plot_inequalities
 
 import cProfile
 import pickle
@@ -39,7 +31,8 @@ from time import sleep
 from math import sqrt
 from tasks import SE3Task, CoMTask, JointPostureTask
 from trajectories import ConstantSE3Trajectory, ConstantNdTrajectory, SmoothedNdTrajectory
-#from sot_utils import RIGHT_FOOT_SIZES, LEFT_FOOT_SIZES
+
+from multi_contact_stability_criterion_utils import compute_com_acceleration_polytope, compute_GIWC
 
 EPS = 1e-4;
 
@@ -68,16 +61,20 @@ def createInvDynFormUtil(q, v):
     
     return invDynForm;
     
-def updateConstraints(t, q, v, invDynForm, contactJointNames, P, N):
+def updateConstraints(t, i, q, v, invDynForm, contactJointNames, P, N):
+    contact_changed = False;
+    
     for active_constr in invDynForm.rigidContactConstraints:
         if(active_constr.name not in contactJointNames):
             invDynForm.removeUnilateralContactConstraint(active_constr.name);
             print "Removing constraint", active_constr.name;
+            contact_changed =True;
 
-    for (i,name) in enumerate(contactJointNames):
+    for name in contactJointNames:
         if(invDynForm.existUnilateralContactConstraint(name)):
             continue;
-
+        
+        contact_changed =True;
         invDynForm.r.forwardKinematics(q, v, 0 * v);
         invDynForm.r.framesKinematics(q);
         
@@ -97,12 +94,16 @@ def updateConstraints(t, q, v, invDynForm, contactJointNames, P, N):
         print "                    contact position error ", pos_err, "norm %.3f"%norm(pos_err);
         print "                    contact position error2", pos_err2, "norm %.3f"%norm(pos_err2);
         
-        Pi = P[:,i*4:i*4+4];
-        Ni = N[:,i*4:i*4+4];
-        for j in range(4):
-            Pi[:,j] = oMi.actInv_point(Pi[:,j]);
-            Ni[:,j] = oMi.rotation.T * Ni[:,j];
+        if(conf.USE_INPUT_CONTACT_POINTS):        
+            Pi = P[name];
+            Ni = N[name];
+            for j in range(Pi.shape[1]):
+                print "    contact point %d in world frame:"%j, oMi.act_point(Pi[:,j]).T, (oMi.rotation * Ni[:,j]).T;
+        else:
+            Pi = conf.DEFAULT_CONTACT_POINTS;
+            Ni = conf.DEFAULT_CONTACT_NORMALS;
         invDynForm.addUnilateralContactConstraint(constr, Pi, Ni, conf.fMin, conf.mu);
+        
     
 def createSimulator(q0, v0):
     simulator  = Simulator('hrp2_sim'+datetime.now().strftime('%Y%m%d_%H%M%S')+str(np.random.random()), 
@@ -135,7 +136,7 @@ def startSimulation(q0, v0, solverId):
     t = 0;
     simulator.reset(t, q0, v0, conf.dt);
     for i in range(conf.MAX_TEST_DURATION):        
-        updateConstraints(t, simulator.q, simulator.v, invDynForm, contact_names[i], contact_points[i], contact_normals[i]);
+        updateConstraints(t, i, simulator.q, simulator.v, invDynForm, contact_names[i], contact_points[i], contact_normals[i]);
         invDynForm.setNewSensorData(t, simulator.q, simulator.v);
         (G,glb,gub,lb,ub) = invDynForm.createInequalityConstraints();
         m_in = glb.size;
@@ -172,23 +173,36 @@ def startSimulation(q0, v0, solverId):
 
         if(np.isnan(torques).any() or np.isinf(torques).any()):
             no_sol_count[j] += 1;
+
+#        f                   = y[nv:nv+invDynForm.k];
+#        fTot = np.matlib.zeros((3,1));
+#        print "Time %.3f"%t;
+#        for (ii,name) in enumerate(contact_names[i]):
+#            fid = invDynForm.getFrameId(name);
+#            oMi = invDynForm.r.framePosition(fid); 
+#            print "    Contact force %s"%name, (f[ii*3:ii*3+3]).T
+#            fTot += f[ii*3:ii*3+3];
+#
+#        fTot_2 = mass*(ddx_com[j][:,i] - np.matrix([0,0,-9.81]).T);
+#        if(norm(fTot-fTot_2)>EPS):
+#            print "   Error contact forces:", fTot.T, fTot_2.T, norm(fTot-fTot_2);
             
-#        cost = norm(D*tau[j][:,i]-d);
-#        if(cost>1e2):
-#            print "Cost ", cost
-            
-        ddx_c = invDynForm.Jc * dv[j][:,i] + invDynForm.dJc_v
-        constr_viol = ddx_c - invDynForm.ddx_c_des;
-        if(norm(constr_viol)>1e-3):
-            print "Time %.3f Constraint violation:"%(t), norm(constr_viol), ddx_c.T, "!=", invDynForm.ddx_c_des.T;
-        
         # impulseDynamics
         constrViol[i] = simulator.integrateAcc(t, dt, dv[j][:,i], fc[j][:,i], tau[j][:,i], conf.PLAY_MOTION_WHILE_COMPUTING);
+        simulator.updateComPositionInViewer(x_com[j][:,i]);
         
         for cv in constrViol[i]:
             cv.time = t;
             print cv.toString();
             constrViolString += cv.toString()+'\n';
+            
+        ''' CHECK TERMINATION CONDITIONS '''
+        ddx_c = invDynForm.Jc * dv[j][:,i] + invDynForm.dJc_v
+        constr_viol = ddx_c - invDynForm.ddx_c_des;
+        if(norm(constr_viol)>1e-3):
+            print "Time %.3f Constraint violation:"%(t), norm(constr_viol), ddx_c.T, "!=", invDynForm.ddx_c_des.T;
+            print "Joint torques:", torques.T
+            return False;
             
         # Check whether robot is falling
         if(np.sum(n_violated_ineq[:,j]) > 10 or norm(dx_com[j][:,i])>conf.MAX_COM_VELOCITY):
@@ -226,7 +240,6 @@ if(conf.MAX_TEST_DURATION<=0 or conf.MAX_TEST_DURATION>len(data)):
     conf.MAX_TEST_DURATION = len(data);
 elif(len(data)>conf.MAX_TEST_DURATION):
     data = data[:conf.MAX_TEST_DURATION];
-
 T = len(data);
 
 ''' CREATE CONTROLLER AND SIMULATOR '''
@@ -235,7 +248,6 @@ nq = q0.shape[0];
 nv = nq-1 if conf.freeFlyer else nq;
 v0 = np.matlib.zeros((nv,1));
 invDynForm = createInvDynFormUtil(q0, v0);
-#updateConstraints(0, q0, v0, invDynForm, data[0]['contacts'], np.matrix(data[0]['P']).T, np.matrix(data[0]['N']).T);
 simulator = createSimulator(q0, v0);
 robot = invDynForm.r;
 dt = conf.dt;
@@ -246,14 +258,17 @@ contact_names   = T*[None,];
 contact_points  = T*[None,];
 contact_normals = T*[None,];
 com_ref = np.matlib.empty((3,T));
-ee_names = data[0]['contacts'];
-ee_indexes = [robot.model.getFrameId(e) for e in ee_names];
+ee_names = data[0]['P'].keys();
+ee_indexes = [invDynForm.getFrameId(e) for e in ee_names];
 ee_ref        = createListOfMatrices(len(ee_names), (3, conf.MAX_TEST_DURATION));
 for t in range(T):
     q_ref[:,t]   = np.matrix(data[t]['q']).T;
-    contact_names[t] = data[t]['contacts'];
-    contact_points[t] = np.matrix(data[t]['P']).T;
-    contact_normals[t] = np.matrix(data[t]['N']).T;
+    contact_names[t] = data[t]['P'].keys();
+    contact_points[t] = {};
+    contact_normals[t] = {};
+    for ee in contact_names[t]:
+        contact_points[t][ee]  = np.matrix(data[t]['P'][ee]).T;
+        contact_normals[t][ee] = np.matrix(data[t]['N'][ee]).T;
     robot.forwardKinematics(q_ref[:,t]);
     robot.framesKinematics(q_ref[:,t]);
     com_ref[:,t] = robot.com(q_ref[:,t]);    
@@ -288,7 +303,7 @@ invDynForm.addTask(com_task, conf.w_com);
 if(conf.PLAY_REFERENCE_MOTION):
     print "Gonna play reference motion";
     sleep(1);
-    simulator.viewer.play(q_ref, dt, 1.0);
+    simulator.viewer.play(q_ref, dt, 0.3);
     print "Reference motion finished";
     sleep(1);
 
@@ -331,23 +346,22 @@ if(conf.PLAY_MOTION_AT_THE_END):
     simulator.viewer.play(q[s], dt, 1.0);
     print "Computed motion finished";
 
-x_ee   = createListOfMatrices(len(ee_names), (3, conf.MAX_TEST_DURATION));
-dx_ee  = createListOfMatrices(len(ee_names), (3, conf.MAX_TEST_DURATION));
-ddx_ee = createListOfMatrices(len(ee_names), (3, conf.MAX_TEST_DURATION));
-for t in range(T):
-    robot.forwardKinematics(q[s][:,t], v[s][:,t], dv[s][:,t]);
-    robot.framesKinematics(q[s][:,t]);
-    robot.computeJacobians(q[s][:,t]);
-    for (i,ee) in enumerate(ee_indexes):
-        oMi = robot.framePosition(ee);
-        x_ee[i][:,t] = oMi.translation;
-        v_ee = robot.frameVelocity(ee).linear
-        dx_ee[i][:,t] = oMi.rotation * v_ee;
-        a_ee = robot.frameClassicAcceleration(ee).linear
-        ddx_ee[i][:,t] = oMi.rotation * a_ee;
-#        dx_ee[i][:,t] = robot.frameVelocity(ee).linear;
-
 if(conf.SHOW_FIGURES and conf.PLOT_EE_TRAJ):
+    x_ee   = createListOfMatrices(len(ee_names), (3, conf.MAX_TEST_DURATION));
+    dx_ee  = createListOfMatrices(len(ee_names), (3, conf.MAX_TEST_DURATION));
+    ddx_ee = createListOfMatrices(len(ee_names), (3, conf.MAX_TEST_DURATION));
+    for t in range(T):
+        robot.forwardKinematics(q[s][:,t], v[s][:,t], dv[s][:,t]);
+        robot.framesKinematics(q[s][:,t]);
+        robot.computeJacobians(q[s][:,t]);
+        for (i,ee) in enumerate(ee_indexes):
+            oMi = robot.framePosition(ee);
+            x_ee[i][:,t] = oMi.translation;
+            v_ee = robot.frameVelocity(ee).linear
+            dx_ee[i][:,t] = oMi.rotation * v_ee;
+            a_ee = robot.frameClassicAcceleration(ee).linear
+            ddx_ee[i][:,t] = oMi.rotation * a_ee;
+
     for (i,ee) in enumerate(ee_indexes):
         f, ax = plot_utils.create_empty_figure(3, 3);
         for j in range(3):
@@ -370,6 +384,9 @@ if(conf.SHOW_FIGURES and conf.PLOT_COM_TRAJ):
         ax[1].plot(com_traj._v_ref[j, :].A.squeeze());
         ax[2].plot(com_traj._a_ref[j, :].A.squeeze());
         ax[0].plot(com_ref[j, :].A.squeeze(), 'r--');
+        ax[0].plot(x_com[s][j,:].A.squeeze(), 'k:');
+        ax[1].plot(dx_com[s][j,:].A.squeeze(), 'k:');
+        ax[2].plot(ddx_com[s][j,:].A.squeeze(), 'k:');
         ax[0].set_title("Com " + str(j));
         plt.show();
 

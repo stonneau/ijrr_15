@@ -92,14 +92,14 @@ def generate_contacts(N_CONTACTS, lx, ly, mu, CONTACT_POINT_LOWER_BOUNDS, CONTAC
     return (p, N);
 
 ''' Compute the gravito-inertial wrench cone.
-    @param contact_points Matrix containing the contact points
-    @param contact_normals Matrix containing the contact normals
+    @param contact_points Nx3 matrix containing the contact points
+    @param contact_normals Nx3 matrix containing the contact normals
     @param mu Friction coefficient
     @param cg Number of generator for the friction cone of each contact point
     @param USE_DIAGONAL_GENERATORS If True generate the generators turned of 45 degrees
     @return (H,h) Matrix and vector defining the GIWC as H*w <= h
 '''
-def compute_GIWC(contact_points, contact_normals, mu, cg=4, USE_DIAGONAL_GENERATORS=True):
+def compute_GIWC(contact_points, contact_normals, mu, cg=4, eliminate_redundancies=False, USE_DIAGONAL_GENERATORS=True):
     ''' compute generators '''
     nContacts = contact_points.shape[0];
     #gamma = atan(mu);   # half friction cone angle
@@ -145,7 +145,7 @@ def compute_GIWC(contact_points, contact_normals, mu, cg=4, USE_DIAGONAL_GENERAT
     for i in range(nContacts):
         S_centr[:,cg*i:cg*i+cg] = np.dot(M[:,3*i:3*i+3], S[:,cg*i:cg*i+cg]);
     ''' convert generators to inequalities '''
-    H = cone_span_to_face(S_centr,True);
+    H = cone_span_to_face(S_centr,eliminate_redundancies);
     h = np.zeros(H.shape[0]);
     return (H,h);
     

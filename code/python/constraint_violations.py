@@ -89,9 +89,7 @@ class PositionConstraintViolation(ConstraintViolation):
         
     def toString(self):
         s = 'Time %.3f POS VIOLATION '%(self.time);
-        s += "joint %d %s, dq=%.1f, ddq=%.1f " % (self.jointId, 
-                                                  hrp2_jointId_2_name(self.jointId),
-                                                  self.dq, self.ddq);
+        s += "joint %d, dq=%.1f, ddq=%.1f " % (self.jointId, self.dq, self.ddq);
         if(self.ddq_d!=None):
             s += "ddq_d=%.1f "%self.ddq_d;
         if(self.dq_ctrl!=None):
@@ -117,9 +115,7 @@ class VelocityConstraintViolation(ConstraintViolation):
         
     def toString(self):
         s = 'Time %.3f VEL VIOLATION '%(self.time);
-        s += "joint %d %s, dq=%.1f, ddq=%.1f " % (self.jointId, 
-                                                  hrp2_jointId_2_name(self.jointId), 
-                                                  self.dq, self.ddq);
+        s += "joint %d, dq=%.1f, ddq=%.1f " % (self.jointId, self.dq, self.ddq);
         if(self.ddq_d!=None):
             s += "ddq_d=%.1f "%self.ddq_d;
         if(self.dq_ctrl!=None):

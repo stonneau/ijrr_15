@@ -11,6 +11,7 @@ from time import sleep
 from time import time
 import os
 import numpy as np
+from numpy.matlib import zeros
 from first_order_low_pass_filter import FirstOrderLowPassFilter
 
 ENABLE_VIEWER = True;
@@ -29,6 +30,9 @@ class Viewer(object):
 
     name = '';
     PLAYER_FRAME_RATE = 20;
+    
+    COM_SPHERE_RADIUS = 0.01;
+    COM_SPHERE_COLOR = (1, 0, 0, 1);
 
     CAMERA_LOW_PASS_FILTER_CUT_FREQUENCY = 10.0;
     CAMERA_FOLLOW_ROBOT = 'robot1';   # name of the robot to follow with the camera
@@ -83,6 +87,7 @@ class Viewer(object):
                                              upwardDirection[0], upwardDirection[1], upwardDirection[2]);
                                 
     def play(self, q, dt, slow_down_factor=1, print_time_every=-1.0, robotName='robot1'):
+        self.addSphere('com', self.COM_SPHERE_RADIUS, zeros((3,1)), zeros((3,1)), self.COM_SPHERE_COLOR, 'OFF');
         if(ENABLE_VIEWER):
             trajRate = 1.0/dt
             rate = int(slow_down_factor*trajRate/self.PLAYER_FRAME_RATE);
@@ -90,6 +95,8 @@ class Viewer(object):
             timePeriod = 1.0/self.PLAYER_FRAME_RATE;
             for t in range(0,q.shape[1],rate):                
                 self.updateRobotConfig(q[:,t], robotName, refresh=False);
+                com = self.robots[robotName].com(q[:,t]);
+                self.updateObjectConfig('com', (com[0,0], com[1,0], 0, 0,0,0,1));
                 timeLeft = timePeriod - (time()-lastRefreshTime);
                 if(timeLeft>0.0):
                     sleep(timeLeft);

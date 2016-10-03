@@ -1,5 +1,7 @@
 import numpy as np
+from numpy.linalg import norm
 from numpy.random import random
+from polytope_conversion_utils import cone_span_to_face
 from pinocchio.robot_wrapper import RobotWrapper
 import pinocchio as se3
 from min_jerk_traj_gen import MinimumJerkTrajectoryGenerator
@@ -111,11 +113,12 @@ class InvDynFormulation (object):
     S_T = [];       # selection matrix
     dJc_v = [];     # product of contact Jacobian time derivative and velocity vector: dJc*v
     
-    rigidContactConstraints = [];
-    rigidContactConstraints_p = [];
-    rigidContactConstraints_N = [];
-    rigidContactConstraints_fMin = [];
-    rigidContactConstraints_mu = [];
+    rigidContactConstraints = [];   # tasks associated to the contact constraints
+    rigidContactConstraints_p = []; # contact points
+    rigidContactConstraints_N = []; # contact normals
+    rigidContactConstraints_fMin = [];  # minimum normal forces
+    rigidContactConstraints_mu = [];    # friction coefficients
+    rigidContactConstraints_m_in = [];  # number of inequalities
     bilateralContactConstraints = [];
 
     tasks = [];
@@ -133,16 +136,19 @@ class InvDynFormulation (object):
         if(self.ENABLE_FORCE_LIMITS):
             self.rigidContactConstraints_m_in = np.zeros(c, np.int);
             Bf = zeros((0,self.k));
+            bf = zeros(0);
             ii = 0;
             for i in range(c):
                 (Bfi, bfi) = self.createContactForceInequalities(self.rigidContactConstraints_fMin[i], self.rigidContactConstraints_mu[i], \
                                                                self.rigidContactConstraints_p[i], self.rigidContactConstraints_N[i]);
                 self.rigidContactConstraints_m_in[i] = Bfi.shape[0];
                 tmp = zeros((Bfi.shape[0], self.k));
-                dim = self.bilateralContactConstraints[i].dim();
-                tmp[:,ii:ii+dim] = Bfi
+                dim = self.rigidContactConstraints[i].dim;
+                mask = self.rigidContactConstraints[i]._mask;
+                tmp[:,ii:ii+dim] = Bfi[:,mask];
                 ii += dim;
                 Bf = np.vstack((Bf, tmp));
+                bf = np.vstack((bf, bfi));
             self.ind_force_in = range(self.m_in, self.m_in + np.sum(self.rigidContactConstraints_m_in));
             self.m_in += np.sum(self.rigidContactConstraints_m_in);
         else:
@@ -180,8 +186,10 @@ class InvDynFormulation (object):
         self.C           = zeros((self.nv+self.k+self.na, self.na));
         self.c           = zeros(self.nv+self.k+self.na);
         
-        if(self.ENABLE_FORCE_LIMITS):
+        if(self.ENABLE_FORCE_LIMITS and self.k>0):
             self.B[self.ind_force_in, self.nv:self.nv+self.k] = Bf;
+            self.b[self.ind_force_in] = bf;
+#            print "Contact inequality constraints:\n", self.B[self.ind_force_in, self.nv:self.nv+self.k], "\n", bf.T;
         
     
     def __init__(self, name, q, v, dt, mesh_dir, urdfFileName, freeFlyer=True):
@@ -381,11 +389,11 @@ class InvDynFormulation (object):
         i = 0;
         for constr in self.rigidContactConstraints:
             dim = constr.dim
-            (self.Jc[i:i+dim,:], self.dJc_v[i:i+dim], self.ddx_c_des[i:i+dim]) = constr.dyn_value(t, q, v);
+            (self.Jc[i:i+dim,:], self.dJc_v[i:i+dim], self.ddx_c_des[i:i+dim]) = constr.dyn_value(t, q, v, local_frame=False);
             i += dim;
         for constr in self.bilateralContactConstraints:
             dim = constr.dim
-            (self.Jc[i:i+dim,:], self.dJc_v[i:i+dim], self.ddx_c_des[i:i+dim]) = constr.dyn_value(t, q, v);
+            (self.Jc[i:i+dim,:], self.dJc_v[i:i+dim], self.ddx_c_des[i:i+dim]) = constr.dyn_value(t, q, v, local_frame=False);
             i += dim;
         self.Minv        = np.linalg.inv(self.M);
         if(self.k>0):
@@ -514,12 +522,23 @@ class InvDynFormulation (object):
     
     
     def createContactForceInequalities(self, fMin, mu, contact_points, contact_normals):
-        B = -1*computeContactInequalities(contact_points.T, contact_normals.T, mu[0]);
-        b = zeros(B.shape[0]);
-        # minimum normal force
-#        B[-1,2] = 1;
-#        b[-1]   = -fMin;
-        
+        if(contact_points.shape[1]>1):
+            B = -1*computeContactInequalities(contact_points.T, contact_normals.T, mu[0]);
+            b = zeros(B.shape[0]);
+        elif(norm(contact_points)<EPS):
+            B = zeros((5,6));
+            b = zeros(B.shape[0]);
+            B[0,0]   = -1;
+            B[1,0]   = 1;
+            B[2,1]   = -1;
+            B[3,1]   = 1;            
+            B[:,2]   = mu[0];
+            # minimum normal force
+            B[-1,2] = 1;
+            b[-1]   = -fMin;
+        else:
+            raise ValueError("Contact with only one point that is not at the origin of the frame: NOT SUPPORTED");
+
         return (B,b);
         
     ''' Compute the matrix A and the vectors lbA, ubA such that:

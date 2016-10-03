@@ -740,3 +740,7 @@ class Simulator (object):
 #                self.viewer.updateObjectConfig('cp', (self.cp[0], self.cp[1], 0, 0,0,0,1));
             
         return res;
+        
+    def updateComPositionInViewer(self, com):
+        if(self.DISPLAY_COM):
+            self.viewer.updateObjectConfig('com', (com[0,0], com[1,0], 0, 0,0,0,1));

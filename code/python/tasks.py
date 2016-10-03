@@ -70,7 +70,7 @@ class SE3Task(Task):
     assert isinstance(M_ref, SE3), "M_ref is not an element of class SE3"
     self._M_ref = M_ref
 
-  def dyn_value(self, t, q, v, update_geometry = False):
+  def dyn_value(self, t, q, v, local_frame = True):
     # Get the current configuration of the link
     oMi = self.robot.framePosition(self._frame_id);
     v_frame = self.robot.frameVelocity(self._frame_id)
@@ -88,8 +88,15 @@ class SE3Task(Task):
     drift.linear += np.cross(v_frame.angular.T, v_frame.linear.T).T    
     a_des = -self.kp * p_error.vector -self.kv * v_error.vector + self._gMl.actInv(a_ref).vector
 
-    J = self.robot.frameJacobian(q, self._frame_id, update_geometry)
-
+    J = self.robot.frameJacobian(q, self._frame_id, False)
+    
+    if(local_frame==False):
+        drift = self._gMl.act(drift);
+        a_des[:3] = self._gMl.rotation * a_des[:3];
+        a_des[3:] = self._gMl.rotation * a_des[3:];
+        J[:3,:] = self._gMl.rotation * J[:3,:];
+        J[3:,:] = self._gMl.rotation * J[3:,:];
+        
     return J[self._mask,:], drift.vector[self._mask], a_des[self._mask]
 
   def jacobian(self, q, update_geometry = False):
