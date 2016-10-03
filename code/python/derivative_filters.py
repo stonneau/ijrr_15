@@ -10,7 +10,8 @@ Classes for computing numerical first and second derivates of a discrete-time tr
 import numpy as np
 from math import floor
 
-''' Compute the first and second derivatives of the specified discrete-time trajectory x.
+''' Compute the first and second derivatives of the specified discrete-time trajectory x
+    by finite differences.
     @param x A NxT numpy matrix, where N is the size of the signal and T is the number of time steps
     @param dt The duration of the time step in seconds
     @return (dx, ddx) Two NxT numpy matrices containing first and second derivatives of x.
@@ -30,11 +31,19 @@ def computeFirstSecondDerivatives(x, dt):
     ddx[:,-1]  = ddx[:,-2];
     
     return (dx, ddx);
-    
+
+''' Filter the specified discrete-time trajectory x by fitting a second-order polynomial to a sliding
+    window of the specified length.
+    @param x A NxT numpy matrix, where N is the size of the signal and T is the number of time steps
+    @param dt The duration of the time step in seconds
+    @param window_length An positive odd integer (>=3) representing the length of the sliding window
+    @return (x, dx, ddx) A tuple of three NxT numpy matrices containing the filtered signal and its first two derivatives.
+''' 
 def computeSecondOrderPolynomialFitting(x, dt, window_length):
     assert dt>0.0, "dt must be positive"
     assert len(x.shape)==2, "x must be a matrix"
     assert window_length>2, "window length must be at least 3"
+    assert window_length%2==1, "window length must be an odd number"
     N   = x.shape[0];
     T   = x.shape[1];
     w   = window_length;

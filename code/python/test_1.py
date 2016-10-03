@@ -30,7 +30,7 @@ from datetime import datetime
 from time import sleep
 from math import sqrt
 from tasks import SE3Task, CoMTask, JointPostureTask
-from trajectories import ConstantSE3Trajectory, ConstantNdTrajectory, SmoothedNdTrajectory
+from trajectories import ConstantSE3Trajectory, ConstantNdTrajectory, SmoothedNdTrajectory, SmoothedSE3Trajectory
 
 from multi_contact_stability_criterion_utils import compute_com_acceleration_polytope, compute_GIWC
 
@@ -41,6 +41,13 @@ def createListOfMatrices(listSize, matrixSize):
     for i in range(listSize):
         l[i] = np.matlib.zeros(matrixSize);
     return l;
+
+def createListOfLists(size1, size2):
+    l = size1*[None,];
+    for i in range(size1):
+        l[i] = size2*[None,];
+    return l;
+    
 
 def createInvDynFormUtil(q, v):
     invDynForm = InvDynFormulation('hrp2_inv_dyn'+datetime.now().strftime('%m%d_%H%M%S'), 
@@ -61,13 +68,17 @@ def createInvDynFormUtil(q, v):
     
     return invDynForm;
     
-def updateConstraints(t, i, q, v, invDynForm, contactJointNames, P, N):
+def updateConstraints(t, i, q, v, invDynForm, contactJointNames, P, N, ee_tasks):
     contact_changed = False;
     
     for active_constr in invDynForm.rigidContactConstraints:
         if(active_constr.name not in contactJointNames):
             invDynForm.removeUnilateralContactConstraint(active_constr.name);
-            print "Removing constraint", active_constr.name;
+            
+            ee_task = [e for e in ee_tasks if e.name==active_constr.name][0];
+            invDynForm.addTask(ee_task, conf.w_ee);
+            
+            print "Removing constraint and adding task", active_constr.name;
             contact_changed =True;
 
     for name in contactJointNames:
@@ -88,8 +99,8 @@ def updateConstraints(t, i, q, v, invDynForm, contactJointNames, P, N):
 
         i_ee = [j for (j,cn) in enumerate(ee_names) if cn==name][0];
         (ee_pos_des, ee_vel_des, ee_acc_des) = ee_traj[i_ee](t);
-        pos_err = oMi.translation.T-ee_pos_des.T
-        pos_err2 = oMi.translation.T - ee_ref[i_ee][:,int(t/dt)].T
+        pos_err = oMi.translation.T - ee_pos_des.translation.T
+        pos_err2 = oMi.translation.T - ee_ref[i_ee][int(t/dt)].translation.T
         print "Adding contact", name, ", contact vel", invDynForm.r.frameVelocity(fid).vector[conf.constraint_mask].T;        
         print "                    contact position error ", pos_err, "norm %.3f"%norm(pos_err);
         print "                    contact position error2", pos_err2, "norm %.3f"%norm(pos_err2);
@@ -103,7 +114,10 @@ def updateConstraints(t, i, q, v, invDynForm, contactJointNames, P, N):
             Pi = conf.DEFAULT_CONTACT_POINTS;
             Ni = conf.DEFAULT_CONTACT_NORMALS;
         invDynForm.addUnilateralContactConstraint(constr, Pi, Ni, conf.fMin, conf.mu);
-        
+        if(t>0):
+            invDynForm.removeTask(name);
+    return contact_changed;
+    
     
 def createSimulator(q0, v0):
     simulator  = Simulator('hrp2_sim'+datetime.now().strftime('%Y%m%d_%H%M%S')+str(np.random.random()), 
@@ -136,7 +150,7 @@ def startSimulation(q0, v0, solverId):
     t = 0;
     simulator.reset(t, q0, v0, conf.dt);
     for i in range(conf.MAX_TEST_DURATION):        
-        updateConstraints(t, i, simulator.q, simulator.v, invDynForm, contact_names[i], contact_points[i], contact_normals[i]);
+        updateConstraints(t, i, simulator.q, simulator.v, invDynForm, contact_names[i], contact_points[i], contact_normals[i], ee_tasks);
         invDynForm.setNewSensorData(t, simulator.q, simulator.v);
         (G,glb,gub,lb,ub) = invDynForm.createInequalityConstraints();
         m_in = glb.size;
@@ -199,7 +213,7 @@ def startSimulation(q0, v0, solverId):
         ''' CHECK TERMINATION CONDITIONS '''
         ddx_c = invDynForm.Jc * dv[j][:,i] + invDynForm.dJc_v
         constr_viol = ddx_c - invDynForm.ddx_c_des;
-        if(norm(constr_viol)>1e-3):
+        if(norm(constr_viol)>EPS):
             print "Time %.3f Constraint violation:"%(t), norm(constr_viol), ddx_c.T, "!=", invDynForm.ddx_c_des.T;
             print "Joint torques:", torques.T
             return False;
@@ -231,7 +245,6 @@ plot_utils.SHOW_LEGENDS     = conf.SHOW_LEGENDS;
 plot_utils.LINE_ALPHA       = conf.LINE_ALPHA;
 plot_utils.LINE_WIDTH_RED   = conf.LINE_WIDTH_RED;
 plot_utils.LINE_WIDTH_MIN   = conf.LINE_WIDTH_MIN;
-SHOW_CONTACT_POINTS_IN_VIEWER = True;
 
 ''' LOAD INPUT DATA '''
 f = open(conf.INPUT_FILE_NAME, 'rb');
@@ -258,9 +271,9 @@ contact_names   = T*[None,];
 contact_points  = T*[None,];
 contact_normals = T*[None,];
 com_ref = np.matlib.empty((3,T));
-ee_names = data[0]['P'].keys();
+ee_names = data[0]['P'].keys(); # assume at time 0 all end-effectors are in contact
 ee_indexes = [invDynForm.getFrameId(e) for e in ee_names];
-ee_ref        = createListOfMatrices(len(ee_names), (3, conf.MAX_TEST_DURATION));
+ee_ref        = createListOfLists(len(ee_names), conf.MAX_TEST_DURATION);
 for t in range(T):
     q_ref[:,t]   = np.matrix(data[t]['q']).T;
     contact_names[t] = data[t]['P'].keys();
@@ -271,9 +284,9 @@ for t in range(T):
         contact_normals[t][ee] = np.matrix(data[t]['N'][ee]).T;
     robot.forwardKinematics(q_ref[:,t]);
     robot.framesKinematics(q_ref[:,t]);
-    com_ref[:,t] = robot.com(q_ref[:,t]);    
+    com_ref[:,t] = robot.com(q_ref[:,t]);
     for (i,ee) in enumerate(ee_indexes):
-        ee_ref[i][:,t] = robot.framePosition(ee).translation;
+        ee_ref[i][t] = robot.framePosition(ee);
 del data;
 
 ''' CREATE POSTURAL TASK '''   
@@ -285,13 +298,13 @@ invDynForm.addTask(posture_task, conf.w_posture);
 
 ''' CREATE END-EFFECTOR TASKS '''
 ee_traj       = len(ee_names)*[None,];
-ee_task       = len(ee_names)*[None,];
+ee_tasks      = len(ee_names)*[None,];
 for (i,ee) in enumerate(ee_indexes):
-    ee_traj[i] = SmoothedNdTrajectory("ee_traj_"+ee_names[i], ee_ref[i], dt, conf.SMOOTH_FILTER_WINDOW_LENGTH);
-    ee_task[i] = SE3Task(invDynForm.r, ee, ee_traj[i], ee_names[i]);
-    ee_task[i].kp = conf.kp_ee;
-    ee_task[i].kv = conf.kd_ee;
-    ee_task[i].mask(conf.ee_mask);
+    ee_traj[i] = SmoothedSE3Trajectory("ee_traj_"+ee_names[i], ee_ref[i], dt, conf.SMOOTH_FILTER_WINDOW_LENGTH);
+    ee_tasks[i] = SE3Task(invDynForm.r, ee, ee_traj[i], ee_names[i]);
+    ee_tasks[i].kp = conf.kp_ee;
+    ee_tasks[i].kv = conf.kd_ee;
+    ee_tasks[i].mask(conf.ee_mask);
     
 ''' CREATE COM TASK '''
 com_traj  = SmoothedNdTrajectory("com_traj", com_ref, conf.dt, conf.SMOOTH_FILTER_WINDOW_LENGTH);
@@ -300,6 +313,39 @@ com_task.kp = conf.kp_com;
 com_task.kv = conf.kd_com;
 invDynForm.addTask(com_task, conf.w_com);
 
+if(conf.SHOW_FIGURES and conf.PLOT_REF_EE_TRAJ):
+    for (i,ee) in enumerate(ee_indexes):
+        f, ax = plot_utils.create_empty_figure(3, 3);
+        for j in range(3):
+            ax[j,0].plot(ee_traj[i]._x_ref[j, :].A.squeeze());
+            ax[j,0].plot(np.hstack([M.translation for M in ee_ref[i]])[j,:].A.squeeze(), 'r--');
+            ax[j,1].plot(ee_traj[i]._v_ref[j, :].A.squeeze());
+            ax[j,2].plot(ee_traj[i]._a_ref[j, :].A.squeeze());
+        ax[0,0].set_title("Pos "+ee_names[i].replace('_','\_'));
+        ax[0,1].set_title("Vel");
+        ax[0,2].set_title("Acc");
+    plt.show();
+
+if(conf.SHOW_FIGURES and conf.PLOT_REF_COM_TRAJ):
+    for j in range(3):
+        f, ax = plot_utils.create_empty_figure(3, 1);
+        ax[0].plot(com_traj._x_ref[j, :].A.squeeze());
+        ax[1].plot(com_traj._v_ref[j, :].A.squeeze());
+        ax[2].plot(com_traj._a_ref[j, :].A.squeeze());
+        ax[0].plot(com_ref[j, :].A.squeeze(), 'r--');
+        ax[0].set_title("Com " + str(j));
+    plt.show();
+
+if(conf.SHOW_FIGURES and conf.PLOT_REF_JOINT_TRAJ):
+    for j in range(nq-7):
+        f, ax = plot_utils.create_empty_figure(3,1);
+        ax[0].plot(posture_traj._x_ref[j,:].A.squeeze());
+        ax[1].plot(posture_traj._v_ref[j,:].A.squeeze());
+        ax[2].plot(posture_traj._a_ref[j,:].A.squeeze());
+        ax[0].plot(q_ref[7+j,:].A.squeeze(), 'r--');
+        ax[0].set_title("Joint "+str(j));
+    plt.show();
+        
 if(conf.PLAY_REFERENCE_MOTION):
     print "Gonna play reference motion";
     sleep(1);
@@ -343,7 +389,7 @@ for s in conf.SOLVER_TO_INTEGRATE:
 if(conf.PLAY_MOTION_AT_THE_END):
     print "Gonna play computed motion";
     sleep(1);
-    simulator.viewer.play(q[s], dt, 1.0);
+    simulator.viewer.play(q[s], dt, 0.1);
     print "Computed motion finished";
 
 if(conf.SHOW_FIGURES and conf.PLOT_EE_TRAJ):
@@ -366,7 +412,7 @@ if(conf.SHOW_FIGURES and conf.PLOT_EE_TRAJ):
         f, ax = plot_utils.create_empty_figure(3, 3);
         for j in range(3):
             ax[j,0].plot(ee_traj[i]._x_ref[j, :].A.squeeze());
-            ax[j,0].plot(ee_ref[i][j, :].A.squeeze(), 'r--');
+            ax[j,0].plot(np.hstack([M.translation for M in ee_ref[i]])[j,:].A.squeeze(), 'r--');
             ax[j,0].plot(x_ee[i][j, :].A.squeeze(), 'k:');
             ax[j,1].plot(ee_traj[i]._v_ref[j, :].A.squeeze());
             ax[j,1].plot(dx_ee[i][j, :].A.squeeze(), 'k:');

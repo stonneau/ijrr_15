@@ -9,8 +9,8 @@ TEXT_FILE_NAME              = 'results.txt';
 SAVE_DATA                   = True;
 
 ''' INITIAL STATE PARAMETERS '''
-SMOOTH_FILTER_WINDOW_LENGTH = 101;
-MAX_TEST_DURATION           = 2*1000;
+SMOOTH_FILTER_WINDOW_LENGTH = 41;
+MAX_TEST_DURATION           = 400;
 dt                          = 1e-3;
 INPUT_FILE_NAME             = '../data/hyq/hole_hyq_t_var_04f_andrea';
 model_path                  = ["/home/adelpret/repos/20151101_contact_planner_steve/code/data/hyq"];
@@ -19,7 +19,7 @@ freeFlyer                   = True;
 
 ''' CONTROLLER CONFIGURATION '''
 ENABLE_CAPTURE_POINT_LIMITS     = False;
-ENABLE_TORQUE_LIMITS            = True;
+ENABLE_TORQUE_LIMITS            = False;
 ENABLE_FORCE_LIMITS             = True;
 ENABLE_JOINT_LIMITS             = False;
 IMPOSE_POSITION_BOUNDS          = False;
@@ -34,20 +34,21 @@ USE_JOINT_VELOCITY_ESTIMATOR    = False;
 ACCOUNT_FOR_ROTOR_INERTIAS      = True;
 
 # CONTROLLER GAINS
-kp_posture  = 30.0; #1.0;   # proportional gain of postural task
+kp_posture  = 100.0; #1.0;   # proportional gain of postural task
 kd_posture  = 2*sqrt(kp_posture);
 kp_constr   = 200.0;   # constraint proportional feedback gain
 kd_constr   = 2*sqrt(kp_constr);   # constraint derivative feedback gain
 kp_com      = 30.0;
 kd_com      = 2*sqrt(kp_com);
-kp_ee       = 10.0;
+kp_ee       = 100.0;
 kd_ee       = 2*sqrt(kp_ee);
 constraint_mask = np.array([True, True, True, False, False, False]).T;
 ee_mask         = np.array([True, True, True, False, False, False]).T;
 
 # CONTROLLER WEIGTHS
-w_com           = 1;
-w_posture       = 1e-1;  #1e-5;  # weight of postural task
+w_com           = 1e-2;     # weight of the CoM task
+w_ee            = 1;        # weight of the end-effector tasks
+w_posture       = 1e-4;     # weight of postural task
 
 # QP SOLVER PARAMETERS
 maxIter = 300;      # max number of iterations
@@ -63,7 +64,7 @@ fMin = 0.0;					     # minimum normal force
 
 # SIMULATOR PARAMETERS
 FORCE_TORQUE_LIMITS            = False;
-FORCE_JOINT_LIMITS             = True;
+FORCE_JOINT_LIMITS             = False;
 USE_LCP_SOLVER                 = False
 
 ''' STOPPING CRITERIA THRESHOLDS '''
@@ -80,7 +81,10 @@ DT_VIEWER                   = 10*dt;   # timestep used to display motion with vi
 SHOW_FIGURES     = False;
 PLOT_JOINT_TRAJ  = False;
 PLOT_COM_TRAJ    = True;
-PLOT_EE_TRAJ     = False;
+PLOT_EE_TRAJ     = True;
+PLOT_REF_JOINT_TRAJ  = False;
+PLOT_REF_COM_TRAJ    = True;
+PLOT_REF_EE_TRAJ     = False;
 SAVE_FIGURES     = False;
 SHOW_LEGENDS     = True;
 LINE_ALPHA       = 0.7;

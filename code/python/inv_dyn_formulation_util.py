@@ -258,7 +258,7 @@ class InvDynFormulation (object):
                     found=True;
                     break;
             if(found==False):
-                raise ValueError("[InvDynForm] ERROR: contact constraint %s cannot be removed!" % constr_name);
+                raise ValueError("[InvDynForm] ERROR: constraint %s cannot be removed because it does not exist!" % constr_name);
         self.updateInequalityData();
         
         
@@ -277,6 +277,14 @@ class InvDynFormulation (object):
     def addTask(self, task, weight):
         self.tasks        += [task];
         self.task_weights += [weight];
+        
+    def removeTask(self, task_name):
+        for (i,t) in enumerate(self.tasks):
+            if t.name==task_name:
+                del self.tasks[i];
+                del self.task_weights[i];
+                return True;
+        raise ValueError("[InvDynForm] ERROR: task %s cannot be removed because it does not exist!" % task_name);
         
         
     def updateConvexHull(self):
