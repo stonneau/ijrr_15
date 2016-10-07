@@ -11,13 +11,16 @@ if cwd+'/data/config' not in sys.path:
 #import test1_planar as conf
 import conf_hyq_hole as conf
 
-from standard_qp_solver import StandardQpSolver
-from simulator import Simulator
-import viewer_utils
-from inv_dyn_formulation_util import InvDynFormulation
-from constraint_violations import ConstraintViolationType
-import plot_utils
-from geom_utils import plot_inequalities
+from pinocchio_inv_dyn.standard_qp_solver import StandardQpSolver
+from pinocchio_inv_dyn.simulator import Simulator
+import pinocchio_inv_dyn.viewer_utils as viewer_utils
+from pinocchio_inv_dyn.inv_dyn_formulation_util import InvDynFormulation
+from pinocchio_inv_dyn.constraint_violations import ConstraintViolationType
+import pinocchio_inv_dyn.plot_utils as plot_utils
+from pinocchio_inv_dyn.geom_utils import plot_inequalities
+from pinocchio_inv_dyn.tasks import SE3Task, CoMTask, JointPostureTask
+from pinocchio_inv_dyn.trajectories import ConstantSE3Trajectory, ConstantNdTrajectory, SmoothedNdTrajectory, SmoothedSE3Trajectory
+from pinocchio_inv_dyn.multi_contact_stability_criterion_utils import compute_com_acceleration_polytope, compute_GIWC
 
 import cProfile
 import pickle
@@ -29,10 +32,6 @@ from datetime import datetime
 #import matplotlib.pyplot as plt
 from time import sleep
 from math import sqrt
-from tasks import SE3Task, CoMTask, JointPostureTask
-from trajectories import ConstantSE3Trajectory, ConstantNdTrajectory, SmoothedNdTrajectory, SmoothedSE3Trajectory
-
-from multi_contact_stability_criterion_utils import compute_com_acceleration_polytope, compute_GIWC
 
 EPS = 1e-4;
 
@@ -247,6 +246,7 @@ plot_utils.LINE_WIDTH_RED   = conf.LINE_WIDTH_RED;
 plot_utils.LINE_WIDTH_MIN   = conf.LINE_WIDTH_MIN;
 
 ''' LOAD INPUT DATA '''
+print "Loading input data from file", conf.INPUT_FILE_NAME;
 f = open(conf.INPUT_FILE_NAME, 'rb');
 data = pickle.load(f);
 if(conf.MAX_TEST_DURATION<=0 or conf.MAX_TEST_DURATION>len(data)):
@@ -254,6 +254,8 @@ if(conf.MAX_TEST_DURATION<=0 or conf.MAX_TEST_DURATION>len(data)):
 elif(len(data)>conf.MAX_TEST_DURATION):
     data = data[:conf.MAX_TEST_DURATION];
 T = len(data);
+print "Max duration of the simulation in time steps", T;
+
 
 ''' CREATE CONTROLLER AND SIMULATOR '''
 q0 = np.matrix(data[0]['q']).T;
@@ -348,8 +350,9 @@ if(conf.SHOW_FIGURES and conf.PLOT_REF_JOINT_TRAJ):
         
 if(conf.PLAY_REFERENCE_MOTION):
     print "Gonna play reference motion";
-    sleep(1);
+    q_ref[2,:] -= 0.03;
     simulator.viewer.play(q_ref, dt, 0.3);
+    q_ref[2,:] += 0.03;
     print "Reference motion finished";
     sleep(1);
 

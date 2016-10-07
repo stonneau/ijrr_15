@@ -60,7 +60,7 @@ USE_INPUT_CONTACT_POINTS = True;
 mu  = np.array([0.3, 0.1]);          # force and moment friction coefficient
 fMin = 1e-3;					     # minimum normal force
 
-# SIMULATOR PARAMETERS
+''' SIMULATOR PARAMETERS '''
 FORCE_TORQUE_LIMITS            = False;
 FORCE_JOINT_LIMITS             = True;
 USE_LCP_SOLVER = False
