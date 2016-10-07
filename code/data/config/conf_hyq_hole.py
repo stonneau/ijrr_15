@@ -36,7 +36,7 @@ ACCOUNT_FOR_ROTOR_INERTIAS      = True;
 # CONTROLLER GAINS
 kp_posture  = 30.0; #1.0;   # proportional gain of postural task
 kd_posture  = 2*sqrt(kp_posture);
-kp_constr   = 200.0;   # constraint proportional feedback gain
+kp_constr   = 100.0;   # constraint proportional feedback gain
 kd_constr   = 2*sqrt(kp_constr);   # constraint derivative feedback gain
 kp_com      = 30.0;
 kd_com      = 2*sqrt(kp_com);
@@ -57,8 +57,8 @@ verb=0;             # verbosity level (0, 1, or 2)
 
 # CONTACT PARAMETERS
 USE_INPUT_CONTACT_POINTS = False;
-DEFAULT_CONTACT_POINTS  = np.matrix([0, 0, 0]).T    # contact points in local reference frame
-DEFAULT_CONTACT_NORMALS = np.matrix([0, 0, 1]).T    # contact normals in local reference frame
+DEFAULT_CONTACT_POINTS  = np.matrix([0., 0., 0.]).T    # contact points in local reference frame
+DEFAULT_CONTACT_NORMALS = np.matrix([0., 0., 1.]).T    # contact normals in local reference frame
 mu  = np.array([0.4, 0.1]);          # force and moment friction coefficient
 fMin = 0.0;					     # minimum normal force
 
@@ -69,13 +69,14 @@ USE_LCP_SOLVER                 = False
 
 ''' STOPPING CRITERIA THRESHOLDS '''
 MAX_COM_VELOCITY            = 5;
+MAX_CONSTRAINT_ERROR        = 0.1;
 
 ''' VIEWER PARAMETERS '''
 ENABLE_VIEWER               = True;
 PLAY_MOTION_WHILE_COMPUTING = True;
-PLAY_REFERENCE_MOTION       = True;
-PLAY_MOTION_AT_THE_END      = True;
-DT_VIEWER                   = 10*dt;   # timestep used to display motion with viewer
+PLAY_REFERENCE_MOTION       = False;
+PLAY_MOTION_AT_THE_END      = False;
+DT_VIEWER                   = 1*dt;   # timestep used to display motion with viewer
 
 ''' FIGURE PARAMETERS '''
 SHOW_FIGURES     = False;
