@@ -10,9 +10,11 @@ SAVE_DATA                   = True;
 
 ''' INITIAL STATE PARAMETERS '''
 SMOOTH_FILTER_WINDOW_LENGTH = 41;
-MAX_TEST_DURATION           = 3000;
+MAX_TEST_DURATION           = -1;
 dt                          = 1e-3;
-INPUT_FILE_NAME             = '../data/hyq/hole_04_0_window_andrea_compressed';
+#INPUT_FILE_NAME             = '../data/2016_ijrr_traj/slide_compressed';
+#INPUT_FILE_NAME             = '../data/2016_ijrr_traj/ijrr/ground_0dl_window1_compressed';
+INPUT_FILE_NAME             = '../data/2016_ijrr_traj/ijrr/test_ground_crouch_conservative_cones/ground_0dl_window1_compressed';
 model_path                  = ["/home/adelpret/repos/20151101_contact_planner_steve/code/data/hyq"];
 urdfFileName                = model_path[0] + "/hyq_description/urdf/hyq.urdf";
 freeFlyer                   = True;
@@ -59,7 +61,7 @@ verb=0;             # verbosity level (0, 1, or 2)
 USE_INPUT_CONTACT_POINTS = False;
 DEFAULT_CONTACT_POINTS  = np.matrix([0., 0., 0.]).T    # contact points in local reference frame
 DEFAULT_CONTACT_NORMALS = np.matrix([0., 0., 1.]).T    # contact normals in local reference frame
-mu  = np.array([0.4, 0.1]);          # force and moment friction coefficient
+mu  = np.array([0.33, 0.1]);          # force and moment friction coefficient
 fMin = 0.0;					     # minimum normal force
 
 # SIMULATOR PARAMETERS
@@ -69,23 +71,23 @@ USE_LCP_SOLVER                 = False
 
 ''' STOPPING CRITERIA THRESHOLDS '''
 MAX_COM_VELOCITY            = 5;
-MAX_CONSTRAINT_ERROR        = 0.1;
+MAX_CONSTRAINT_ERROR        = 0.3;
 
 ''' VIEWER PARAMETERS '''
 ENABLE_VIEWER               = True;
 PLAY_MOTION_WHILE_COMPUTING = True;
 PLAY_REFERENCE_MOTION       = False;
-PLAY_MOTION_AT_THE_END      = False;
-DT_VIEWER                   = 1*dt;   # timestep used to display motion with viewer
+PLAY_MOTION_AT_THE_END      = True;
+DT_VIEWER                   = 10*dt;   # timestep used to display motion with viewer
 
 ''' FIGURE PARAMETERS '''
 SHOW_FIGURES     = False;
 PLOT_JOINT_TRAJ  = False;
 PLOT_COM_TRAJ    = True;
 PLOT_EE_TRAJ     = True;
-PLOT_REF_JOINT_TRAJ  = True;
-PLOT_REF_COM_TRAJ    = True;
-PLOT_REF_EE_TRAJ     = True;
+PLOT_REF_JOINT_TRAJ  = False;
+PLOT_REF_COM_TRAJ    = False;
+PLOT_REF_EE_TRAJ     = False;
 SAVE_FIGURES     = False;
 SHOW_LEGENDS     = True;
 LINE_ALPHA       = 0.7;

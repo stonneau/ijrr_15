@@ -20,7 +20,7 @@ import pinocchio_inv_dyn.plot_utils as plot_utils
 from pinocchio_inv_dyn.geom_utils import plot_inequalities
 from pinocchio_inv_dyn.tasks import SE3Task, CoMTask, JointPostureTask
 from pinocchio_inv_dyn.trajectories import ConstantSE3Trajectory, ConstantNdTrajectory, SmoothedNdTrajectory, SmoothedSE3Trajectory
-from pinocchio_inv_dyn.multi_contact_stability_criterion_utils import compute_com_acceleration_polytope, compute_GIWC
+from pinocchio_inv_dyn.multi_contact.utils import compute_com_acceleration_polytope, compute_GIWC
 
 from pinocchio.utils import XYZQUATToSe3
 import cProfile
@@ -114,7 +114,7 @@ def updateConstraints(t, i, q, v, invDynForm, contacts, ee_tasks):
         else:
             Pi = conf.DEFAULT_CONTACT_POINTS;   # contact points is expressed in local frame
             Ni = oMi.rotation.T * conf.DEFAULT_CONTACT_NORMALS; # contact normal is in world frame
-            print "    contact point in world frame:", oMi.act_point(Pi).T, (oMi.rotation * Ni).T;
+            print "    contact point in world frame:", oMi.act(Pi).T, (oMi.rotation * Ni).T;
         invDynForm.addUnilateralContactConstraint(constr, Pi, Ni, conf.fMin, conf.mu);
         if(t>0):
             invDynForm.removeTask(name);
@@ -153,7 +153,7 @@ def startSimulation(q0, v0, solverId):
     contact_switch_index = 0;
     simulator.reset(t, q0, v0, conf.dt);
     for i in range(conf.MAX_TEST_DURATION):        
-        if(contact_switches[contact_switch_index][0]==i):
+        if(len(contact_switches)>contact_switch_index and contact_switches[contact_switch_index][0]==i):
             contacts = contact_switches[contact_switch_index][1];
             updateConstraints(t, i, simulator.q, simulator.v, invDynForm, contacts, ee_tasks);
             contact_switch_index += 1;
@@ -317,7 +317,7 @@ for t in range(T):
             robot.forwardKinematics(q_ref[:,t]);
             robot.framesKinematics(q_ref[:,t]);
             ee_ref[i][t] = robot.framePosition(ee_ind);
-        
+
 del data;
 
 ''' CREATE POSTURAL TASK '''   
@@ -453,7 +453,7 @@ if(conf.SHOW_FIGURES and conf.PLOT_EE_TRAJ):
         ax[0,0].set_title("Pos "+ee_names[i].replace('_','\_'));
         ax[0,1].set_title("Vel");
         ax[0,2].set_title("Acc");
-        plt.show();    
+    plt.show();    
 
 if(conf.SHOW_FIGURES and conf.PLOT_COM_TRAJ):
     for j in range(3):
