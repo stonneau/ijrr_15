@@ -5,10 +5,10 @@ To move, a legged robot is required to sequentially create contacts with the env
 
 Addressing this issue is a pre-requisite to the deployment of robots in human-centered environments, where wheeled robots are not able to navigate. 
 
-To make a legged robot walk on a flat ground, efficient approaches based on the capture point(PRATT) can be used to determine the contact location. Choosing the effector
+To make a legged robot walk on a flat ground, efficient approaches based on the capture point~\citep{Pratt2006} can be used to determine the contact location. Choosing the effector
 to create a contact with is also trivial because walk follows a cyclic pattern.
-Unfortunately, in the general case planning complex contact interactions is extremely challenging.
-At any given time a contact choice must be made between infinitely many possibilities (often a combinatorial discrete choice for the effector, but an infinite choice of locations). Furthermore, the contact manifold is foliated~\citep{simeon-manipulation-04}: a contact choice constrains kinematically and dynamically the possible motions, and there is no analytical way to verify whether this decision brings the robot one step closer to the desired goal or to a dead end, especially in the presence of obstacles. Lastly, the contact manifold has a null measure and is thus impossible to randomly sample because it has a zero measure with respect to the configuration space.
+Unfortunately, in the general case planning complex contact interactions is extremely challenging because the determinism disappears.
+At any given time a contact choice must be made between infinitely many possibilities (often a combinatorial discrete choice for the effector, and an infinite choice for the location). Furthermore, the contact manifold is foliated~\citep{simeon-manipulation-04}: a contact choice constrains kinematically and dynamically the possible motions, and there is no analytical way to verify whether this decision brings the robot one step closer to the desired goal or to a dead end, especially in the presence of obstacles. Lastly, the contact manifold has a null measure and is thus impossible to randomly sample.
 
 
 %~ This makes the simultaneous planning of a center of mass trajectory with a contact sequence tedious.
@@ -31,15 +31,19 @@ At any given time a contact choice must be made between infinitely many possibil
 %~ \item kinematic constraints appear upon contact creation, introducing an infinite foliation of the contact manifold~\citep{simeon-manipulation-04};
 %~ \item in theory, maintaining the balance of the robot requires the simultaneous planning of the root trajectory and the contact locations and timing, which increases even more the search space.
 %~ \end{enumerate}
-Most locomotion systems avoid these issues thanks to simplifying assumptions that reduce the complexity (coplanar contacts, cyclic patterns that are not combinatorial)~\citep{Kajita03a}.
-At the DARPA challenge, instead of using the environment for creating contacts that facilitate motion, the chosen strategies to locomotion planning avoided obstacles as much as possible~\citep{atkensondarpa}. 
+%~ Most locomotion systems avoid these issues thanks to simplifying assumptions that reduce the complexity (coplanar contacts, cyclic patterns that are not combinatorial)~\citep{Kajita03a}.
+For this reason at the DARPA challenge, instead of using the environment for creating contacts that facilitate motion, the chosen strategies fell back to walking patterns, and avoided obstacles as much as possible~\citep{atkensondarpa}, resulting in unsafe behaviors. 
 Previous contributions having demonstrated acyclic contact locomotion have not been used because they are either too computationally expensive~\citep{Bretl:2006:MPM:1124573.1124585} or dynamically inconsistent~\citep{Mordatch:2012:DCB:2185520.2185539}.
 
-
-
-As suggested by \cite{Bouyarmane2009}, contrary to observation 5 we believe trajectory and contact planning can be decoupled. We go further and claim that this can be done at a much smaller cost, provided we can formulate a computationally-efficient condition for \glslink{equilibrium feasible}{\textit{equilibrium feasibility}} of a root configuration (i.e. there exists a joint configuration such that the robot is in static equilibrium).
+In this paper, we propose a pragmatic approach to tackle the complexity of the acyclic contact planning problem. Rather than planning simultaneously in the configuration space the 
+whole-body trajectory and the contact location and timings, we decouple path and contact planning, as suggested by \citeauthor{Bouyarmane2009}.
+We first plan a path for the geometric root of the robot in a low dimensional space. We formulate this space as a computationally-efficient approximation
+of the \textit{equilibrium feasibile} space, that is the space of root configurations for which there exists a joint configuration such that the robot is in static equilibrium.
+We then use a deterministic algorithm 
+%~ We introduce a computationally-efficient condition for \glslink{equilibrium feasible}{\textit{equilibrium feasibility}} of a root configuration (i.e. there exists a joint configuration such that the robot is in static equilibrium).
+%~ We claim that this can be done at a much smaller cost, provided we can formulate a computationally-efficient condition for \glslink{equilibrium feasible}{\textit{equilibrium feasibility}} of a root configuration (i.e. there exists a joint configuration such that the robot is in static equilibrium).
 This paper presents a geometrical approximation of this condition, and a concrete implementation of such a decoupled planner.
-This approximation results from a trade-off between a necessary and a sufficient condition for \glslink{equilibrium feasible}{\textit{equilibrium feasibility}}, allowing us to find solutions extremely rapidly, while preserving a high success rate in the demonstrated scenarios.
+This approximation results from a trade-off between a necessary and a sufficient condition for \textit{equilibrium feasibility}, allowing us to find solutions extremely rapidly, while preserving a high success rate in the demonstrated scenarios.
 
 %~ In the remainder of this introduction, we discuss further the current state of the art. This allows us to situate more precisely our contributions.
 

@@ -12,18 +12,16 @@ SAVE_DATA                   = True;
 SMOOTH_FILTER_WINDOW_LENGTH = 41;
 MAX_TEST_DURATION           = -1;
 dt                          = 1e-3;
-#INPUT_FILE_NAME             = '../data/2016_ijrr_traj/slide_compressed';
-#INPUT_FILE_NAME             = '../data/2016_ijrr_traj/ijrr/ground_0dl_window1_compressed';
-INPUT_FILE_NAME             = '../data/2016_ijrr_traj/ijrr/test_ground_crouch_conservative_cones/ground_0dl_window1_compressed';
-model_path                  = ["/home/adelpret/repos/20151101_contact_planner_steve/code/data/hyq"];
+INPUT_FILE_NAME             = '/home_local/dev/hpp/src/2016_ijrr_traj/ijrr/test_ground_crouch_conservative_cones/ground_0dl_window1_compressed';
+model_path                  = ["/home_local/dev/hpp/install/share"];
 urdfFileName                = model_path[0] + "/hyq_description/urdf/hyq.urdf";
 freeFlyer                   = True;
 
 ''' CONTROLLER CONFIGURATION '''
 ENABLE_CAPTURE_POINT_LIMITS     = False;
-ENABLE_TORQUE_LIMITS            = True;
-ENABLE_FORCE_LIMITS             = True;
-ENABLE_JOINT_LIMITS             = True;
+ENABLE_TORQUE_LIMITS            = True; # param
+ENABLE_FORCE_LIMITS             = True; # param
+ENABLE_JOINT_LIMITS             = True; # param, modulate with 4 next (position viability false, velocity ok)
 IMPOSE_POSITION_BOUNDS          = True;
 IMPOSE_VELOCITY_BOUNDS          = True;
 IMPOSE_VIABILITY_BOUNDS         = True;
