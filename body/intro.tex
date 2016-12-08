@@ -1,20 +1,47 @@
 % !TEX root =  ../main.tex
 
-Planning the locomotion of a multipedal robot in a complex environment - made of stairs, constraining obstacles or uneven surfaces - is still an open issue. Most multipedal locomotion systems focus on cyclic walking gaits \citep{Kajita03a}, but executing this behavior on constraining environments is dangerous if not impossible. In such a context, the robot has to perform a particular class of motion planning called acyclic contact planning, in which the robot must be in contact with the environment at every configuration to maintain the static equilibrium. 
+Planning legged robot locomotion in a complex environment (stairs, constraining obstacles, uneven surfaces \dots) remains an open issue.
+To move, a legged robot is required to sequentially create contacts with the environment while avoiding collisions. Finding such a contact sequence is an instance of the motion planning problem called acyclic contact planning.
 
-The lack of solution to this planning problem has been highlighted by Atkeson \citeauthor{atkensondarpa}. Actually, the current approach to locomotion planning tends to avoid obstacles as much as possible, instead of using them by making contacts to facilitate motion. One main reason is that contact planning is algorithmically difficult, both because of the proximity to obstacles which makes tedious the sampling of collision-free configurations, and because of the foliation of the configuration space where zero-measure manifolds intersect in a combinatorial manner \citep{simeon-manipulation-04}.
+Addressing this issue is a pre-requisite to the deployment of robots in human-centered environments, where wheeled robots are not able to navigate. 
 
-Previous contributions that embrace the combinatorial provide complete approaches, not applicable in practice because they require hours of computations \citep{Bretl:2006:MPM:1124573.1124585}.
-More recent successes use a local solution, resulting in more reasonable computation times (still far from real time), at the cost of dynamically inconsistent behaviors \citep{Mordatch:2012:DCB:2185520.2185539}.
-Neither global nor local methods present satisfying performances, because planning simultaneously the robot trajectory and the contacts that allow
-its execution is a very hard problem. 
+To make a legged robot walk on a flat ground, efficient approaches based on the capture point(PRATT) can be used to determine the contact location. Choosing the effector
+to create a contact with is also trivial because walk follows a cyclic pattern.
+Unfortunately, in the general case planning complex contact interactions is extremely challenging.
+At any given time a contact choice must be made between infinitely many possibilities (often a combinatorial discrete choice for the effector, but an infinite choice of locations). Furthermore, the contact manifold is foliated~\citep{simeon-manipulation-04}: a contact choice constrains kinematically and dynamically the possible motions, and there is no analytical way to verify whether this decision brings the robot one step closer to the desired goal or to a dead end, especially in the presence of obstacles. Lastly, the contact manifold has a null measure and is thus impossible to randomly sample because it has a zero measure with respect to the configuration space.
 
-As suggested by \cite{Bouyarmane2009}, we believe that these two problems can be treated sequentially within a global planner.
-We go further and claim that this can be done at a much smaller cost, provided we can formulate a computationally-efficient condition for \glslink{equilibrium feasible}{\textit{equilibrium feasibility}} of the root configuration (i.e. there exists a joint configuration such that the robot is in static equilibrium).
+
+%~ This makes the simultaneous planning of a center of mass trajectory with a contact sequence tedious.
+
+
+ %~ The contact manifold can be seen as a building with an infinite number of floors and elevators, where each elevator only stops at a subset of the floors. We don't have a map of this building. In this metaphor, the kinematic and dynamic constraints associated with a contact configuration restrict the motion to lie on
+%~ a floor, until an elevator can be reached, to safely transition to another floor (ie a new contact configuration). Exploring efficiently the building to find 
+%~ the sequence of floor paths and elevator transitions is the scientific question to address.
+ %~ Furthermore, because the contact manifold has a zero measure in the configuration space, we can't sample a configuration that lie on a floor.
+
+%~ This contact manifold has a null measure, which makes it impossible to directly sample contact configurations. Even worse, 
+%~ the contact manifold is foliated~\citep{simeon-manipulation-04}: each contact decision creates kinematic and dynamic constraints that must 
+%~ be respected to transition to another state. 
+
+%~ Contact interaction is crucial to maintain equilibrium, though extremely challenging:
+%~ \begin{enumerate}
+%~ \item verifying that a contact allows the motion to be continuously dynamically feasible is computationally expensive; 
+%~ \item the contact manifold has a zero measure (a contact configuration cannot be sampled);
+%~ \item the choice of contacts along the motion (e.g. left or right hand) adds a combinatorial issue, and the set of possible contact locations is infinite; 
+%~ \item kinematic constraints appear upon contact creation, introducing an infinite foliation of the contact manifold~\citep{simeon-manipulation-04};
+%~ \item in theory, maintaining the balance of the robot requires the simultaneous planning of the root trajectory and the contact locations and timing, which increases even more the search space.
+%~ \end{enumerate}
+Most locomotion systems avoid these issues thanks to simplifying assumptions that reduce the complexity (coplanar contacts, cyclic patterns that are not combinatorial)~\citep{Kajita03a}.
+At the DARPA challenge, instead of using the environment for creating contacts that facilitate motion, the chosen strategies to locomotion planning avoided obstacles as much as possible~\citep{atkensondarpa}. 
+Previous contributions having demonstrated acyclic contact locomotion have not been used because they are either too computationally expensive~\citep{Bretl:2006:MPM:1124573.1124585} or dynamically inconsistent~\citep{Mordatch:2012:DCB:2185520.2185539}.
+
+
+
+As suggested by \cite{Bouyarmane2009}, contrary to observation 5 we believe trajectory and contact planning can be decoupled. We go further and claim that this can be done at a much smaller cost, provided we can formulate a computationally-efficient condition for \glslink{equilibrium feasible}{\textit{equilibrium feasibility}} of a root configuration (i.e. there exists a joint configuration such that the robot is in static equilibrium).
 This paper presents a geometrical approximation of this condition, and a concrete implementation of such a decoupled planner.
 This approximation results from a trade-off between a necessary and a sufficient condition for \glslink{equilibrium feasible}{\textit{equilibrium feasibility}}, allowing us to find solutions extremely rapidly, while preserving a high success rate in the demonstrated scenarios.
 
-In the remainder of this introduction, we discuss further the current state of the art. This allows us to situate more precisely our contributions.
+%~ In the remainder of this introduction, we discuss further the current state of the art. This allows us to situate more precisely our contributions.
 
 \subsection{State of the art}
 
