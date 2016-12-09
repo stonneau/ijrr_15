@@ -12,7 +12,7 @@ SAVE_DATA                   = True;
 SMOOTH_FILTER_WINDOW_LENGTH = 41;
 MAX_TEST_DURATION           = -1;
 dt                          = 1e-3;
-INPUT_FILE_NAME             = '/home_local/dev/hpp/src/2016_ijrr_traj/ijrr/test_ground_crouch_conservative_cones/ground_0dl_window1_compressed';
+INPUT_FILE_NAME             = '/home_local/dev/hpp/src/hpp-rbprm-corba/script/scenarios/test35_compressed';
 model_path                  = ["/home_local/dev/hpp/install/share"];
 urdfFileName                = model_path[0] + "/hyq_description/urdf/hyq.urdf";
 freeFlyer                   = True;
@@ -59,7 +59,7 @@ verb=0;             # verbosity level (0, 1, or 2)
 USE_INPUT_CONTACT_POINTS = False;
 DEFAULT_CONTACT_POINTS  = np.matrix([0., 0., 0.]).T    # contact points in local reference frame
 DEFAULT_CONTACT_NORMALS = np.matrix([0., 0., 1.]).T    # contact normals in local reference frame
-mu  = np.array([0.33, 0.1]);          # force and moment friction coefficient
+mu  = np.array([0.6, 0.1]);          # force and moment friction coefficient
 fMin = 0.0;					     # minimum normal force
 
 # SIMULATOR PARAMETERS
