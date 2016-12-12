@@ -357,11 +357,11 @@ thus allowing to consider \gls{interactive} applications.
 
 \subsubsection{Success rates:}
 Table~\ref{tab:requestpercent} summarizes the success rates obtained for each scenario.
-We observe that, as expected, our planner does not succeed systematically, because of the approximations made in our formulation. The extreme situation of the car egress scenario provides the less satisfying results in terms of kinematic failure. This is not
+As expected, our planner does not succeed systematically, because of the approximations made in our formulation. The extreme situation of the car egress scenario provides the less satisfying results in terms of kinematic failure. This is not
 surprising considering the narrowness of the scene.
-From a pragmatic point of view, regarding the computation times, we claim that our approach provides a satisfying compromise between completeness and efficiency.
-Indeed, the advantage of the framework is that when the contact generation fails, it does so rapidly, which allows us to rapidly re-plan a new contact sequence with a reasonable chance of success.
-The most efficient (and immediate) approach is probably to launch in parallel several instances of the planner for a given problem (our current implementation is single threaded) and to apply any successful result.
+\deladp{From a pragmatic point of view, }regarding \deladp{the} computation times, \deladp{we claim that} our approach provides a satisfying compromise between completeness and efficiency.
+Indeed, \deladp{the advantage of the framework is that} when the contact generation fails, it does so rapidly, which allows us to rapidly re-plan \deladp{a new contact sequence} with a reasonable chance of success.
+The most efficient (and immediate) approach is probably to launch in parallel several instances of the planner \deladp{for a given problem} (our current implementation is single threaded) and to apply any successful result.
 
 \begin{table*}
 \centering
