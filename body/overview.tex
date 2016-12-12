@@ -94,7 +94,7 @@ contact generation problem is reduced to the number of degrees of freedom of the
 %In other words, we consider each limb as a manipulator attached to the root. 
 We select from a database of precomputed limb configurations (independent from the environment) the ones resulting in the end-effector being close to the environment.
 Limiting our selection to this set of precomputed configurations allow us to drastically reduce the computation times. 
-Then we select one of these configurations based on user-defined heuristics (Figure~\ref{fig:contact_gen}), which we present in Section~\ref{sec:heuristics}.
+Then we select one of these configurations based on user-defined heuristics (Figure~\ref{fig:contact_gen}), which we present in the Appendix~\ref{sec:heuristics}.
 
 From a given start configuration, the planner proceeds in an iterative fashion along the discretized path: given a new root configuration, an inverse-kinematics solver 
 is used to maintain the contacts that were previously existing. Possibly, some of these contacts cannot be maintained (because of joint limits or collisions).

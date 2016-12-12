@@ -31,7 +31,10 @@
 % To print the list of change use: \listofchanges
 \usepackage{changes}	% use this for the working version
 %\usepackage[final]{changes} % use this for the final version
-%\definechangesauthor[name={Andrea Del Prete}, color=orange]{adp}
+\definechangesauthor[name={Andrea Del Prete}, color=orange]{adp}
+\newcommand{\deladp}[1]{\deleted[id=adp]{#1}}
+\newcommand{\addadp}[1]{\added[id=adp]{#1}}
+\newcommand{\repadp}[2]{\replaced[id=adp]{#1}{#2}}
 
 
 \usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=red,urlcolor=red]{hyperref}
@@ -80,14 +83,17 @@ France.}
 \input{body/overview}
 \input{body/rbprm}
 \input{body/contact}
-\input{body/equilibrium}
-\input{body/efort}
 \input{body/results}
 \input{body/conclusion}
 \section*{Acknowledgements}
 This research is supported by Euroc (project under FP7 Grant Agreement  608849);  Entracte (ANR  grant  agreement  13-CORD-002-01);
 the ARO Contract W911NF-14-1-0437; and the NSF award 1305286. %, and a grant from Boeing.
 %~ \theendnotes
+
+\appendix
+\section*{Appendix}
+\input{body/equilibrium}
+\input{body/efort}
 
 \glsaddall
 \printglossaries
