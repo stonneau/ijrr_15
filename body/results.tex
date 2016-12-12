@@ -3,7 +3,8 @@
 \label{sec:results}
 In this Section we present some of the results obtained with our planner. The complete sequences computed are shown in the companion video.
 Specifically, we demonstrate the planner for two really different robots, in a large variety of environments: the humanoid HRP-2 and the quadruped HyQ.
-For each scenario we indicate the chosen heuristics. We also provide a performance analysis, which shows that the planner is compatible with \gls{interactive} applications,
+%For each scenario we indicate the chosen heuristics. 
+We also provide a performance analysis, which shows that the planner is compatible with \gls{interactive} applications,
 and present the success rates obtained in each scenario. Moreover, we demonstrate the interest of our robustness criterion in the different computed poses.
 Finally, a last example suggests possible applications to dexterous manipulation.
 
@@ -32,7 +33,7 @@ to refer to the previous paper for a discussion on these results.
 In all the scenarios considered, the formulation of the problem is always the same:
 a start and goal root configurations are provided as an input of the scenario.
 The framework computes the initial contact configuration, and outputs a sequence of contact configurations connecting it to the goal.
-In each scenario we detail the parameters chosen: the heuristics, and the constraints on the reachable workspaces (for instance in all the scenarios,
+In each scenario we detail the parameters chosen: the heuristics (either $h_{\textrm{\it EFORT}}$, $h_{vel}$ or $h_{w}$, and optionally the equilibrium robustness, all of which are defined in the Appendix~\ref{sec:heuristics}), and the constraints on the reachable workspaces (for instance in all the scenarios,
 the reachable workspaces of the legs of HRP-2 are always required to intersect with the environment). 
 %~ The companion video presents the complete contact sequence obtained in all these scenarios.
 
