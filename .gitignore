@@ -25,6 +25,8 @@
 *.lbl
 *.pdf
 *.brf
+*.soc
+*.orig
 eg15template.brf
 *~
 *.fuse*

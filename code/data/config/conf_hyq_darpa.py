@@ -12,10 +12,10 @@ SAVE_DATA                   = True;
 SMOOTH_FILTER_WINDOW_LENGTH = 41;
 MAX_TEST_DURATION           = -1;
 dt                          = 1e-3;
-INPUT_FILE_NAME             = '/home_local/dev/hpp/src/2016_ijrr_traj/ground_crouch_ok/test34_compressed';
+INPUT_FILE_NAME             = '/home_local/dev/hpp/src/hpp-rbprm-corba/script/scenarios/test55_compressed';
 model_path                  = ["/home_local/dev/hpp/install/share"];
 urdfFileName                = model_path[0] + "/hyq_description/urdf/hyq.urdf";
-sceneFileName               = model_path[0] + "/hpp-rbprm-corba/meshes/groundcrouch.stl";
+sceneFileName               = model_path[0] + "/hpp-rbprm-corba/meshes/darpareduced.stl";
 freeFlyer                   = True;
 
 ''' CONTROLLER CONFIGURATION '''
@@ -35,7 +35,7 @@ USE_JOINT_VELOCITY_ESTIMATOR    = False;
 ACCOUNT_FOR_ROTOR_INERTIAS      = True;
 
 # CONTROLLER GAINS
-kp_posture  = 15 #30.0; #1.0;   # proportional gain of postural task
+kp_posture  = 30 #15.0; #1.0;   # proportional gain of postural task
 kd_posture  = 2*sqrt(kp_posture);
 kp_constr   = 100.0;   # constraint proportional feedback gain
 kd_constr   = 2*sqrt(kp_constr);   # constraint derivative feedback gain

@@ -10,6 +10,7 @@ if cwd+'/data/config' not in sys.path:
 
 #import test1_planar as conf
 import conf_hyq_hole as conf
+#~ import conf_hyq_bridge as conf
 
 from pinocchio_inv_dyn.standard_qp_solver import StandardQpSolver
 from pinocchio_inv_dyn.simulator import Simulator
@@ -414,9 +415,27 @@ final_time           = np.zeros(N_SOLVERS);
 final_time_step      = np.zeros(N_SOLVERS, np.int);
 controller_balance   = N_SOLVERS*[False,];
 
+''' Cosmetics '''
+gepgui = simulator.viewer.robot.viewer.gui
+simulator.viewer.addMesh("ground",conf.sceneFileName)
+gepgui.setColor('world/ground', [0.8,0.4,0.,1])
+gepgui.applyConfiguration("world/ground",[0,0,0.01,1,0,0,0]); 
+gepgui.setVisibility('world/floor', 'OFF')
+gepgui.refresh()
+
+
 for s in conf.SOLVER_TO_INTEGRATE:
     controller_balance[s] = startSimulation(q0, v0, s);
 #    cProfile.run('startSimulation(q0, v0, s);');
+
+
+gepgui.setVisibility('world/com', 'OFF')
+gepgui.setVisibility('world/cp', 'OFF')
+gepgui.setVisibility('world/lf_foot_joint', 'OFF')
+gepgui.setVisibility('world/rf_foot_joint', 'OFF')
+gepgui.setVisibility('world/lh_foot_joint', 'OFF')
+gepgui.setVisibility('world/rh_foot_joint', 'OFF')
+gepgui.refresh()
 
 if(conf.PLAY_MOTION_AT_THE_END):
     print "Gonna play computed motion";
@@ -477,3 +496,5 @@ if(conf.SHOW_FIGURES and conf.PLOT_JOINT_TRAJ):
         ax[0].plot(q_ref[7+j,:].A.squeeze(), 'r--');
         ax[0].set_title("Joint "+str(j));
         plt.show();
+        
+
