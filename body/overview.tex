@@ -7,8 +7,6 @@ Figure~\ref{fig:framework} illustrates our workflow.
 \Pa and \Pb are addressed in a sequential fashion: we first plan a root guide path with the \textit{reachability condition}, before
 extending it into a sequence of configurations in static equilibrium.
 In this Section we describe this workflow and give some notations used throughout the paper. 
-\delst{Some key concepts are introduced,
-whose definitions can be found in the glossary at the end of this paper.}
 
 %
 \begin{figure*}
@@ -25,50 +23,50 @@ whose definitions can be found in the glossary at the end of this paper.}
 \end{figure*}
 
 \subsection{Computation of a guide path --- \Pa}
-We first consider the problem of planning a root guide path. All root configurations 
-As done by \citeauthor{Bouyarmane2009}, the aim is that 
-%The objective is to compute a path of root configurations that will allow for equilibrium. 
-%A desired requirement is to preserve the completeness of the planner: it should be able to explore any valid guide path, but at the same time, any computed guide path must lead to a sequence of configurations in static equilibrium.
+We first consider the problem of planning a root guide path (Figure~\ref{fig:framework}--$\mathcal{P}_1$).  The dimension of the path is equal to the number of degrees of freedom of the root of the robot.
+As for previous works~\citep{Bouyarmane2009} the path must be \textit{equilibrium feasible}: the root configurations of the path must be extended into full-body static equilibrium configurations. Previous work verify \textit{equilibrium feasibility} by explicitly computing such a joint configuration. 
+We preserve the low dimensionality of the problem by approximating \textit{equilibrium feasibility} with \textit{contact rechability}, illustrated in the following.
+
+An intuitive description of \gls{contact reachable} configurations is ``close, but not too close'': close, because a contact surface must be partially included in the reachable workspace of the robot (represented for the right leg in Figure~\ref{fig:contact_gen}--a) to allow contact creation; not too close, because the robot must avoid collision.
+\textit{Contact reachability} is verified with the \textit{reachability condition}, a geometrical criterion based on this intuitive description (Figure~\ref{fig:reach_cond}).
+More precisely, a root configuration is \textit{contact reachable} if the root scaled by a factor $s \geq 1$ is not in collision, while the reachable workspace is in collision.
+%~ Verifying the \textit{reachability condition} is very efficient in practice.
+To plan a root path, we then use a RRT planner where, instead of checking collision to validate a configuration, we verify the \textit{reachability condition}.
+This is detailed in Section~\ref{rbprm}.
+%~ In Section~\ref{rbprm} we detail how  we define and use the \textit{reachability condition} to compute a guide path with the Reachability-Based RRT (Figure~\ref{fig:framework}---\Pa).
+
 \begin{figure}[t]
 \centering
-  \begin{overpic}[width=1\linewidth]{figures/2D_feas}
-		\put (15,) {$C_{Equil}^0$      $\subset$} 
-		\put (47,) {$C_{Contact}^0$ $\approx$ } 
-		\put (76,) {$C_{Reach}^0$} 
-		%~ \put (5,27) {3.b)} 
-		%~ \put (37,27) {4.a)} 
-		%~ \put (68,27) {4.b)} 
+  \begin{overpic}[width=0.8\linewidth]{figures/reachability_cond}
 	\end{overpic}
-\caption{Illustration of several root configurations sets used in this paper in a 2D scene. Obstacles are violet, and units are in meters. To show the sets in a 2D representation, all the rotational joints of HRP-2 are locked in the shown configuration, such that a torso configuration
-is only described by two positional parameters (x and y). The root of the robot is indicated with a black cross. To compute the reachable workspace, the point on the ankle indicated by a green cross was used. $C_{Equil}^0$ is included in $C_{Contact}^0$. $C_{Reach}^0$ approximates $C_{Contact}^0$. Depending on a parametrization, we can obtain $C_{Contact}^0 \subset C_{Reach}^0$. Considering the configurations around the top obstacle, we can observe a dramatic
-divergence between  $C_{Equil}^0$  and $C_{Contact}^0$ when the problem is not \textit{\gls{cluttered}}.}
-		   \label{fig:dedefeas}
+\caption{The reachability condition is verified by the right configuration: the trunk (red) is free of collisions while the limbs reachable workspace (green) intersect the environment.}
+		   \label{fig:reach_cond}
 \end{figure}
+
+
+
 %
-Ideally we would like to sample root configurations that are \gls{equilibrium feasible}. A root configuration is \gls{equilibrium feasible} if and only if there exists at least one joint configuration such that:
-\begin{description}
-\item[C1]: the robot is not in collision with the environment, 
-%~ \item[C2] has at least one end-effector in contact with the environment, 
-\item[C2]: the robot is in static equilibrium. 
-\end{description}
-Verifying C2 is computationally expensive because it requires the projection of the whole-body configuration into a contact posture, as well as the resolution of a linear program to compute the contact forces~\citep{Prete2016}.
-For this reason, we are interested in finding an approximation of the \glslink{equilibrium feasible}{\textit{equilibrium feasibility}} that is computationally efficient.
-A requirement for C2 is the condition:
-\begin{description}
-\item[C3]: at least one end-effector is in contact with the environment.
-\end{description}
-C1 and C3 define \glslink{contact reachable}{\textit{contact reachability}}, which is easier to verify than \glslink{equilibrium feasible}{\textit{equilibrium feasibility}} because it does not require the computation of contact forces.
-We make the assumption that for the \textit{\gls{cluttered} contact planning problem}, most of the times \gls{contact reachable} root configurations are also \gls{equilibrium feasible}.
-For this reason we neglect C2 during the resolution of $\mathcal{P}_1$, and we consider it only when solving \Pb.
-However, even verifying \glslink{contact reachable}{\textit{contact reachability}} is computationally too expensive because it requires the projection of the whole-body configuration into a contact posture.
-
-An intuitive description of \gls{contact reachable} configurations is ``close, but not too close'': close, because a contact surface must be partially included in the reachable workspace of the robot (represented for the right leg in Figure~\ref{fig:contact_gen}--a); not too close, because the robot must avoid collision.
-We approximate \glslink{contact reachable}{\textit{contact reachability}} with the \textit{reachability condition}, a geometrical criterion based on this intuitive description.
-More precisely, a root configuration is \textit{reachable} if the root scaled by a factor $s \geq 1$ is not in collision, while the reachable workspace is in collision with the environment.
-Verifying the \textit{reachability condition} is very efficient in practice.
-In Section~\ref{rbprm} we detail how  we define and use the \textit{reachability condition} to compute a guide path with the Reachability-Based RRT (Figure~\ref{fig:framework}---\Pa).
-
-Figure~\ref{fig:dedefeas} gives an insight into the difference between the three conditions, depicting $C_{Equil}^0$, $C_{Contact}^0$ and $C_{Reach}^0$, which are the sets of \gls{equilibrium feasible}, \gls{contact reachable} and \textit{reachable} root configurations, respectively.
+%~ Ideally we would like to sample root configurations that are \gls{equilibrium feasible}. A root configuration is \gls{equilibrium feasible} if and only if there exists at least one joint configuration such that:
+%~ \begin{description}
+%~ \item[C1]: the robot is not in collision with the environment, 
+%~ \item[C2]: the robot is in static equilibrium. 
+%~ \end{description}
+%~ Verifying C2 is computationally expensive because it requires the projection of the whole-body configuration into a contact posture, as well as the resolution of a linear program to compute the contact forces~\citep{Prete2016}.
+%~ For this reason, we are interested in finding an approximation of the \glslink{equilibrium feasible}{\textit{equilibrium feasibility}} that is computationally efficient.
+%~ A requirement for C2 is the condition:
+%~ \begin{description}
+%~ \item[C3]: at least one end-effector is in contact with the environment.
+%~ \end{description}
+%~ C1 and C3 define \glslink{contact reachable}{\textit{contact reachability}}, which is easier to verify than \glslink{equilibrium feasible}{\textit{equilibrium feasibility}} because it does not require the computation of contact forces.
+%~ We make the assumption that for the \textit{\gls{cluttered} contact planning problem}, most of the times \gls{contact reachable} root configurations are also \gls{equilibrium feasible}.
+%~ For this reason we neglect C2 during the resolution of $\mathcal{P}_1$, and we consider it only when solving \Pb.
+%~ However, even verifying \glslink{contact reachable}{\textit{contact reachability}} is computationally too expensive because it requires the projection of the whole-body configuration into a contact posture.
+%~ 
+%~ An intuitive description of \gls{contact reachable} configurations is ``close, but not too close'': close, because a contact surface must be partially included in the reachable workspace of the robot (represented for the right leg in Figure~\ref{fig:contact_gen}--a); not too close, because the robot must avoid collision.
+%~ We approximate \glslink{contact reachable}{\textit{contact reachability}} with the \textit{reachability condition}, a geometrical criterion based on this intuitive description.
+%~ More precisely, a root configuration is \textit{reachable} if the root scaled by a factor $s \geq 1$ is not in collision, while the reachable workspace is in collision with the environment.
+%~ Verifying the \textit{reachability condition} is very efficient in practice.
+%~ In Section~\ref{rbprm} we detail how  we define and use the \textit{reachability condition} to compute a guide path with the Reachability-Based RRT (Figure~\ref{fig:framework}---\Pa).
 
 In the remainder of this paper, we use the terms \gls{contact reachable} and \gls{equilibrium feasible} to qualify either a root configuration, a whole-body configuration, or a set
 of such configurations.
@@ -76,19 +74,27 @@ of such configurations.
 
 \subsection{Generating a discrete sequence of contact configurations --- \Pb}
 
-The second stage extends the guide path into a sequence of contact configurations (Figure~\ref{fig:framework}--\Pb).
-With a fixed root position, the dimensionality of the 
-contact generation problem is reduced to the number of degrees of freedom of the considered limb. 
-%In other words, we consider each limb as a manipulator attached to the root. 
-We select from a database of precomputed limb configurations (independent from the environment) the ones resulting in the end-effector being close to the environment.
-Limiting our selection to this set of precomputed configurations allow us to drastically reduce the computation times. 
-Then we select one of these configurations based on user-defined heuristics (Figure~\ref{fig:contact_gen}), which we present in the Appendix~\ref{sec:heuristics}.
+The second stage extends the guide path into a sequence of contact configurations (Figure~\ref{fig:framework}--$\mathcal{P}_2$).
+To achieve this the root path is first decomposed into a sequence of discrete root configurations, according to a user-defined discretization step.
+Each root configuration is then extended into a whole-body configuration, subject to three constraints:
+\begin{itemize} 
+\item At most one contact is not maintained (\textit{broken}) between two consecutive configurations.
+\item Each configuration is in static equilibrium.
+\item Each configuration is collision-free.
+\end{itemize} 
 
-From a given start configuration, the planner proceeds in an iterative fashion along the discretized path: given a new root configuration, an inverse-kinematics solver 
-is used to maintain the contacts that were previously existing. Possibly, some of these contacts cannot be maintained (because of joint limits or collisions).
-Then the contacts are broken. Conversely, new contacts are created to ensure the static equilibrium of the robot.
-The algorithm is designed so that only one contact can be created or broken between two successive configurations. While it does not provide guarantees that the interpolation between two configurations is achievable, it appears empirically as a reasonable heuristic.
-Details are presented in Section~\ref{sec:contact}. 
+The algorithm thus proceeds iteratively, starting from the whole-body initial configuration of the robot.
+
+The algorithm takes advantage of the fact that each root configuration is fixed to generate the contact by considering each limb individually. Candidate limb configurations are selected from a database (independent from the environment) those resulting in the end-effector being close to the environment.
+Then we select one of these configurations based on user-defined heuristics (Figure~\ref{fig:contact_gen}), detailed in Appendix~\ref{sec:heuristics}.
+
+The details of the contact sequence generation are given in Section~\ref{sec:contact}. 
+
+%~ From a given start configuration, the planner proceeds in an iterative fashion along the discretized path: given a new root configuration, an inverse-kinematics solver 
+%~ is used to maintain the contacts that were previously existing. Possibly, some of these contacts cannot be maintained (because of joint limits or collisions).
+%~ Then the contacts are broken. Conversely, new contacts are created to ensure the static equilibrium of the robot.
+%~ The algorithm is designed so that only one contact can be created or broken between two successive configurations. While it does not provide guarantees that the interpolation between two configurations is achievable, it appears empirically as a reasonable heuristic.
+
 
 %~ To create a contact, we consider each limb of the robot as a manipulator arm attached to the root. We store a database of configurations for each manipulator. Figure~\ref{fig:contact_gen} -- 2 presents a few configurations for the right arm of the robot. The configurations in the database which are close to contact are considered (Figure~\ref{fig:contact_gen} -- 2 and 3). Among the candidates, 3 criteria are considered to choose the most relevant: the ideal candidate is free of collision, allows to maintain static balance if necessary, and  contributes to the motion in an optimal way. We call the measure of this contribution task efficiency: it represents the ability the limb has to exert a force compatible with the direction of motion. In Figure~\ref{fig:contact_gen} -- 4, the black arrow represents the direction of motion. Among the candidates, the most relevant to achieve a vertical motion is chosen, and projected on the contact surface using an inverse kinematics solver (Figure~\ref{fig:contact_gen} -- 5). The task efficiency is measured using the Extended FORce Transmission ratio (EFORT), proposed by ~\cite{Tonneau:2014:TEC:2619648.2619652}.
 

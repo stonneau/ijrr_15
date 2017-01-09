@@ -1,4 +1,33 @@
- \section{Discussion and future work} 
+ \section{Discussion} 
+\label{sec:discussion}
+
+\subsection{validity and interest of the approximations}
+
+TODO equilibirum as contact reachability
+
+\begin{figure}[t]
+\centering
+  \begin{overpic}[width=1\linewidth]{figures/2D_feas}
+		\put (15,) {$C_{Equil}^0$      $\subset$} 
+		\put (47,) {$C_{Contact}^0$ $\approx$ } 
+		\put (76,) {$C_{Reach}^0$} 
+	\end{overpic}
+\caption{Illustration of several root configurations sets used in this paper in a 2D scene. Obstacles are violet, and units are in meters. To show the sets in a 2D representation, all the rotational joints of HRP-2 are locked in the shown configuration, such that a torso configuration
+is only described by two positional parameters (x and y). The root of the robot is indicated with a black cross. To compute the reachable workspace, the point on the ankle indicated by a green cross was used. $C_{Equil}^0$ is included in $C_{Contact}^0$. $C_{Reach}^0$ approximates $C_{Contact}^0$. Depending on a parametrization, we can obtain $C_{Contact}^0 \subset C_{Reach}^0$. Considering the configurations around the top obstacle, we can observe a dramatic
+divergence between  $C_{Equil}^0$  and $C_{Contact}^0$ when the problem is not \textit{\gls{cluttered}}.}
+		   \label{fig:dedefeas}
+\end{figure}
+
+Figure~\ref{fig:dedefeas} gives an insight into the difference between the three conditions, depicting $C_{Equil}^0$, $C_{Contact}^0$ and $C_{Reach}^0$, which are the sets of \gls{equilibrium feasible}, \gls{contact reachable} and \textit{reachable} root configurations, respectively.
+
+
+TODO blah regarding contact plan generation, and ignoring the mid contact conf
+The first constraint is less restrictive than the one proposed by \citeauthor{DBLP:conf/iser/EscandeKMG08}, because our method
+allows to break and create one contact 
+
+%~ \subsection{feasibility }
+
+\section{Conclusion} 
 \label{sec:conclusion}
 
 In this paper we consider the \gls{cluttered} contact planning problem, formulated as two sub-problems that we address sequentially.

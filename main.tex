@@ -39,10 +39,11 @@
 \newcommand{\delst}[1]{\deleted[id=st]{#1}}
 \newcommand{\addst}[1]{\added[id=st]{#1}}
 \newcommand{\repst}[2]{\replaced[id=st]{#1}{#2}}
-
+\newcommand{\gls}[1]{\textit{#1}}
+\newcommand{\glslink}[2]{{#2}}
 
 \usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=red,urlcolor=red]{hyperref}
-\usepackage{glossaries}
+%~ \usepackage{glossaries}
 
 \newcommand\BibTeX{{\rmfamily B\kern-.05em \textsc{i\kern-.025em b}\kern-.08em
 T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -50,8 +51,8 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \def\volumeyear{2015}
 
 
-\makeglossaries
-\input{body/glossary}
+%~ \makeglossaries
+%~ \input{body/glossary}
 
 \begin{document}
 
@@ -99,8 +100,8 @@ the ARO Contract W911NF-14-1-0437; and the NSF award 1305286. %, and a grant fro
 \input{body/equilibrium}
 \input{body/efort}
 
-\glsaddall
-\printglossaries
+%~ \glsaddall
+%~ \printglossaries
 \bibliographystyle{SageH}
 \bibliography{biblio}
 \appendix
