@@ -2,26 +2,13 @@
 \section{Overview}
 \label{overview}
 
-%~ \begin{table*}
-%~ \centering
-%~ \begin{tabular}{ c | >{\arraybackslash}m{200pt} | c}
-   %~ Robot configuration set &  \centering Definition: $\mathbf{q} \in$ set $\Rightarrow$?  & Root configuration set\\
- %~ \hline
- %~ \hline
-   %~ $C_{contact}$ & $\mathbf{q}$ collision free; at least one end effector in contact. &  $\mathbf{q}^{0} \in C_{contact}^0$ is ``contact feasible''.  \\
- %~ \hline
-   %~ $C_{Equil} \subset C_{contact} $ & $\mathbf{q}$  in static equilibrium &  $\mathbf{q}^{0} \in C_{Equil}^0$ is ``equilibrium feasible''. \\
- %~ \end{tabular}
-%~ \caption{TODO.}
-%~ \label{tab:glossary}
-%~ \quad
-%~ \end{table*}
 
 Figure~\ref{fig:framework} illustrates our workflow.
 \Pa and \Pb are addressed in a sequential fashion: we first plan a root guide path with the \textit{reachability condition}, before
 extending it into a sequence of configurations in static equilibrium.
-In this Section we describe this workflow and give some notations used throughout the paper. Some key concepts are introduced,
-whose definitions can be found in the glossary at the end of this paper.
+In this Section we describe this workflow and give some notations used throughout the paper. 
+\delst{Some key concepts are introduced,
+whose definitions can be found in the glossary at the end of this paper.}
 
 %
 \begin{figure*}
@@ -38,7 +25,8 @@ whose definitions can be found in the glossary at the end of this paper.
 \end{figure*}
 
 \subsection{Computation of a guide path --- \Pa}
-We first consider the problem of planning a root guide path. 
+We first consider the problem of planning a root guide path. All root configurations 
+As done by \citeauthor{Bouyarmane2009}, the aim is that 
 %The objective is to compute a path of root configurations that will allow for equilibrium. 
 %A desired requirement is to preserve the completeness of the planner: it should be able to explore any valid guide path, but at the same time, any computed guide path must lead to a sequence of configurations in static equilibrium.
 \begin{figure}[t]
@@ -69,20 +57,20 @@ A requirement for C2 is the condition:
 \begin{description}
 \item[C3]: at least one end-effector is in contact with the environment.
 \end{description}
-C1 and C3 define \glslink{contact feasible}{\textit{contact feasibility}}, which is easier to verify than \glslink{equilibrium feasible}{\textit{equilibrium feasibility}} because it does not require the computation of contact forces.
-We make the assumption that for the \textit{\gls{cluttered} contact planning problem}, most of the times \gls{contact feasible} root configurations are also \gls{equilibrium feasible}.
+C1 and C3 define \glslink{contact reachable}{\textit{contact reachability}}, which is easier to verify than \glslink{equilibrium feasible}{\textit{equilibrium feasibility}} because it does not require the computation of contact forces.
+We make the assumption that for the \textit{\gls{cluttered} contact planning problem}, most of the times \gls{contact reachable} root configurations are also \gls{equilibrium feasible}.
 For this reason we neglect C2 during the resolution of $\mathcal{P}_1$, and we consider it only when solving \Pb.
-However, even verifying \glslink{contact feasible}{\textit{contact feasibility}} is computationally too expensive because it requires the projection of the whole-body configuration into a contact posture.
+However, even verifying \glslink{contact reachable}{\textit{contact reachability}} is computationally too expensive because it requires the projection of the whole-body configuration into a contact posture.
 
-An intuitive description of \gls{contact feasible} configurations is ``close, but not too close'': close, because a contact surface must be partially included in the reachable workspace of the robot (represented for the right leg in Figure~\ref{fig:contact_gen}--a); not too close, because the robot must avoid collision.
-We approximate \glslink{contact feasible}{\textit{contact feasibility}} with the \textit{reachability condition}, a geometrical criterion based on this intuitive description.
+An intuitive description of \gls{contact reachable} configurations is ``close, but not too close'': close, because a contact surface must be partially included in the reachable workspace of the robot (represented for the right leg in Figure~\ref{fig:contact_gen}--a); not too close, because the robot must avoid collision.
+We approximate \glslink{contact reachable}{\textit{contact reachability}} with the \textit{reachability condition}, a geometrical criterion based on this intuitive description.
 More precisely, a root configuration is \textit{reachable} if the root scaled by a factor $s \geq 1$ is not in collision, while the reachable workspace is in collision with the environment.
 Verifying the \textit{reachability condition} is very efficient in practice.
 In Section~\ref{rbprm} we detail how  we define and use the \textit{reachability condition} to compute a guide path with the Reachability-Based RRT (Figure~\ref{fig:framework}---\Pa).
 
-Figure~\ref{fig:dedefeas} gives an insight into the difference between the three conditions, depicting $C_{Equil}^0$, $C_{Contact}^0$ and $C_{Reach}^0$, which are the sets of \gls{equilibrium feasible}, \gls{contact feasible} and \textit{reachable} root configurations, respectively.
+Figure~\ref{fig:dedefeas} gives an insight into the difference between the three conditions, depicting $C_{Equil}^0$, $C_{Contact}^0$ and $C_{Reach}^0$, which are the sets of \gls{equilibrium feasible}, \gls{contact reachable} and \textit{reachable} root configurations, respectively.
 
-In the remainder of this paper, we use the terms \gls{contact feasible} and \gls{equilibrium feasible} to qualify either a root configuration, a whole-body configuration, or a set
+In the remainder of this paper, we use the terms \gls{contact reachable} and \gls{equilibrium feasible} to qualify either a root configuration, a whole-body configuration, or a set
 of such configurations.
 
 
