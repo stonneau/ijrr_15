@@ -3,6 +3,24 @@
 
 \subsection{validity and interest of the approximations}
 
+Again, we assume that, for \gls{cluttered} problems, most of the times \contactreachability\, implies \equilibriumfeasibility.
+Under this assumption, our goal is to find a \gls{contact reachable} guide path.
+
+To generate such a path efficiently, ideally we need to only sample \gls{contact reachable} root configurations.
+This requires exhibiting a necessary and sufficient condition for \contactreachability. %,that does not need the computation of the whole-body configuration.
+By default, verifying \contactreachability\, implies a constructive demonstration by exhibiting a valid $\mathbf{q}^{\overline{0}}$. This is the approach chosen by \cite{Bouyarmane2009},
+which is too computationally expensive.
+To formulate a cheaper condition, we may turn our attention towards either an only-necessary or an only-sufficient condition.
+
+Only-necessary conditions are appealing because they preserve the completeness of the search, while reducing 
+the search space: they provide an outer approximation of $C_{Contact}^0$.
+On the other hand, only-sufficient conditions provide the guarantee that any configuration that satisfies them is indeed \gls{contact reachable}:
+they provide an inner approximation of $C_{Contact}^0$.
+
+In practice, the only-necessary and only-sufficient conditions that we can provide are trivial and give rather inaccurate approximations of $C_{Contact}^0$.
+Therefore, we propose a compromise between them: the \textit{reachability condition}, which is computationally efficient
+and provides a rather accurate approximation of $C_{Contact}^0$.
+
 TODO equilibirum as contact reachability
 
 \begin{figure}[t]

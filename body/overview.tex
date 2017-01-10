@@ -4,9 +4,8 @@
 
 
 Figure~\ref{fig:framework} illustrates our workflow.
-\Pa and \Pb are addressed in a sequential fashion: we first plan a root guide path with the \textit{reachability condition}, before
+\Pa and \Pb are addressed sequentially: we first plan a root guide path with the \textit{reachability condition}, before
 extending it into a sequence of configurations in static equilibrium.
-In this Section we describe this workflow and give some notations used throughout the paper. 
 
 %
 \begin{figure*}
@@ -107,7 +106,7 @@ The details of the contact sequence generation are given in Section~\ref{sec:con
 \end{figure}
 
 
-\subsection{Notation conventions and definitions} \label{notations}
+\section{Notation conventions and definitions} \label{notations}
 
 A vector  $\mathbf{x}$ is denoted with a bold lower-case letter.
 A matrix $\mathbf{A}$ is denoted with a bold upper-case letter.
@@ -130,23 +129,23 @@ $r$ or $f(\textbf{x})$.
 %~ \end{figure}
 
 \medskip
-\textbf{A robot} is a kinematic chain $R$, that we divide into different parts: a root $R^0$, and $l$ limbs $R^k, 1 \leq k \leq l$, attached to the root.
+\textbf{A robot} is a kinematic chain $R$ composed of: a root $R^0$, and $l$ limbs $R^k, 1 \leq k \leq l$, attached to the root.
 The root has $r \geq 6$ DOFS: for instance, HRP-2 has two extra DOFS in the torso, such that we have $r=8$.
 Therefore $R$ is fully described by a configuration $\mathbf{q} \in  \mathbb{R}^{r+n}$.
-We define some relevant projections of $\mathbf{q}$:
+$\mathbf{q}$ is decomposed as follows:
 \begin{itemize}
-	\item $\mathbf{q}^k$ denotes the configuration (a vector of joint values) of the limb $R^k$; % (Figure~\ref{fig:character});
-	\item $\mathbf{q}^{\overline{k}}$ denotes the vector of joint values of R \textbf{not} related to $R^k$. We define for convenience \mbox{$\mathbf{q}= \mathbf{q}^k \oplus \mathbf{q}^{\overline{k}}$}; %Abusively, we denote by $\mathbf{q}^0 \oplus \mathbf{q}^k$ any configuration respecting $\mathbf{q}^0$ and $\mathbf{q}^k$;
-	\item $\mathbf{q}^{0}\in \mathbb{R}^r$ denotes the world coordinates of the root $R^0$.
+	\item $\mathbf{q}^k$ is a configuration (a vector of joint values) of the limb $R^k$; % (Figure~\ref{fig:character});
+	\item $\mathbf{q}^{\overline{k}}$ is a vector of joint values of R \textbf{not} related to $R^k$. We define for convenience \mbox{$\mathbf{q}= \mathbf{q}^k \oplus \mathbf{q}^{\overline{k}}$}; %Abusively, we denote by $\mathbf{q}^0 \oplus \mathbf{q}^k$ any configuration respecting $\mathbf{q}^0$ and $\mathbf{q}^k$;
+	\item $\mathbf{q}^{0}\in \mathbb{R}^r$ is the world coordinates vector of $R^0$.
 \end{itemize}
 %Finally, $ \mathbf{q}_{start}$ and  $\mathbf{q}_{goal}$ are the start and goal configurations given as an input of our problem.
 
 %\subsubsection{Environment and other volumes} 
 %\label{sec:A}
 \medskip
-The volume encompassing $R^0$ is denoted $W^0$ (Figure~\ref{fig:HyQ_roms}).
+\noindent $W^0$ is a volume encompassing $R^0$ (Figure~\ref{fig:HyQ_roms}). \\
  %~ (Figure~\ref{fig:character}-right: central cylinder). 
- The reachable workspace of a limb $R^k$ is denoted $W^k$: %(Figure~\ref{fig:character}-right: the four ellipses). 
+ $W^k$ is the reachable workspace of a limb $R^k$: %(Figure~\ref{fig:character}-right: the four ellipses). 
 \begin{equation}
   W^k = \left\{ {\mathbf{x} \in \mathbb{R}^3: \exists \, \mathbf{q}^k \in C^k_{jl}, \mathbf{p}^k(\mathbf{q}^k) = \mathbf{x} } \right\}
 \end{equation}
@@ -157,4 +156,17 @@ $W^k(\mathbf{q}^{0})$ (for $1 \leq k \leq l$) as the volume $W^k$ for the root c
 
 \medskip
 \textbf{The environment} $O$ is defined as the union of the obstacles $O_i$ that it contains.
+
+\medskip
+$C_{Contact}$ is the set of whole body-configurations in contact and collision-free.
+
+\medskip
+$C_{Equil} \subset C_{Contact}$ is the set of whole body-configurations in static equilibrium and collision-free.
+
+\medskip
+For any set $C_{X}$, we define $C_{X}^0$:
+\begin{equation*}
+  C_{X}^0 = \left\{ \mathbf{q}^{0},  \exists \mathbf{q}^{\overline{0}}: \mathbf{q}^0  \oplus \mathbf{q}^{\overline{0}} \in C_{X} \right\}
+\end{equation*}
+
 %~ Finally, we define $dist(\mathbf{x}, O)$ as the minimal distance between a point $\mathbf{x}$ and the closest surface of the environment.
