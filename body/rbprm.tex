@@ -3,7 +3,7 @@
 \section{Root path planning in the \textit{contact reachable space}}
 \label{rbprm}
 
-\repadp{During the root path planning}{In the root path planning phase of our framework,} we only consider the root configuration $\mathbf{q}^0$ defined in the previous Section,
+During the root path planning we only consider the root configuration $\mathbf{q}^0$ defined in the previous Section,
 as well as the environment $O$.
 
 Given a start and a goal configurations, we aim at computing a guide path $\mathbf{q}^0(t) : [0,1] \longrightarrow$ $\mathbb{R}^r$ verifying:
@@ -11,7 +11,7 @@ Given a start and a goal configurations, we aim at computing a guide path $\math
 \forall t \in [0,1], \mathbf{q}^0(t)  \in C_{Equil}^0
 \end{equation*}
 This means that any root configuration must be extended into a whole-body, static equilibrium configuration.
-$C_{Equil}^0$  cannot be described analytically\deladp{, because the contact manifold has a zero measure}.
+$C_{Equil}^0$  cannot be described analytically.
 
 The strong hypothesis of this work is that for a large variety of locomotion tasks, we can define a space  $C_{Reach}^0 \simeq C_{Contact}^0$, such that 
 \begin{equation} \label{eq:creach}
@@ -26,7 +26,7 @@ The validity of this hypothesis is discussed in depth in Section~\ref{sec:discus
 The contact reachable workspace is defined as a compromise between two necessary and a sufficient condition for contact creation.
 
 \textbf{necessary conditions:}
-For a contact to be possible, \repadp{an obstacle}{a volume} $O_i \in O$ necessarily intersects the reachable workspace $W(\mathbf{q}^{0})$ of the robot (Figure~\ref{fig:contact_gen}--1). Also the torso of the robot $W^0(\mathbf{q}^{0})$ \repadp{must}{is} necessarily \addadp{be} collision-free.
+For a contact to be possible, an obstacle $O_i \in O$ necessarily intersects the reachable workspace $W(\mathbf{q}^{0})$ of the robot (Figure~\ref{fig:contact_gen}--1). Also the torso of the robot $W^0(\mathbf{q}^{0})$ must necessarily be collision-free.
 Therefore we can define an outer approximation  $ \mathcal{C}^0_{\textrm{\it Nec}} \supset$ $C_{Contact}^0$ as: 
 \begin{equation}
 \mathcal{C}^0_{\textrm{\it Nec}} = \{ \mathbf{q}^0 : W(\mathbf{q}^{0}) \cap O \neq \emptyset \wedge W^0(\mathbf{q}^{0}) \cap O = \emptyset \} % \\ }
@@ -72,14 +72,14 @@ In Appendix~\ref{app:rom}, we give a generic method to compute the $W$ volumes a
 
 \subsection{Computing the guide path in $C_{reach}^0$}
 $C_{Reach}^0$ can be sampled efficiently thanks to Eq.~\ref{eq:reachc}, and can thus be used with a standard motion planner.
-\repadp{The}{Thus, the} only significant change \deladp{regarding a classical planner} is to replace the collision checking with the \textit{reachability condition} \deladp{when verifying
-the drawn configurations and associated local paths}.
+The only significant change is to replace the collision checking with the \textit{reachability condition}.
 
 \delst{However, to improve the sampling efficiency 
 we bias the sampling process to generate near-obstacle configurations, similarly to cite{Amato98choosinggood}.}
 Our current implementation of these modifications is based on the Bi-RRT planner \citep{770022} provided by the HPP software.
 
-\repadp{This Section has}{In this Section we have thus} presented a guide path planner for the geometric root of a robot. This planner is implemented as a low-dimensional sampling-based 
-algorithm. Given start and goal configurations, it outputs a continuous path for the root of the robot. \deladp{Thanks to the \textit{reachability condition}, we assume that for any configuration in the path there exists a joint configuration that results in static equilibrium.}
+This Section has presented a guide path planner for the geometric root of a robot. This planner is implemented as a low-dimensional sampling-based 
+algorithm. Given start and goal configurations, it outputs a continuous path for the root of the robot. 
+%~ \deladp{Thanks to the \textit{reachability condition}, we assume that for any configuration in the path there exists a joint configuration that results in static equilibrium.}
 %~ Thanks to these modifications, the problem of planning a \gls{contact reachable} path is reduced to a geometric collision-checking problem, of low dimension (6 for HyQ, 8 for HRP-2 that has 2 joints in the torso).
 %~ By doing this we can solve the problem with a sampling-based approach, in \gls{interactive} computation times.
