@@ -73,11 +73,12 @@ In Appendix~\ref{app:rom}, we give a generic method to compute the $W$ volumes a
 \subsection{Computing the guide path in $C_{reach}^0$}
 $C_{Reach}^0$ can be sampled efficiently thanks to Eq.~\ref{eq:reachc}, and can thus be used with a standard motion planner.
 The only significant change is to replace the collision checking with the \textit{reachability condition}.
-
-\delst{However, to improve the sampling efficiency 
-we bias the sampling process to generate near-obstacle configurations, similarly to cite{Amato98choosinggood}.}
 Our current implementation of these modifications is based on the Bi-RRT planner \citep{770022} provided by the HPP software.
 
+%~ \delst{However, to improve the sampling efficiency 
+%~ we bias the sampling process to generate near-obstacle configurations, similarly to cite{Amato98choosinggood}.}
+
+\subsubsection*{}
 This Section has presented a guide path planner for the geometric root of a robot. This planner is implemented as a low-dimensional sampling-based 
 algorithm. Given start and goal configurations, it outputs a continuous path for the root of the robot. 
 %~ \deladp{Thanks to the \textit{reachability condition}, we assume that for any configuration in the path there exists a joint configuration that results in static equilibrium.}

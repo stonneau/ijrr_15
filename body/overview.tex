@@ -8,27 +8,15 @@ Figure~\ref{fig:framework} illustrates our workflow.
 extending it into a sequence of configurations in static equilibrium.
 
 %
-\begin{figure*}
-  \centering
-  \begin{overpic}[width=0.8\linewidth]{figures/contact_gen}
-		\put (1,1) {a} 
-		\put (22,1) {b} 
-		\put (42,1) {c} 
-		\put (62,1) {d} 
-		\put (83,1) {e} 
-	\end{overpic}
-  \caption{Generation of a contact configuration for the right leg of HRP-2. (a): Selection of reachable obstacles. (b): Entries of the limb samples database (with $N = 4$). (c): With a proximity query on the octree database, configurations too far from obstacles are eliminated. (d): The best candidate according to a user-defined heuristic $h$ is chosen. (e): The final contact is achieved using inverse kinematics.}
-  \label{fig:contact_gen}
-\end{figure*}
 
 \subsection{Computation of a guide path --- \Pa}
 We first consider the problem of planning a root guide path (Figure~\ref{fig:framework}--$\mathcal{P}_1$).  The dimension of the path is equal to the number of degrees of freedom of the root of the robot.
 Similarly to previous work~\citep{Bouyarmane2009} the path must be \textit{equilibrium feasible}: the root configurations must be extensible into full-body static equilibrium configurations. Previous work verifies \textit{equilibrium feasibility} by explicitly computing such a configuration. 
 We preserve the low dimensionality of the problem by approximating \textit{equilibrium feasibility} with \textit{contact rechability}, illustrated in the following.
 
-An intuitive description of \gls{contact reachable} configurations is ``close, but not too close'' to the environment: close, because a contact surface must be partially included in the reachable workspace of the robot (represented for the right leg in Figure~\ref{fig:contact_gen}--a) to allow contact creation; not too close, because the robot must avoid collision.
+An intuitive description of \gls{contact reachable} configurations is ``close, but not too close'' to the environment: close, because a contact surface must be partially included in the reachable workspace of the robot to allow contact creation; not too close, because the robot must avoid collision.
 %~ \deladp{\textit{Contact reachability} is verified with the \textit{reachability condition}, a geometrical criterion based on this intuitive description (Figure~\ref{fig:reach_cond}).}
-More precisely, a root configuration is \textit{contact reachable} if the root scaled by a user-defined factor $s \geq 1$ is not in collision, while the reachable workspace is in collision.
+More precisely, a root configuration is \textit{contact reachable} if the root scaled by a user-defined factor $s \geq 1$ is not in collision (Figure~\ref{fig:reach_cond} - red shape), while the reachable workspace is in collision (Figure~\ref{fig:reach_cond} - green shapes).
 %~ Verifying the \textit{reachability condition} is very efficient in practice.
 To plan a root path, we then use an RRT planner where, instead of checking collision to validate a configuration, we verify the \textit{reachability condition}.
 This is detailed in Section~\ref{rbprm}.
@@ -75,17 +63,11 @@ of such configurations.
 
 The second stage extends the guide path into a sequence of contact configurations (Figure~\ref{fig:framework}--$\mathcal{P}_2$).
 To achieve this the root path is first decomposed into a sequence of discrete root configurations, according to a user-defined discretization step.
-Each root configuration is then extended into a whole-body configuration, subject to three constraints:
-\begin{itemize} 
-\item At most one contact is not maintained (\textit{broken}) between two consecutive configurations.
-\item Each configuration is in static equilibrium.
-\item Each configuration is collision-free.
-\end{itemize} 
-
+Each root configuration is then extended into a whole-body configuration in static equilibrium.
 The algorithm thus proceeds iteratively, starting from the whole-body initial configuration of the robot.
-
-The algorithm takes advantage of the fact that each root configuration is fixed to generate the contact by considering each limb individually. Candidate limb configurations resulting in the end-effector being close to the environment are selected from a database computed offline independently from the environment).
-Then we select one of these configurations based on user-defined heuristics (Figure~\ref{fig:contact_gen}), detailed in Appendix~\ref{sec:heuristics}.
+It takes advantage of the fact that each root configuration is fixed to generate the contact by considering each limb individually. 
+%~ Candidate limb configurations resulting in the end-effector being close to the environment are selected from a database computed offline independently from the environment).
+%~ Then we select one of these configurations based on user-defined heuristics (Figure~\ref{fig:contact_gen}), detailed in Appendix~\ref{sec:heuristics}.
 
 The details of the contact sequence generation are given in Section~\ref{sec:contact}. 
 
@@ -96,14 +78,6 @@ The details of the contact sequence generation are given in Section~\ref{sec:con
 
 
 %~ To create a contact, we consider each limb of the robot as a manipulator arm attached to the root. We store a database of configurations for each manipulator. Figure~\ref{fig:contact_gen} -- 2 presents a few configurations for the right arm of the robot. The configurations in the database which are close to contact are considered (Figure~\ref{fig:contact_gen} -- 2 and 3). Among the candidates, 3 criteria are considered to choose the most relevant: the ideal candidate is free of collision, allows to maintain static balance if necessary, and  contributes to the motion in an optimal way. We call the measure of this contribution task efficiency: it represents the ability the limb has to exert a force compatible with the direction of motion. In Figure~\ref{fig:contact_gen} -- 4, the black arrow represents the direction of motion. Among the candidates, the most relevant to achieve a vertical motion is chosen, and projected on the contact surface using an inverse kinematics solver (Figure~\ref{fig:contact_gen} -- 5). The task efficiency is measured using the Extended FORce Transmission ratio (EFORT), proposed by ~\cite{Tonneau:2014:TEC:2619648.2619652}.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.95\linewidth]{figures/HyQ_roms}
-  \caption{
-           Reachable workspace and torso bounding box of HyQ. The green shapes represent the reachable workspace $W^k$ of each limb. The red shape is $W^0$.}
-		   \label{fig:HyQ_roms}
-\end{figure}
 
 
 \section{Notation and definitions} \label{notations}
@@ -127,6 +101,7 @@ $r$ or $f(\textbf{x})$.
     %~ Left: Robot in a rest configuration. The right arm is denoted as the limb $R^1$. Each colored dot represents a degree of freedom around an axis. Right: Volumes of the robot. The red geometry denotes $W^0$ and must remain collision-free. The green spheres are the reachable workspace of each limb, the  $W^k$.}
   %~ \label{fig:character}
 %~ \end{figure}
+
 
 \medskip
 \textbf{A robot} is a kinematic chain $R$ composed of: a root $R^0$, and $l$ limbs $R^k, 1 \leq k \leq l$, attached to the root.
@@ -159,6 +134,7 @@ $W^k(\mathbf{q}^{0})$ (for $1 \leq k \leq l$) as the volume $W^k$ for the root c
 
 \medskip
 $C_{Contact}$ is the set of whole body-configurations in contact and collision-free.
+$C_{Contact}^k \subset C_{Contact}$ is the set of whole body-configurations where at least $R^k$ is in contact.
 
 \medskip
 $C_{Equil} \subset C_{Contact}$ is the set of whole body-configurations in static equilibrium and collision-free.
@@ -170,3 +146,10 @@ For any set $C_{X}$, we define $C_{X}^0$:
 \end{equation*}
 
 %~ Finally, we define $dist(\mathbf{x}, O)$ as the minimal distance between a point $\mathbf{x}$ and the closest surface of the environment.
+\begin{figure}
+  \centering
+  \includegraphics[width=0.95\linewidth]{figures/HyQ_roms}
+  \caption{
+           Reachable workspace and torso bounding box of HyQ. The green shapes represent the reachable workspace $W^k$ of each limb. The red shape is $W^0$.}
+		   \label{fig:HyQ_roms}
+\end{figure}

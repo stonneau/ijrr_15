@@ -1,4 +1,6 @@
 % !TEX root =  ../main.tex
+\newcommand{\Pa}{$\mathcal{P}_1$ }
+\newcommand{\Pb}{$\mathcal{P}_2$ }
 
 %~ Planning legged robot locomotion remains an open issue.
 Legged robots move by sequentially creating contacts with the environment.
@@ -26,10 +28,26 @@ This decoupling presents drawbacks and advantages discussed in previous related 
 
 %~ In the remainder of this introduction, we discuss further the current state of the art. This allows us to situate more precisely our contributions.
 
+\begin{figure*}
+  \centering
+  \begin{overpic}[width=0.8\linewidth]{figures/workflow}
+    %~ \put (6.4,1.8) {\normalsize{Request}} 
+    \put (30,10.8) {\large{\color{white}\Pa} }
+    %~ \put (31.6,2) {\scriptsize{\color{white}RB-RRT}} 
+    \put (66.4,10.8) {\large{\color{white}\Pb} }
+    %~ \put (72.5,2) {\tiny{\color{white}Contact}} 
+  \end{overpic}
+  \vspace{-1em}
+  \caption{
+    Overview of our two-stage framework. Given a path request between start and goal positions (left image), \Pa is the problem of computing a guide path in the space
+    of \textit{equilibrium feasible} root configurations. We achieve this by defining a geometric condition, the \textit{reachability condition} (abstracted with the transparent cylinders on the middle image). \Pb is then the problem of extending the path into a discrete sequence of contact configurations using an iterative algorithm (right image).}
+  \label{fig:framework}
+\end{figure*}
+
+
 \subsection{State of the art}
 
-\newcommand{\Pa}{$\mathcal{P}_1$ }
-\newcommand{\Pb}{$\mathcal{P}_2$ }
+
 
 Additionally to robotics, acyclic motion planning is also a problem of interest in neurosciences, biomechanics, and virtual character animation.
 Early contributions in the latter field rely on local adaptation of motion graphs \citep{citeulike:220163}, or ad-hoc construction of locomotion controllers \citep{Pettre:2003:LPD:846276.846313}. These approaches are by definition not able to discover complex behaviors in unforeseen contexts.
@@ -60,23 +78,8 @@ However, recent contributions to the interpolation between contact poses (proble
 Therefore, a planner capable of efficiently solving \Pa and \Pb could outperform all existing planners if coupled with an interpolation method solving $\mathcal{P}_3$.
 The main contribution of this paper is exactly this planner.
 
-\subsection{Contributions}
 
-\begin{figure*}
-  \centering
-  \begin{overpic}[width=0.8\linewidth]{figures/workflow}
-    %~ \put (6.4,1.8) {\normalsize{Request}} 
-    \put (30,10.8) {\large{\color{white}\Pa} }
-    %~ \put (31.6,2) {\scriptsize{\color{white}RB-RRT}} 
-    \put (66.4,10.8) {\large{\color{white}\Pb} }
-    %~ \put (72.5,2) {\tiny{\color{white}Contact}} 
-  \end{overpic}
-  \vspace{-1em}
-  \caption{
-    Overview of our two-stage framework. Given a path request between start and goal positions (left image), \Pa is the problem of computing a guide path in the space
-    of \textit{equilibrium feasible} root configurations. We achieve this by defining a geometric condition, the \textit{reachability condition} (abstracted with the transparent cylinders on the middle image). \Pb is then the problem of extending the path into a discrete sequence of contact configurations using an iterative algorithm (right image).}
-  \label{fig:framework}
-\end{figure*}
+\subsection{Contributions}
 
 Our solution belongs to the class of decoupled approaches, because we believe it is the most promising direction~\citep{DBLP:conf/iser/EscandeKMG08} to break the complexity of acyclic contact planning. Compared to previous approaches, our solution has two main novelties: 
 
