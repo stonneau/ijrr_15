@@ -4,7 +4,7 @@
 
 
 Figure~\ref{fig:framework} illustrates our workflow.
-\Pa and \Pb are addressed sequentially: we first plan a root guide path with the \textit{reachability condition}, before
+\Pa and \Pb are addressed sequentially: we first plan a root guide path \deladp{with the \textit{reachability condition}}, before
 extending it into a sequence of configurations in static equilibrium.
 
 %
@@ -23,14 +23,14 @@ extending it into a sequence of configurations in static equilibrium.
 
 \subsection{Computation of a guide path --- \Pa}
 We first consider the problem of planning a root guide path (Figure~\ref{fig:framework}--$\mathcal{P}_1$).  The dimension of the path is equal to the number of degrees of freedom of the root of the robot.
-As for previous works~\citep{Bouyarmane2009} the path must be \textit{equilibrium feasible}: the root configurations of the path must be extended into full-body static equilibrium configurations. Previous work verify \textit{equilibrium feasibility} by explicitly computing such a joint configuration. 
+\repadp{Similarly to}{As for} previous work~\citep{Bouyarmane2009} the path must be \textit{equilibrium feasible}: the root configurations \deladp{of the path} must be \repadp{extensible}{extended} into full-body static equilibrium configurations. Previous work verifies \textit{equilibrium feasibility} by explicitly computing such a \deladp{joint} configuration. 
 We preserve the low dimensionality of the problem by approximating \textit{equilibrium feasibility} with \textit{contact rechability}, illustrated in the following.
 
-An intuitive description of \gls{contact reachable} configurations is ``close, but not too close'': close, because a contact surface must be partially included in the reachable workspace of the robot (represented for the right leg in Figure~\ref{fig:contact_gen}--a) to allow contact creation; not too close, because the robot must avoid collision.
-\textit{Contact reachability} is verified with the \textit{reachability condition}, a geometrical criterion based on this intuitive description (Figure~\ref{fig:reach_cond}).
-More precisely, a root configuration is \textit{contact reachable} if the root scaled by a factor $s \geq 1$ is not in collision, while the reachable workspace is in collision.
+An intuitive description of \gls{contact reachable} configurations is ``close, but not too close'' \addadp{to the environment}: close, because a contact surface must be partially included in the reachable workspace of the robot (represented for the right leg in Figure~\ref{fig:contact_gen}--a) to allow contact creation; not too close, because the robot must avoid collision.
+\deladp{\textit{Contact reachability} is verified with the \textit{reachability condition}, a geometrical criterion based on this intuitive description (Figure~\ref{fig:reach_cond}).}
+More precisely, a root configuration is \textit{contact reachable} if the root scaled by a \addadp{user-defined} factor $s \geq 1$ is not in collision, while the reachable workspace is in collision.
 %~ Verifying the \textit{reachability condition} is very efficient in practice.
-To plan a root path, we then use a RRT planner where, instead of checking collision to validate a configuration, we verify the \textit{reachability condition}.
+To plan a root path, we then use an RRT planner where, instead of checking collision to validate a configuration, we verify the \textit{reachability condition}.
 This is detailed in Section~\ref{rbprm}.
 %~ In Section~\ref{rbprm} we detail how  we define and use the \textit{reachability condition} to compute a guide path with the Reachability-Based RRT (Figure~\ref{fig:framework}---\Pa).
 
@@ -84,7 +84,7 @@ Each root configuration is then extended into a whole-body configuration, subjec
 
 The algorithm thus proceeds iteratively, starting from the whole-body initial configuration of the robot.
 
-The algorithm takes advantage of the fact that each root configuration is fixed to generate the contact by considering each limb individually. Candidate limb configurations are selected from a database (independent from the environment) those resulting in the end-effector being close to the environment.
+The algorithm takes advantage of the fact that each root configuration is fixed to generate the contact by considering each limb individually. Candidate limb configurations resulting in the end-effector being close to the environment are selected from a database (\repadp{computed offline independently}{independent} from the environment).
 Then we select one of these configurations based on user-defined heuristics (Figure~\ref{fig:contact_gen}), detailed in Appendix~\ref{sec:heuristics}.
 
 The details of the contact sequence generation are given in Section~\ref{sec:contact}. 
@@ -106,7 +106,7 @@ The details of the contact sequence generation are given in Section~\ref{sec:con
 \end{figure}
 
 
-\section{Notation conventions and definitions} \label{notations}
+\section{Notation \deladp{conventions} and definitions} \label{notations}
 
 A vector  $\mathbf{x}$ is denoted with a bold lower-case letter.
 A matrix $\mathbf{A}$ is denoted with a bold upper-case letter.
