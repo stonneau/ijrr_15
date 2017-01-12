@@ -295,16 +295,11 @@ We measured the computation time spent in each aspect of the algorithm, and anal
 \begin{tabular}{ >{\centering\arraybackslash}m{37pt} | >{\centering\arraybackslash}m{57pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{70pt} | >{\centering\arraybackslash}m{73pt} | >{\centering\arraybackslash}m{80pt} | >{\centering\arraybackslash}m{10pt}}
   Scenario (nb steps) &  Complete guide generation (ms) & Static equilibrium (ms) & Collision (ms) & Inverse Kinematics (ms) & Total generation time (ms) & Time per step (ms)\\
  \hline
-   Stairs (18) & 5 -- \textbf{6} --  18 & 13 --  \textbf{32} -- 329   & 1 --  \textbf{4} -- 38 & 26 --  \textbf{127} -- 1345 & 92 --  \textbf{261} -- 2174 & \textbf{15} \\
-   %~ Standing (24)& 4 -- \textbf{451} --  985 & 27 --  \textbf{144} -- 338   & 2 --  \textbf{12} -- 37 & 144 --  \textbf{1046} -- 2374 & 310 --  \textbf{1622} -- 3429 & \textbf{66}  \\
-   Standing (24)& 65 -- \textbf{1086} --  5227 & 27 --  \textbf{144} -- 338   & 2 --  \textbf{12} -- 37 & 144 --  \textbf{1046} -- 2374 & 371 --  \textbf{2257} -- 7671 & \textbf{94}  \\
-   %~ Car (61)& 1 -- \textbf{529} --  995 & 64 --  \textbf{85} -- 144   & 394 --  \textbf{735} -- 1422 & 3947 --  \textbf{13069} -- 36262 & 6775 --  \textbf{20890} -- 52963 & \textbf{342} \\
-   Car TODO (61)& 145 -- \textbf{1055} --  15063 & 64 --  \textbf{85} -- 144   & 394 --  \textbf{735} -- 1422 & 3947 --  \textbf{13069} -- 36262 & 6919 --  \textbf{21416} -- 67031 & \textbf{351} \\
-   %~ Rubble (71)& 3 -- \textbf{524} --  993 & 242 --  \textbf{511} -- 3480   & 233 --  \textbf{505} -- 4564 & 180 --  \textbf{414} -- 3518 & 1400 --  \textbf{3058} -- 13126 & \textbf{43} \\
-   Rubble (71)& 151 -- \textbf{15220} --  125867 & 242 --  \textbf{511} -- 3480   & 233 --  \textbf{505} -- 4564 & 180 --  \textbf{414} -- 3518 & 1548 --  \textbf{18058} -- 13126 & \textbf{254} \\
-   %~ Race (112)& 1 -- \textbf{501} --  995 & 266 --  \textbf{449} -- 3956   & 824 --  \textbf{1061} -- 2130 & 666 --  \textbf{874} -- 1613 & 2530 --  \textbf{3722} -- 10030 & \textbf{33}
-   Race (112)& 267 -- \textbf{966} --  2257 & 266 --  \textbf{449} -- 3956   & 824 --  \textbf{1061} -- 2130 & 666 --  \textbf{874} -- 1613 & 2797 --  \textbf{4187} -- 11292 & \textbf{37}
-   %Standing up & $70$ & 23 & 48\\
+   Stairs (18) 	& 5 -- \textbf{6} --  18 		 & 13 --  \textbf{32} -- 329   	& 1 --  \textbf{4} -- 38 & 26 --  \textbf{127} -- 1345 & 92 --  \textbf{261} -- 2174 & \textbf{15} \\
+   Standing (24)& 65 -- \textbf{1086} --  5227   & 27 --  \textbf{144} -- 338   & 2 --  \textbf{12} -- 37 & 144 --  \textbf{1046} -- 2374 & 371 --  \textbf{2257} -- 7671 & \textbf{94}  \\
+   Car (86)& 320 -- \textbf{6971} --  44002 & 409 --  \textbf{1766} -- 14752   	& 297 -- \textbf{1187} -- 8483 & 3154 --  \textbf{15323} -- 165541 & 5834 --  \textbf{31391} -- 281000 & \textbf{365}\\
+   Rubble (82)& 37 -- \textbf{573} --  1685 & 583 --  \textbf{2714} -- 9459 & 491 --  \textbf{1971} -- 6273 & 269 --  \textbf{706} -- 3118 & 1811 --  \textbf{7195} -- 23241 & \textbf{86} \\
+   Race (134)& 14 -- \textbf{51} --  125 & 455 --  \textbf{1359} -- 21045   & 397 --  \textbf{923} -- 9924 & 228 --  \textbf{471} -- 5415 & 1436 --  \textbf{3343} -- 41446 & \textbf{25}
  \end{tabular}
 \caption{minimum, \textbf{average} and worst time (in ms) spent in the generation process for each scenario and each critical part of the generation process (not all parts are timed,
 thus the average total computation time is higher than the sum of each part). The last
@@ -316,19 +311,35 @@ column indicates the average time necessary to compute one contact transition. }
 
 \begin{table*}
 \centering
-\begin{tabular}{ l | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | c}
-  &  Path planning success rate & Success rate & Kinematic failure & Equilibrium failure \\
+\begin{tabular}{ l | c}
+  &  Path planning success rate \\
  \hline
-   Steep stairs & 100\%  & 99.5\% & 0.1\% & 0.4\% \\
-   Standing up & 68\% & 87.8\% & 6.1\% & 6.1\% \\
-   Car egress TODO & 39\% & 77.0\% & 21.0\% &  2.0\% \\
-   Rubble & 74\% & 97.9\% & 0.1\% & 2.0\% \\
-   Obstacle race TODO & 58.0\% & 95.7\% & 1.8\% & 2.5\% \\
+   Steep stairs     	& 100\% \\
+   Standing up 			& 68\% 	\\
+   Car egress 			& 77\% 	\\
+   Rubble 				& 97\% 	\\
+   Obstacle race        & 88.0\% 	\\
  \end{tabular}
-\caption{ TODO AMBIGUITE POURCENTAGE Success rates for each scenario, rounded to the first decimal. The first value indicates the percentage of successful complete contact plannings for 1000 tests; The second value
-indicates the percentage of equilibrium feasible root configurations: considering each limb individually, indicates the percentage of root configurations of the guide path that
-led to a feasible contact. Kinematic failure is the percentage of contact generations that failed because no collision-free candidate was found. Equilibrium failure is the percentage of contact
-generations that failed because no candidate respected the static equilibrium condition.}
+\caption{ Percentage of successful complete contact planning rates for each scenario, rounded to the first decimal.}
+\label{tab:sucess_planning}
+\quad
+\end{table*}
+
+\begin{table*}
+\centering
+\begin{tabular}{ l | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | c}
+  &  Equilibrium success rate & Kinematic failure & Equilibrium failure \\
+ \hline
+   Steep stairs 	& 99.5\%  & 0.1\% 	& 0.4\% \\
+   Standing up 		& 87.8\%  & 6.1\% 	& 6.1\% \\
+   Car egress 		& 66.2\%  & 15.9\% 	& 17.9\% \\
+   Rubble 			& 97.54\% & 0.16\% 	& 2.3\% \\
+   Obstacle race 	& 92.4\%  & 0.15\% 	& 7.45\% \\
+ \end{tabular}
+\caption{Success rates obtained for the generation of static equilibrium contact configurations for each scenario, rounded to the first decimal. Column 1 indicates 
+indicates the rate of contact generation that suceeeded. In the cases where the generation fails, it can be
+either a kinematic issue (column 2), or because no contact configuration led to a static equilibrium configuration (column 3). Note that a failure in the contact generation
+is not equivalent to a failure of the contact planning algorithm.}
 \label{tab:requestpercent}
 \quad
 \end{table*}
@@ -351,13 +362,17 @@ thus allowing to consider \gls{interactive} applications. This would allow to co
 
 
 \subsubsection{Success rates:}
-Table~\ref{tab:requestpercent} summarizes the success rates obtained for each scenario.
+Table~\ref{tab:sucess_planning} summarizes the successful planning rates obtained for each scenario.
 Despite the complexity of the scenarios adressed, as well as the approximations made in our formulation, our planner succeeds in a large majority of cases.
-As expected, our planner does not succeed systematically, because of the approximations made in our formulation. The extreme situation of the car egress scenario provides the less satisfying results in terms of kinematic failure. This is not
-surprising considering the narrowness of the scene.
-Regarding computation times, our approach provides a satisfying compromise between completeness and efficiency.
+
+Table~\ref{tab:requestpercent} presents, for each scenario, the rate of contact generation that succeeded. Note that a failure in contact generation for a root configuration is not equivalent to a failure in the contact plan. It simply means that another limb was tested for contact generation for the same root configuration.
+As expected, the more constrained scenario, the car egress one, provides the less satisfying results, despite the high success rate of the planner.
+
+These results confirm that our approach provides a satisfying compromise between completeness and efficiency, thus allowing to consider online planning
+while controlling the robot.
 Indeed, when the contact generation fails, it does so rapidly, which allows us to rapidly re-plan with a reasonable chance of success.
-The most efficient (and immediate) approach is probably to launch in parallel several instances of the planner (our current implementation is single threaded) and to apply any successful result.
+The most efficient (and immediate) approach to obtain a valid contact plan as fast as possible is probably to launch in parallel several instances of the planner (our current implementation is single-threaded) and to use any successful result as a plan for solver $\mathcal{P}_3$.
+
 
 %~ \begin{table*}
 %~ \centering
