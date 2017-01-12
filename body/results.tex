@@ -4,10 +4,11 @@
 In this Section we present some of the results obtained with our planner. The complete sequences computed are shown in the companion video.
 Specifically, we demonstrate the planner for two really different robots, in a large variety of environments: the humanoid HRP-2 and the quadruped HyQ.
 Finally, a last example suggests possible applications to dexterous manipulation.
+
 At the end of the video, we validate our contact plans by exhibiting a solution to the interpolation problem $\mathcal{P}_3$ for these scenarios.
 
-At the end of this Section, we provide the \textit{interactive} computation times obtained in each case.
-We also compare the times obtained with HRP-2 with respect to previous demonstrations.
+At the end of this Section, we analyze the influence of the parameters of our framework on the output, and provide the \textit{interactive} computation times obtained in each case.
+We also compare the times obtained with HRP-2 with respect to previous works.
 
 These scenarios complete the ones demonstrated on virtual avatars (Figure~\ref{fig:robots_old}) in our previous ISRR paper~\citep{tonneauisrr15} and video\footnote{\url{http://youtu.be/LmLAHgGQJGA}}.
 %~ (Figure~\ref{fig:robots_old}).
@@ -35,8 +36,8 @@ These scenarios complete the ones demonstrated on virtual avatars (Figure~\ref{f
 In all the scenarios considered, the formulation of the problem is always the same:
 a start and goal root configurations are provided as an input of the scenario.
 The framework computes the initial contact configuration, and outputs a sequence of contact configurations connecting it to the goal.
-In each scenario we detail the parameters chosen: the heuristics (either $h_{\textrm{\it EFORT}}$, $h_{vel}$ or $h_{w}$, and optionally the equilibrium robustness, all of which are defined in the Appendix~\ref{sec:heuristics}), and the constraints on the reachable workspaces (for instance in all the scenarios,
-the reachable workspaces of the legs of HRP-2 are always required to intersect with the environment). 
+In each scenario we detail the contacts involved and the heuristics chosen (either $h_{\textrm{\it EFORT}}$, $h_{vel}$ or $h_{w}$, all of which are defined in the Appendix~\ref{sec:heuristics}).
+ %~ and the constraints on the reachable workspaces (for instance in all the scenarios, the reachable workspaces of the legs of HRP-2 are always required to intersect with the environment). 
 %~ The companion video presents the complete contact sequence obtained in all these scenarios.
 
 % \subsubsection*{Truck egress (Figure~\ref{res_truck_pres} and Figure~\ref{res_truck_bd}) -- Humanoid and insectoid robots.}
@@ -56,34 +57,29 @@ The goal is to climb three 15-cm high steps. This height requires HRP-2 to use a
 \noindent\textbf{Contacts involved:} Feet and right arm.
 
 \noindent\textbf{Heuristics:} The manipulability $h_w$ is chosen for the feet; $h_{\textrm{\it EFORT}}$ is chosen for the right arm.
-Regarding equilibrium, the video demonstrates two sequences computed for two different threshold values of $b_0$: $0$ and $2$ (Figure~\ref{fig:stair_robust}). 
+%~ Regarding equilibrium, the video demonstrates two sequences computed for two different threshold values of $b_0$: $0$ and $2$ (Figure~\ref{fig:stair_robust}). 
 
-\noindent\textbf{Observations:}
-This scenario illustrates best the importance of the equilibrium-robustness criterion.
-With a robust approach, more states are required to reach the last step (15 rather than 13 in average).
-However, when the last step is reached by both feet, in the nonrobust case the contacts are extremely close to 
-the cone limits (Figure~\ref{fig:stair_comp}).
-
-
-The geometry of the environment is easily addressed by our planner, and the contact planning is several times faster than real time in this scenario.
-
-Again, the interpolation motion between the contact steps is out of the scope of this paper. However it should be noted that the computed plan in this scenario has been executed successfully on the robot (\url{http://youtu.be/YjL-DBQgXwk#t=0m28s}).
-
-\begin{figure}
-  \centering
-  %~ \includegraphics[width=0.6\linewidth]{figures/stair_robust}
-  \begin{overpic}[width=0.5\linewidth]{figures/stair_robust}
-		\put (17,5) {\small{\color{red}$b_0 = 0.23$}} 
-		\put (79,5) {\small{\color{green}$b_0 = 6.16$}} 
-		%~ \put (68,) {3.a)} 
-		%~ \put (5,27) {3.b)} 
-		%~ \put (37,27) {4.a)} 
-		%~ \put (68,27) {4.b)} 
-	\end{overpic}
-  \caption{
-           Evaluation of the robustness $b_0$ of two contact configurations. Although in equilibrium, the left configuration is on the verge of slipping.}
-		   \label{fig:stair_comp}
-\end{figure}
+%~ \noindent\textbf{Observations:}
+%~ This scenario illustrates best the importance of the equilibrium-robustness criterion.
+%~ With a robust approach, more states are required to reach the last step (15 rather than 13 in average).
+%~ However, when the last step is reached by both feet, in the nonrobust case the contacts are extremely close to 
+%~ the cone limits (Figure~\ref{fig:stair_comp}).
+%~ 
+%~ 
+%~ The geometry of the environment is easily addressed by our planner, and the contact planning is several times faster than real time in this scenario.
+%~ 
+%~ Again, the interpolation motion between the contact steps is out of the scope of this paper. However it should be noted that the computed plan in this scenario has been executed successfully on the robot (\url{http://youtu.be/YjL-DBQgXwk#t=0m28s}).
+%~ 
+%~ \begin{figure}
+  %~ \centering
+  %~ \begin{overpic}[width=0.5\linewidth]{figures/stair_robust}
+		%~ \put (17,5) {\small{\color{red}$b_0 = 0.23$}} 
+		%~ \put (79,5) {\small{\color{green}$b_0 = 6.16$}} 
+	%~ \end{overpic}
+  %~ \caption{
+           %~ Evaluation of the robustness $b_0$ of two contact configurations. Although in equilibrium, the left configuration is on the verge of slipping.}
+		   %~ \label{fig:stair_comp}
+%~ \end{figure}
 
 \subsubsection{HRP-2 -- Standing up (Figure~\ref{fig:standing}):}
 From a bent configuration, a standing-up motion is computed in a constraining environment.
@@ -102,22 +98,22 @@ The resulting motion involves using a wall as support, and climbing a 25-cm high
 
 \noindent\textbf{Heuristics:} $h_w$ for the feet, $h_{\textrm{\it EFORT}}$  for the hands.
 
-\noindent\textbf{Observations:} The scenario illustrates well the acyclic aspect of the planning. For instance, in the four first frames of Figure~\ref{fig:standing}, we can see that the right foot
-is moved twice, with the left foot in between, before the configuration allows HRP-2 to move its hand.
-Because the contacts are tried in a FIFO manner, the fact that the output contact sequence is acyclic shows that a cyclic approach (with a finite state machine for instance) is not sufficient
-for the computed path. The reason for this is not reachability, but equilibrium. The planning is slower than for the stair scenario (because the contact generation fails more),
-though it remains compatible with \gls{interactive} performances. % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
+%~ \noindent\textbf{Observations:} The scenario illustrates well the acyclic aspect of the planning. For instance, in the four first frames of Figure~\ref{fig:standing}, we can see that the right foot
+%~ is moved twice, with the left foot in between, before the configuration allows HRP-2 to move its hand.
+%~ Because the contacts are tried in a FIFO manner, the fact that the output contact sequence is acyclic shows that a cyclic approach (with a finite state machine for instance) is not sufficient
+%~ for the computed path. The reason for this is not reachability, but equilibrium. The planning is slower than for the stair scenario (because the contact generation fails more),
+%~ though it remains compatible with \gls{interactive} performances. % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
 
 
-\subsubsection{HRP-2 -- Car egress (Figure~\ref{fig:car}):}
+\subsubsection{HRP-2 -- Polaris car egress (Figure~\ref{fig:car}):}
 This scenario is inspired from the Darpa challenge car egress scenario (\url{http://cpc.cx/edH}). HRP-2 has 
-to find the contact sequence that allows it to step out of a car.
+to find the contact sequence that allows it to step out of the Polaris car.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.5\linewidth]{figures/car}
+  \includegraphics[width=1\linewidth]{figures/polaris}
   \caption{
-           Selected frames from the car egress scenario. }
+           Selected frames from the polaris egress scenario. }
 		   \label{fig:car}
 \end{figure}
 
@@ -126,11 +122,10 @@ to find the contact sequence that allows it to step out of a car.
 
 \noindent\textbf{Heuristics:} $h_w$.
 
-\noindent\textbf{Observations:} The difficulty of this scenario lies in the strong reduction of the reachable workspace induced 
-by the extreme proximity of all obstacles. The planner is able to find a sequence, that consists in many steps.
-The proximity of the obstacles invalidate a large number of contact candidates because of collisions. To avoid breaking more than one contact between each step, the motion has to be decomposed into a large number of steps (61 in average).
-While this scenario is the slowest to solve, the planner still computes a solution \glslink{interactive}{interactively}.
- % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
+%~ \noindent\textbf{Observations:} The difficulty of this scenario lies in the strong reduction of the reachable workspace induced 
+%~ by the extreme proximity of all obstacles. The planner is able to find a sequence, that consists in many steps.
+%~ The proximity of the obstacles invalidate a large number of contact candidates because of collisions. To avoid breaking more than one contact between each step, the motion has to be decomposed into a large number of steps (61 in average).
+%~ While this scenario is the slowest to solve, the planner still computes a solution \glslink{interactive}{interactively}.
 
 
 \subsubsection{HyQ -- Darpa-style rubble (Figure~\ref{fig:darpa})}
@@ -149,10 +144,10 @@ The quadruped robot is given the task to cross a rubble composed of bricks rotat
 
 \noindent\textbf{Heuristics:} $h_w$ for all legs. The robustness threshold $b_0$ is set to $20$.
 
-\noindent\textbf{Observations:} In this context, setting up a really important minimum value for $b_0$ is possible due to the high
-stability of the HyQ robot, and results in more contact switches, in exchange for safety. The guide path-planning in this scenario takes a few seconds in average, more than
-in any other scenarios. This is explained by the necessity of discovering a safe way to ``climb down'' the rubble. In this part of the planning, the constraint that the 4 reachable workspaces of all legs must collide with the environment at all times is hard to respect, but enforces the equilibrium of HyQ. %\adnote{Why do not relax this constraint and require only 3 legs?} 
-Again, the computation times remain however \gls{interactive}.
+%~ \noindent\textbf{Observations:} In this context, setting up a really important minimum value for $b_0$ is possible due to the high
+%~ stability of the HyQ robot, and results in more contact switches, in exchange for safety. The guide path-planning in this scenario takes a few seconds in average, more than
+%~ in any other scenarios. This is explained by the necessity of discovering a safe way to ``climb down'' the rubble. In this part of the planning, the constraint that the 4 reachable workspaces of all legs must collide with the environment at all times is hard to respect, but enforces the equilibrium of HyQ. %\adnote{Why do not relax this constraint and require only 3 legs?} 
+%~ Again, the computation times remain however \gls{interactive}.
 
 \subsubsection{HyQ -- Obstacle race (Figure~\ref{fig:HyQ_bridge} and~\ref{fig:HyQ_obs}):}
 In this long scene, HyQ is first required to cross a 55-cm large hole; then, to cross a narrow ``bridge'', only 25-cm large.
@@ -179,12 +174,12 @@ In this long scene, HyQ is first required to cross a 55-cm large hole; then, to 
 
 \noindent\textbf{Heuristics:} $h_w$ for all legs. The robustness threshold $b_0$ is set to $10$.
 
-\noindent\textbf{Observations:} Despite the apparent simplicity of the scene, this scenario is a hard case for a contact planner.
-While finding a guide path above the hole is easy for the guide planner, finding a sequence of contacts that allows for equilibrium is not trivial.
-Second, the narrow bridge is hard both for the planner and the contact generator: to make sure that equilibrium is preserved along the traversal,
-the bridge must be approached with the appropriate angle.
-The difficulty is illustrated in Figure~\ref{fig:HyQ_obs}, where several feet rearrangements are required to cross the hole (although the video shows this best).
-The planner however succeeds in finding a feasible sequence in the end, again with \gls{interactive} computation times.
+%~ \noindent\textbf{Observations:} Despite the apparent simplicity of the scene, this scenario is a hard case for a contact planner.
+%~ While finding a guide path above the hole is easy for the guide planner, finding a sequence of contacts that allows for equilibrium is not trivial.
+%~ Second, the narrow bridge is hard both for the planner and the contact generator: to make sure that equilibrium is preserved along the traversal,
+%~ the bridge must be approached with the appropriate angle.
+%~ The difficulty is illustrated in Figure~\ref{fig:HyQ_obs}, where several feet rearrangements are required to cross the hole (although the video shows this best).
+%~ The planner however succeeds in finding a feasible sequence in the end, again with \gls{interactive} computation times.
 
 \subsubsection{HRP-2 -- Path re-planning (Figure~\ref{fig:re-planning}):}
 In this long scene, HRP-2 plans a path through several obstacles. the scene is edited during the execution of the motion: a stair is added,
@@ -204,8 +199,8 @@ some stepping stones are removed, and part of the final staircase is deleted. Al
 
 \noindent\textbf{Heuristics:} $h_w$  for all legs. $h_{\textrm{\it EFORT}}$  for the right arm. The robustness threshold is set to $2$.
 
-\noindent\textbf{Observations:} This scenario is designed to illustrate concretely the computation times of the planner.
-In the video, the footsteps indicating the contact sequence appear at the average speed of their computation (including the guide-path planning).
+%~ \noindent\textbf{Observations:} This scenario is designed to illustrate concretely the computation times of the planner.
+%~ In the video, the footsteps indicating the contact sequence appear at the average speed of their computation (including the guide-path planning).
 
 
 \subsubsection{3-fingered hand -- Manipulation of a pen (Figure~\ref{fig:penrot}):}
@@ -229,7 +224,9 @@ Although we do not address the hard issue of accounting for rolling motions, the
  
 \subsection{Influence of the parameters} \label{sec:influence}
 This subsection discusses the several factors that influence the outcome of our planner: the root scaling factor $s$, the choice of heuristics for
-contact generation, the desired value of the robustness parameter $b_0$, and lastly, the discretization 
+contact generation, 
+%~ the desired value of the robustness parameter $b_0$, 
+and lastly, the discretization 
 of the guide path.
  
 \subsubsection{Choosing the scaling factor $s$:} \label{sec:params}
@@ -239,11 +236,11 @@ We then computed the rates of false positives (i.e. the configuration satisfies
 the reachability condition, but does not belong to \gls{$C_{Equil}^0$}) and false negatives (i.e. the configuration does not satisfy the 
 reachability condition, but belongs to \gls{$C_{Equil}^0$}).
 
-The obtained results for HRP-2 are summarized in Table~\ref{tab:scale}, averaged over all scenes (except for the car egress: in this scenario, 
+The obtained results for HRP-2 are shown in Table~\ref{tab:scale}, averaged over all scenes (except for the car egress: in this scenario, 
 statistical tests are not really conclusive since we are only interested in a small area of the environment).
 As it can be expected, the scaling results in a high increase of the false negatives, while the false positives decrease.
-For HRP-2 we decided to set $s^*=1.2$, that results in less than 3 \% of false positives, and was also effective
-for the car egress scenario. 
+For HRP-2 we decided to set $s^*=1.2$, which results in less than 3 \% of false positives.
+%~ , and was also effective for the car egress scenario. 
 
 \begin{table}
 \centering
@@ -272,14 +269,14 @@ the generation of the plan, the resulting interpolation on the real robot turned
 For this reason, we prefer to use our manipulability-based heuristic for the legs of the robot, but we still
 use EFORT for the arms, that results in less contact repositioning.
 
-\subsubsection{On the robustness equilibrium criterion:} \label{sec:parrob}
-Robustness is really important when considering practical applications on the robot, to account 
-for the various uncertainties that result from environment and state estimation. However,
-maximizing the robustness criterion is often not optimal, because the resulting configurations may be too conservative, thus not favoring the motion. In our experiments, we choose not to maximize the robustness,
-but to empirically set a robustness threshold value under which a configuration is not considered to be in
-static equilibrium (If no candidate reaches the threshold, instead of failing, the algorithm can eventually return the ``more robust'' configuration
-found). Currently for HRP-2, a threshold value of 2 subjectively gives the best results in the considered scenarios, while 10 seems to be a good choice for HyQ. Both values do not
-significantly slow down the planning times.
+%~ \subsubsection{On the robustness equilibrium criterion:} \label{sec:parrob}
+%~ Robustness is really important when considering practical applications on the robot, to account 
+%~ for the various uncertainties that result from environment and state estimation. However,
+%~ maximizing the robustness criterion is often not optimal, because the resulting configurations may be too conservative, thus not favoring the motion. In our experiments, we choose not to maximize the robustness,
+%~ but to empirically set a robustness threshold value under which a configuration is not considered to be in
+%~ static equilibrium (If no candidate reaches the threshold, instead of failing, the algorithm can eventually return the ``more robust'' configuration
+%~ found). Currently for HRP-2, a threshold value of 2 subjectively gives the best results in the considered scenarios, while 10 seems to be a good choice for HyQ. Both values do not
+%~ significantly slow down the planning times.
 
 \subsubsection{Discretization of the guide path:} \label{sec:disc}
 Currently, to discretize the path, the user defines a fixed step size. The step size
@@ -292,8 +289,7 @@ by reducing the step size when failure occurs.
 
 \subsection{Performance analysis} \label{sec:perf}
 To analyze performance, for each considered scenario, we ran the planner 1000 times.
-We measured the computation time spent in each aspect of the algorithm, and also analyzed the success
-rate obtained for each scenario.
+We measured the computation time spent in each aspect of the algorithm, and analyzed their success rate.
 
 
 \begin{table*}
