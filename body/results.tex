@@ -222,52 +222,49 @@ Although we do not address the hard issue of accounting for rolling motions, the
 \noindent\textbf{Heuristics:} $h_{\textrm{\it EFORT}}$ for all fingers.
  
  
-\subsection{Influence of the parameters} \label{sec:influence}
-This subsection discusses the several factors that influence the outcome of our planner: the root scaling factor $s$, the choice of heuristics for
-contact generation, 
-%~ the desired value of the robustness parameter $b_0$, 
-and lastly, the discretization 
-of the guide path.
+\subsection{Role of the main parameters} \label{sec:influence}
+We discuss the several factors that influence the outcome of our planner: the root scaling factor $s$ (Section~\ref{sec:scaling}), the choice of heuristics for
+contact generation (Appendix~\ref{sec:heuristics}), and lastly, the discretization step for the guide path. The appropriate value for these parameters
+is computed empirically based on statistical analysis or trials and errors.
  
 \subsubsection{Choosing the scaling factor $s$:} \label{sec:params}
 To find a convenient value $s^*$ of $s$, we proceeded as follows. 
 For several values of $s$, we generated $10 000$ configurations. 
-We then computed the rates of false positives (i.e. the configuration satisfies
-the reachability condition, but does not belong to \gls{$C_{Equil}^0$}) and false negatives (i.e. the configuration does not satisfy the 
-reachability condition, but belongs to \gls{$C_{Equil}^0$}).
-
+We then computed the sensitivity of the reachability condition (proportion of configurations in $C_{Reach}^0$, effectively belonging to \gls{$C_{Contact}^0$}).
+Similarly we comuputed the specificity of the condition (proportion of configurations \textbf{not} in $C_{Reach}^0$, effectively \textbf{not} belonging to \gls{$C_{Contact}^0$}).
 The obtained results for HRP-2 are shown in Table~\ref{tab:scale}, averaged over all scenes (except for the car egress: in this scenario, 
 statistical tests are not really conclusive since we are only interested in a small area of the environment).
-As it can be expected, the scaling results in a high increase of the false negatives, while the false positives decrease.
-For HRP-2 we decided to set $s^*=1.2$, which results in less than 3 \% of false positives.
+
+As it can be expected, the scaling results in a high decrease of the sensitivity, with an decrease of the specificity.
+For HRP-2 we decided to set $s^*=1.2$.
 %~ , and was also effective for the car egress scenario. 
 
 \begin{table}
 \centering
 \footnotesize
 \begin{tabular}{c | c | c}
-   Value of $s$ &  False positive & False negative\\
+   Value of $s$ &  Sensitivity & Specificity\\
  \hline
-   1   & 24\% & 0 \%\\
-   1.1& 12\% & 4\% \\
-   1.15& 7\% & 6\%\\
-   1.2 & 3\% & 7.5\%\\
-   1.25& 2\% & 8.3\%\\
-   1.5 & 1\% & 9.5\%\\
+   1   & 76\% & 100 \%\\
+   1.1& 88\% & 96\% \\
+   1.15& 93\% & 94\%\\
+   1.2 & 97\% & 92.5\%\\
+   1.25& 98\% & 91.7\%\\
+   1.5 & 99\% & 90.5\%\\
  \end{tabular}
-\caption{Percentage of true and false positive in the reachability condition, depending on the scaling value of $W^0$.}
+\caption{Sensitivity and specificity values the reachability condition, depending on the scaling value of $W^0$.}
 \label{tab:scale}
 \quad
 \end{table}
 
 \subsubsection{On the choice of heuristics:} \label{sec:heuristichoices}
-In our conference paper, the computed motions were only generated using the EFORT heuristic.
+In our conference paper~\citep{tonneauisrr15}, the computed motions were only generated using the EFORT heuristic.
 EFORT is designed for tasks requiring to exert important forces (such as pushing / pulling / climbing). 
 Regarding locomotion tasks, such as the stair scenario, one issue with EFORT is that it tends to generate
 configurations close to singularities (and joint limits). While this does not significantly impact
 the generation of the plan, the resulting interpolation on the real robot turned out to be harder.
 For this reason, we prefer to use our manipulability-based heuristic for the legs of the robot, but we still
-use EFORT for the arms, that results in less contact repositioning.
+use EFORT for the arms, that results in less contact repositionings.
 
 %~ \subsubsection{On the robustness equilibrium criterion:} \label{sec:parrob}
 %~ Robustness is really important when considering practical applications on the robot, to account 
@@ -279,13 +276,13 @@ use EFORT for the arms, that results in less contact repositioning.
 %~ significantly slow down the planning times.
 
 \subsubsection{Discretization of the guide path:} \label{sec:disc}
-Currently, to discretize the path, the user defines a fixed step size. The step size
+The discretization step is a user-defined, fixed parameter. The step
 has an influence on the output of the planner: if too large steps are taken,
 the planner may fail since we impose the constraint that only one contact change might occur
-between two consecutive steps. For instance, in most scenarios the torso of HRP-2 moves about 15 cm between two postures, but only 3 cm
-for the car egress scenario, where we had to lower the step size because of the many contact breaks induced by the extremely constraining geometry.
-For future work, we would like to automatically adapt the size of the discretization step to the complexity of the planning, for instance
-by reducing the step size when failure occurs.
+between two consecutive steps. On the other hand, a small step will not impact the success rate of the planner, 
+but may generate unnecessary states. In most scenarios the torso of HRP-2 moves about 15 cm between two postures, but only 3 cm
+for the car egress scenario to handle the geometry of the polaris.
+For future work, we would like to automatically adapt the size of the discretization step to the complexity of the environment.
 
 \subsection{Performance analysis} \label{sec:perf}
 To analyze performance, for each considered scenario, we ran the planner 1000 times.
