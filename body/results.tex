@@ -7,7 +7,7 @@ Finally, a last example suggests possible applications to dexterous manipulation
 
 At the end of the video, we validate our contact plans by exhibiting a solution to the interpolation problem $\mathcal{P}_3$ for these scenarios.
 
-At the end of this Section, we analyze the influence of the parameters of our framework on the output, and provide the \textit{interactive} computation times obtained in each case.
+At the end of this Section, we discuss the role of the parameters of our framework on the output. We then provide the \textit{interactive} computation times obtained in each case.
 We also compare the times obtained with HRP-2 with respect to previous works.
 
 These scenarios complete the ones demonstrated on virtual avatars (Figure~\ref{fig:robots_old}) in our previous ISRR paper~\citep{tonneauisrr15} and video\footnote{\url{http://youtu.be/LmLAHgGQJGA}}.
@@ -265,7 +265,7 @@ In our conference paper, the computed motions were only generated using the EFOR
 EFORT is designed for tasks requiring to exert important forces (such as pushing / pulling / climbing). 
 Regarding locomotion tasks, such as the stair scenario, one issue with EFORT is that it tends to generate
 configurations close to singularities (and joint limits). While this does not significantly impact
-the generation of the plan, the resulting interpolation on the real robot turned out to be harder \citep{Carpentier2016}.
+the generation of the plan, the resulting interpolation on the real robot turned out to be harder.
 For this reason, we prefer to use our manipulability-based heuristic for the legs of the robot, but we still
 use EFORT for the arms, that results in less contact repositioning.
 
@@ -302,7 +302,7 @@ We measured the computation time spent in each aspect of the algorithm, and anal
    %~ Standing (24)& 4 -- \textbf{451} --  985 & 27 --  \textbf{144} -- 338   & 2 --  \textbf{12} -- 37 & 144 --  \textbf{1046} -- 2374 & 310 --  \textbf{1622} -- 3429 & \textbf{66}  \\
    Standing (24)& 65 -- \textbf{1086} --  5227 & 27 --  \textbf{144} -- 338   & 2 --  \textbf{12} -- 37 & 144 --  \textbf{1046} -- 2374 & 371 --  \textbf{2257} -- 7671 & \textbf{94}  \\
    %~ Car (61)& 1 -- \textbf{529} --  995 & 64 --  \textbf{85} -- 144   & 394 --  \textbf{735} -- 1422 & 3947 --  \textbf{13069} -- 36262 & 6775 --  \textbf{20890} -- 52963 & \textbf{342} \\
-   Car (61)& 145 -- \textbf{1055} --  15063 & 64 --  \textbf{85} -- 144   & 394 --  \textbf{735} -- 1422 & 3947 --  \textbf{13069} -- 36262 & 6919 --  \textbf{21416} -- 67031 & \textbf{351} \\
+   Car TODO (61)& 145 -- \textbf{1055} --  15063 & 64 --  \textbf{85} -- 144   & 394 --  \textbf{735} -- 1422 & 3947 --  \textbf{13069} -- 36262 & 6919 --  \textbf{21416} -- 67031 & \textbf{351} \\
    %~ Rubble (71)& 3 -- \textbf{524} --  993 & 242 --  \textbf{511} -- 3480   & 233 --  \textbf{505} -- 4564 & 180 --  \textbf{414} -- 3518 & 1400 --  \textbf{3058} -- 13126 & \textbf{43} \\
    Rubble (71)& 151 -- \textbf{15220} --  125867 & 242 --  \textbf{511} -- 3480   & 233 --  \textbf{505} -- 4564 & 180 --  \textbf{414} -- 3518 & 1548 --  \textbf{18058} -- 13126 & \textbf{254} \\
    %~ Race (112)& 1 -- \textbf{501} --  995 & 266 --  \textbf{449} -- 3956   & 824 --  \textbf{1061} -- 2130 & 666 --  \textbf{874} -- 1613 & 2530 --  \textbf{3722} -- 10030 & \textbf{33}
@@ -320,15 +320,15 @@ column indicates the average time necessary to compute one contact transition. }
 \begin{table*}
 \centering
 \begin{tabular}{ l | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | c}
-  &  Path planning & Equilibrium feasibility & Kinematic failure & Equilibrium failure \\
+  &  Path planning success rate & Success rate & Kinematic failure & Equilibrium failure \\
  \hline
    Steep stairs & 100\%  & 99.5\% & 0.1\% & 0.4\% \\
    Standing up & 68\% & 87.8\% & 6.1\% & 6.1\% \\
-   Car egress & 39\% & 77.0\% & 21.0\% &  2.0\% \\
+   Car egress TODO & 39\% & 77.0\% & 21.0\% &  2.0\% \\
    Rubble & 74\% & 97.9\% & 0.1\% & 2.0\% \\
-   Obstacle race & 58.0\% & 95.7\% & 1.8\% & 2.5\% \\
+   Obstacle race TODO & 58.0\% & 95.7\% & 1.8\% & 2.5\% \\
  \end{tabular}
-\caption{Success rates for each scenario, rounded to the first decimal. The first value indicates the percentage of successful complete contact plannings for 1000 tests; The second value
+\caption{ TODO AMBIGUITE POURCENTAGE Success rates for each scenario, rounded to the first decimal. The first value indicates the percentage of successful complete contact plannings for 1000 tests; The second value
 indicates the percentage of equilibrium feasible root configurations: considering each limb individually, indicates the percentage of root configurations of the guide path that
 led to a feasible contact. Kinematic failure is the percentage of contact generations that failed because no collision-free candidate was found. Equilibrium failure is the percentage of contact
 generations that failed because no candidate respected the static equilibrium condition.}
@@ -342,7 +342,7 @@ Table~\ref{tab:requestime} summarizes the performance measurements obtained, in 
 Considering the repartition of the computation time, for HRP-2, most of the time is spent performing inverse kinematics.
 This is not surprising considering the number of calls to the methods: IK projection is used intensively to maintain contact continuity between two postures; 
 it is also applied every time a new candidate needs to be evaluated. In particular for the car egress scenario,
-the kinematic constraints are very demanding. Therefore a large number of projections fail because of joint-limit violations.
+the kinematic constraints are very demanding to avoid collisions.
 
 For HyQ, there is a more uniform repartition of the times for the rubble scenario. For the obstacle scenario,
 we observe a large increase of the time spent performing collision checking and inverse kinematics. This is explained
@@ -350,16 +350,44 @@ by the complexity of crossing the bridge: the robot has to stand high and create
 the bridge is narrow. In many cases this results in collisions, thus a large number of contacts have to be evaluated.
 
 In all scenarios, one can observe that the average computation time for one single step is largely below one second,
-thus allowing to consider \gls{interactive} applications. 
+thus allowing to consider \gls{interactive} applications. This would allow to consider online autonomous planning of the robot motion.
 
 
 \subsubsection{Success rates:}
 Table~\ref{tab:requestpercent} summarizes the success rates obtained for each scenario.
+Despite the complexity of the scenarios adressed, as well as the approximations made in our formulation, our planner succeeds in a large majority of cases.
 As expected, our planner does not succeed systematically, because of the approximations made in our formulation. The extreme situation of the car egress scenario provides the less satisfying results in terms of kinematic failure. This is not
 surprising considering the narrowness of the scene.
-\deladp{From a pragmatic point of view, }regarding \deladp{the} computation times, \deladp{we claim that} our approach provides a satisfying compromise between completeness and efficiency.
-Indeed, \deladp{the advantage of the framework is that} when the contact generation fails, it does so rapidly, which allows us to rapidly re-plan \deladp{a new contact sequence} with a reasonable chance of success.
-The most efficient (and immediate) approach is probably to launch in parallel several instances of the planner \deladp{for a given problem} (our current implementation is single threaded) and to apply any successful result.
+Regarding computation times, our approach provides a satisfying compromise between completeness and efficiency.
+Indeed, when the contact generation fails, it does so rapidly, which allows us to rapidly re-plan with a reasonable chance of success.
+The most efficient (and immediate) approach is probably to launch in parallel several instances of the planner (our current implementation is single threaded) and to apply any successful result.
+
+%~ \begin{table*}
+%~ \centering
+%~ \begin{tabular}{ c | c | c | c | c }
+ %~ Scenario & Method  & Guide Path & Contact sequence & Interpolation \\
+ %~ \hline
+   %~ \multirow{3}{*}{Stair 20 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{\cellcolor{blue!25}5.42 min}  \\
+							 %~ & \textbf{Ours} + \citeauthor{Carpentier2016}  & \textbf{5 ms} & $\mathbf{<}$ \textbf{18 ms} & $ <$ 2s \\
+							 %~ & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{\cellcolor{blue!25}2 to 10 min} \\
+ %~ \hline
+   %~ \multirow{3}{*}{Stair 30 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{\cellcolor{blue!25}4.08 min}  \\
+							 %~ & \textbf{Ours}  & \textbf{5 ms} & $\mathbf{<}$ \textbf{18 ms} & X \\
+							 %~ & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{\cellcolor{blue!25}2 to 10 min} \\
+ %~ \hline
+   %~ \multirow{3}{*}{Stair 40 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{\cellcolor{blue!25}10.08 min}  \\
+							 %~ & \textbf{Ours}  & \textbf{5 s} & \textbf{3 s} & X \\
+							 %~ & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{\cellcolor{blue!25}2 to 10 min} \\
+ %~ \hline
+   %~ \multirow{2}{*}{Table (car) egress} & \citeauthor{Bouyarmane2009, DBLP:conf/iser/EscandeKMG08} & 10 min & \multicolumn{2}{c}{\cellcolor{blue!25}3.5 hours}  \\
+							 %~ & \textbf{Ours}  & \textbf{529 ms} & \textbf{$<$ 22 s} & X \\
+ %~ \end{tabular}
+%~ \caption{Comparison between the computation times obtained by our method and previous ones, for each phase of the planning. Blue cells indicate merged times (because no
+%~ precise time information is available). The X symbol indicates scenarios where we did not address the interpolation of the contact sequence.}
+%~ \label{tab:compprev}
+%~ \quad
+%~ \end{table*}
+
 
 \begin{table*}
 \centering
@@ -377,25 +405,29 @@ The most efficient (and immediate) approach is probably to launch in parallel se
    \multirow{3}{*}{Stair 40 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{\cellcolor{blue!25}10.08 min}  \\
 							 & \textbf{Ours}  & \textbf{5 s} & \textbf{3 s} & X \\
 							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{\cellcolor{blue!25}2 to 10 min} \\
- \hline
-   \multirow{2}{*}{Table (car) egress} & \citeauthor{Bouyarmane2009, DBLP:conf/iser/EscandeKMG08} & 10 min & \multicolumn{2}{c}{\cellcolor{blue!25}3.5 hours}  \\
-							 & \textbf{Ours}  & \textbf{529 ms} & \textbf{$<$ 22 s} & X \\
+ %~ \hline
+   %~ \multirow{2}{*}{Table (car) egress} & \citeauthor{Bouyarmane2009, DBLP:conf/iser/EscandeKMG08} & 10 min & \multicolumn{2}{c}{\cellcolor{blue!25}3.5 hours}  \\
+							 %~ & \textbf{Ours}  & \textbf{529 ms} & \textbf{$<$ 22 s} & X \\
  \end{tabular}
 \caption{Comparison between the computation times obtained by our method and previous ones, for each phase of the planning. Blue cells indicate merged times (because no
 precise time information is available). The X symbol indicates scenarios where we did not address the interpolation of the contact sequence.}
 \label{tab:compprev}
 \quad
 \end{table*}
-\subsection{Comparison with previous work} \label{sec:compa}
-Comparing our method with others is not trivial. Indeed, we focus on the contact planning aspect of the problem, and do not address
-the interpolation in this paper, nor provide a strong guarantee that our sequences can be interpolated.
-Most papers in the literature only provide the overall computation
-time, without specifying how much is spent in each phase. Moreover, there exists no off-the-shelf implementation
-of the related methods. Due to their complexity, we cannot afford the development resources required to reimplement them.
 
-Furthermore, the interpolation itself is not completely solved. For instance in \cite{DBLP:conf/iser/EscandeKMG08}, the end-effector trajectories are computed automatically with splines, but are manually corrected if they enter in collision. In \citep{Mordatch:2012:DCB:2185520.2185539}, internal joint collisions can occur in the resulting motion.
+\subsection{Validation of the contact plans, and comparison with previous work} \label{sec:compa}
+To validate our plans, we had to implement our own interpolation method to address $\mathcal{P}_3$.
+We refer the curious reader to \citep{Carpentier2016} for the implementation details of our method. 
+This motion is in turn validated in our dynamic simulator~\citep{DelPrete2015b}. The stair climbing scenario was validated on the real HRP-2 robot \citep{Carpentier2016}.
+The obtained motions are available in the video.
+
+Few contributions provided computation times on the complete problem, necessary to provide comparison between our approaches. 
+Furthermore, $\mathcal{P}_3$ is an open problem in the presence of obstacles. For instance in \cite{DBLP:conf/iser/EscandeKMG08}, the end-effector trajectories are computed automatically with splines, but are manually corrected if they enter in collision. In \citep{Mordatch:2012:DCB:2185520.2185539}, internal joint collisions can occur in the resulting motion.
 Recent methods suffer from similar issues \citep{Carpentier2016}.
+The only valid scenarios addressed completely and automatically in previous works are thus the stair climbing scenarios with HRP-2 
+To compare our approach with previous contributions, we considered those that addressed the complete problem, and selected scenarios similar to ours, thus focusing on the HRP-2 robot.
 
+Table~\ref{tab:compprev} presents the results we obtained 
 
 Nonetheless, we indicate in Table~\ref{tab:compprev} what is actually computed by each method and in how much time.
 We compare motions obtained in previous works with HRP-2 (or a humanoid avatar) with ours.

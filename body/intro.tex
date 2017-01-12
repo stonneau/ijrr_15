@@ -36,6 +36,9 @@ This decoupling presents drawbacks and advantages discussed in previous related 
     %~ \put (31.6,2) {\scriptsize{\color{white}RB-RRT}} 
     \put (66.4,10.8) {\large{\color{white}\Pb} }
     %~ \put (72.5,2) {\tiny{\color{white}Contact}} 
+	\put (15,1) {a} 
+	\put (50,1) {b} 
+	\put (85,1) {c} 
   \end{overpic}
   \vspace{-1em}
   \caption{
@@ -91,7 +94,11 @@ directly the contact manifold, but an approximation of the \textit{contact reach
 This sequential approach is the key to the efficiency of our method, though it
 can result in failures. However, we demonstrate empirically its interest: the high success rate, combined with the low computation times, allow us to plan (and re-plan upon failure) multi-contact sequences at \gls{interactive} rates.
 
-Finally, to further demonstrate the validity of our approach, we show that the generated contact plans  can be successfully executed (problem  $\mathcal{P}_3$), either in simulation or on the real HRP-2 robot. For HRP-2, we detail the complete computation times to address sequentially the three problems, and compare them to related work, demonstrating that our method is order of magnitude faster.
+To further demonstrate the validity of our approach, we show that the generated contact plans  can be successfully executed (problem  $\mathcal{P}_3$), either in simulation or on the real HRP-2 robot. For HRP-2, we detail the complete computation times to address sequentially the three problems, and compare them to related work, demonstrating that our method is orders of magnitude faster.
+
+Finally, we provide an extensive discussion on the consequences of our approach in terms of efficiency and completeness regarding the contact planning problem. 
+
+
 
 
 %

@@ -4,8 +4,9 @@
 
 
 Figure~\ref{fig:framework} illustrates our workflow.
-\Pa and \Pb are addressed sequentially: we first plan a root guide path, before
-extending it into a sequence of configurations in static equilibrium.
+\Pa and \Pb are addressed sequentially: From a given problem (a) we first plan a root guide path (b), before
+extending it into a sequence of static equilibrium configurations(c). In the case where step c fails,
+our framework invalidates the computed guide path, and restarts the planning from b.
 
 %
 
@@ -59,8 +60,6 @@ In the remainder of this paper, we use the terms \gls{contact reachable} and \gl
 of such configurations.
 
 
-\subsection{Generating a discrete sequence of contact configurations --- \Pb}
-
 The second stage extends the guide path into a sequence of contact configurations (Figure~\ref{fig:framework}--$\mathcal{P}_2$).
 To achieve this the root path is first decomposed into a sequence of discrete root configurations, according to a user-defined discretization step.
 Each root configuration is then extended into a whole-body configuration in static equilibrium.
@@ -78,6 +77,8 @@ The details of the contact sequence generation are given in Section~\ref{sec:con
 
 
 %~ To create a contact, we consider each limb of the robot as a manipulator arm attached to the root. We store a database of configurations for each manipulator. Figure~\ref{fig:contact_gen} -- 2 presents a few configurations for the right arm of the robot. The configurations in the database which are close to contact are considered (Figure~\ref{fig:contact_gen} -- 2 and 3). Among the candidates, 3 criteria are considered to choose the most relevant: the ideal candidate is free of collision, allows to maintain static balance if necessary, and  contributes to the motion in an optimal way. We call the measure of this contribution task efficiency: it represents the ability the limb has to exert a force compatible with the direction of motion. In Figure~\ref{fig:contact_gen} -- 4, the black arrow represents the direction of motion. Among the candidates, the most relevant to achieve a vertical motion is chosen, and projected on the contact surface using an inverse kinematics solver (Figure~\ref{fig:contact_gen} -- 5). The task efficiency is measured using the Extended FORce Transmission ratio (EFORT), proposed by ~\cite{Tonneau:2014:TEC:2619648.2619652}.
+
+\subsection{Generating a discrete sequence of contact configurations --- \Pb}
 
 
 \section{Notation and definitions} \label{notations}
@@ -133,6 +134,7 @@ $W^k(\mathbf{q}^{0})$ (for $1 \leq k \leq l$) as the volume $W^k$ for the root c
 \textbf{The environment} $O$ is defined as the union of the obstacles $O_i$ that it contains.
 
 \medskip
+Finally we define some relevant of the configuration space $C$.
 $C_{Contact}$ is the set of whole body-configurations in contact and collision-free.
 $C_{Contact}^k \subset C_{Contact}$ is the set of whole body-configurations where at least $R^k$ is in contact.
 

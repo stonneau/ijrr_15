@@ -17,7 +17,7 @@ a contact generator, used to generate static equilibrium configurations. We firs
 %~ Our criterion to assert efficiently the static equilibrium of the system
 %~ is described in Appendix~\ref{sec:heuristics}.
 
-\subsection{\repadp{Contact}{Definition of a contact} generator}
+\subsection{Contact generator}
 \label{sec:single_contact}
 
 \begin{figure*}
@@ -34,14 +34,14 @@ a contact generator, used to generate static equilibrium configurations. We firs
 \end{figure*}
 
 
-\repadp{The contact generation treats each limb $R^k$ independently.}{A contact generator is defined for a given limb $R^k$, and only affects the DoFs of $R^k$.}
-Given a \repadp{configuration of the root and the other limbs}{robot configuration}, it computes a configuration $\mathbf{q}^k$ such that $R^k$ is in contact and the robot $R$ is in static equilibrium:
+The contact generation treats each limb $R^k$ independently.
+Given a configuration of the root and the other limbs, it computes a configuration $\mathbf{q}^k$ such that $R^k$ is in contact and the robot $R$ is in static equilibrium:
 \begin{equation}
 \label{eq:contact_gen}
 	\mathbf{q}^{\overline{k}}  \longrightarrow \mathbf{q}^k, (\mathbf{q}^{k} \oplus \mathbf{q}^{\overline{k}}) \in  C_{Equil} \wedge \mathbf{q}^k \in  C_{Contact}^k 
 \end{equation}
 
-Contact generation is typically adressed by randomly sampling a limb configuration, before projecting the \deladp{considered} effector onto the closest surface with an inverse kinematics solver.
+Contact generation is typically adressed by randomly sampling a limb configuration, before projecting the effector onto the closest surface with an inverse kinematics solver.
 This process is repeated until either a solution for Eq.~\ref{eq:contact_gen} is found, or the generator fails, according to a user-defined maximum number of trials.
 We favor a modified implementation of this naive approach, more computationally efficient, introduced in our previous work~\citep{Tonneau2014}.
 
@@ -77,7 +77,7 @@ We then apply the following steps:
 %~ Regarding convergence, it is immediate to verify that as $N$ grows, the probability of finding a solution if it exists converges to 1.
 %~ $N$ is a parameter that allows us to specify the trade-off between exhaustiveness and efficiency.
 The reader is invited to refer to our previous work for an extensive discussion on the benefits of this approach, and the optimal choice 
-of the \repadp{parameter $N$}{$N$ parameter}~\citep{Tonneau2014}. Our criterion to assert efficiently the static equilibrium of the robot, as well as the heuristics $h$ \deladp{used} are detailed in Appendix~\ref{sec:heuristics}.
+of the parameter $N$~\citep{Tonneau2014}. Our criterion to assert efficiently the static equilibrium of the robot, as well as the heuristics $h$ are detailed in Appendix~\ref{sec:heuristics}.
 
 %~ It should be noted that a failure case for our contact generator does not necessarily mean that the planner will globally fail. Indeed,
 %~ for a given root configuration, if contact configurations are found for other limbs, resulting in static equilibrium, the configuration will be accepted despite
@@ -98,7 +98,7 @@ where $\mathbf{q}^0_{0}$ and $\mathbf{q}^0_{j-1}$ are the start and goal configu
 Each root configuration of $\mathbf{Q}^0$ is then extended into a whole-body configuration such that:
 \begin{itemize} 
 \item At most one contact is not maintained (\textit{broken}) between two consecutive configurations.
-\item \addadp{At most one contact is added between two consecutive configurations.} 
+\item At most one contact is added between two consecutive configurations.
 \item Each configuration is in static equilibrium.
 \item Each configuration is collision-free.
 \end{itemize} 
@@ -132,7 +132,7 @@ If kinematically possible, a limb in contact at step $i-1$ remains in contact at
 %~ The contact is broken if an inverse-kinematics solver fails to find a collision-free limb configuration that satisfies joint limits. 
 %~ The solver is directly provided by the HPP software.
 Otherwise the contact is broken and a collision-free configuration is assigned to the limb.
-If two or more contacts \repadp{cannot be maintained between two consecutive configurations}{are broken in a single step}, one or more intermediate \repadp{configurations}{steps} are added.
+If two or more contacts can't be maintained between two consecutive configurations, one or more intermediate configurations are added.
 %~ For these steps the root configuration is the same as for the previous step, with the difference that
 %~ one faulty contact is repositioned, in the hope that it will not be broken at the next step.
 
@@ -148,7 +148,7 @@ If two or more contacts \repadp{cannot be maintained between two consecutive con
 		%~ \put (37,27) {4.a)} 
 		%~ \put (68,27) {4.b)} 
 	\end{overpic}
-\caption{Contacts are maintained if joint limits and collisions constraints are respected (2). They are broken otherwise(3,4).}
+\caption{Contacts are maintained if joint limits and collisions constraints are respected (2). They are broken otherwise(3,4). The green line represents the root path.}
 		   \label{fig:break_contact}
 \end{figure}
 
@@ -168,16 +168,14 @@ If two or more contacts \repadp{cannot be maintained between two consecutive con
 
 %\subsection{Generation of a contact configuration}  
 \subsubsection{Creating contacts:}
-Contacts are created using \deladp{three rules:} \addadp{a FIFO approach: we try first to create a contact with the limb that has been contact-free the longest. If the contact creation was not successful for a limb, the limb is pushed on top of the queue, and will only be tried again after the others.}
-\begin{enumerate}
-\item \deladp{At most one contact creation happens between two consecutive steps. }
-%~ This increases the odds that the interpolation between the two steps be feasible;
-%\adnote{Before you said that you ensured that transition between two states is feasible...}
-\item \deladp{A contact is validated if and only if the resulting configuration is in static equilibrium;}
-\item \deladp{We use a FIFO approach:  we always try first to create a contact with the limb that has been contact-free the longest. If the contact creation
-was not successful for a limb, the limb is pushed on top of the queue, and will only be tried again after the others.}
-\end{enumerate}
+Contacts are created using a FIFO approach: we try first to create a contact with the limb that has been contact-free the longest. If the contact creation was not successful, the limb is pushed on top of the queue, and will only be tried again after the others.
+%~ \begin{enumerate}
+%~ \item \deladp{At most one contact creation happens between two consecutive steps. }
+%~ \item \deladp{A contact is validated if and only if the resulting configuration is in static equilibrium;}
+%~ \item \deladp{We use a FIFO approach:  we always try first to create a contact with the limb that has been contact-free the longest. If the contact creation
+%~ was not successful for a limb, the limb is pushed on top of the queue, and will only be tried again after the others.}
+%~ \end{enumerate}
 
-\repadp{This set of rules}{The set of rules defined in this Section} defines a deterministic contact planning algorithm.
+This set of rules defines a deterministic contact planning algorithm.
 The determinism of this algorithm makes it efficient, at the cost of not being probabilistically complete.
-\deladp{However, in practice the planner is successful in the large majority of cases, as discussed in Section~\ref{sec:perf}.}
+%~ \deladp{However, in practice the planner is successful in the large majority of cases, as discussed in Section~\ref{sec:perf}.}
