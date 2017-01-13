@@ -363,14 +363,13 @@ thus allowing to consider \gls{interactive} applications. This would allow to co
 
 \subsubsection{Success rates:}
 Table~\ref{tab:sucess_planning} summarizes the successful planning rates obtained for each scenario.
-Despite the complexity of the scenarios adressed, as well as the approximations made in our formulation, our planner succeeds in a large majority of cases.
+Despite the complexity of the scenarios adressed, as well as the approximations made in our formulation, our planner succeeds in the large majority of cases.
 
 Table~\ref{tab:requestpercent} presents, for each scenario, the rate of contact generation that succeeded. Note that a failure in contact generation for a root configuration is not equivalent to a failure in the contact plan. It simply means that another limb was tested for contact generation for the same root configuration.
 As expected, the more constrained scenario, the car egress one, provides the less satisfying results, despite the high success rate of the planner.
 
 These results confirm that our approach provides a satisfying compromise between completeness and efficiency, thus allowing to consider online planning
-while controlling the robot.
-Indeed, when the contact generation fails, it does so rapidly, which allows us to rapidly re-plan with a reasonable chance of success.
+while controlling the robot. Indeed, when the contact planning fails, it does so rapidly, which allows us to rapidly re-plan with a reasonable chance of success.
 The most efficient (and immediate) approach to obtain a valid contact plan as fast as possible is probably to launch in parallel several instances of the planner (our current implementation is single-threaded) and to use any successful result as a plan for solver $\mathcal{P}_3$.
 
 

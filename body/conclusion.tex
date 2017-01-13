@@ -1,27 +1,37 @@
- \section{Discussion} 
+ \section{Discussion: validity and interest of our contact planner} 
 \label{sec:discussion}
 
-\subsection{validity and interest of the approximations}
+\subsection{Accuracy and performance gain of the reachability condition}
 
-Again, we assume that, for \gls{cluttered} problems, most of the times \contactreachability\, implies \equilibriumfeasibility.
-Under this assumption, our goal is to find a \gls{contact reachable} guide path.
+As demonstrated in the results section, the main interest of our method is time performance. Time performance is critical to consider using a multi-contact planner for 
+online applications with the robot, a goal not satisfied by any of the previous contributions. Our method addresses highly constrained environments while improving the search time by orders of magnitude. This high performance is reached at the cost of some approximations we discuss here. 
+%~ In previous approaches, we identified 2 sources of high computational cost. 
 
-To generate such a path efficiently, ideally we need to only sample \gls{contact reachable} root configurations.
-This requires exhibiting a necessary and sufficient condition for \contactreachability. %,that does not need the computation of the whole-body configuration.
-By default, verifying \contactreachability\, implies a constructive demonstration by exhibiting a valid $\mathbf{q}^{\overline{0}}$. This is the approach chosen by \cite{Bouyarmane2009},
-which is too computationally expensive.
-To formulate a cheaper condition, we may turn our attention towards either an only-necessary or an only-sufficient condition.
+The first approximation is the verification of \contactreachability\ ($\mathbf{q}^0 \in C_{Contact}^0$).  Our \textit{reachability condition} ($\mathbf{q}^0 \in C_{Reach}^0$) is computationally efficient and provides an accurate approximation of $C_{Contact}^0$ (Section~\ref{sec:scaling}). This is demonstrated by the second column of Table~\ref{tab:requestpercent}, and illustrated by Figure~\ref{fig:dedefeas}. Indeed, in the large majority of cases, (84\% in the worst case), we are able to find a contact configuration for any configuration in $C_{Reach}^0$.
 
-Only-necessary conditions are appealing because they preserve the completeness of the search, while reducing 
-the search space: they provide an outer approximation of $C_{Contact}^0$.
-On the other hand, only-sufficient conditions provide the guarantee that any configuration that satisfies them is indeed \gls{contact reachable}:
-they provide an inner approximation of $C_{Contact}^0$.
+%~ These results clearly demonstrate that the reachability condition, presented in Section~\ref{sec:scaling}, provides an accurate representation of the 
+%~ contact we combine only-necessary and only-sufficient conditions which are trivial to estimate. Only-necessary conditions are appealing because they preserve the completeness of the search, while reducing 
+%~ the search space: they provide an outer approximation of $C_{Contact}^0$. On the other hand, only-sufficient conditions provide the guarantee that any configuration that satisfies them is indeed \gls{contact reachable}: they provide an inner approximation of $C_{Contact}^0$.
 
-In practice, the only-necessary and only-sufficient conditions that we can provide are trivial and give rather inaccurate approximations of $C_{Contact}^0$.
-Therefore, we propose a compromise between them: the \textit{reachability condition}, which is computationally efficient
-and provides a rather accurate approximation of $C_{Contact}^0$.
+The main source of computational cost identified in previous works is the verification of \equilibriumfeasibility. 
+The strong assumption of our work is that for the class of problems we consider \contactreachability\ implies \equilibriumfeasibility.
+Our scenarios show that the  assumption is verified in the majority of cases when at least one contact surface is \textit{quasi flat}, that is when
+the friction cone of the contact surface contains the direction opposite to the gravity.
+Figure~\ref{fig:dedefeas} illustrate this observation, demonstrated empirically by the third column of Table~\ref{tab:requestpercent}. In the worst case, in our experiment
+the assumption was verified for 82\% of the total amount of trials.
 
-TODO equilibirum as contact reachability
+In the example of \cite{Bouyarmane2009}, the verification of \equilibriumfeasibility implies a constructive demonstration by exhibiting a valid $\mathbf{q}^{\overline{0}}$, requiring
+several minutes of planning. Our method, in comparison, takes from a few milliseconds to several seconds.
+
+These results clearly justify the pragmatic decisions of this paper. What is lost in completeness is largely compensated by the computation times we obtain.
+
+\subsection{Addressing $\mathcal{P}_3$}
+This paper focuses on the contact planning aspect of multi-contact locomotion. While it does not address directly the continuous motion generation,
+we had to prove that the plans produced by our planner are useful and can be executed by the considered robots. The problem $\mathcal{P}_3$ remains open,
+and most existing solutions do not consider collisions with the environment during the planning, making it hard to validate constrained problems such as the polaris scenario
+or the table egress in \cite{DBLP:conf/iser/EscandeKMG08}.
+The companion video shows the results we obtained in simulation and on the real HRP-2 robot. Despite the fact that our method does not consider joint torque limits in the planning
+phase, the robot is able to execute our plans, achieving to demonstrate the interest of our framework.
 
 \begin{figure}[t]
 \centering
@@ -35,13 +45,6 @@ is only described by two positional parameters (x and y). The root of the robot 
 divergence between  $C_{Equil}^0$  and $C_{Contact}^0$ when the problem is not \textit{\gls{cluttered}}.}
 		   \label{fig:dedefeas}
 \end{figure}
-
-Figure~\ref{fig:dedefeas} gives an insight into the difference between the three conditions, depicting $C_{Equil}^0$, $C_{Contact}^0$ and $C_{Reach}^0$, which are the sets of \gls{equilibrium feasible}, \gls{contact reachable} and \textit{reachable} root configurations, respectively.
-
-
-TODO blah regarding contact plan generation, and ignoring the mid contact conf
-The first constraint is less restrictive than the one proposed by \citeauthor{DBLP:conf/iser/EscandeKMG08}, because our method
-allows to break and create one contact 
 
 %~ \subsection{feasibility }
 
