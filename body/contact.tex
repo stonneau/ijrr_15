@@ -2,7 +2,7 @@
 \section{From a guide path to a discrete sequence of contact configurations ($\mathcal{P}_2$)}
 \label{sec:contact}
 In the second phase, we compute a discrete sequence of static equilibrium configurations $\mathbf{Q}^{\overline{0}}$ given a root path
-$\mathbf{q}^0(t) : [0,1] \longrightarrow$ \gls{$C_{Reach}^0 \simeq C_{Equil}^0$}. This contact planner is built on top of
+$\mathbf{q}^0(t) : [0,1] \longrightarrow$ \gls{$C_{Reach}^0$}. This contact planner is built on top of
 a contact generator, used to generate static equilibrium configurations. We first describe the generator, before detailing the contact planning algorithm.
 %~ Our planner computes guide paths in $C_{Reach}^0$ , an approximation of \gls{$C_{Equil}^0$}.
 %~ As an input of this stage, we however assume an \gls{equilibrium feasible} root guide path $\mathbf{q}^0(t) : [0,1] \longrightarrow$ \gls{$C_{Equil}^0$}.
@@ -29,7 +29,7 @@ a contact generator, used to generate static equilibrium configurations. We firs
 		\put (62,1) {d} 
 		\put (83,1) {e} 
 	\end{overpic}
-  \caption{Generation of a contact configuration for the right leg of HRP-2. (a): Selection of reachable obstacles. (b): Entries of the limb samples database (with $N = 4$). (c): With a proximity query on the octree database, configurations too far from obstacles are eliminated. (d): The best candidate according to a user-defined heuristic $h$ is chosen. (e): The final contact is achieved using inverse kinematics.}
+  \caption{Generation of a contact configuration for the right leg of HRP-2. (a): Selection of reachable obstacles. (b): Entries of the limb samples database (with $N = 4$). (c): With a proximity query between the octree database and the obstacles, configurations too far from obstacles are discarded. (d): The best candidate according to a user-defined heuristic $h$ is chosen. (e): The final contact is achieved using inverse kinematics.}
   \label{fig:contact_gen}
 \end{figure*}
 
