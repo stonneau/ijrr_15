@@ -1,18 +1,19 @@
-We present a framework capable of producing contact plans describing complex multiped motions: standing up, climbing stairs using a handrail, crossing rubble and getting out of a car. The need for such a planner was highlighted at the Darpa Robotics Challenge, where required multi contact behaviors
+% !TEX root =  ../main.tex
+\adnote{What about replacing 'multiped' with 'legged' everywhere?}
+\repadp{We present a contact planning framework for complex legged locomotion tasks:}{We present a framework capable of producing contact plans describing complex multiped motions}: standing up, climbing stairs using a handrail, crossing rubble and getting out of a car. The need for such a planner was highlighted at the Darpa Robotics Challenge, where \deladp{required} multi-contact behaviors
 could not be demonstrated.
 
-Indeed, current planners suffer from prohibitive computation times, explained by the difficulty
+Indeed, current planners suffer from prohibitive computation times, \repadp{due to}{explained by} the difficulty
 of generating contact postures: the feasible space (the contact manifold) is of high dimension,
 and impossible to sample.
 
-We tackle this issue with our novel key idea, the reachability condition. This condition allows us to define
+We tackle this issue with our novel \deladp{key} idea, the reachability condition. This condition allows us to define
 a geometric approximation of the contact manifold, which is of low dimension and can be sampled efficiently.
-Informally, the condition verifies that the root configuration of a robot is ‚Äúclose, but not too close‚Äù from obstacles: close to allow contact creation, not too close to avoid collision. Thanks to this condition we decompose the hard contact planning problem into
-simpler sub-problems: first, to plan a guide path for the root without considering the whole-body configuration, using a sampling
-based algorithm; then, to generate a discrete sequence of whole-body configurations in static equilibrium along this path, using a new deterministic
-contact selection algorithm. 
+Informally, the condition verifies that the root configuration of a robot is Äúclose, but not too close to obstacles: close to allow contact creation, not too close to avoid collision. Thanks to this condition we decompose the hard contact planning problem into two
+simpler sub-problems: first, planning a guide path for the robot root without considering the whole-body configuration, using a sampling-based algorithm; then, generating a discrete sequence of whole-body configurations in static equilibrium along this path, using a new deterministic
+contact-selection algorithm. 
 
-Our approach results from the pragmatic choice of favoring efficiency over completeness, justified empirically: in a
+Our approach results from the pragmatic choice of favoring efficiency over completeness, \repadp{which we justify empirically}{justified empirically}: in a
 few seconds, with satisfying success rates, we generate complex contact plans for various scenarios and robots, namely
-HRP-2, HyQ, and a dexterous hand. These plans are then validated in dynamic simulations, or on the real HRP-2 robot, thus demonstrating 
+HRP-2, HyQ, and a dexterous hand. These plans are then validated either in dynamic simulations, or on the real HRP-2 robot, thus demonstrating 
 the first interactive multi-contact planner.
