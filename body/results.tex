@@ -235,7 +235,7 @@ Similarly we comuputed the specificity of the condition (proportion of configura
 The obtained results for HRP-2 are shown in Table~\ref{tab:scale}, averaged over all scenes (except for the car egress: in this scenario, 
 statistical tests are not really conclusive since we are only interested in a small area of the environment).
 
-As it can be expected, the scaling results in a high decrease of the sensitivity, with an decrease of the specificity.
+As it can be expected, the scaling results in a high decrease of the sensitivity, with a decrease of the specificity.
 For HRP-2 we decided to set $s^*=1.2$.
 %~ , and was also effective for the car egress scenario. 
 
@@ -352,10 +352,7 @@ This is not surprising considering the number of calls to the methods: IK projec
 it is also applied every time a new candidate needs to be evaluated. In particular for the car egress scenario,
 the kinematic constraints are very demanding to avoid collisions.
 
-For HyQ, there is a more uniform repartition of the times for the rubble scenario. For the obstacle scenario,
-we observe a large increase of the time spent performing collision checking and inverse kinematics. This is explained
-by the complexity of crossing the bridge: the robot has to stand high and create contacts close to each other because
-the bridge is narrow. In many cases this results in collisions, thus a large number of contacts have to be evaluated.
+On the other hand for HyQ most of the time is spent testing the static equilibrium of the candidates configurations..
 
 In all scenarios, one can observe that the average computation time for one single step is largely below one second,
 thus allowing to consider \gls{interactive} applications. This would allow to consider online autonomous planning of the robot motion.
