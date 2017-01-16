@@ -26,7 +26,7 @@ The validity of this hypothesis is discussed in depth in Section~\ref{sec:discus
 The contact reachable workspace is defined as a compromise between two necessary and a sufficient condition for contact creation.
 
 \textbf{necessary conditions:}
-For a contact to be possible, an obstacle $O_i \in O$ necessarily intersects the reachable workspace $W(\mathbf{q}^{0})$ of the robot (Figure~\ref{fig:contact_gen}--1). Also the torso of the robot $W^0(\mathbf{q}^{0})$ must necessarily be collision-free.
+For a contact to be possible, an obstacle $O_i \subset O$ necessarily intersects the reachable workspace $W(\mathbf{q}^{0})$ of the robot (Figure~\ref{fig:contact_gen}--1). Also the torso of the robot $W^0(\mathbf{q}^{0})$ must necessarily be collision-free.
 Therefore we can define an outer approximation  $ \mathcal{C}^0_{\textrm{\it Nec}} \supset$ $C_{Contact}^0$ as: 
 \begin{equation}
 \mathcal{C}^0_{\textrm{\it Nec}} = \{ \mathbf{q}^0 : W(\mathbf{q}^{0}) \cap O \neq \emptyset \wedge W^0(\mathbf{q}^{0}) \cap O = \emptyset \} % \\ }
@@ -74,7 +74,7 @@ In Appendix~\ref{app:rom}, we give a generic method to compute the $W$ volumes a
 \subsection{Computing the guide path in $C_{reach}^0$}
 $C_{Reach}^0$ can be sampled efficiently thanks to Eq.~\ref{eq:reachc}, and can thus be used with a standard motion planner.
 The only significant change is to replace the collision checking with the \textit{reachability condition}.
-Our current implementation of these modifications is based on the Bi-RRT planner \citep{770022} provided by the HPP software.
+Our current implementation of these modifications is based on the Bi-RRT planner \citep{770022} provided by the HPP software~\citep{7759083}.
 
 %~ \delst{However, to improve the sampling efficiency 
 %~ we bias the sampling process to generate near-obstacle configurations, similarly to cite{Amato98choosinggood}.}

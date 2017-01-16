@@ -42,7 +42,7 @@ Given a configuration of the root and the other limbs, it computes a configurati
 \end{equation}
 
 Contact generation is typically adressed by randomly sampling a limb configuration, before projecting the effector onto the closest surface with an inverse kinematics solver.
-This process is repeated until either a solution for Eq.~\ref{eq:contact_gen} is found, or the generator fails, according to a user-defined maximum number of trials.
+This process is repeated until either a solution for Eq.~(\ref{eq:contact_gen}) is found, or the generator fails, according to a user-defined maximum number of trials.
 We favor a modified implementation of this naive approach, more computationally efficient, introduced in our previous work~\citep{Tonneau2014}.
 
 %~ Given a configuration $\mathbf{q}^{\overline{k}}$ of the root and all the limbs but $R^k$, we look for a limb configuration $\mathbf{q}^k$ such that
@@ -63,7 +63,7 @@ We then apply the following steps:
 \begin{enumerate}
 \item Generate off-line $N$ valid sample limb configurations $\mathbf{q}^k_i,  0 \leq i < N$;
 \item Using the end-effector positions $\mathbf{p}(\mathbf{q}^k_i)$ as indices, store each sample in an octree data structure;
-\item At runtime, when contact creation is required, retrieve from the octree the list of samples $S \subset C_{Contact}^{\epsilon}$ close to contact (Figure~\ref{fig:contact_gen} (b) and (c));
+\item At runtime, when contact creation is required, intersect the octree and the environment to retrieve the list of samples $S \subset C_{Contact}^{\epsilon}$ close to contact (Figure~\ref{fig:contact_gen} (b) and (c));
 \item Use a user-defined heuristic $h$ to sort $S$;
 \item If $S$ is empty, stop (failure). Else select the first configuration of $S$. Project it onto contact using inverse kinematics. (Figure~\ref{fig:contact_gen} (d) and (e));
 \item If Eq.~\ref{eq:contact_gen} is verified, stop (success). Otherwise remove the element from $S$ and go to step 5.

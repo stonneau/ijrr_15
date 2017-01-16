@@ -231,7 +231,7 @@ is computed empirically based on statistical analysis or trials and errors.
 To find a convenient value $s^*$ of $s$, we proceeded as follows. 
 For several values of $s$, we generated $10 000$ configurations. 
 We then computed the sensitivity of the reachability condition (proportion of configurations in $C_{Reach}^0$, effectively belonging to \gls{$C_{Contact}^0$}).
-Similarly we comuputed the specificity of the condition (proportion of configurations \textbf{not} in $C_{Reach}^0$, effectively \textbf{not} belonging to \gls{$C_{Contact}^0$}).
+Similarly we computed the specificity of the condition (proportion of configurations \textbf{not} in $C_{Reach}^0$, effectively \textbf{not} belonging to \gls{$C_{Contact}^0$}).
 The obtained results for HRP-2 are shown in Table~\ref{tab:scale}, averaged over all scenes (except for the car egress: in this scenario, 
 statistical tests are not really conclusive since we are only interested in a small area of the environment).
 
@@ -366,7 +366,7 @@ Table~\ref{tab:requestpercent} presents, for each scenario, the rate of contact 
 As expected, the more constrained scenario, the car egress one, provides the less satisfying results, despite the high success rate of the planner.
 
 These results confirm that our approach provides a satisfying compromise between completeness and efficiency, thus allowing to consider online planning
-while controlling the robot. Indeed, when the contact planning fails, it does so rapidly, which allows us to rapidly re-plan with a reasonable chance of success.
+while controlling the robot. Indeed, when the contact planning fails, it fails rapidly. This allows us to rapidly re-plan with a reasonable chance of success.
 The most efficient (and immediate) approach to obtain a valid contact plan as fast as possible is probably to launch in parallel several instances of the planner (our current implementation is single-threaded) and to use any successful result as a plan for solver $\mathcal{P}_3$.
 
 
@@ -425,7 +425,7 @@ precise time information is available). The X symbol indicates scenarios where w
 
 \subsection{Validation of the contact plans, and comparison with previous work} \label{sec:compa}
 To validate our plans, we had to implement our own interpolation method to address $\mathcal{P}_3$.
-We refer the curious reader to \citep{Carpentier2016} for the implementation details of our method. 
+We refer the reader to \citep{Carpentier2016} for the implementation details of our method. 
 This motion is in turn validated in our dynamic simulator~\citep{DelPrete2015b}. The stair climbing scenario was validated on the real HRP-2 robot \citep{Carpentier2016}.
 The obtained motions are available in the video.
 
