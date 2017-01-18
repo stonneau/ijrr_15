@@ -1,0 +1,81 @@
+\title{Cover letter}
+
+\documentclass[12pt]{article}
+
+\begin{document}
+\maketitle
+
+This cover letter for the manuscript ``An efficient acyclic contact planner for
+legged robots'' plays more the role of a rebutal, since the paper is a resubmission for the ISSR'15 sepcial issue, and that we ask for reviewer continuity. We left the original cover
+letter at the end of this document.
+
+We would first like to thank the reviewers for their previous feedback on the initial manuscript. We believe we have answered
+all of their concerns, the main ones being that our method had not been tested on a real robot or a simulation, and that the paper was too verbose.
+In the following lines we are going to describe how we improved our paper in this regard, and answer to the other remarks of the reviewers.
+
+\section{Validation of the method (addressing  $\mathcal{P}_3$) }
+Because we had already validated some of our plans, we were really surprised by the remark of reviewer 2 stating that our plans are not executable, even in simulation.
+The stair climbing scenario has been demonstrated
+on the real HRP-2 robot, while the standing up had been demonstrated in simulation. While it was mentioned in the paper,
+we did not insist on these demonstrations because our main contribution focuses on the other problems. 
+
+We believe that, as reviewer 1 notices, this observation was due to the fact that we do not clearly define what we mean by a contact plan.
+This is now detailed in section 5.1.. In any case, the validation videos joined to the submission should now establish that our plans are in indeed feasible, even without considering
+the torque constraints.
+
+In this submission, we have thus joined the simulation and real life videos of all the scenarios we demonstrate.
+These videos show that the plans we compute correspond to feasible motions.
+We thank the reviewers for this comment,
+since we now believe that our paper is stronger with the complete demonstration. However, while we briefly describe how we solve $\mathcal{P}_3$, the focus of the 
+paper remains $\mathcal{P}_1$ and $\mathcal{P}_2$.
+
+
+\section{Success rates of the method}
+At this point, we believe it is important to clarify our position regarding both reviewers concerns of the success rates of our paper.
+We did something that no other contact planning paper does, that is providing the success rates of our contact planner. Our method is not always successful, we assume it and argue that it is mostly successful, and that it can always find a feasible solution fast enough for online applications by replanning upon failure.
+
+In previous works, it is in fact unknown whether the methods are always successful or not. We simply have no idea. For instance, the CIO of Mordatch,
+because of the local convergence of the method, \textbf{necessarily} fails in some scenarios. We just do not know how often. Similarly, Escande et al. had to manually edit 
+the end effector trajectories to avoid collisions with the environment, but we do not know how often. Considering this,
+we do not understand why we are criticized for providing our success rates, which actually demonstrate the interet of our approach.
+
+\section{Originality and interest of the work}
+We strongly disagree with reviewer 1 regarding the originality of the work. Reviewer 1 states that we simply experiment with minor heuristic adjustments.
+Bretl formalized well the problem without providing an algorithm applicable to the general case. Escande focused on the contact planning $\mathcal{P}_2$. 
+Our work tackles $\mathcal{P}_1$ as well, in a much more efficient manner than Bouyarmane et al.. 
+As for Hauser, these works are limited by the computational complexity of considering the full dimension of the problem.
+
+
+The reachability condition provides a dimensionality reduction of the problem. This is clearly an originality regarding the previous work who always consider the whole-body problem.
+We believe that this reduction is the only way to make the contact planning problem tractable, in the same way that many researchers (such as ourselves, but also Wieber, Tedrake, Righetti and others) use dimensionality reduction successfully to address
+the trajectory optimization problem $\mathcal{P}_3$.
+
+Furthermore, the computational time provided by our method is a contribution in itself: it makes the difference
+between a method that can be used at the Darpa challenge or not, as we show in our introduction.
+
+\section{A clearer paper}
+As requested, we have deeply shortened the paper. More importantly, we have done an important work of defining in simpler terms
+the different concepts that we use in the paper, and reduced their number.
+We believe that the paper is much more clearer in its current form.
+
+\section{Justification of the simplifying assumptions}
+Regarding several comments from both reviewers, stating that our paper does not justify the fact that contact feasibility implies equilibrium feasibility,
+we now have added a section that discusses in depth the assumption (Section 7). We clearly describe which hypothesis (we call it the quasi-flat hypothesis, referring
+to the contacts in the configurations, rather than the vague cluttered term) are required to validate our approach, and analyze
+the success rates we obtained in each scenario to justify that the assumption works.
+
+\section{Comparison with other methods}
+As noted by reviewer 2, in our previous paper it was indeed complex to compare our work with previous contributions,
+since they were adressing the complete problem. We now give the complete computation times and compare them with previous works,
+clearly demonstrating that our method outperforms them by orders of magnitude (Section 6.4).
+
+
+\section{On the static equilibrium of each configuration}
+Reviewer 1 stated that ``the planned contact path is only discrete with static equilibrium considered for each
+configuration, which is not very realistic''. First, we recall that this assumption is always made in the previous works that address cluttered scenarios,
+such as the work from Bretl and Escande. Work that do not make this assumption such as Mordatch and al. only offer local convergence and can't address these scenarios. Furthermore, this limitation is in fact less restrictive in our approach that the one of Escande, since while our plan is quasi static, our resulting motion is dynamic, as now explained in the paper (Section 5.1). 
+
+\section{Actual car model of the DARPA Challenge}
+As asked by reviewer 2, we now use the polaris car model for demonstrating our egress scenario.
+
+\end{document}
