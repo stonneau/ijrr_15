@@ -17,6 +17,14 @@ a contact generator, used to generate static equilibrium configurations. We firs
 %~ Our criterion to assert efficiently the static equilibrium of the system
 %~ is described in Appendix~\ref{sec:heuristics}.
 
+\subsection{Definition of a contact sequence}
+In previous contributions, a contact plan is defined as a sequence of configurations that describe a quasi-static equilibrium configuration
+for each existing phase of the motion. For instance, a walk cycle would be described by three key configurations: a double support configuration,
+a simple configuration (the contact is broken), and another double support configuration (a contact is created). Our definition of the contact plan differs: in this example it would simply consists in the two double support configurations. 
+However, in the case where the contact broken and the contact created sequentially are not related to the same effector, our planner outputs two distinct states.
+This representation is sufficient to describe all the contact constraints of the problem. Furthermore it removes the unnecessary constraint of having a simple support,
+quasi static configuration in the path as in the example. As shown in the validation video, this allows our framework to produce motions that are not quasi static, but dynamic. 
+
 \subsection{Contact generator}
 \label{sec:single_contact}
 
@@ -132,7 +140,8 @@ If kinematically possible, a limb in contact at step $i-1$ remains in contact at
 %~ The contact is broken if an inverse-kinematics solver fails to find a collision-free limb configuration that satisfies joint limits. 
 %~ The solver is directly provided by the HPP software.
 Otherwise the contact is broken and a collision-free configuration is assigned to the limb.
-If two or more contacts can't be maintained between two consecutive configurations, one or more intermediate configurations are added.
+If two or more contacts can't be maintained between two consecutive configurations, one or more intermediate configurations are added, to ensure
+that at most one contact is broken between two sequential configurations.
 %~ For these steps the root configuration is the same as for the previous step, with the difference that
 %~ one faulty contact is repositioned, in the hope that it will not be broken at the next step.
 

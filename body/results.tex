@@ -1,16 +1,16 @@
 % !TEX root =  ../main.tex
 \section{Results}
 \label{sec:results}
-In this \repadp{section}{Section} we present some of the results obtained with our planner. The complete sequences \deladp{computed} are shown in the companion video.
+In this section we present some of the results obtained with our planner. The complete sequences are shown in the companion video.
 Specifically, we demonstrate the planner for two really different robots, in a large variety of environments: the humanoid HRP-2 and the quadruped HyQ.
 Finally, a last example suggests possible applications to dexterous manipulation.
 
 At the end of the video, we validate our contact plans by exhibiting a solution to the interpolation problem $\mathcal{P}_3$ for these scenarios.
 
-At the end of this \repadp{section}{Section}, we discuss the role of the parameters of our framework\deladp{ on the output}. We then provide the \textit{interactive} computation times obtained in each case.
+At the end of this section, we discuss the role of the parameters of our framework. We then provide the \textit{interactive} computation times obtained in each case.
 We also compare the times obtained with HRP-2 with respect to previous works.
 
-These scenarios \repadp{complement}{complete} the ones demonstrated on virtual avatars (Figure~\ref{fig:robots_old}) in our previous ISRR paper~\citep{tonneauisrr15} and video\footnote{\url{http://youtu.be/LmLAHgGQJGA}}.
+These scenarios complement the ones demonstrated on virtual avatars (Figure~\ref{fig:robots_old}) in our previous ISRR paper~\citep{tonneauisrr15} and video\footnote{\url{http://youtu.be/LmLAHgGQJGA}}.
 %~ (Figure~\ref{fig:robots_old}).
  %~ We invite the interested reader to watch the ISRR video (\url{http://youtu.be/LmLAHgGQJGA}), and 
 %~ to refer to the previous paper for a discussion on these results.
@@ -34,7 +34,7 @@ These scenarios \repadp{complement}{complete} the ones demonstrated on virtual a
 
 \subsection{Description of the scenarios}
 In all the scenarios considered, the formulation of the problem is always the same:
-a start and goal root configurations are provided as \deladp{an} input \deladp{of the scenario}.
+a start and goal root configurations are provided as input.
 The framework computes the initial contact configuration, and outputs a sequence of contact configurations connecting it to the goal.
 In each scenario we detail the contacts involved and the heuristics chosen (either $h_{\textrm{\it EFORT}}$, $h_{vel}$ or $h_{w}$, all of which are defined in the Appendix~\ref{sec:heuristics}).
  %~ and the constraints on the reachable workspaces (for instance in all the scenarios, the reachable workspaces of the legs of HRP-2 are always required to intersect with the environment). 
@@ -52,7 +52,7 @@ In each scenario we detail the contacts involved and the heuristics chosen (eith
 		   \label{fig:stair_robust}
 \end{figure}
 
-The goal is to climb three 15-cm high steps. This height requires HRP-2 to use a ramp to perform the task. \adnote{It is not clear why, so either explain why, or remove the comment.}
+The goal is to climb three 15-cm high steps.
 
 \noindent\textbf{Contacts involved:} Feet and right arm.
 
@@ -82,7 +82,7 @@ The goal is to climb three 15-cm high steps. This height requires HRP-2 to use a
 %~ \end{figure}
 
 \subsubsection{HRP-2 -- Standing up (Figure~\ref{fig:standing}):}
-From a bent configuration, \repadp{the robot has to stand up}{a standing-up motion is computed in a constraining environment. The resulting motion involves} using a wall as support, and climbing a 25-cm high step.
+From a bent configuration, the robot has to stand up using a wall as support, and climbing a 25-cm high step.
 
 \begin{figure}
   \centering
@@ -105,7 +105,7 @@ From a bent configuration, \repadp{the robot has to stand up}{a standing-up moti
 
 
 \subsubsection{HRP-2 -- Polaris car egress (Figure~\ref{fig:car}):}
-\repadp{In this scenario---inspired from the DRC car egress (\url{http://cpc.cx/edH})---HRP-2 has}{This scenario is inspired from the DARPA-Robotics-Challenge car egress scenario (\url{http://cpc.cx/edH}). HRP-2 has to find the contact sequence that allows it} to step out of the Polaris car.
+In this scenario inspired from the DRC car egress HRP-2 has to step out of the Polaris car.
 
 \begin{figure}
   \centering
@@ -127,13 +127,13 @@ From a bent configuration, \repadp{the robot has to stand up}{a standing-up moti
 
 
 \subsubsection{HyQ -- DRC-style rubble (Figure~\ref{fig:darpa})}
-The quadruped robot \repadp{must}{is given the task to} cross a rubble composed of bricks rotated at different angles and directions.
+The quadruped robot must cross a rubble composed of bricks rotated at different angles and directions.
 
 \begin{figure}
   \centering
   \includegraphics[width=1\linewidth]{figures/darpa}
   \caption{
-           Robust crossing of rubbles by HyQ \deladp{($b_0 > 20$)}. }
+           Robust crossing of rubbles by HyQ. }
 		   \label{fig:darpa}
 \end{figure}
 
@@ -148,7 +148,7 @@ The quadruped robot \repadp{must}{is given the task to} cross a rubble composed 
 %~ Again, the computation times remain however \gls{interactive}.
 
 \subsubsection{HyQ -- Obstacle race (Figure~\ref{fig:HyQ_bridge} and~\ref{fig:HyQ_obs}):}
-In this long scene, HyQ \repadp{has to cross a 55-cm large hole, followed by}{is first required to cross a 55-cm large hole; then, to cross} a narrow ``bridge'', only 25-cm large.
+In this long scene, HyQ has to cross a 55-cm large hole, followed by a narrow ``bridge'', only 25-cm large.
 
 \begin{figure}
   \centering
@@ -162,7 +162,7 @@ In this long scene, HyQ \repadp{has to cross a 55-cm large hole, followed by}{is
   \centering
   \includegraphics[width=1\linewidth]{figures/HyQ_obs}
   \caption{
-           Crossing a hole contact sequence for HyQ \deladp{($b_0 > 4$)}. }
+           Crossing a hole contact sequence for HyQ. }
 		   \label{fig:HyQ_obs}
 \end{figure}
 
@@ -221,19 +221,19 @@ Although we do not address the hard issue of accounting for rolling motions, the
  
  
 \subsection{Role of the main parameters} \label{sec:influence}
-We discuss the several factors \adnote{Either use 'the' or use 'several'} that influence the outcome of our planner: the root scaling factor $s$ (Section~\ref{sec:scaling}), the \deladp{choice of} heuristics for
+We discuss the factors that influence the outcome of our planner: the root scaling factor $s$ (Section~\ref{sec:scaling}), the heuristics for
 contact generation (Appendix~\ref{sec:heuristics}), and lastly, the discretization step for the guide path. The appropriate value for these parameters
-is computed empirically based on statistical analysis \adnote{Are you sure you wanna use the word 'statistical'?} or trials and errors.
+is computed empirically based on use-case analysis or trials and errors.
  
 \subsubsection{Choosing the scaling factor $s$:} \label{sec:params}
-\deladp{To find a convenient value $s^*$ of $s$, we proceeded as follows. }
+%~ \deladp{To find a convenient value $s^*$ of $s$, we proceeded as follows. }
 For several values of $s$, we generated $10 000$ configurations. 
-We then computed the sensitivity of the reachability condition (\repadp{percentage}{proportion} of configurations in $C_{Reach}^0$, effectively belonging to \gls{$C_{Contact}^0$}).
-Similarly we computed the specificity of the condition (\repadp{percentage}{proportion} of configurations \textbf{not} in $C_{Reach}^0$, effectively \textbf{not} belonging to \gls{$C_{Contact}^0$}).
+We then computed the sensitivity of the reachability condition (percentage of configurations in $C_{Reach}^0$, effectively belonging to \gls{$C_{Contact}^0$}).
+Similarly we computed the specificity of the condition (percentage of configurations \textbf{not} in $C_{Reach}^0$, effectively \textbf{not} belonging to \gls{$C_{Contact}^0$}).
 The obtained results for HRP-2 are shown in Table~\ref{tab:scale}, averaged over all scenes (except for the car egress: in this scenario, 
 statistical tests are not really conclusive since we are only interested in a small area of the environment).
 
-As it can be expected, the scaling results in a high \repadp{increase}{decrease} of the sensitivity, with a decrease of the specificity.
+As it can be expected, the scaling results in a high increasepercentage of the sensitivity, with a decrease of the specificity.
 For HRP-2 we decided to set $s^*=1.2$.
 %~ , and was also effective for the car egress scenario. 
 
@@ -250,17 +250,17 @@ For HRP-2 we decided to set $s^*=1.2$.
    1.25& 98\% & 91.7\%\\
    1.5 & 99\% & 90.5\%\\
  \end{tabular}
-\caption{Sensitivity and specificity values \addadp{of} the reachability condition, depending on the scaling value \addadp{$s$} of $W^0$.}
+\caption{Sensitivity and specificity values of the reachability condition, depending on the scaling value $s$ of $W^0$.}
 \label{tab:scale}
 \quad
 \end{table}
 
-\subsubsection{\repadp{Choosing the heuristics}{On the choice of heuristics}:} \label{sec:heuristichoices}
-In our conference paper~\citep{tonneauisrr15}, the computed motions were \deladp{only} generated using the EFORT heuristic.
+\subsubsection{Choosing the heuristics:} \label{sec:heuristichoices}
+In our conference paper~\citep{tonneauisrr15}, the computed motions were generated using the EFORT heuristic.
 EFORT is designed for tasks requiring to exert important forces (such as pushing / pulling / climbing). 
-\repadp{In}{Regarding} locomotion tasks, such as the stair scenario, one issue with EFORT is that it tends to generate
+In locomotion tasks, such as the stair scenario, one issue with EFORT is that it tends to generate
 configurations close to singularities (and joint limits). While this does not significantly impact
-the generation of the plan, the resulting interpolation \deladp{on the real robot} turned out to be harder.
+the generation of the plan, the resulting interpolation turned out to be harder.
 For this reason, we prefer to use our manipulability-based heuristic for the legs of the robot, but we still
 use EFORT for the arms, which results in less contact repositionings.
 
@@ -281,11 +281,10 @@ between two consecutive steps. On the other hand, a small step will not impact t
 but may generate unnecessary states. In most scenarios the torso of HRP-2 moves about 15 cm between two postures, but only 3 cm
 for the car egress scenario to handle the geometry of the polaris.
 For future work, we would like to automatically adapt the size of the discretization step to the complexity of the environment.
-\adnote{Maybe you should say which discretization step you used.}
 
 \subsection{Performance analysis} \label{sec:perf}
 To analyze performance, we ran the planner 1000 times for each considered scenario.
-We measured the computation time spent in each \repadp{part}{aspect} of the algorithm, and analyzed their success rate.
+We measured the computation time spent in each part of the algorithm, and analyzed their success rate.
 
 
 \begin{table*}
@@ -313,11 +312,11 @@ column indicates the average time necessary to compute one contact transition. }
 \begin{tabular}{ l | c}
   &  Path planning success rate \\
  \hline
-   Steep stairs     	& 100\% \\
-   Standing up 			& 68\% 	\\
-   Car egress 			& 77\% 	\\
+   Stairs     	& 100\% \\
+   Standing			& 68\% 	\\
+   Car 			& 77\% 	\\
    Rubble 				& 97\% 	\\
-   Obstacle race        & 88.0\% 	\\
+   Race        & 88.0\% 	\\
  \end{tabular}
 \caption{ Percentage of successful complete contact planning rates for each scenario, rounded to the first decimal.}
 \label{tab:sucess_planning}
@@ -344,9 +343,9 @@ is not equivalent to a failure of the contact planning algorithm.}
 \end{table*}
 
 \subsubsection{Computation times:}
-Table~\ref{tab:requestime} summarizes the \deladp{performance measurements obtained, in terms of} computation times.
+Table~\ref{tab:requestime} summarizes the computation times.
 
-\repadp{F}{Considering the repartition of the computation time, f}or HRP-2, most of the time \repadp{was}{is} spent performing inverse kinematics.
+For HRP-2, most of the time was spent performing inverse kinematics.
 This is not surprising considering the number of calls to the methods: IK projection is used intensively to maintain contact continuity between two postures; 
 it is also applied every time a new candidate needs to be evaluated. In particular for the car egress scenario,
 the kinematic constraints are very demanding to avoid collisions.
@@ -354,19 +353,19 @@ the kinematic constraints are very demanding to avoid collisions.
 On the other hand for HyQ most of the time is spent testing the static equilibrium of the candidate configurations.
 
 In all scenarios, one can observe that the average computation time for one single step is largely below one second,
-thus allowing to consider \gls{interactive} applications\repadp{ and}{. This would allow to consider} online autonomous planning of the robot motion.
+thus allowing to consider \gls{interactive} applications and online autonomous planning of the robot motion.
 
 
 \subsubsection{Success rates:}
-Table~\ref{tab:sucess_planning} summarizes the successful planning rates\deladp{ obtained for each scenario}.
-Despite the complexity of the scenarios addressed, as well as the approximations made in our formulation, our planner \repadp{succeeded}{succeeds} in the large majority of cases.
+Table~\ref{tab:sucess_planning} summarizes the successful planning rates.
+Despite the complexity of the scenarios addressed, as well as the approximations made in our formulation, our planner succeeded in the large majority of cases.
 
-Table~\ref{tab:requestpercent} presents\deladp{, for each scenario,} the rate of \addadp{successful} contact generation\deladp{ that succeeded}. Note that a failure in contact generation for a root configuration is not equivalent to a failure in the contact plan. It simply means that another limb was tested for contact generation for the same root configuration.
-As expected, the more constrained scenario, the car egress \deladp{one}, provides the \repadp{worst}{less satisfying} results, despite the high success rate of the planner.
+Table~\ref{tab:requestpercent} presents the rate of successful contact generation. Note that a failure in contact generation for a root configuration is not equivalent to a failure in the contact plan. It simply means that another limb was tested for contact generation for the same root configuration.
+As expected, the more constrained scenario, the car egress, provides the less satisfying results, despite the high success rate of the planner.
 
 These results confirm that our approach provides a satisfying compromise between completeness and efficiency, thus allowing to consider online planning
 while controlling the robot. Indeed, when the contact planning fails, it fails rapidly. This allows us to rapidly re-plan with a reasonable chance of success.
-The most efficient (and immediate) approach to obtain a valid contact plan as fast as possible \repadp{would be}{is probably} to launch in parallel several instances of the planner (our current implementation is single-threaded) and to use any successful result as a plan for solver $\mathcal{P}_3$.
+The most efficient (and immediate) approach to obtain a valid contact plan as fast as possible would be to launch in parallel several instances of the planner (our current implementation is single-threaded) and to use any successful result as a plan for solver $\mathcal{P}_3$.
 
 
 %~ \begin{table*}

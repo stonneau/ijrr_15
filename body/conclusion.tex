@@ -4,11 +4,11 @@
 
 \subsection{Accuracy and performance gain of the reachability condition}
 
-As demonstrated in the results section, the main interest of our method is time performance. Time performance is critical \deladp{to consider using a multi-contact planner} for 
+As demonstrated in the results section, the main interest of our method is time performance. Time performance is critical for 
 online applications with the robot, a goal not satisfied by any of the previous contributions. Our method addresses highly constrained environments while improving the search time by orders of magnitude. This high performance is reached at the cost of some approximations that we discuss here. 
 %~ In previous approaches, we identified 2 sources of high computational cost. 
 
-The first approximation is the verification of \contactreachability\ ($\mathbf{q}^0 \in C_{Contact}^0$).  Our \textit{reachability condition} ($\mathbf{q}^0 \in C_{Reach}^0$) is computationally efficient and provides an accurate approximation of $C_{Contact}^0$ (Section~\ref{sec:scaling}). This is demonstrated by the second column of Table~\ref{tab:requestpercent}, and illustrated by Figure~\ref{fig:dedefeas}. Indeed, in the large majority of cases, (84\% in the worst case \adnote{I do not get where this 84 comes from}), we are able to find a contact configuration for any configuration in $C_{Reach}^0$.
+The first approximation is the verification of \contactreachability\ ($\mathbf{q}^0 \in C_{Contact}^0$).  Our \textit{reachability condition} ($\mathbf{q}^0 \in C_{Reach}^0$) is computationally efficient and provides an accurate approximation of $C_{Contact}^0$ (Section~\ref{sec:scaling}). This is demonstrated by the second column of Table~\ref{tab:requestpercent}, and illustrated by Figure~\ref{fig:dedefeas}. Indeed, in the large majority of cases, (84\% in the worst car egress case), we are able to find a contact configuration for any configuration in $C_{Reach}^0$.
 
 %~ These results clearly demonstrate that the reachability condition, presented in Section~\ref{sec:scaling}, provides an accurate representation of the 
 %~ contact we combine only-necessary and only-sufficient conditions which are trivial to estimate. Only-necessary conditions are appealing because they preserve the completeness of the search, while reducing 
@@ -27,13 +27,13 @@ several minutes of planning. Our method, in comparison, takes from a few millise
 These results clearly justify the pragmatic decisions of this paper. What is lost in completeness is largely compensated by the computation times we obtain.
 
 \subsection{Addressing $\mathcal{P}_3$}
-This paper focuses on \deladp{the} contact planning \deladp{aspect} of multi-contact locomotion. While it does not address directly the continuous motion generation,
-we had to prove that the plans produced by our planner \deladp{are useful and} can be executed by the considered robots. Problem $\mathcal{P}_3$ remains \repadp{an active research topic~\cite{Carpentier2016, herzog2015trajectory}}{open},
+This paper focuses on contact planning of multi-contact locomotion. While it does not address directly the continuous motion generation,
+we had to prove that the plans produced by our planner can be executed by the considered robots. Problem $\mathcal{P}_3$ remains an active research topic~\cite{Carpentier2016, herzog2015trajectory},
 and most existing solutions do not consider collisions with the environment during the planning, making it hard to validate constrained problems such as the polaris scenario
 or the table egress in \cite{DBLP:conf/iser/EscandeKMG08}.
 The companion video shows the results that we obtained in simulation and on the real HRP-2 robot. Despite the fact that our method does not consider joint torque limits in the planning
 phase, the robot is able to execute our plans, achieving to demonstrate the interest of our framework.
-\adnote{Probably you should add in appendix an explanation of how you solve $P_3$ and refer to it here.}
+%~ \adnote{Probably you should add in appendix an explanation of how you solve $P_3$ and refer to it here.}
 
 \begin{figure}[t]
 \centering
@@ -60,8 +60,7 @@ Our contribution to \Pa is the introduction of a low-dimensional space $C_{reach
 $C_{reach}^0$ can be efficiently sampled and has a low-dimension. For these reasons we are able to solve \Pa much faster than previous approaches.
 
 %~ Our contribution to \Pa is a generic characterization of the properties that the guide path must satisfy, in particular to enforce the completeness of the acyclic contact planner. 
-Our contribution to \Pb is a fast contact generation scheme that can \repadp{optimize user-defined criteria}{take into
-account criteria to optimize user-defined properties}.
+Our contribution to \Pb is a fast contact generation scheme that canoptimize user-defined criteria.
 
 Our results demonstrate that our method allows a pragmatic compromise between three 
 criteria that are hard to conciliate: generality, performance, and quality of the solution, making it the first acyclic contact
@@ -70,13 +69,13 @@ planner compatible with \gls{interactive} applications.
 \textbf{Regarding generality}, the \textit{reachability condition}, coupled with an approach based on limb decomposition, 
 allows the method to address automatically arbitrary multiped robots.
 %
-\textbf{Regarding performance}, our framework is \deladp{really} efficient in addressing both \Pa and $\mathcal{P}_2$. This results in \gls{interactive} computation times.
+\textbf{Regarding performance}, our framework is efficient in addressing both \Pa and $\mathcal{P}_2$. This results in \gls{interactive} computation times.
 %
 \textbf{Regarding the quality of the paths}, we are able to compute
 \gls{equilibrium feasible} paths in all the presented scenarios, with high success rates.
 As for \cite{Bouyarmane2009}, failures can still occur, due to the approximate condition used to compute the guide path.
 The low computational burden of our framework however allows for fast re-planning in case of failure.
-Furthermore, because of this approximation, the guide search is not complete. The choice is deliberate, because we \repadp{believe}{are convinced}
+Furthermore, because of this approximation, the guide search is not complete. The choice is deliberate, because we believe
 that it is necessary to trade completeness for efficiency at all stages of the planner.
 However, one direction for future work is to focus on a more accurate formulation of $C_{reach}^0$ to improve
 the approximation.
@@ -89,11 +88,11 @@ This would give us a necessary condition for \equilibriumfeasibility.
 
 While we have exhibited complete multi-contact locomotion obtained with our contact planner, our main concern for future work is to address the interpolation
 between contact sequences ($\mathcal{P}_3$), not addressed here, and which remains an open issue in highly-constrained scenarios.
-Solving $\mathcal{P}_3$ requires addressing efficiently the collision avoidance problem \deladp{during the interpolation},	but also improving
+Solving $\mathcal{P}_3$ requires addressing efficiently the collision avoidance problem,	but also improving
 our plans with transition certificates, i.e. guarantees that the interpolation between two contact configurations is feasible.
 %~ Our current direction is to propose a geometric quantification of both the kinematic and dynamic constraints of the problem, expressed
 %~ at the center of mass of the robot.
  %~ We are also
 %~ working on new heuristics more closely related to the dynamics of the systems (for instance, choose the contacts that minimize the jerk between two contact configurations).
-Finally, we aim at performing kinodynamic planning to remove the constraint that configurations in the contact plan \deladp{should} be in static equilibrium. We believe that the most promising direction in this regard is to integrate the notion of Admissible Velocity Propagation in our current work \citep{DBLP:conf/rss/PhamCN13}.
+Finally, we aim at performing kinodynamic planning to remove the constraint that configurations in the contact plan be in static equilibrium. We believe that the most promising direction in this regard is to integrate the notion of Admissible Velocity Propagation in our current work \citep{DBLP:conf/rss/PhamCN13}.
 Addressing these two issues is essential to bridge the gap between the planning and control aspects of multiped locomotion.
