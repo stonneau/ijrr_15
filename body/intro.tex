@@ -65,16 +65,13 @@ the contacts manually for complex interactions.
 In addition to the limits of the current implementations, optimization-based approaches only converge locally.
 
 \textbf{On the other hand, the two problems \Pa and \Pb might be decoupled} to reduce the complexity. The feasibility and interest of the decoupling has been shown by \citeauthor{DBLP:conf/iser/EscandeKMG08} who manually set up a rough root guide path (i.e. an ad-hoc solution to $\mathcal{P}_1$), and then addressed \Pb as the combinatorial computation of a feasible contact sequence in the neighborhood of the guide. A solution could then be found, %efficiently when considering quadruped locomotion \citep{kalakrishnan2011learning}, 
-but at the cost of prohibitive computation times (up to several hours) for constraining scenarios. This approach is suboptimal because the quality of the motion depends on the quality of the guide path. \citeauthor{Bouyarmane2009} precisely focused on automatically computing a guide path with guarantees of \textit{equilibrium feasibility}, by extending key frames of the path into whole-body configurations in static equilibrium. Randomly-sampled configurations are projected to the contact manifold using an inverse-kinematics solver, a computationally-expensive process (about 15 minutes to compute a guide path in the examples presented). Moreover this explicit projection is insufficient to guarantee the feasibility between two key postures in the path. \citeauthor{7140082} also proposed a decoupled approach, with a planning phase based on the reachable workspace of the robot limbs, used to judge the ability to make contact with 
-a discretized environment. This planning phase does not account for collisions, implying that replanning is required in case of failure. This approach is efficient 
-in the demonstrated scenarios. In highly-constraining cases such 
-as the car egress scenario that we address here, we believe that including collision constraints in the planning is a requirement.
+but at the cost of prohibitive computation times (up to several hours) for constraining scenarios. This approach is suboptimal because the quality of the motion depends on the quality of the guide path. \citeauthor{Bouyarmane2009} precisely focused on automatically computing a guide path with guarantees of \textit{equilibrium feasibility}, by extending key frames of the path into whole-body configurations in static equilibrium. Randomly-sampled configurations are projected to the contact manifold using an inverse-kinematics solver, a computationally-expensive process (about 15 minutes to compute a guide path in the examples presented). Moreover this explicit projection is insufficient to guarantee the feasibility between two key postures in the path. \citeauthor{7140082} also proposed a decoupled approach, with a planning phase based on the reachable workspace of the robot limbs, used to judge the ability to make contact with a discretized environment. This planning phase does not account for collisions, implying that replanning is required in case of failure. In highly-constraining cases such as the car egress scenario we address, we believe that including collision constraints in the planning is a requirement~\citep{tonneauisrr15,grey2017footstep}.
 
 For completeness, we lastly mention a new kind of approach, recently proposed in the computer graphics field \citep{hamalainen_cpbp_2015}. The authors
 used black-box physics simulators to perform Model Predictive Control for a humanoid character, and managed to obtain dynamically-consistent motions
-at \gls{interactive} frame rates (we say that a method is interactive when the computation time for planning is less than the
-time for execution). While this new approach provides an exciting direction of research, currently the resulting motions
-look unnatural, and do not seem applicable to real robots.
+at \gls{interactive} frame rates (a method is interactive when the computation time for planning is less than the
+execution time). While this new approach provides an exciting direction of research, currently the resulting motions
+ do not seem applicable to real robots.
 
 As far as robotics applications are concerned, none of the existing planners is \gls{interactive}.
 However, recent contributions to the interpolation between contact poses (problem $\mathcal{P}_3$) have brought promising preliminary solutions \citep{Hauser2014, herzog2015trajectory, Park116, Carpentier2016}. In particular, our algorithm proposed in \citeauthor{Carpentier2016} is \gls{interactive}.
@@ -86,8 +83,7 @@ The main contribution of this paper is exactly this planner.
 
 Our solution belongs to the class of decoupled approaches, because we believe it is the most promising direction~\citep{DBLP:conf/iser/EscandeKMG08} to break the complexity of acyclic contact planning. Compared to previous approaches, our solution has two main novelties: 
 
-\noindent \textbf{Regarding $\mathcal{P}_1$}, we propose a fast guide path planning algorithm. The key to its efficiency is that it does not sample
-directly the contact manifold, but an approximation of the \textit{contact reachable} space. The \textit{contact reachable} space is a low-dimensional space for which there exists a mapping to the contact manifold.
+\noindent \textbf{Regarding $\mathcal{P}_1$}. We propose a fast guide path planning algorithm. The key to its efficiency is that it does not sample directly the contact manifold, but an approximation of the \textit{contact reachable} space. The \textit{contact reachable} space is a low-dimensional space for which there exists a mapping to the contact manifold.
 
 \noindent \textbf{Regarding $\mathcal{P}_2$},  we propose a fast method to extend a \textit{contact reachable} path into a sequence of whole-body configurations in static equilibrium. This  requires the explicit computation of contact configurations. It is guided by dedicated heuristics that quickly synthesize feasible configurations.
 
