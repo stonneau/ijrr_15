@@ -1,0 +1,73 @@
+\section{Addressing $\mathcal{P}_3$}
+\label{app:optim}
+The stair climbing and the standing up scenarios were validated with the trajectory optimization scheme provided in \citeauthor{Carpentier2016}. 
+To address the others scenarios, we propose a new implementation, entirely open source (\url{https://github.com/stonneau/python_sandbox}), which can be integrated directly in our motion planner software.
+This implementation is slower, but handles collision avoidance in the trajectory generation phase.
+It uses a modified formulation of the optimization problem, that we present here.
+
+\subsection{The centroidal cone}
+We rewrite Eq.~\ref{eq:new_eul} in the general case:
+
+%~ \begin{align} \label{eq:new_eul}
+%~ \underbrace{
+%~ \mat{\mathbf{I}_3 & \dots & \mathbf{I}_3 \\
+%~ \hat{\mathbf{p}}_1 & \dots & \hat{\mathbf{p}}_e} \mathbf{V}
+%~ }_\mathbf{G} \bm{\beta}, = 
+%~ \underbrace{\mat{\mathbf{0}_{3\times 3} \\ m \hat{\mathbf{g}}}}_{\mathbf{D}} \mathbf{c} + 
+%~ \underbrace{\mat{-m\mathbf{g} \\ \mathbf{0}}}_{\mathbf{d}}
+%~ \end{align}
+
+\begin{align} \label{eq:new_eul_acc}
+\mathbf{G} \bm{\beta} = 
+\underbrace{\mat{m (\mathbf{\ddot{c}} - {g}) \\m (\mathbf{\ddot{c}} - {g}) + \dot{L}}}_{\mathbf{w}}
+%~ \underbrace{m (\mathbf{\ddot{c}} - \mathbf{g})  \\ m (\mathbf{\ddot{dc}} - \mathbf{g}) + \mathbf{\dot{L}} }_{\mathbf{w}}
+\end{align}
+
+where $\dot{L}$ is the angular momentum expressed at the com.
+Eq.~\ref{eq:new_eul} defines a 6 dimensional cone $\mathcal{K}$ ~\citep{qiu:dhm:2011,Caron2015}. For a given set of contacts,
+this cone determines all the admissible wrenches $\mathbf{w}$ such that the robot won't fall. The objective 
+is thus to plan a trajectory for $c$ and $\dot{L}$ that remains inside $\mathcal{K}$. As a cone,
+$\mathcal{K}$ can be described as a linear inequality, obtained with the double description method~\citep{Fukuda1996}:
+
+\begin{equation}
+\label{eq:cone_k}
+	\mathcal{K} =  \left\{ \mathbf{w}, \mathbf{A}\mathbf{w} \leq \mathbf{b	} \right\}
+\end{equation}
+
+We now consider a two contact configurations  $\mathbf{q}_0$ and $\mathbf{q}_1$ given by our planner: in the general case one contact is broken and one created to get from
+$\mathbf{q}_0$ to $\mathbf{q}_1$. The motion is thus constrained by three cones $\mathcal{K}_s, s =0 \dots 2$. We manually define the duration of each contact phase, of total
+time $T$, and formulate the following optimization problem:
+
+\begin{equation} \label{eq:lin_prog_rob} \begin{aligned}
+%~ \find \quad & \mx{R} \in \Rv{3\times T}, \mxdd{C} \in  \Rv{6\times T} \\
+\minimize_{\mathbf{c}(t), \mathbf{w}(t)}  \quad & \sum_{s=0}^{2} \int_{t_s}^{t_s + \Delta t_s}  h(\mathbf{c}, \mathbf{w})  \\
+\st \quad & \mathbf{\dot{c}} = f(\mathbf{c}, \mathbf{w}) \\
+	\quad & \mathbf{A}_s \mathbf{w}(t)  \leq \mathbf{b}_s , \forall t \in  \left[t_s, t_s + \Delta t_s \right[ \\
+	\quad & \mathbf{c}(0)  = \mathbf{c}_{\mathbf{q}_0} \\
+	\quad & \mathbf{c}(T)  = \mathbf{c}_{\mathbf{q}_1} \\
+	\quad & \mathbf{c}(0)  = \mathbf{\dot{c}}(0)  = \mathbf{\ddot{c}}(0) = \mathbf{0}\\
+	\quad & \mathbf{c}(T)  = \mathbf{\dot{c}}(T)  = \mathbf{\ddot{c}}(T) = \mathbf{0}\\
+    %~ \quad & ({\vct{r}}\tra\vct{r}=1,  \forall t  ?) \\
+    %~ \quad & \delta t \sum\limits_1^{T-1}{\vc{r}^1}\tra {\vc{r}^1} \ge t_{transit} \\
+    %~ \quad & \mx{A}_{\int} \mxdd{C} \leq \vc{a}_{\int} \\
+    %~ \quad & \mx{V}_{\int} \mxd{C} \leq \vc{v}_{\int} \\
+    %~ \quad & \mx{B}_{\int}^{1} \mx{C} \leq \vc{b}_{\int} \\
+    %~ \quad & [\vc{c}_0\tra, \vcd{c}_0\tra]\tra = \vc{x}_0 \\
+    %~ \quad & \vc{c}_T = \vc{c}_T^{input} \\
+\end{aligned} \end{equation}
+
+where $h$ is a cost function (We typically minimize the angular momentum and acceleration over the whole trajectory, and use
+a log barrier to constrain kinematically the center of mass position with respect to the contact locations).
+This formulation can trivially be extended over the whole contact sequence.
+In our implementation, the problem is discretized using time steps of 100 ms. 
+
+As an output, the solution of this optimization problem gives us a admissible center of mass trajectory.
+To compute the whole body motion, we use a two step approach.
+
+First, we plan a kinematic motion for the robot, subject to the contact constraints and center of mass constraints.
+This is achieved using a RRT planner. Using a sampling based planner guarantees that the effector will find a whole-body motion that is collision free.
+
+Planning the whole-body takes approximatively 1.5 seconds for a complete contact transition.
+
+This motion is then validated in our dynamic simulator~\citep{DelPrete2015b}, using the whole-body trajectory as a postural task to an inverse dynamics
+solver, that accounts for the torque constraints of the robot. This final result is shown in the videos.
