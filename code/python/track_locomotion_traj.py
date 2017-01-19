@@ -9,8 +9,10 @@ if cwd+'/data/config' not in sys.path:
     sys.path += [cwd+'/data/config',];
 
 #import test1_planar as conf
-import conf_hyq_hole as conf
+#~ import conf_hyq_hole as conf
 #~ import conf_hyq_bridge as conf
+import conf_hyq_darpa as conf
+#import conf_hrp2_polaris as conf
 
 from pinocchio_inv_dyn.standard_qp_solver import StandardQpSolver
 from pinocchio_inv_dyn.simulator import Simulator
@@ -111,7 +113,7 @@ def updateConstraints(t, i, q, v, invDynForm, contacts, ee_tasks):
             Ni = np.matrix(contacts[name]['N']).T;
             for j in range(Pi.shape[1]):
 #                print "    contact point %d in local frame:"%j, Pi[:,j].T, Ni[:,j].T;
-                print "    contact point %d in world frame:"%j, oMi.act_point(Pi[:,j]).T, (oMi.rotation * Ni[:,j]).T;
+                print "    contact point %d in world frame:"%j, oMi.act(Pi[:,j]).T, (oMi.rotation * Ni[:,j]).T;
         else:
             Pi = conf.DEFAULT_CONTACT_POINTS;   # contact points is expressed in local frame
             Ni = oMi.rotation.T * conf.DEFAULT_CONTACT_NORMALS; # contact normal is in world frame
@@ -255,6 +257,27 @@ def startSimulation(q0, v0, solverId):
         
     return True;
 
+def fusion_data(files):
+    all_data = {'Q':[],'fly':[],'C':[],'frameswitches':[] }
+    current_offset=0
+    for fi in files:
+        f = open(fi, 'rb');
+        print(len(all_data['C']))
+        data = pickle.load(f);
+        for k, el in enumerate(data['frameswitches']):
+            #if(k != 0 or len(all_data['C']) == 0):
+            all_data['frameswitches'] = all_data['frameswitches'] + [[current_offset + el[0], el[1]]]
+        current_offset += len(data['Q'])
+        all_data['Q']   += data['Q'][:];
+        all_data['fly'] += data['fly'][:];
+        all_data['C']   += data['C'][:];
+        print(len(all_data['C']))
+        f.close()
+    T = len(all_data['Q']);
+    conf.MAX_TEST_DURATION = T
+    print "Max duration of the simulation in time steps", T;
+    return all_data, T
+
 
 ''' *********************** BEGINNING OF MAIN SCRIPT *********************** '''
     
@@ -269,18 +292,23 @@ plot_utils.LINE_ALPHA       = conf.LINE_ALPHA;
 plot_utils.LINE_WIDTH_RED   = conf.LINE_WIDTH_RED;
 plot_utils.LINE_WIDTH_MIN   = conf.LINE_WIDTH_MIN;
 
+
 ''' LOAD INPUT DATA '''
 print "Loading input data from file", conf.INPUT_FILE_NAME;
-f = open(conf.INPUT_FILE_NAME, 'rb');
-data = pickle.load(f);
-if(conf.MAX_TEST_DURATION<=0 or conf.MAX_TEST_DURATION>len(data['Q'])):
-    conf.MAX_TEST_DURATION = len(data['Q']);
-elif(len(data['Q'])>conf.MAX_TEST_DURATION):
-    data['Q']   = data['Q'][:conf.MAX_TEST_DURATION];
-    data['fly'] = data['fly'][:conf.MAX_TEST_DURATION];
-    data['C']   = data['C'][:conf.MAX_TEST_DURATION];
-T = len(data['Q']);
-print "Max duration of the simulation in time steps", T;
+data = {}
+if(type(conf.INPUT_FILE_NAME)==list):
+    data, T = fusion_data(conf.INPUT_FILE_NAME)
+else:
+    f = open(conf.INPUT_FILE_NAME, 'rb');
+    data = pickle.load(f);
+    if(conf.MAX_TEST_DURATION<=0 or conf.MAX_TEST_DURATION>len(data['Q'])):
+        conf.MAX_TEST_DURATION = len(data['Q']);
+    elif(len(data['Q'])>conf.MAX_TEST_DURATION):
+        data['Q']   = data['Q'][:conf.MAX_TEST_DURATION];
+        data['fly'] = data['fly'][:conf.MAX_TEST_DURATION];
+        data['C']   = data['C'][:conf.MAX_TEST_DURATION];
+    T = len(data['Q']);
+    print "Max duration of the simulation in time steps", T;
 
 
 ''' CREATE CONTROLLER AND SIMULATOR '''
@@ -288,6 +316,7 @@ q0 = np.matrix(data['Q'][0]).T;
 nq = q0.shape[0];
 nv = nq-1 if conf.freeFlyer else nq;
 v0 = np.matlib.zeros((nv,1));
+print(len(q0))
 invDynForm = createInvDynFormUtil(q0, v0);
 simulator = createSimulator(q0, v0);
 robot = invDynForm.r;
@@ -378,6 +407,8 @@ if(conf.SHOW_FIGURES and conf.PLOT_REF_JOINT_TRAJ):
         ax[0].set_title("Joint "+str(j));
     plt.show();
         
+ 
+        
 if(conf.PLAY_REFERENCE_MOTION):
     print "Gonna play reference motion";
 #    q_ref[2,:] -= 0.03;
@@ -422,6 +453,8 @@ gepgui.setColor('world/ground', [0.8,0.4,0.,1])
 gepgui.applyConfiguration("world/ground",[0,0,0.01,1,0,0,0]); 
 gepgui.setVisibility('world/floor', 'OFF')
 gepgui.refresh()
+if(conf.CAMERA_TRANSFORM):
+    gepgui.setCameraTransform(0,conf.CAMERA_TRANSFORM)
 
 
 for s in conf.SOLVER_TO_INTEGRATE:
@@ -442,6 +475,17 @@ if(conf.PLAY_MOTION_AT_THE_END):
     sleep(1);
     simulator.viewer.play(q[s], dt, 1.0);
     print "Computed motion finished";
+    
+if(conf.RECORD):
+    print "Recording computed motion";
+    if(conf.CAMERA_TRANSFORM):
+        gepgui.setCameraTransform(0,conf.CAMERA_TRANSFORM)
+    sleep(1);
+    gepgui.startCapture(0, conf.RECORD_FILE_NAME, 'jpeg')
+    simulator.viewer.play(q[s], dt, 1.0);
+    sleep(0.05)
+    gepgui.stopCapture(0)
+    print "Recording motion finished";
 
 if(conf.SHOW_FIGURES and conf.PLOT_EE_TRAJ):
     x_ee   = createListOfMatrices(len(ee_names), (3, conf.MAX_TEST_DURATION));
@@ -497,4 +541,5 @@ if(conf.SHOW_FIGURES and conf.PLOT_JOINT_TRAJ):
         ax[0].set_title("Joint "+str(j));
         plt.show();
         
+#ffmpeg -start_number 3036 -r 25 -i seq_6_0_%d.jpeg -r 25 -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -vcodec libx264 seq6.mp4
 

@@ -12,22 +12,17 @@ SAVE_DATA                   = True;
 SMOOTH_FILTER_WINDOW_LENGTH = 41;
 MAX_TEST_DURATION           = -1;
 dt                          = 1e-3;
-FOLDER = '/home_local/dev/hpp/src/2016_ijrr_traj/darpa_ok/'
-INPUT_FILE_NAME             = [FOLDER+'seq_1',FOLDER+'seq_2',FOLDER+'seq_3',FOLDER+'seq_4',FOLDER+'seq_5',FOLDER+'seq_6'];
-#INPUT_FILE_NAME             = [FOLDER+'seq_5', FOLDER+'seq_6'];
-RECORD_FILE_NAME             = 'seq_all';
-RECORD                      = True
-CAMERA_TRANSFORM            = [-1.9623876810073853, -5.876553058624268, 3.1662111282348633, 0.8184708952903748, 0.5468565821647644, -0.09847398102283478, -0.14613758027553558];
+INPUT_FILE_NAME             = '/home_local/dev/hpp/src/2016_ijrr_traj/polaris_2_compressed';
 model_path                  = ["/home_local/dev/hpp/install/share"];
-urdfFileName                = model_path[0] + "/hyq_description/urdf/hyq.urdf";
-sceneFileName               = model_path[0] + "/hpp-rbprm-corba/meshes/darpareduced.stl";
+urdfFileName                = model_path[0] + "/hrp2_14_description/urdf/hrp2_14_reduced.urdf";
+sceneFileName               = model_path[0] + "/hpp-rbprm-corba/meshes/polaris.stl";
 freeFlyer                   = True;
 
 ''' CONTROLLER CONFIGURATION '''
 ENABLE_CAPTURE_POINT_LIMITS     = False;
 ENABLE_TORQUE_LIMITS            = True; # param
 ENABLE_FORCE_LIMITS             = True; # param
-ENABLE_JOINT_LIMITS             = True; # param, modulate with 4 next (position viability false, velocity ok)
+ENABLE_JOINT_LIMITS             = False; # param, modulate with 4 next (position viability false, velocity ok)
 IMPOSE_POSITION_BOUNDS          = True;
 IMPOSE_VELOCITY_BOUNDS          = True;
 IMPOSE_VIABILITY_BOUNDS         = True;
@@ -40,7 +35,7 @@ USE_JOINT_VELOCITY_ESTIMATOR    = False;
 ACCOUNT_FOR_ROTOR_INERTIAS      = True;
 
 # CONTROLLER GAINS
-kp_posture  = 30 #15.0; #1.0;   # proportional gain of postural task
+kp_posture  = 30 #30.0; #1.0;   # proportional gain of postural task
 kd_posture  = 2*sqrt(kp_posture);
 kp_constr   = 100.0;   # constraint proportional feedback gain
 kd_constr   = 2*sqrt(kp_constr);   # constraint derivative feedback gain
@@ -62,7 +57,7 @@ maxTime = 0.8;      # max computation time for the solver in seconds
 verb=0;             # verbosity level (0, 1, or 2)
 
 # CONTACT PARAMETERS
-USE_INPUT_CONTACT_POINTS = False;
+USE_INPUT_CONTACT_POINTS = True;
 DEFAULT_CONTACT_POINTS  = np.matrix([0., 0., 0.]).T    # contact points in local reference frame
 DEFAULT_CONTACT_NORMALS = np.matrix([0., 0., 1.]).T    # contact normals in local reference frame
 mu  = np.array([0.9, 0.1]);          # force and moment friction coefficient
@@ -80,8 +75,8 @@ MAX_CONSTRAINT_ERROR        = 0.3;
 ''' VIEWER PARAMETERS '''
 ENABLE_VIEWER               = True;
 PLAY_MOTION_WHILE_COMPUTING = True;
-PLAY_REFERENCE_MOTION       = False;
-PLAY_MOTION_AT_THE_END      = False;
+PLAY_REFERENCE_MOTION       = True;
+PLAY_MOTION_AT_THE_END      = True;
 DT_VIEWER                   = 10*dt;   # timestep used to display motion with viewer
 
 ''' FIGURE PARAMETERS '''
