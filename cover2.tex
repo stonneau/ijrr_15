@@ -5,34 +5,70 @@
 \begin{document}
 \maketitle
 
-This cover letter for the manuscript ``An efficient acyclic contact planner for
-legged robots'' plays more the role of a rebutal, since the paper is a resubmission for the ISSR'15 sepcial issue, and that we ask for reviewer continuity. We left the original cover
-letter at the end of this document.
+%This cover letter for the manuscript ``An efficient acyclic contact planner for legged robots'' plays more the role of a rebutal, since the paper is a resubmission for the ISSR'15 sepcial issue, and that we ask for reviewer continuity.
+This cover letter introduces the first revision of the manuscript ``An efficient acyclic contact planner for legged robots'', resubmited for the ISSR'15 sepcial issue.
+As discussed with the Editor, we hoped to have reviewer continuity for the revision.
+The cover letter then plays more the role of a rebutal.
+We left the original cover letter at the end of this document.
 
 We would first like to thank the reviewers for their previous feedback on the initial manuscript. We believe we have answered
 all of their concerns, the main ones being that our method had not been tested on a real robot or a simulation, and that the paper was too verbose.
 In the following lines we are going to describe how we improved our paper in this regard, and answer to the other remarks of the reviewers.
 
+\section{Recall of main paper contributions}
+The paper is concerned with the problem of planning acyclic contact planning. 
+More precisely, we propose a very efficient method to address what we believe is the core of the difficulty of the contact planning problem: discovering the sequence of key contact posture that would lead to a safe and stable contact trajectory of the robot. 
+Using the terminlogy of the paper, our contact planner addressed the two sub-problems $\mathcal{P}_1$ (finding a guide path for the robot root) and $\mathcal{P}_2$ (finding a sequence of stable contact postures and corresponding contact locations).
+Our claim is that the solution of our planner leads to a straight-forward resolution of the last sub-problem $\mathcal{P}_3$ (finding the complete trajectory connecting the contact postures).
+In particular, our method is able to interactive performances, i.e. the planner needs less time to compute the solution than what is needed for the robot to execute it.
+This practical result corresponds to a dramatic improve of the state of the art, for example comparing to the capabilities of planning acyclic contact motions demonstrated by the humanoid teams during the Darpa Robotics Challenge last year.
+
+Regarding this contribution, the reviews mostly criticized the structure of the paper (too verbose) and the unjustified claim that the contact sequence output by the planner leads to easy resolution of $\mathcal{P}_3$ hence complete resolution of the contact planning problem.
+
+In the revision, we implemented a solver inspired by the state of the art to solve $\mathcal{P}_3$ and empiricially proved the claim that our $\mathcal{P}_1$-$\mathcal{P}_2$ planner leads to easily solving $\mathcal{P}_3$. 
+All the robot contact sequences reported in the paper have been converted to full contact trajectories using this $\mathcal{P}_3$ solution.
+We also executed one of them on the real robot.
+This extension, along with the correction of the other remarks by the reviewers, have been integregated in the revision paper, that we also reworked to make it clearer, shorter and sharper.
+
+Details of these modifications follow.
+
 \section{Validation of the method (addressing  $\mathcal{P}_3$) }
-Because we had already validated some of our plans, we were really surprised by the remark of reviewer 2 stating that our plans are not executable, even in simulation.
-The stair climbing scenario has been demonstrated
-on the real HRP-2 robot, while the standing up had been demonstrated in simulation. While it was mentioned in the paper,
-we did not insist on these demonstrations because our main contribution focuses on the other problems. 
+In his review, reviewer 2 stated that our plans are likely to be not executable, even in simulation.
 
-We believe that, as reviewer 1 notices, this observation was due to the fact that we do not clearly define what we mean by a contact plan.
-This is now detailed in section 5.1.. In any case, the validation videos joined to the submission should now establish that our plans are in indeed feasible, even without considering
-the torque constraints.
+\begin{quote}
+  \textit{A quick glance at the sequences displayed in the video reveals that the "motion patterns" (and I understand these are not "motions" per se, but "contact plans") are not physically consistent (even reagrding them as mere contact plans and not as the final motions). The robot moves a contact without needing to readjust the posture in order to release that contact (or "set it free", by nullifying the contact forces on that contact). This results in sequences in which the contacts seem to be "slided" rather than removed and repositioned. This denotes a significant flaw in the algorithm.   }
+\end{quote}
 
-In this submission, we have thus joined the simulation and real life videos of all the scenarios we demonstrate.
+We were really surprised by the remark, in particular because we had already validated some of our plans.
+The stair climbing scenario has been demonstrated on the real HRP-2 robot, while the standing up had been demonstrated in simulation. 
+While it was mentioned in the paper, we did not insist on these demonstrations because our main contribution focuses on the other problems. 
+We believe that, as reviewer 1 notices, this observation was due to the fact that we do not clearly define what we mean by a contact plan (i.e. a discrete sequence of key contact posture with the corresponding contact locations).
+We thank the reviewers for these comments, since it pointed out that what we believed to be an evidence must be carefully explained and justified.
+
+A rigorous definition of what we mean by contat plan is now detailed in section 5.1. 
+
+%In any case, the validation videos joined to the submission should now establish that our plans are in indeed feasible, even without considering the torque constraints.
+
+We also implemented a solver inspired by the state of the art to dynamically interpolate the contact plan and produce a complete trajectory of the robot, that we validated in a full-dynamics simulator. 
+This implementation completely validates that the contact plan is feasible by the real robot.
+We also indeed executed one of the computed trajectory (climbing the stairs with HRP-2).
+
+We have joined the full-dynamics simulation and real life videos of all the scenarios we demonstrate.
 These videos show that the plans we compute correspond to feasible motions.
-We thank the reviewers for this comment,
-since we now believe that our paper is stronger with the complete demonstration. However, while we briefly describe how we solve $\mathcal{P}_3$, the focus of the 
-paper remains $\mathcal{P}_1$ and $\mathcal{P}_2$.
+While we briefly describe how we solve $\mathcal{P}_3$, the focus of the paper remains $\mathcal{P}_1$ and $\mathcal{P}_2$. 
+The solution of $\mathcal{P}_3$ is reported in the appendix to emphasize the main focus.
 
+\newcommand{\mP}[1]{$\mathcal{P}_#1$}
 
 \section{Success rates of the method}
-At this point, we believe it is important to clarify our position regarding both reviewers concerns of the success rates of our paper.
-We did something that no other contact planning paper does, that is providing the success rates of our contact planner. Our method is not always successful, we assume it and argue that it is mostly successful, and that it can always find a feasible solution fast enough for online applications by replanning upon failure.
+At this point, we believe it is important to clarify our position regarding the concerns of both reviewers about the success rates of our paper.
+In the paper, we are providing the success rates of our contact planner. 
+Such an empirical study has yet never been provided for other contact planners (arguabily because previous works did not reached the maturity level that would have permit such an empirical study).
+Our method is not always successful, as very often with probabilistic searches.
+More precisely, the hypothesis taken by \mP1 may lead to infeasible \mP2 problem, and similarly \mP2 hypotheses may lead to infeasible to infeasible \mP3.
+We accept this fact and argue that it is mostly successful (i.e. more than 90\% of success in reasonable ``DRC-like'' scenarios).
+Even in case of failure, the planner is based on random sampling that approximate probabilistic completeness, and can be restarted to obtain another candidate trajectory.
+In practice, it can always find a feasible solution fast enough for online applications by replanning upon failure.
 
 In previous works, it is in fact unknown whether the methods are always successful or not. We simply have no idea. For instance, the CIO of Mordatch,
 because of the local convergence of the method, \textbf{necessarily} fails in some scenarios. We just do not know how often. Similarly, Escande et al. had to manually edit 
