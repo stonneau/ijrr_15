@@ -18,12 +18,13 @@ a contact generator, used to generate static equilibrium configurations. We firs
 %~ is described in Appendix~\ref{sec:heuristics}.
 
 \subsection{Definition of a contact sequence}
-In previous contributions, a contact plan is defined as a sequence of configurations that describe a quasi-static equilibrium configuration
-for each existing phase of the motion. For instance, a walk cycle would be described by three key configurations: a double support configuration,
-a simple configuration (the contact is broken), and another double support configuration (a contact is created). Our definition of the contact plan differs: in this example it would simply consists in the two double support configurations. 
-However, in the case where the contact broken and the contact created sequentially are not related to the same effector, our planner outputs two distinct states.
-This representation is sufficient to describe all the contact constraints of the problem. Furthermore it removes the unnecessary constraint of having a simple support,
-quasi static configuration in the path as in the example. As shown in the validation video, this allows our framework to produce motions that are not quasi static, but dynamic. 
+In previous contributions\adnote{Add reference here}, a contact plan is defined as a sequence of \deladp{configurations that describe a} quasi-static equilibrium configurations
+for each \repadp{contact}{existing} phase \deladp{of the motion}. For instance, a walk cycle would be described by three key configurations: a double-support configuration, a single-support configuration (a contact is broken), and another double-support configuration (a contact is created). 
+Our definition of contact plan differs: between two consecutive configurations we allow both a contact break and a contact creation---if they are on the same effector. 
+In the previous example, our contact plan would simply consist of the two double-support configurations. 
+%However, if the contact broken and the contact created sequentially are not on the same effector, our planner outputs two distinct states.
+This representation is sufficient to describe all the contact constraints of the problem. Furthermore it removes the need to have single-support quasi-static configurations as in the example. 
+As shown in the companion video, this allows our framework to produce dynamic motions. 
 
 \subsection{Contact generator}
 \label{sec:single_contact}
