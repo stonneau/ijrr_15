@@ -1,9 +1,9 @@
 \section{Addressing $\mathcal{P}_3$}
 \label{app:optim}
 The stair climbing and the standing up scenarios were validated with the trajectory optimization scheme provided in \citeauthor{Carpentier2016}. 
-To address the others scenarios, we propose a new implementation, entirely open source (\url{https://github.com/stonneau/python_sandbox}), which can be integrated directly in our motion planner software.
-This implementation is slower, but handles collision avoidance in the trajectory generation phase.
-It uses a modified formulation of the optimization problem, that we present here.
+The optimization is formulated as an optimal control problem that aims at generating a valid trajectory for the center of mass.
+To address the others scenarios, we propose a new implementation, entirely open source (\url{https://github.com/stonneau/python_sandbox}), which can be integrated directly in our motion planner software. This formulation uses the center of mass acceleration and angular momentum as input variables, while previously the cotnact forces were used.
+The center of mass trajectory resulting from the optimization is then turned into a collision-free whole-body trajectory.
 
 We rewrite Eq.~\ref{eq:new_eul} in the general case:
 
@@ -18,24 +18,25 @@ We rewrite Eq.~\ref{eq:new_eul} in the general case:
 
 \begin{align} \label{eq:new_eul_acc}
 \mathbf{G} \bm{\beta} = 
-\underbrace{\mat{m (\mathbf{\ddot{c}} - {g}) \\m (\mathbf{\ddot{c}} - {g}) + \dot{L}}}_{\mathbf{w}}
+\underbrace{\mat{m (\mathbf{\ddot{c}} - \mathbf{g}) \\m (\mathbf{\ddot{c}} - \mathbf{g}) + \dot{L}}}_{\mathbf{w}}
 %~ \underbrace{m (\mathbf{\ddot{c}} - \mathbf{g})  \\ m (\mathbf{\ddot{dc}} - \mathbf{g}) + \mathbf{\dot{L}} }_{\mathbf{w}}
 \end{align}
 
 where $\dot{L}$ is the angular momentum expressed at the com.
 Eq.~\ref{eq:new_eul_acc} defines a 6 dimensional cone $\mathcal{K}$ ~\citep{qiu:dhm:2011,Caron2015}. For a given set of contacts,
-this cone determines all the admissible wrenches $\mathbf{w}$ such that the robot won't fall. The objective 
-is thus to plan a trajectory for $c$ and $\dot{L}$ that remains inside $\mathcal{K}$. As a cone,
-$\mathcal{K}$ can be described as a linear inequality, obtained with the double description method~\citep{Fukuda1996}:
+this cone determines all the contact forces that generate an admissible wrench $\mathbf{w}$ such that the robot won't fall.
+The face form of $\mathcal{K}$ can be computed using the double description method~\citep{Fukuda1996}, resulting in the following linear inequalities:
 
 \begin{equation}
 \label{eq:cone_k}
 	\mathcal{K} =  \left\{ \mathbf{w}, \mathbf{A}\mathbf{w} \leq \mathbf{b	} \right\}
 \end{equation}
 
-We now consider a two contact configurations  $\mathbf{q}_0$ and $\mathbf{q}_1$ given by our planner: in the general case one contact is broken and one created to get from
-$\mathbf{q}_0$ to $\mathbf{q}_1$. The motion is thus constrained by three cones $\mathcal{K}_s, s =0 \dots 2$. We manually define the duration of each contact phase, of total
-time $T$, and formulate the following optimization problem:
+The objective 
+is then to plan a trajectory for the center of mass such that the generated $\mathbf{w}$ always verifies Eq.~\ref{eq:cone_k}. 
+We now consider two contact configurations  $\mathbf{q}_0$ and $\mathbf{q}_1$ computed by our planner: in the general case one contact is broken and one created to get from
+$\mathbf{q}_0$ to $\mathbf{q}_1$. The motion is thus constrained by three cones $\mathcal{K}_s, s =0 \dots 2$. We manually define the duration of each of the three contact phases.
+We call the total duration of the motion $T$, and formulate the following optimization problem:
 
 \begin{equation} \label{eq:lin_prog_rob} \begin{aligned}
 %~ \find \quad & \mx{R} \in \Rv{3\times T}, \mxdd{C} \in  \Rv{6\times T} \\
@@ -56,9 +57,8 @@ time $T$, and formulate the following optimization problem:
     %~ \quad & \vc{c}_T = \vc{c}_T^{input} \\
 \end{aligned} \end{equation}
 
-$h$ is a cost function (We typically minimize the angular momentum and acceleration over the whole trajectory, and use
-a log barrier to constrain kinematically the center of mass position with respect to the contact locations). $f$ is the colocation method
-bounding the position, velocity and acceleration of the center of mass. 
+As a cost function, $h$ typically minimizes the angular momentum and acceleration variation over the whole trajectory. $f$ is the integration method
+that ties together the position, velocity and acceleration of the center of mass. 
 $\mathbf{D}_s$ and $\mathbf{d}_s$ denote stacked kinematic constraints on the center of mass position, determined by the active contact locations.
 The inequalities for each contact are determined in the same way that the reachable workspace is computed in Appendix~\ref{app:rom}, with
 the effector serving as root (a triangulated object is a polytope, and as such can be described as a set of linear inequalities).
@@ -69,10 +69,10 @@ In our implementation, the problem is discretized using time steps of 100 ms.
 As an output, the solution of this optimization problem gives us a admissible center of mass trajectory.
 To compute the whole body motion, we use a two step approach.
 
-First, we plan a kinematic motion for the robot, subject to the contact constraints and center of mass constraints.
-This is achieved using a RRT planner. Using a sampling based planner guarantees that the effector will find a whole-body motion that is collision free.
+First, we plan a kinematic motion for the robot, subject to the contact constraints. We also constrain the center of mass to follow
+the computed trajectory. This is achieved using a constraint-based RRT planner~\citep{7759083}. As a result we obtain a whole-body motion that is collision free.
 
-Planning the whole-body takes approximatively 1.5 seconds for a complete contact transition.
+The entire resolution takes approximatively 1.5 seconds for a complete contact transition.
 
-This motion is then validated in our dynamic simulator~\citep{DelPrete2015b}, using the whole-body trajectory as a postural task to an inverse dynamics
+This motion is then validated in our dynamic simulator~\citep{DelPrete2015b}, using the trajectory as a reference postural task to an inverse dynamics
 solver, that accounts for the torque constraints of the robot. This final result is shown in the videos.
