@@ -70,7 +70,7 @@ We define $C_{Contact}^{\epsilon} \supset C_{Contact}$ as the set of configurati
 between an effector and an obstacle is less than $\epsilon \in \mathbb{R}$.
 We then apply the following steps:
 \begin{enumerate}
-\item Generate off-line $N$ valid sample limb configurations $\mathbf{q}^k_i,  0 \leq i < N$;
+\item Generate off-line $N$ valid sample limb configurations $\mathbf{q}^k_i,  0 \leq i < N$ (We choose $N=10^3$);
 \item Using the end-effector positions $\mathbf{p}(\mathbf{q}^k_i)$ as indices, store each sample in an octree data structure;
 \item At runtime, when contact creation is required, intersect the octree and the environment to retrieve the list of samples $S \subset C_{Contact}^{\epsilon}$ close to contact (Figure~\ref{fig:contact_gen} (b) and (c));
 \item Use a user-defined heuristic $h$ to sort $S$;
