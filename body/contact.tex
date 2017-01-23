@@ -2,8 +2,8 @@
 \section{From a guide path to a discrete sequence of contact configurations ($\mathcal{P}_2$)}
 \label{sec:contact}
 In the second phase, we compute a discrete sequence of static equilibrium configurations $\mathbf{Q}^{\overline{0}}$ given a root path
-$\mathbf{q}^0(t) : [0,1] \longrightarrow$ \gls{$C_{Reach}^0$}. This contact planner is built on top of
-a contact generator, used to generate static equilibrium configurations. We first describe the generator, before detailing the contact planning algorithm.
+$\mathbf{q}^0(t) : [0,1] \longrightarrow$ \gls{$C_{Reach}^0$}. This contact planner uses a contact generator, used to generate static equilibrium configurations. We first describe the contact planning algorithm, before describing
+the contact generator.
 %~ Our planner computes guide paths in $C_{Reach}^0$ , an approximation of \gls{$C_{Equil}^0$}.
 %~ As an input of this stage, we however assume an \gls{equilibrium feasible} root guide path $\mathbf{q}^0(t) : [0,1] \longrightarrow$ \gls{$C_{Equil}^0$}.
 %~ If this is not the case, our planner will fail rapidly, thus allowing replanning, as discussed in Section~\ref{sec:perf}.
@@ -26,76 +26,10 @@ In the previous example, our contact plan would simply consist of the two double
 This representation is sufficient to describe all the contact phases. Furthermore it removes the need to have single-support quasi-static configurations as in the example. 
 As shown in the companion video, this allows our framework to produce dynamic motions. 
 
-\subsection{Contact generator}
-\label{sec:single_contact}
-
-\begin{figure*}
-  \centering
-  \begin{overpic}[width=0.8\linewidth]{figures/contact_gen}
-		\put (1,1) {a} 
-		\put (22,1) {b} 
-		\put (42,1) {c} 
-		\put (62,1) {d} 
-		\put (83,1) {e} 
-	\end{overpic}
-  \caption{Generation of a contact configuration for the right leg of HRP-2. (a): Selection of reachable obstacles. (b): Entries of the limb samples database (with $N = 4$). (c): With a proximity query between the octree database and the obstacles, configurations too far from obstacles are discarded. (d): The best candidate according to a user-defined heuristic $h$ is chosen. (e): The final contact is achieved using inverse kinematics.}
-  \label{fig:contact_gen}
-\end{figure*}
-
-
-The contact generation treats each limb $R^k$ independently.
-Given a configuration of the root and the other limbs, it computes a configuration $\mathbf{q}^k$ such that $R^k$ is in contact and the robot $R$ is in static equilibrium:
-\begin{equation}
-\label{eq:contact_gen}
-	\mathbf{q}^{\overline{k}}  \longrightarrow \mathbf{q}^k, (\mathbf{q}^{k} \oplus \mathbf{q}^{\overline{k}}) \in  C_{Equil} \wedge \mathbf{q}^k \in  C_{Contact}^k 
-\end{equation}
-
-Contact generation is typically adressed by randomly sampling a limb configuration, before projecting the effector onto the closest surface with an inverse kinematics solver.
-This process is repeated until either a solution for Eq.~(\ref{eq:contact_gen}) is found, or the generator fails, according to a user-defined maximum number of trials.
-We favor a modified implementation of this naive approach, more computationally efficient, introduced in our previous work~\citep{Tonneau2014}.
-
-%~ Given a configuration $\mathbf{q}^{\overline{k}}$ of the root and all the limbs but $R^k$, we look for a limb configuration $\mathbf{q}^k$ such that
-%~ $R^k$ is in contact, and not colliding (neither with parts of the robot nor with the environment).
-%~ While exhibiting analytically a $\mathbf{q}^{k}$ does not seem tractable, we can iteratively try to generate one as follows:
-%~ \begin{enumerate}
-%~ \item Generate randomly a collision-free limb configuration;
-%~ \item Project the end-effector onto the closest surface with inverse kinematics;
-%~ \item If a valid solution is found, stop. Otherwise repeat from step 1.
-%~ \end{enumerate}
-
-
-%~ We favor a modified implementation of this naive approach, more computationally efficient, introduced in our previous work~\citep{Tonneau2014}.
-
-We define $C_{Contact}^{\epsilon} \supset C_{Contact}$ as the set of configurations such that the minimum distance 
-between an effector and an obstacle is less than $\epsilon \in \mathbb{R}$.
-We then apply the following steps:
-\begin{enumerate}
-\item Generate off-line $N$ valid sample limb configurations $\mathbf{q}^k_i,  0 \leq i < N$ (We choose $N=10^3$);
-\item Using the end-effector positions $\mathbf{p}(\mathbf{q}^k_i)$ as indices, store each sample in an octree data structure;
-\item At runtime, when contact creation is required, intersect the octree and the environment to retrieve the list of samples $S \subset C_{Contact}^{\epsilon}$ close to contact (Figure~\ref{fig:contact_gen} (b) and (c));
-\item Use a user-defined heuristic $h$ to sort $S$;
-\item If $S$ is empty, stop (failure). Else select the first configuration of $S$. Project it onto contact using inverse kinematics. (Figure~\ref{fig:contact_gen} (d) and (e));
-\item If Eq.~\ref{eq:contact_gen} is verified, stop (success). Otherwise remove the element from $S$ and go to step 5.
-\end{enumerate}
-
-%~ This approach has two main advantages.
-%~ First, this allows us to select a large number of candidates in a single proximity request.
-%~ Having several candidates is interesting, because it allows to compare them using a user-selected heuristic $h$, thus obtaining
-%~ a locally-optimal candidate.
-%~ Furthermore, the fact that the candidates are already close to contact increases the odds that the inverse kinematics will converge to a valid solution in a small number of iterations.
-%~ Regarding convergence, it is immediate to verify that as $N$ grows, the probability of finding a solution if it exists converges to 1.
-%~ $N$ is a parameter that allows us to specify the trade-off between exhaustiveness and efficiency.
-The reader is invited to refer to our previous work for an extensive discussion on the benefits of this approach, and the optimal choice 
-of the parameter $N$~\citep{Tonneau2014}. Our criterion to assert efficiently the static equilibrium of the robot, as well as the heuristics $h$ are detailed in Appendix~\ref{sec:heuristics}.
-
-%~ It should be noted that a failure case for our contact generator does not necessarily mean that the planner will globally fail. Indeed,
-%~ for a given root configuration, if contact configurations are found for other limbs, resulting in static equilibrium, the configuration will be accepted despite
-%~ the failure to generate a contact.
-
 \subsection{Contact planning algorithm}
-Starting from an initial whole-body configuration, we use the contact generator to compute a sequence
+Starting from an initial whole-body configuration, we compute a sequence
 of whole-body configurations  $\mathbf{Q}^{\overline{0}}$ along the root path $\mathbf{q}^0(t)$.
-The algorithm details can be found in Appendix~\ref{app:contact}. Here we provide an intuition of it.
+The algorithm can be found in Appendix~\ref{app:contact}. Here we provide an intuition of it.
 %~ Although we address acyclic contact sequences, the algorithm is deterministic in the order in which 
 %~ the contacts are created, allowing it to break the combinatorial.
 
@@ -186,6 +120,73 @@ Contacts are created using a FIFO approach: we try first to create a contact wit
 %~ was not successful for a limb, the limb is pushed on top of the queue, and will only be tried again after the others.}
 %~ \end{enumerate}
 
-This set of rules defines a deterministic contact planning algorithm.
-The determinism of this algorithm makes it efficient, at the cost of not being probabilistically complete.
 %~ \deladp{However, in practice the planner is successful in the large majority of cases, as discussed in Section~\ref{sec:perf}.}
+
+\subsection{Contact generator}
+\label{sec:single_contact}
+
+\begin{figure*}
+  \centering
+  \begin{overpic}[width=0.8\linewidth]{figures/contact_gen}
+		\put (1,1) {a} 
+		\put (22,1) {b} 
+		\put (42,1) {c} 
+		\put (62,1) {d} 
+		\put (83,1) {e} 
+	\end{overpic}
+  \caption{Generation of a contact configuration for the right leg of HRP-2. (a): Selection of reachable obstacles. (b): Entries of the limb samples database (with $N = 4$). (c): With a proximity query between the octree database and the obstacles, configurations too far from obstacles are discarded. (d): The best candidate according to a user-defined heuristic $h$ is chosen. (e): The final contact is achieved using inverse kinematics.}
+  \label{fig:contact_gen}
+\end{figure*}
+
+To generate contacts, we proceed as follows.
+The contact generator treats each limb $R^k$ independently.
+Given a configuration of the root and the other limbs, it computes a configuration $\mathbf{q}^k$ such that $R^k$ is in contact and the robot $R$ is in static equilibrium:
+\begin{equation}
+\label{eq:contact_gen}
+	\mathbf{q}^{\overline{k}}  \longrightarrow \mathbf{q}^k, (\mathbf{q}^{k} \oplus \mathbf{q}^{\overline{k}}) \in  C_{Equil} \wedge \mathbf{q}^k \in  C_{Contact}^k 
+\end{equation}
+
+Contact generation is typically adressed by randomly sampling a limb configuration, before projecting the effector onto the closest surface with an inverse kinematics solver.
+This process is repeated until either a solution for Eq.~(\ref{eq:contact_gen}) is found, or the generator fails, according to a user-defined maximum number of trials.
+We favor a modified implementation of this naive approach, more computationally efficient, introduced in our previous work~\citep{Tonneau2014}.
+
+%~ Given a configuration $\mathbf{q}^{\overline{k}}$ of the root and all the limbs but $R^k$, we look for a limb configuration $\mathbf{q}^k$ such that
+%~ $R^k$ is in contact, and not colliding (neither with parts of the robot nor with the environment).
+%~ While exhibiting analytically a $\mathbf{q}^{k}$ does not seem tractable, we can iteratively try to generate one as follows:
+%~ \begin{enumerate}
+%~ \item Generate randomly a collision-free limb configuration;
+%~ \item Project the end-effector onto the closest surface with inverse kinematics;
+%~ \item If a valid solution is found, stop. Otherwise repeat from step 1.
+%~ \end{enumerate}
+
+
+%~ We favor a modified implementation of this naive approach, more computationally efficient, introduced in our previous work~\citep{Tonneau2014}.
+
+We define $C_{Contact}^{\epsilon} \supset C_{Contact}$ as the set of configurations such that the minimum distance 
+between an effector and an obstacle is less than $\epsilon \in \mathbb{R}$.
+We then apply the following steps:
+\begin{enumerate}
+\item Generate off-line $N$ valid sample limb configurations $\mathbf{q}^k_i,  0 \leq i < N$ (We choose $N=10^3$);
+\item Using the end-effector positions $\mathbf{p}(\mathbf{q}^k_i)$ as indices, store each sample in an octree data structure;
+\item At runtime, when contact creation is required, intersect the octree and the environment to retrieve the list of samples $S \subset C_{Contact}^{\epsilon}$ close to contact (Figure~\ref{fig:contact_gen} (b) and (c));
+\item Use a user-defined heuristic $h$ to sort $S$;
+\item If $S$ is empty, stop (failure). Else select the first configuration of $S$. Project it onto contact using inverse kinematics. (Figure~\ref{fig:contact_gen} (d) and (e));
+\item If Eq.~\ref{eq:contact_gen} is verified, stop (success). Otherwise remove the element from $S$ and go to step 5.
+\end{enumerate}
+
+%~ This approach has two main advantages.
+%~ First, this allows us to select a large number of candidates in a single proximity request.
+%~ Having several candidates is interesting, because it allows to compare them using a user-selected heuristic $h$, thus obtaining
+%~ a locally-optimal candidate.
+%~ Furthermore, the fact that the candidates are already close to contact increases the odds that the inverse kinematics will converge to a valid solution in a small number of iterations.
+%~ Regarding convergence, it is immediate to verify that as $N$ grows, the probability of finding a solution if it exists converges to 1.
+%~ $N$ is a parameter that allows us to specify the trade-off between exhaustiveness and efficiency.
+The reader is invited to refer to our previous work for an extensive discussion on the benefits of this approach, and the optimal choice 
+of the parameter $N$~\citep{Tonneau2014}. Our criterion to assert efficiently the static equilibrium of the robot, as well as the heuristics $h$ are detailed in Appendix~\ref{sec:heuristics}.
+
+%~ It should be noted that a failure case for our contact generator does not necessarily mean that the planner will globally fail. Indeed,
+%~ for a given root configuration, if contact configurations are found for other limbs, resulting in static equilibrium, the configuration will be accepted despite
+%~ the failure to generate a contact.
+
+%~ In this Section, we have thus defined a deterministic contact planning algorithm.
+%~ The determinism of this algorithm makes it efficient, at the cost of not being probabilistically complete.

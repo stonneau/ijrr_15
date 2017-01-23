@@ -32,7 +32,7 @@ ItemLabels=\ding{43},%
 
 Dear Editor, \medskip
 
-First of all we thank you for the time spent on considering our original manuscript. Indeed,
+First of all we thank you for the time spent considering our original manuscript. Indeed,
 %This cover letter for the manuscript ``An efficient acyclic contact planner for legged robots'' plays more the role of a rebutal, since the paper is a resubmission for the ISSR'15 sepcial issue, and that we ask for reviewer continuity.
 this cover letter introduces the first revision of the manuscript ``An efficient acyclic contact planner for legged robots'', resubmitted for the ISSR'15 special issue.
 As discussed with Prof. Hollerbach, we hope to have reviewer continuity for the revision.
@@ -43,24 +43,28 @@ We would then like to thank the reviewers for their previous feedback on the ini
 all of their concerns, the main ones being that our method had not been tested on a real robot or a simulation, and that the paper was too verbose.
 In the following lines we are going to describe how we improved our paper in this regard, and answer to the other remarks of the reviewers.
 
-\section{Recall of main paper contributions}
-The paper is concerned with the problem of planning acyclic contact movements. 
+Furthermore, we included the integrality of the previous reviews, decomposed in an array. Each row contains a paragraph of the review, as well as our answer to the
+specific paragraph.
+
+\section{Rebutal}
+\subsection{Main contributions of the paper}
 More precisely, we propose a very efficient method to address what we believe is the core of the difficulty of the contact planning problem: discovering the sequence of key contact postures that would lead to a safe and stable contact trajectory of the robot. 
+The paper is concerned with the problem of planning acyclic contact movements. 
 Using the terminology of the paper, our contact planner addressed the two sub-problems $\mathcal{P}_1$ (finding a guide path for the robot root) and $\mathcal{P}_2$ (finding a sequence of stable contact postures and corresponding contact locations).
-Our claim is that the solution of our planner leads to a straight-forward resolution of the last sub-problem $\mathcal{P}_3$ (finding the complete trajectory connecting the contact postures).
-In particular, our method proposes interactive performances, i.e. the planner needs less time to compute the solution than what is needed for the robot to execute it.
+Our claim is that the solution produced by our planner leads to a feasible sub-problem $\mathcal{P}_3$ (finding the complete trajectory connecting the contact postures).
+We demonstrate that our method provides interactive performances, i.e. the planner needs less time to compute the solution than what is needed for the robot to execute it.
 This practical result corresponds to a significant improvement of the state of the art, for example regarding the capabilities of acyclic contact planners demonstrated by the humanoid teams during the Darpa Robotics Challenge last year.
 
-Regarding this contribution, the reviews mostly criticized the structure of the paper (too verbose) and the unjustified claim that the contact sequence output by the planner leads to a feasible resolution of $\mathcal{P}_3$.
+Regarding this contribution, the reviews essentially criticized the structure of the paper (too verbose) and the undemonstrated claim that the contact sequence output by the planner leads to a feasible resolution of $\mathcal{P}_3$.
 
-In the revision, we implemented a solver inspired by the state of the art to solve $\mathcal{P}_3$ and empirically proved the claim that our $\mathcal{P}_1$-$\mathcal{P}_2$ planner leads to easily solving $\mathcal{P}_3$. 
-All the robot contact sequences reported in the paper have been converted to full contact trajectories using this $\mathcal{P}_3$ solution, that were validated in an contact simulator.
+In the revision, we implemented a solver inspired by the state of the art to solve $\mathcal{P}_3$ and empirically proved the claim that our $\mathcal{P}_1$-$\mathcal{P}_2$ planner leads to a feasible $\mathcal{P}_3$. 
+All the robot contact sequences reported in the paper have been converted to full contact trajectories using this $\mathcal{P}_3$ solution, that were validated in an inverse dynamics simulator.
 We also executed one of them on the real robot.
 This extension, along with the correction of the other remarks by the reviewers, have been integrated in the revision paper, that we also reworked to make it clearer, shorter and sharper (the core of the paper is now 13 pages long, as opposed to 17 before) than the original manuscript.
 
 The details of these modifications follow.
 
-\section{Validation of the method (addressing  $\mathcal{P}_3$) }
+\subsection{Validation of the method (addressing  $\mathcal{P}_3$) }
 In his review, Reviewer 2 stated that our plans are likely to be not executable, even in simulation.
 
 \begin{quote}
@@ -70,9 +74,8 @@ In his review, Reviewer 2 stated that our plans are likely to be not executable,
 We were really surprised by the remark, in particular because we had already validated some of our plans.
 The stair climbing scenario has been demonstrated on the real HRP-2 robot, while the standing up had been demonstrated in simulation. 
 While it was mentioned in the paper, we did not insist on these demonstrations because our main contribution focuses on the other problems. 
-We believe that, as Reviewer 1 notices, this observation was due to the fact that we did not clearly define what we mean by a contact plan (i.e. a discrete sequence of key contact posture with the corresponding contact locations).
-We thank the reviewers for these comments, since it pointed out that what we believed to be an evidence must be carefully explained and justified.
-
+We believe that, as Reviewer 2 notices, his observation is due to the fact that we did not clearly define what we mean by a contact plan (i.e. a discrete sequence of key contact posture with the corresponding contact locations).
+We thank the reviewers for these comments, which pointed out that we had to carefully explain and justify this aspect of the paper.
 A rigorous definition of a contact plan is now detailed in section 5.1. 
 
 %In any case, the validation videos joined to the submission should now establish that our plans are in indeed feasible, even without considering the torque constraints.
@@ -88,14 +91,14 @@ The solution of $\mathcal{P}_3$ is reported in the appendix to emphasize the mai
 
 \newcommand{\mP}[1]{$\mathcal{P}_#1$}
 
-\section{Success rates of the method}
+\subsection{Success rates of the method}
 At this point, we believe it is important to clarify our position regarding the concerns of both reviewers about the success rates of our paper.
 In the paper, we are providing the success rates of our contact planner. 
 Such an empirical study has yet never been provided for other contact planners.
 Our method is not always successful, as very often with probabilistic searches.
 More precisely, the hypothesis taken by \mP1 may lead to an unfeasible \mP2 problem, and similarly \mP2 hypotheses may lead to an unfeasible \mP3.
 We accept this fact and argue that it is mostly successful (i.e. more than 77\% of success in reasonable ``DRC-like'' scenarios).
-Even in case of failure, the planner is based on random sampling that approximate probabilistic completeness, and can be restarted to obtain another candidate trajectory.
+Even in case of failure, since the planner is based on random sampling it can be restarted to obtain another candidate trajectory.
 In practice, it can always find a feasible solution fast enough for online applications by re-planning upon failure.
 
 Reading the papers reporting previous works in contact planning, it is in fact not discussed whether the methods are always successful or not. We simply have no idea. For instance, the CIO of Mordatch,
@@ -103,8 +106,9 @@ because of the local convergence of the method, \textbf{necessarily} fails in so
 the end effector trajectories to avoid collisions with the environment, but we do not know how often. Considering this,
 we do not understand why we are criticized for providing our success rates, which actually demonstrate the interest of our approach.
 
-\section{Originality and interest of the work}
-We strongly disagree with Reviewer 2 regarding the originality of the work when he states that we simply ``\textit{experiment with minor heuristic adjustments}''.
+\subsection{Originality and interest of the work}
+\label{orig}
+We strongly disagree with Reviewer 1 and 2 regarding the originality of the work as ``\textit{heuristic adjustments}''.
 Bretl formalized well the problem without providing an algorithm applicable to the general case. Escande focused on the contact planning $\mathcal{P}_2$. 
 Our work tackles $\mathcal{P}_1$ as well, in a much more efficient manner than Bouyarmane et al.
 These works, including the one of Hauser, are limited by the computational complexity of considering the full dimension of the problem.
@@ -116,28 +120,28 @@ We believe that this reduction is the only way to make the contact planning prob
 Furthermore, the computational time provided by our method is a contribution in itself: it makes the difference
 between a method that can be used at the Darpa challenge or not, as we show in our introduction.
 
-\section{A clearer paper}
-As requested, we have deeply shortened the paper. More importantly, we have done an important work of defining in simpler terms
+
+\subsection{A clearer paper}
+As requested by both reviewers, we have deeply shortened the paper. More importantly, we have done an important work of defining in simpler terms
 the different concepts that we use in the paper, and reduced their number.
 We believe that the paper is much clearer in its current form.
 
-\section{Justification of the simplifying assumptions}
+More specifically, Reviewer 1 stated that the section related to the contact generation, in particular, was confusing. We rewrote Section 2.2 and Section 5 to give a clearer
+description of the method, especially regarding the addition of intermediate contact configurations. 
+
+\subsection{Justification of the simplifying assumptions}
 Regarding several comments from both reviewers, stating that our paper does not justify the fact that contact feasibility implies equilibrium feasibility,
 we now have added a section that discusses in depth the assumption (Section 7). We clearly describe which hypothesis (we call it the quasi-flat hypothesis, referring
 to the contacts in the configurations, rather than the vague cluttered term) are required to validate our approach, and analyze
 the success rates we obtained in each scenario to justify that the assumption works.
 
-\section{Comparison with other methods}
+\subsection{Comparison with other methods}
 As noted by Reviewer 2, in our previous paper it was indeed complex to compare our work with previous contributions,
 since they were addressing the complete problem. We now give the complete computation times and compare them with previous works,
 clearly demonstrating that our method outperforms them by orders of magnitude (Section 6.4).
 
 
-\section{On the static equilibrium of each configuration}
-Reviewer 1 stated that ``\textit{the planned contact path is only discrete with static equilibrium considered for each
-configuration, which is not very realistic''}. While we agree with the observation, we first recall that this assumption is made in the previous works that address cluttered scenarios, such as the work from Bretl and Escande. Works that do not make this assumption such as Mordatch and al. only offer local convergence and cannot address these scenarios (e.g. on the ``Polaris car egress'' scenario reported in our paper). Furthermore, this limitation is in fact less restrictive in our approach that the one of Escande, since while our plan is quasi static, our resulting motion is dynamic, as now explained in the paper (Section 5.1). 
-
-\section{Actual car model of the DARPA Challenge}
+\subsection{Actual car model of the DARPA Challenge}
 As asked by Reviewer 2, we now use the Polaris car model for demonstrating our egress scenario.
 
 \newpage
@@ -157,35 +161,53 @@ However, the question is whether the above key assumption (of
 “contact feasible” implies “equilibrium feasible”) is reasonable. The paper did not provide justification for the assumption, and the assumption does not seem intuitive. The paper used terms such as “most of the times” and “cluttered contact planning” without clear and quantifiable definitions. With the above assumptions, planning becomes quite straightforward, and the planning algorithm used is rather conventional. 
 &
 We modified the paper to more rigorously discuss these hypotheses. 
-We also believe that the main justification of their validity is through statistical tests, as reported in the result section.\newline
+We also believe that the main justification of their validity is shown by the statistical tests we provide in the result section.\newline
 See Section 6 for details. 
 \\ \hline % ----------------------------------------------------------------------------------
 For the next problem of planning a sequence of contact configurations given a “contact feasible” root path, the paper further decomposed the problem by planning the configuration of one limb at a time, assuming the root configuration and the other limb configurations were fixed. For each limb, N sampled configurations were considered (sampled off-line), and they were indexed by the corresponding end-effector position and stored in an octree beforehand. 
 Because all that was done off-line, it is not clear how N was decided. 
+&
+As explained in the paper, in our previous work (Tonneau et al. 2014), we discussed in details  how to choose N. We chose to refer to the paper rather than giving details  because of the space constraints of
+the paper. In our experiments,
+we always set $N=10000$.
+
+\\ \hline % ----
 The on-line planning step would search through the stored limb configurations (sorted according to some heuristic), one limb at a time (it seems), to find an almost-contact configuration and create a feasible limb contact configuration out of it. Different limbs were considered in some deterministic order: the limb that was contact-free the longest was considered first, and contact configurations were generated as long as the limb could maintain contact.  It is a bit confusing when interpolated contact configurations would be added between two adjacent contact configurations. Was it “in the hope” to keep a limb in contact or change limbs in contact? 
 & 
---- I THINK WE MUST DISCUSS THAT HERE ---
+The main reason to add intermediate contact configuration
+is to respect the conditions imposed by our planner: at most one contact must be broken between two configurations. Sometimes the kinematic constraints are such
+that for a given discretization step, several contacts have to be broken at once. Adding intermediate states allows to reposition one contact before the other.
+Concretely, when an intermediate contact is added, one contact is broken and relocated. This is the role of \textsc{RepositionContacts}, as explained in Appendix D. We clarified this aspect in section 5.1.
+
 \\ \hline % ----------------------------------------------------------------------------------
 The manipulator Jacobian for each limb was assumed full rank, and no singular configurations were considered. 
 &
---- I THINK WE MUST DISCUSS THAT HERE ---
+For locomotion tasks, we are interested in avoiding the singular configurations that are not desirable.
+Indeed, in our approach we discard these singular configurations, at the sampling phase, or by favoring non singular configurations
+using our manipulability based heuristics.
+
+However, this choice is not a limitation of our method: if singular configurations were required for some reason, the method would be able
+to handle them.
+
 \\ \hline % ----------------------------------------------------------------------------------
 The main issue with the proposed planner is that assumptions (commented earlier) and decisions were made in the planner conveniently in order to simplify the problem but without much justification, and there is no guarantee of a solution. The entire approach is heuristic and somewhat ad hoc. 
 &
-We agree that our approach is mostly heuristic.
-Heuristics are somehow underestimated in robotics, where optimality principles are often preferred (this is not the case in other fields, like discrete optimization, data routing or multi-agent diagnosis in web applications).
+As detailed in Section~\ref{orig} of this cover letter, we disagree regarding the fact that our approach is purely heuristic.
+We claim that the dimensionality reduction proposed to address \mP1 is an important contribution to the field.
 
 The main hypotheses of the papers are: the division of contact planning in three problems; the reachability condition approximating the equilibrium condition; and the heuristics for building the contact sequence (\mP2) along the guide path (\mP1).
-We believe that these main hypotheses are properly discussed, some being theoretically justified (reachability condition), the other being statistically asserted.
+We believe that these main hypotheses are properly discussed, some being theoretically justified (reachability condition), the others being statistically asserted.
 
-We agree that the method also requires some other minor choices, like the ones discussed by the reviewers. 
+
+%~ Then, regarding the heuristics we used to generate contacts and solve \mP2, we believe that heuristics are somehow underestimated in robotics, where optimality principles are often preferred. This is not the case in other fields, like discrete optimization, data routing or multi-agent diagnosis in web applications.
+We agree that the method also requires some other minor choices, especially regarding \mP2, like the ones discussed by the reviewers. 
 We do not believe that these minor technical choices are important. 
 If other choices are made, similar results would likely be obtained as well.
 To keep the paper as short as possible, we did not spent time explaining these choices.
-Any reader that would try to re-implement our approach would find enough details to reproduce our choices.
-The source code of the planner is also available (url in the paper) in case the exact implementation is needed.
-
-Providing more details about any single technical choice would require 10 more pages, which is in contraction to the request of the reviewer to have the paper less verbose.
+%~ Any reader that would try to re-implement our approach would find enough details to reproduce our choices.
+%~ The source code of the planner is also available (url in the paper) in case the exact implementation is needed.
+%~ 
+%~ Providing more details about any single technical choice would require 10 more pages, which is in contraction to the request of the reviewer to have the paper less verbose.
 
 In the revision, we emphasized what are the key assumptions, and spent more time to justify them properly.
 In the appositive, we more clearly pointed what assumptions are the results of technical choices and do not impact the solver performances.
@@ -194,23 +216,13 @@ In the appositive, we more clearly pointed what assumptions are the results of t
 \\ \hline % ----------------------------------------------------------------------------------
 Another major limitation is that the planned contact path is only discrete with static equilibrium considered for each configuration, which is not very realistic. The paper also pointed out this limitation in the Conclusions.
 &
-Our contribution is on solving \mP1-\mP2 efficiently. 
-We believe that this is the core of the contact planning problem, as argued in introduction.
-Indeed, solving \mP3 in all the cases studied in the paper was quite straight-forward.
-
-Clearly, dividing the complete problem in 3 subproblems will ease the solver and possibly obstruct some solutions. The question is whether this choice is a sane trade-off or not. 
-We insist that this division is quite classical in the state of the art.
-In particular, the only planner able to cope with this division (by Mordatch et al) only leads to local convergence.
+We first recall that this assumption is made in the previous works that address cluttered scenarios, such as the work from Bretl and Escande. Works that do not make this assumption such as Mordatch and al. only offer local convergence and cannot address these scenarios (e.g. on the ``Polaris car egress'' scenario reported in our paper). Furthermore, this limitation is in fact less restrictive in our approach that the one of Escande, since while our plan is quasi static, our resulting motion is dynamic, as now explained in the paper (Section 5.1). 
 
 In the new version, we asserted the realism of the contact sequences by implementing a solution to \mP3, outputing full trajectories that were tested in a contact simulator and on the real HRP-2 robot.
-
 See Sections 2 and 6 for details.
 
 \\ \hline % ----------------------------------------------------------------------------------
 The important problem of transitioning motion from one contact configuration to the next was left out as beyond the scope of the paper. 
-&
---- I THINK WE MUST DISCUSS THAT HERE ---
-\\ \hline % ----------------------------------------------------------------------------------
 The planner was tested in a number of diverse simulation examples, and there were related comparisons with existing work. This is commendable. However, there is no experimental result on a real robot. 
 &
 The contribution of the paper is on subproblems \mP1 and \mP2. 
@@ -254,8 +266,8 @@ We believe that the comment is partly due to a problem of definition of what we 
 The solution to subproblem \mP2 is a discrete sequence of static posture in stable contact (as detailed in Section 2).
 All the sequences reported in the paper are realistic in that sense.
 
-In the original paper, we claimed that any of these contact sequences would directly lead to a full contact trajectory (\mP3).
-However, we did not asserted this claim. 
+In the original paper, we claimed that our contact sequences would directly lead feasible problem (\mP3), and thus a feasible trajectory.
+However, we did not assert this claim. 
 In the new version, we implemented a solver \mP3 and validated that all the contact sequences reported in the paper are leading to full contact trajectories, whose dynamic plausibility has been checked by execution on the real robot for one of them, and in a dynamic contact simulator for the others.
 
 See Sections 2 and 6 for details.
@@ -267,9 +279,9 @@ We agree that this remark is justified by the lack of facts in our original pape
 Our claim was that any contact sequence output by our planner easily lead to full contact trajectory.
 We wrongly assumed that this was an evidence when looking at the contact sequences, and neglected to prove it.
 
-In the revision, we have implement a solve \mP3 and converted all contact sequences in full contact trajectory, validated in simulation or on the real robot.
-We must insist that this validation was straight-forward, on a scientific point of view. 
-As initially stated, the produced contact sequences indeed lead directly to full trajectories.
+In the revision, we have implement a solver for \mP3 and converted all contact sequences to whole-body trajectories, validated in simulation or on the real robot.
+%~ We must insist that this validation was straight-forward, on a scientific point of view. 
+As initially stated, the produced contact sequences indeed lead directly to complete trajectories.
 
 See Section 2 for details.
 
@@ -283,7 +295,7 @@ It is yet possible to find counter-examples, and we cite some of them in the pap
 Our planner is only a contribution to the problem, not the ultimate solution to the contact-planning problem.
 
 In terms of genericity, two key aspects must be considered.
-First, our planner is good enough for 90\% of the situations that nowadays legged robot can meet.
+First, our planner is good enough for the majority of situations that nowadays legged robot can meet.
 Second, the general idea of reducing the contact planning problem is valid in any situations that we can imagine, and the heuristics and approximate models that we proposed can be adapted to extend the planner capabilities.
 Automatic synthesis of these models is indeed a research direction that we are currently considering.
 
@@ -314,12 +326,13 @@ The paper was rewritten, see Section 5.
 \\ \hline % ----------------------------------------------------------------------------------
 Overall, I think the work is very promising, and I hope that my detailed comments and questions show my enthusiasm and interest of the subject. I understand that all the approximations and heuristics are driven by a sense of  pragmatism and practicality rather than pure theoretical soundness, which are probably legitimate motivations in their own right. However I also think that the work is still not mature enough, and will largely benefit from a validation of these approximations with a real robot or simulation experiment after the framework is complete. I encourage the authors to continue along the completion of the work.
 &
-It was indeed difficult to fully feel the enthusiasm of the reviewer, although we definitely appreciated his detailed comment and effort to improve the quality of the paper.
-In conclusion, we truly believe that our solution answer to the main difficulty of contact planning, by building a realistic contact sequence which easily leads to the construction of a complete contact trajectory, and behind, the execution of it on the real robot.
+%~ It was indeed difficult to fully feel the enthusiasm of the reviewer, although
+We definitely appreciated the detailed comments and effort to improve the quality of the paper.
+In conclusion, we truly believe that our solution answers to the main difficulty of contact planning, by building a realistic contact sequence which easily leads to the construction of a complete contact trajectory, and behind, the execution of it on the real robot.
 The addition of a \mP3 solver in the revised paper experimentally justifies this claim.
 The results that we demonstrated have never been reached so far by any previous works, neither in term of qualitative results, number of reported scenario, statistical analysis of the algorithms or combinatorial efficiency.
 The contribution that we are reporting is not a marginal increment or a practical implementation, but a step-change in how the contact planning problem should be considered, leading to the first realistic implementation.
-We hope that the revision of the paper will help the reviewer to meet our opinion.
+We hope that the revision of the paper will help the reviewers to meet our opinion.
 
 \\ \hline % ----------------------------------------------------------------------------------
 \end{longtable}
