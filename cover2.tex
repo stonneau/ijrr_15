@@ -147,9 +147,12 @@ As asked by Reviewer 2, we now use the Polaris car model for demonstrating our e
 \newpage
 \section{Recap of Reviewer comments}
 
+In this section, we answer to each point of the reviews, while referring to the first section of the letter.
+
 \subsection{Reviewer 1}
 \noindent
 \begin{longtable}{|p{21em}|p{21em}|}
+\hline \bf Reviewer comment & \bf Author answer \\
 \hline
 The paper addresses an important problem of planning robot motion involving contacts. It extends the idea of planning acyclic contacts by decoupling the issue into (1) planning a guide path for the root of the robot, and (2) planning a discrete sequence of acyclic and static equilibrium contact configurations along the path, with an interpolation of motion between two consecutive contact postures in the sequence. The introduced planner considers both collision avoidance and maintenance of desired contacts and aims at real-time or interactive performance. 
 &Thanks for the comment.
@@ -192,8 +195,12 @@ to handle them.
 \\ \hline % ----------------------------------------------------------------------------------
 The main issue with the proposed planner is that assumptions (commented earlier) and decisions were made in the planner conveniently in order to simplify the problem but without much justification, and there is no guarantee of a solution. The entire approach is heuristic and somewhat ad hoc. 
 &
-As detailed in Section~\ref{orig} of this cover letter, we disagree regarding the fact that our approach is purely heuristic.
-We claim that the dimensionality reduction proposed to address \mP1 is an important contribution to the field.
+%As detailed in Section~\ref{orig} of this cover letter, we disagree regarding the fact that our approach is purely heuristic.
+%We claim that the dimensionality reduction proposed to address \mP1 is an important contribution to the field.
+The main contribution of the paper are the dimensionality reduction breaking the complexity of the contact planning problem.
+The main reduction comes from the reachability condition used to solve subproblem \mP1, which is not a heuristic but rather an approximate condition.
+Some rigorous heuristics are introduced to solve \mP2.
+We therefore disagree regarding the fact that our approach is purely heuristic.
 
 The main hypotheses of the papers are: the division of contact planning in three problems; the reachability condition approximating the equilibrium condition; and the heuristics for building the contact sequence (\mP2) along the guide path (\mP1).
 We believe that these main hypotheses are properly discussed, some being theoretically justified (reachability condition), the others being statistically asserted.
@@ -241,6 +248,7 @@ The paper was completely rewritten to make it shorter and more rigorous.
 \subsection{Reviewer 2}
 \noindent
 \begin{longtable}{|p{21em}|p{21em}|}
+\hline \bf Reviewer comment & \bf Author answer \\
 \hline
 The paper presents a method for producing contact plans for the locomotion of multiped robots. It decomposes the problem into two sub-problems : the computation of a guide path is which the robot is floating close enough to the environment, and subsequently the positioning of contacts on the environment along the guide.
 & Thanks for this summary, that we agree with.
