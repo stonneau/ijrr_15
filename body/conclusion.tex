@@ -14,17 +14,16 @@ The first approximation is the verification of \contactreachability\ ($\mathbf{q
 %~ contact we combine only-necessary and only-sufficient conditions which are trivial to estimate. Only-necessary conditions are appealing because they preserve the completeness of the search, while reducing 
 %~ the search space: they provide an outer approximation of $C_{Contact}^0$. On the other hand, only-sufficient conditions provide the guarantee that any configuration that satisfies them is indeed \gls{contact reachable}: they provide an inner approximation of $C_{Contact}^0$.
 
-The main source of computational cost identified in previous works is the verification of \equilibriumfeasibility. 
+Another source of computational cost identified in previous works is the verification of \equilibriumfeasibility. 
 The strong assumption of our work is that for the class of problems we consider \contactreachability\ implies \equilibriumfeasibility.
 Our scenarios show that the  assumption is verified in the majority of cases when at least one contact surface is \textit{quasi flat}~\cite{Prete2016}, that is when
 the friction cone of the contact surface contains the direction opposite to the gravity.
 Figure~\ref{fig:dedefeas} illustrates this observation, demonstrated empirically by the third column of Table~\ref{tab:requestpercent}. In the worst case, in our experiment
-the assumption was verified for 82\% of the total amount of trials.
-
+the assumption was verified for 82\% of the total amount of trials that verified \contactreachability\.
 In the example of \cite{Bouyarmane2009}, the verification of \equilibriumfeasibility\ implies a constructive demonstration by exhibiting a valid $\mathbf{q}^{\overline{0}}$, requiring
 several minutes of planning. Our method, in comparison, takes from a few milliseconds to several seconds.
 
-These results clearly justify the pragmatic decisions of this paper. What is lost in completeness is largely compensated by the computation times we obtain.
+These results clearly justify the pragmatic decisions of this paper.
 
 \subsection{Addressing $\mathcal{P}_3$}
 This paper focuses on contact planning of multi-contact locomotion. While it does not address directly the continuous motion generation,
