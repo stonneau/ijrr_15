@@ -59,14 +59,14 @@ Our contribution to \Pa is the introduction of a low-dimensional space $C_{reach
 $C_{reach}^0$ can be efficiently sampled and has a low-dimension. For these reasons we are able to solve \Pa much faster than previous approaches.
 
 %~ Our contribution to \Pa is a generic characterization of the properties that the guide path must satisfy, in particular to enforce the completeness of the acyclic contact planner. 
-Our contribution to \Pb is a fast contact generation scheme that canoptimize user-defined criteria.
+Our contribution to \Pb is a fast contact generation scheme that can optimize user-defined criteria.
 
 Our results demonstrate that our method allows a pragmatic compromise between three 
 criteria that are hard to conciliate: generality, performance, and quality of the solution, making it the first acyclic contact
 planner compatible with \gls{interactive} applications.
 %
 \textbf{Regarding generality}, the \textit{reachability condition}, coupled with an approach based on limb decomposition, 
-allows the method to address automatically arbitrary multiped robots.
+allows the method to address automatically arbitrary legged robots.
 %
 \textbf{Regarding performance}, our framework is efficient in addressing both \Pa and $\mathcal{P}_2$. This results in \gls{interactive} computation times.
 %
@@ -86,12 +86,13 @@ Considering the set of obstacles intersecting with the reachable workspace for a
 This would give us a necessary condition for \equilibriumfeasibility.
 
 While we have exhibited complete multi-contact locomotion obtained with our contact planner, our main concern for future work is to address the interpolation
-between contact sequences ($\mathcal{P}_3$), not addressed here, and which remains an open issue in highly-constrained scenarios.
-Solving $\mathcal{P}_3$ requires addressing efficiently the collision avoidance problem,	but also improving
-our plans with transition certificates, i.e. guarantees that the interpolation between two contact configurations is feasible.
+between contact sequences ($\mathcal{P}_3$), which remains an open issue in highly-constrained scenarios.
+Solving $\mathcal{P}_3$ requires addressing efficiently the collision avoidance problem in the interpolation phase, an issue 
+not addressed by existing frameworks. We aim at providing our plans with transition certificates, that would define constraints on $\mathcal{P}_3$, under which
+the transition between two contact configurations is feasible and collision-free.
 %~ Our current direction is to propose a geometric quantification of both the kinematic and dynamic constraints of the problem, expressed
 %~ at the center of mass of the robot.
  %~ We are also
 %~ working on new heuristics more closely related to the dynamics of the systems (for instance, choose the contacts that minimize the jerk between two contact configurations).
 Finally, we aim at performing kinodynamic planning to remove the constraint that configurations in the contact plan be in static equilibrium. We believe that the most promising direction in this regard is to integrate the notion of Admissible Velocity Propagation in our current work \citep{DBLP:conf/rss/PhamCN13}.
-Addressing these two issues is essential to bridge the gap between the planning and control aspects of multiped locomotion.
+Addressing these two issues is essential to bridge the gap between the planning and control aspects of legged locomotion.
