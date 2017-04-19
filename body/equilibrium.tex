@@ -1,6 +1,5 @@
 % !TEX root =  ../main.tex
-\section{Heuristics and criteria for contact selection}
-\label{sec:heuristics}
+
 \subsection{A criterion for robust static equilibrium}
 The planner is designed so that any generated contact configuration is in static equilibrium.
 %~ Equilibrium is of course critical in legged locomotion. For this reason 
@@ -24,15 +23,15 @@ We first define the variables of the problem, for $e$ contact points, expressed 
 	\begin{itemize}
 	\item $\mathbf{p_i}$ is the contact position;
 	\item $\mathbf{f_i}$ is the force applied at $\mathbf{p_i}$;
-	\item $\mathbf{n}_i,\mathbf{t}_{i1},\mathbf{t}_{i2}$ form a local Cartesian coordinate system centered at $\mathbf{p_i}$. $\mathbf{n}_i$ is aligned
-	with the contact surface normal, and the $\mathbf{t}_i$s are tangent vectors.
+	\item $\mathbf{n}_i,\mathbf{\boldsymbol\upgamma}_{i1},\mathbf{\boldsymbol\upgamma}_{i2}$ form a local Cartesian coordinate system centered at $\mathbf{p_i}$. $\mathbf{n}_i$ is aligned
+	with the contact surface normal, and the $\mathbf{\boldsymbol\upgamma}_i$s are tangent vectors.
 	\end{itemize}
 \end{itemize}
 
 According to Coulomb's law, the nonslipping condition is verified if all the contact forces lie in the friction cone defined by the surface.
 As classically done, we linearize the friction cone in a conservative fashion with a pyramid, described by four generating rays of unit length. We choose for instance:
 \begin{equation*}
-\mathbf{V}_{i} = \mat{\mathbf{n}_{i} + \mu \mathbf{t}_{i1} & \mathbf{n}_{i} -\mu \mathbf{t}_{i1} & \mathbf{n}_{i} + \mu \mathbf{t}_{i2} & \mathbf{n}_{i} - \mu \mathbf{t}_{i2}}^T
+\mathbf{V}_{i} = \mat{\mathbf{n}_{i} + \mu \mathbf{\boldsymbol\upgamma}_{i1} & \mathbf{n}_{i} -\mu \mathbf{\boldsymbol\upgamma}_{i1} & \mathbf{n}_{i} + \mu \mathbf{\boldsymbol\upgamma}_{i2} & \mathbf{n}_{i} - \mu \mathbf{\boldsymbol\upgamma}_{i2}}^T
 \end{equation*}
 
 Any force belonging to the linearized cone

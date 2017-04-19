@@ -397,51 +397,38 @@ The most efficient (and immediate) approach to obtain a valid contact plan as fa
 
 \begin{table*}
 \centering
-\begin{tabular}{ c | c | c | c | c }
- Scenario & Method  & Guide Path & Contact sequence & Interpolation \\
+\begin{tabular}{ c | c | c }
+ Scenario & Method  & Complete computation time \\
  \hline
-   \multirow{3}{*}{Stair 20 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{\cellcolor{blue!25}5.42 min}  \\
-							 & \textbf{Ours} + \citeauthor{Carpentier2016}  & \textbf{5 ms} & $\mathbf{<}$ \textbf{18 ms} & $ <$ 2s \\
-							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{\cellcolor{blue!25}2 to 10 min} \\
+   \multirow{3}{*}{Stair 20 cm} & \citeauthor{Hauser06usingmotion} &  5.42 min  \\							 
+							  & \citeauthor{Mordatch:2012:DCB:2185520.2185539} & 2 to 10 min \\
+							 & \textbf{Ours} + \citeauthor{Carpentier2016}  & \textbf{$ <$ 2s} \\
  \hline
-   \multirow{3}{*}{Stair 30 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{\cellcolor{blue!25}4.08 min}  \\
-							 & \textbf{Ours}  & \textbf{5 ms} & $\mathbf{<}$ \textbf{18 ms} & X \\
-							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{\cellcolor{blue!25}2 to 10 min} \\
+   \multirow{3}{*}{Stair 30 cm} & \citeauthor{Hauser06usingmotion} &  4.08 min  \\
+							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} & 2 to 10 min \\
+							 & \textbf{Ours}  & \textbf{$ <$ 2s}   \\
  \hline
-   \multirow{3}{*}{Stair 40 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{\cellcolor{blue!25}10.08 min}  \\
-							 & \textbf{Ours}  & \textbf{5 s} & \textbf{3 s} & X \\
-							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{\cellcolor{blue!25}2 to 10 min} \\
- %~ \hline
-   %~ \multirow{2}{*}{Table (car) egress} & \citeauthor{Bouyarmane2009, DBLP:conf/iser/EscandeKMG08} & 10 min & \multicolumn{2}{c}{\cellcolor{blue!25}3.5 hours}  \\
-							 %~ & \textbf{Ours}  & \textbf{529 ms} & \textbf{$<$ 22 s} & X \\
+   \multirow{3}{*}{Stair 40 cm} & \citeauthor{Hauser06usingmotion} &  10.08 min  \\
+							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} & 2 to 10 min \\
+							 & \textbf{Ours}   & \textbf{$ <$ 5s}   \\
+ \hline
+   \multirow{2}{*}{Table (car) egress} & \citeauthor{Bouyarmane2009, DBLP:conf/iser/EscandeKMG08} & 3.5 hours  \\
+							 & \textbf{Ours}  & \textbf{$<$ 60 s} \\
+							 
  \end{tabular}
-\caption{Comparison between the computation times obtained by our method and previous ones, for each phase of the planning. Blue cells indicate merged times (because no
-precise time information is available). The X symbol indicates scenarios where we did not address the interpolation of the contact sequence.}
+\caption{Comparison between the computation times obtained by our method and previous ones for addressing the whole problem.}
 \label{tab:compprev}
 \quad
 \end{table*}
 
 \subsection{Validation of the contact plans, and comparison with previous work} \label{sec:compa}
-To validate our plans, we had to implement our own interpolation method to address $\mathcal{P}_3$.
-We refer the reader to \citep{Carpentier2016} for the implementation details of our method. 
-This motion is in turn validated in our dynamic simulator~\citep{DelPrete2015b}. The stair climbing scenario was validated on the real HRP-2 robot \citep{Carpentier2016}.
-The obtained motions are available in the video.
+To validate our plans, we either use the framework proposed by \citeauthor{Carpentier2016} or our own implementation of a $\mathcal{P}_3$ solver, detailed in Appendix~\ref{app:optim}.
+The companion video shows the obtained motions.
 
-Few contributions provided computation times on the complete problem, necessary to provide comparison between our approaches. 
-Furthermore, $\mathcal{P}_3$ is an open problem in the presence of obstacles. For instance in \cite{DBLP:conf/iser/EscandeKMG08}, the end-effector trajectories are computed automatically with splines, but are manually corrected if they enter in collision. In \citep{Mordatch:2012:DCB:2185520.2185539}, internal joint collisions can occur in the resulting motion.
-Recent methods suffer from similar issues \citep{Carpentier2016}.
-The only valid scenarios addressed completely and automatically in previous works are thus the stair climbing scenarios with HRP-2 
-To compare our approach with previous contributions, we considered those that addressed the complete problem, and selected scenarios similar to ours, thus focusing on the HRP-2 robot.
+Few contributions provided computation times on the complete problem. %, necessary to provide comparison between our approaches. 
+Furthermore, $\mathcal{P}_3$ remains an open problem in the presence of obstacles. The only valid scenarios addressed completely in previous works are thus the stair-climbing scenarios of different heights proposed by \citeauthor{Hauser06usingmotion}, and the table-egress scenario by~\citeauthor{DBLP:conf/iser/EscandeKMG08}, which we consider to be of similar complexity with respect to the car-egress scenario (we did not consider the stairs in the scene). Both scenarios are tested with HRP-2.
 
-Table~\ref{tab:compprev} presents the results we obtained 
-
-Nonetheless, we indicate in Table~\ref{tab:compprev} what is actually computed by each method and in how much time.
-We compare motions obtained in previous works with HRP-2 (or a humanoid avatar) with ours.
-The two scenarios we selected consist in:  climbing one step, of height 20, 30 or 40 centimeters; 
-getting out of a table, that we consider of a complexity similar to the car egress scenario (or inferior since the feet locations remain on the ground in the former case).
-For scenarios that apply, we also indicate the interpolation time that we obtained by feeding the plan to our interpolation method presented in \cite{Carpentier2016}.
-
-Despite the difficulty of comparing the methods, we believe the results presented in Table~\ref{tab:compprev} indicate that our planner holds the promise of planning complete trajectories significantly faster than previous works.
+Table~\ref{tab:compprev} presents the computation times for these scenarios, clearly demonstrating that our approach is order of magnitude faster than previous works.
 
 
 

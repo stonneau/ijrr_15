@@ -1,3 +1,5 @@
+\section{Heuristics and criteria for contact selection}
+\label{sec:heuristics}
 % !TEX root =  ../main.tex
 \subsection{Manipulability-based heuristics for contact selection}
 This Section proposes heuristics to select a contact that optimizes desired capabilities.
@@ -52,23 +54,23 @@ The first one, EFORT, was introduced by \cite{Tonneau2014}; the other two are ne
 
 With EFORT, we define the efficiency of a configuration as the ability of a limb to exert a force in a given direction.
 We thus consider the force ellipsoid as a basis for our heuristic.
-In a given direction $\mathbf{m}$, the length of the ellipsoid is given by the force-transmission ratio \citep{1087795}:
+In a given direction $\uprho$, the length of the ellipsoid is given by the force-transmission ratio \citep{1087795}:
 \begin{equation*}
-f_\mathsf{T}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}	^{T})\mathbf{m}]^{-\frac{1}{2}}
+f_\mathsf{T}(\mathbf{q}, \uprho) = [\uprho^{T}(\mathbf{J}\mathbf{J}	^{T})\uprho]^{-\frac{1}{2}}
 \end{equation*}
 
-In our problem, to compare candidate configurations, we include the quality of the contact surface, and choose $\mathbf{m}$ as the direction
+In our problem, to compare candidate configurations, we include the quality of the contact surface, and choose $\uprho$ as the direction
 opposite to the local motion (given by the difference between two consecutive root positions):
 
 \begin{equation}
-h_{\textrm{\it EFORT}}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}^T)\mathbf{m}]^{-\frac{1}{2}} ( \mu \mathbf{n}^T \mathbf{m})
+h_{\textrm{\it EFORT}}(\mathbf{q}, \uprho) = [\uprho^{T}(\mathbf{J}\mathbf{J}^T)\uprho]^{-\frac{1}{2}} ( \mu \mathbf{n}^T \uprho)
 \end{equation}
 where $\mu$ and $\mathbf{n}$ are respectively the friction coefficient and the normal vector of the contact surface.
 
 
 If the ability to generate large velocities at the effector is considered, we define a new heuristic $h_{vel}$ with a similar reasoning on the velocity ellipsoid:
 \begin{equation}
-h_{vel}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}^T)^{-1}\mathbf{m}]^{-\frac{1}{2}} ( \mu \mathbf{n}^T \mathbf{m})
+h_{vel}(\mathbf{q}, \uprho) = [\uprho^{T}(\mathbf{J}\mathbf{J}^T)^{-1}\uprho]^{-\frac{1}{2}} ( \mu \mathbf{n}^T \uprho)
 \end{equation}
 
 $h_{\textrm{\it EFORT}}$ and $h_{vel}$ will favor contacts that allow large efforts or fast modifications in the velocity.

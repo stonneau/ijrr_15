@@ -1,0 +1,28 @@
+\documentclass[a4paper]{article}
+ \usepackage{fullpage}
+\usepackage{amsfonts} % pour les lettres maths creuses \mathbb
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[frenchb]{babel}
+\usepackage{aeguill}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{pdfpages}
+\usepackage{afterpage}
+
+\begin {document}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\includepdf[pages={-}]{cover2.pdf} 
+\includepdf[pages={-}]{cover_letter.pdf} 
+
+
+\end {document}
