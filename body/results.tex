@@ -307,7 +307,7 @@ column indicates the average time necessary to compute one contact transition. }
 \end{table*}
 
 
-\begin{table*}
+\begin{table}
 \centering
 \begin{tabular}{ l | c}
   &  Path planning success rate \\
@@ -321,11 +321,11 @@ column indicates the average time necessary to compute one contact transition. }
 \caption{ Percentage of successful complete contact planning rates for each scenario, rounded to the first decimal.}
 \label{tab:sucess_planning}
 \quad
-\end{table*}
+\end{table}
 
-\begin{table*}
+\begin{table}
 \centering
-\begin{tabular}{ l | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{65pt} | c}
+\begin{tabular}{ l | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{35pt} | >{\centering\arraybackslash}m{35pt} | c}
   &  Equilibrium success rate & Kinematic failure & Equilibrium failure \\
  \hline
    Steep stairs 	& 99.5\%  & 0.1\% 	& 0.4\% \\
@@ -340,7 +340,7 @@ either a kinematic issue (column 2), or because no contact configuration led to 
 is not equivalent to a failure of the contact planning algorithm.}
 \label{tab:requestpercent}
 \quad
-\end{table*}
+\end{table}
 
 \subsubsection{Computation times:}
 Table~\ref{tab:requestime} summarizes the computation times.
@@ -368,10 +368,10 @@ while controlling the robot. Indeed, when the contact planning fails, it fails r
 The most efficient (and immediate) approach to obtain a valid contact plan as fast as possible would be to launch in parallel several instances of the planner (our current implementation is single-threaded) and to use any successful result as a plan for solver $\mathcal{P}_3$.
 
 
-\begin{table*}
+\begin{table}
 \centering
 \begin{tabular}{ c | c | c }
- Scenario & Method  & Complete computation time \\
+ Scenario & Method  & Computation time \\
  \hline
    \multirow{3}{*}{Stair 20 cm} & Hauser~\cite{Hauser06usingmotion} &  5.42 min  \\							 
 							  & Mordatch et al.\cite{Mordatch:2012:DCB:2185520.2185539} & 2 to 10 min \\
@@ -392,7 +392,7 @@ The most efficient (and immediate) approach to obtain a valid contact plan as fa
 \caption{Comparison between the computation times obtained by our method and previous ones for addressing the whole problem.}
 \label{tab:compprev}
 \quad
-\end{table*}
+\end{table}
 
 \subsection{Validation of the contact plans, and comparison with previous work} \label{sec:compa}
 To validate our plans, we either use the framework proposed in \cite{Carpentier2016} or our own implementation of a $\mathcal{P}_3$ solver, detailed in Appendix~\ref{app:optim}.
