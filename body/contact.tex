@@ -141,7 +141,7 @@ The contact generator treats each limb $R^k$ independently.
 Given a configuration of the root and the other limbs, it computes a configuration $\mathbf{q}^k$ such that $R^k$ is in contact and the robot $R$ is in static equilibrium:
 \begin{equation}
 \label{eq:contact_gen}
-	\mathbf{q}^{\overline{k}}  \longrightarrow \mathbf{q}^k, (\mathbf{q}^{k} \oplus \mathbf{q}^{\overline{k}}) \in  C_{Equil} \wedge \mathbf{q}^k \in  C_{Contact}^k 
+	\mathbf{q}^{\overline{k}}  \longrightarrow \mathbf{q}^k, (\mathbf{q}^{k} \oplus \mathbf{q}^{\overline{k}}) \in  C_{Equil} \textrm{ \textbf{and}}\ \mathbf{q}^k \in  C_{Contact}^k 
 \end{equation}
 
 Contact generation is typically adressed by randomly sampling a limb configuration, before projecting the effector onto the closest surface with an inverse kinematics solver.

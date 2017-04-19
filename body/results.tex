@@ -2,7 +2,7 @@
 \section{Results}
 \label{sec:results}
 In this section we present some of the results obtained with our planner. The complete sequences are shown in the companion video.
-Specifically, we demonstrate the planner for two really different robots, in a large variety of environments: the humanoid HRP-2 and the quadruped HyQ.
+Specifically, we demonstrate the planner for two legged robots, in a large variety of environments: the humanoid HRP-2 and the quadruped HyQ.
 Finally, a last example suggests possible applications to dexterous manipulation.
 
 At the end of the video, we validate our contact plans by exhibiting a solution to the interpolation problem $\mathcal{P}_3$ for these scenarios.
@@ -225,7 +225,7 @@ We discuss the factors that influence the outcome of our planner: the root scali
 contact generation (Appendix~\ref{sec:heuristics}), and lastly, the discretization step for the guide path. The appropriate value for these parameters
 is computed empirically based on use-case analysis or trials and errors.
  
-\subsubsection{Choosing the scaling factor $s$:} \label{sec:params}
+\subsubsection{Choosing the scaling factor $s$} \label{sec:params}
 %~ \deladp{To find a convenient value $s^*$ of $s$, we proceeded as follows. }
 For several values of $s$, we generated $10 000$ configurations. 
 We then computed the sensitivity of the reachability condition (percentage of configurations in $C_{Reach}^0$, effectively belonging to \gls{$C_{Contact}^0$}).
@@ -233,7 +233,7 @@ Similarly we computed the specificity of the condition (percentage of configurat
 The obtained results for HRP-2 are shown in Table~\ref{tab:scale}, averaged over all scenes (except for the car egress: in this scenario, 
 statistical tests are not really conclusive since we are only interested in a small area of the environment).
 
-As it can be expected, the scaling results in a high increasepercentage of the sensitivity, with a decrease of the specificity.
+As it can be expected, the scaling results in a high increase of the sensitivity, with a decrease of the specificity.
 For HRP-2 we decided to set $s^*=1.2$.
 %~ , and was also effective for the car egress scenario. 
 
@@ -255,25 +255,25 @@ For HRP-2 we decided to set $s^*=1.2$.
 \quad
 \end{table}
 
-\subsubsection{Choosing the heuristics:} \label{sec:heuristichoices}
+\subsubsection{Choosing the heuristics} \label{sec:heuristichoices}
 In our conference paper~\citep{tonneauisrr15}, the computed motions were generated using the EFORT heuristic.
 EFORT is designed for tasks requiring to exert important forces (such as pushing / pulling / climbing). 
 In locomotion tasks, such as the stair scenario, one issue with EFORT is that it tends to generate
-configurations close to singularities (and joint limits). While this does not significantly impact
+configurations close to singularities (and joint limits). While this did not significantly impact
 the generation of the plan, the resulting interpolation turned out to be harder.
 For this reason, we prefer to use our manipulability-based heuristic for the legs of the robot, but we still
-use EFORT for the arms, which results in less contact repositionings.
+use EFORT for the arms, which results in fewer contact repositionings.
 
 %~ \subsubsection{On the robustness equilibrium criterion:} \label{sec:parrob}
 %~ Robustness is really important when considering practical applications on the robot, to account 
 %~ for the various uncertainties that result from environment and state estimation. However,
 %~ maximizing the robustness criterion is often not optimal, because the resulting configurations may be too conservative, thus not favoring the motion. In our experiments, we choose not to maximize the robustness,
-%~ but to empirically set a robustness threshold value under which a configuration is not considered to be in
+%~ but to empirically se	t a robustness threshold value under which a configuration is not considered to be in
 %~ static equilibrium (If no candidate reaches the threshold, instead of failing, the algorithm can eventually return the ``more robust'' configuration
 %~ found). Currently for HRP-2, a threshold value of 2 subjectively gives the best results in the considered scenarios, while 10 seems to be a good choice for HyQ. Both values do not
 %~ significantly slow down the planning times.
 
-\subsubsection{Discretization of the guide path:} \label{sec:disc}
+\subsubsection{Discretization of the guide path} \label{sec:disc}
 The discretization step is a user-defined, fixed parameter. The step
 has an influence on the output of the planner: if too large steps are taken,
 the planner may fail since we impose the constraint that only one contact change might occur
