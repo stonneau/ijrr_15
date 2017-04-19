@@ -368,51 +368,24 @@ while controlling the robot. Indeed, when the contact planning fails, it fails r
 The most efficient (and immediate) approach to obtain a valid contact plan as fast as possible would be to launch in parallel several instances of the planner (our current implementation is single-threaded) and to use any successful result as a plan for solver $\mathcal{P}_3$.
 
 
-%~ \begin{table*}
-%~ \centering
-%~ \begin{tabular}{ c | c | c | c | c }
- %~ Scenario & Method  & Guide Path & Contact sequence & Interpolation \\
- %~ \hline
-   %~ \multirow{3}{*}{Stair 20 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{\cellcolor{blue!25}5.42 min}  \\
-							 %~ & \textbf{Ours} + \citeauthor{Carpentier2016}  & \textbf{5 ms} & $\mathbf{<}$ \textbf{18 ms} & $ <$ 2s \\
-							 %~ & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{\cellcolor{blue!25}2 to 10 min} \\
- %~ \hline
-   %~ \multirow{3}{*}{Stair 30 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{\cellcolor{blue!25}4.08 min}  \\
-							 %~ & \textbf{Ours}  & \textbf{5 ms} & $\mathbf{<}$ \textbf{18 ms} & X \\
-							 %~ & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{\cellcolor{blue!25}2 to 10 min} \\
- %~ \hline
-   %~ \multirow{3}{*}{Stair 40 cm} & \citeauthor{Hauser06usingmotion} &  \multicolumn{3}{c}{\cellcolor{blue!25}10.08 min}  \\
-							 %~ & \textbf{Ours}  & \textbf{5 s} & \textbf{3 s} & X \\
-							 %~ & \citeauthor{Mordatch:2012:DCB:2185520.2185539} &  \multicolumn{3}{c}{\cellcolor{blue!25}2 to 10 min} \\
- %~ \hline
-   %~ \multirow{2}{*}{Table (car) egress} & \citeauthor{Bouyarmane2009, DBLP:conf/iser/EscandeKMG08} & 10 min & \multicolumn{2}{c}{\cellcolor{blue!25}3.5 hours}  \\
-							 %~ & \textbf{Ours}  & \textbf{529 ms} & \textbf{$<$ 22 s} & X \\
- %~ \end{tabular}
-%~ \caption{Comparison between the computation times obtained by our method and previous ones, for each phase of the planning. Blue cells indicate merged times (because no
-%~ precise time information is available). The X symbol indicates scenarios where we did not address the interpolation of the contact sequence.}
-%~ \label{tab:compprev}
-%~ \quad
-%~ \end{table*}
-
-
 \begin{table*}
 \centering
 \begin{tabular}{ c | c | c }
  Scenario & Method  & Complete computation time \\
  \hline
-   \multirow{3}{*}{Stair 20 cm} & \citeauthor{Hauser06usingmotion} &  5.42 min  \\							 
-							  & \citeauthor{Mordatch:2012:DCB:2185520.2185539} & 2 to 10 min \\
-							 & \textbf{Ours} + \citeauthor{Carpentier2016}  & \textbf{$ <$ 2s} \\
+   \multirow{3}{*}{Stair 20 cm} & Hauser~\cite{Hauser06usingmotion} &  5.42 min  \\							 
+							  & Mordatch et al.\cite{Mordatch:2012:DCB:2185520.2185539} & 2 to 10 min \\
+							 & \textbf{Ours} + \cite{Carpentier2016}  & \textbf{$ <$ 2s} \\
  \hline
-   \multirow{3}{*}{Stair 30 cm} & \citeauthor{Hauser06usingmotion} &  4.08 min  \\
-							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} & 2 to 10 min \\
+   \multirow{3}{*}{Stair 30 cm} & Hauser~\cite{Hauser06usingmotion} &  4.08 min  \\
+							 & Mordatch et al.\cite{Mordatch:2012:DCB:2185520.2185539} & 2 to 10 min \\
 							 & \textbf{Ours}  & \textbf{$ <$ 2s}   \\
  \hline
-   \multirow{3}{*}{Stair 40 cm} & \citeauthor{Hauser06usingmotion} &  10.08 min  \\
-							 & \citeauthor{Mordatch:2012:DCB:2185520.2185539} & 2 to 10 min \\
+   \multirow{3}{*}{Stair 40 cm} & Hauser \cite{Hauser06usingmotion} &  10.08 min  \\
+							 & Mordatch et al.\cite{Mordatch:2012:DCB:2185520.2185539} & 2 to 10 min \\
 							 & \textbf{Ours}   & \textbf{$ <$ 5s}   \\
  \hline
-   \multirow{2}{*}{Table (car) egress} & \citeauthor{Bouyarmane2009, DBLP:conf/iser/EscandeKMG08} & 3.5 hours  \\
+   \multirow{2}{*}{Table (car) egress} & Bouyarmane et al.~\cite{Bouyarmane2009, DBLP:conf/iser/EscandeKMG08} & 3.5 hours  \\
 							 & \textbf{Ours}  & \textbf{$<$ 60 s} \\
 							 
  \end{tabular}
@@ -422,11 +395,11 @@ The most efficient (and immediate) approach to obtain a valid contact plan as fa
 \end{table*}
 
 \subsection{Validation of the contact plans, and comparison with previous work} \label{sec:compa}
-To validate our plans, we either use the framework proposed by \citeauthor{Carpentier2016} or our own implementation of a $\mathcal{P}_3$ solver, detailed in Appendix~\ref{app:optim}.
+To validate our plans, we either use the framework proposed in \cite{Carpentier2016} or our own implementation of a $\mathcal{P}_3$ solver, detailed in Appendix~\ref{app:optim}.
 The companion video shows the obtained motions.
 
 Few contributions provided computation times on the complete problem. %, necessary to provide comparison between our approaches. 
-Furthermore, $\mathcal{P}_3$ remains an open problem in the presence of obstacles. The only valid scenarios addressed completely in previous works are thus the stair-climbing scenarios of different heights proposed by \citeauthor{Hauser06usingmotion}, and the table-egress scenario by~\citeauthor{DBLP:conf/iser/EscandeKMG08}, which we consider to be of similar complexity with respect to the car-egress scenario (we did not consider the stairs in the scene). Both scenarios are tested with HRP-2.
+Furthermore, $\mathcal{P}_3$ remains an open problem in the presence of obstacles. The only valid scenarios addressed completely in previous works are thus the stair-climbing scenarios of different heights proposed by Hauser in \cite{Hauser06usingmotion}, and the table-egress scenario by Escande et al. in~\cite{DBLP:conf/iser/EscandeKMG08}, which we consider to be of similar complexity with respect to the car-egress scenario (we did not consider the stairs in the scene). Both scenarios are tested with HRP-2.
 
 Table~\ref{tab:compprev} presents the computation times for these scenarios, clearly demonstrating that our approach is order of magnitude faster than previous works.
 

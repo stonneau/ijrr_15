@@ -25,7 +25,7 @@ Only the horizontal and vertical speeds are shown (not the rotation speeds).}
 
 We consider: a limb configuration $\mathbf{q}^k$; its end effector position $\mathbf{p}^k$; its Jacobian matrix
 $\mathbf{J}^k(\mathbf{q}^k)$; a force $\mathbf{f}$ exerted by the end effector. For clarity in the rest of the section we omit the $k$ indices and write $\mathbf{J}^k(\mathbf{q}^k)$ as $\mathbf{J}$.
-\citeauthor{Yoshikawa1984} defines the velocity~\ref{eq:vel} and force~\ref{eq:vel} ellipsoids:
+Yoshikawa~\cite{Yoshikawa1984} defines the velocity~\ref{eq:vel} and force~\ref{eq:vel} ellipsoids:
  
  \begin{equation} 
  \label{eq:vel}
@@ -41,13 +41,6 @@ They describe the set of end-effector velocities (respectively forces) that can
 be reached under the constraint $||\dot{\mathbf{q}}||^2 \leq 1$ for the current configuration.
 The longer the axis of the ellipsoid is, the more important the velocity (resp. force) of the end-effector the direction of the axis can be (Figure~\ref{sec:efort_ellipsoid}).
  
-%~ Similarly, \citeauthor{Yoshikawa1984} also defines the force ellipsoid (Figure~\ref{sec:efort_ellipsoid} - right):
- 
-%~ \begin{equation} \label{ellipsoidforce}
-%~ \mathbf{f}^T (\mathbf{J}\mathbf{J}^T) \mathbf{f} \leq 1
-%~ \end{equation}
-%~ with $\mathbf{f}$ is a force vector expressed in the task space $\mathbb{R}^m$;
-
 \subsubsection{Manipulability-based heuristics:}
 From these definitions, we can derive three useful heuristics, that all account for the environment and the task being performed.
 The first one, EFORT, was introduced by \cite{Tonneau2014}; the other two are new minor contributions, derived from these previous works.
@@ -76,7 +69,7 @@ h_{vel}(\mathbf{q}, \uprho) = [\uprho^{T}(\mathbf{J}\mathbf{J}^T)^{-1}\uprho]^{-
 $h_{\textrm{\it EFORT}}$ and $h_{vel}$ will favor contacts that allow large efforts or fast modifications in the velocity.
 $EFORT$ in particular is useful for tasks such as standing up, pushing / pulling.
 In other less demanding cases, manipulability can also be considered to avoid singularities.
-To do so, we can consider the manipulability measure $h_{w}$, also given by \citeauthor{Yoshikawa1984}:
+To do so, we can consider the manipulability measure $h_{w}$, also given by Yoshikawa:
 
 \begin{equation} \label{ellipsoid}
 h_{w}(\mathbf{q}) = \sqrt{det(\mathbf{J}\mathbf{J}^T)}
@@ -84,87 +77,5 @@ h_{w}(\mathbf{q}) = \sqrt{det(\mathbf{J}\mathbf{J}^T)}
 $h_{w}$ measures the ``distance'' of a given configuration to singularity. When $h_{w}$ is equal to 0, the configuration is singular;
 the greater $h_{w}$ is, the further away the configuration is from singularity.
 
-%~ $h_{\textrm{\it EFORT}}$, $h_{vel}$ and $h_{w}$ define three kinematic heuristics, fast to compute (indeed, thanks to our sampling-based approach, the Jacobian and inverse products
-%~ can be precomputed off-line), that allow the planner to select the best
-%~ candidates according to user-defined criterion.
 
 
-
-
-%~ This results in faster computation times, and a reduced number of overall contact switches.
-
-
-
-
-%~ where the $\dot$ symbol represents the time derivative.  It describes the set of end-effector velocities that can
-%~ be reached under the constraint \eqref{ball} for the current configuration.
-%~ The longer the axis of the ellipsoid is, the faster the end-effector can move along the direction of the axis (Figure~\ref{sec:efort_ellipsoid}).
- %~ 
-%~ Similarly, \citeauthor{Yoshikawa1984} also defines the force ellipsoid(Figure~\ref{sec:efort_ellipsoid} - right):
- %~ 
-%~ \begin{equation} \label{ellipsoidforce}
-%~ \mathbf{f}^T (\mathbf{J}\mathbf{J}^T) \mathbf{f} \leq 1
-%~ \end{equation}
-%~ where $\mathbf{f}$ is a force vector $\mathbf{f}$ expressed in the task space $\mathbb{R}^m$;
-%~ the equivalent joint torque vector $\bm{\tau}$;
- %~ 
-%~ \begin{equation} \label{jac}
-%~ \mathbf{\dot{p}}^k = \mathbf{J}^k(\mathbf{q}^k) \dot{\mathbf{q}}^k
-%~ \end{equation}
-%~ 
-%~ For clarity in the rest of the section we omit the $k$ indices and write $\mathbf{J}^k(\mathbf{q}^k)$ as $\mathbf{J}$.
- %~ 
-%~ As a linear approximation of a forward-kinematics function, $\mathbf{J}$ describes how small
-%~ variations from the configuration $\mathbf{q}$ affect the position vector $\mathbf{p}$.
-
-%~ Now we consider the unit ball in the configuration space $C$ defined by the set of joint velocities
-%~ for which the norm is at most 1:
-%~ \begin{equation} \label{ball}
-%~ ||\dot{\mathbf{q}}||^2 \leq 1
-%~ \end{equation}
-%~ 
-%~ We assume that $\mathbf{J}$ is full rank (we are not interested in singular configurations, which we discard).
-%~ From \eqref{jac} we can thus obtain the following equality (Appendix~\ref{app:manipulability}):
-%~ \begin{equation} \label{jaceq}
-%~ \mathbf{\dot{p}}^T(\mathbf{J}\mathbf{J}^T)^{-1}\mathbf{\dot{p}} = \dot{\mathbf{q}}^T \dot{\mathbf{q}}
-%~ \end{equation}
-
-%~ We can use \eqref{jaceq} to map the ball into an ellipsoid in the Euclidian space $\mathbb{R}^m$:
-
-%~ \begin{equation} \label{ellipsoid}
-%~ \mathbf{\dot{p}}^T(\mathbf{J}\mathbf{J}^T)^{-1}\mathbf{\dot{p}} \leq 1
-%~ \end{equation}
-%~ This ellipsoid is called the manipulability ellipsoid, or velocity ellipsoid, introduced by \cite{Yoshikawa1984}. It describes the set of end-effector velocities that can
-%~ be reached under the constraint \eqref{ball} for the current configuration.
-%~ The longer the axis of the ellipsoid is, the faster the end-effector can move along the direction of the axis.
-%~ Figure~\ref{sec:efort_ellipsoid} - left shows the velocity ellipsoid for different configurations of a manipulator with two degrees of freedom.
-
-%~ \begin{figure}[!tbp]
-  %~ \centering
-	%~ \begin{overpic}[width=1\linewidth]{figures/EFORT/ellipsoid}
-		%~ \put (8.5,1.2) {\small{Velocity ellipsoid}}
-		%~ \put (62.5,1.2) {\small{Force ellipsoid} \tiny{(scale 0.5)}}
-	%~ \end{overpic}
-  %~ \caption{Examples of velocity and force ellipsoids for a manipulator composed of 2 dofs and 2 segments.
-%~ Only the horizontal and vertical speeds are shown (not the rotation speeds), since it would require being able to draw in four dimensions.}
-		   %~ \label{sec:efort_ellipsoid}
-%~ \end{figure}
-
-
-%~ Similarly to the velocity ellipsoid, \citeauthor{Yoshikawa1984} also defines the force ellipsoid.
-%~ Considering: a force vector $\mathbf{f}$ expressed in the task space $\mathbb{R}^m$;
-%~ the equivalent joint torque vector $\bm{\tau}$;
-%~ we can define the mechanical work in both spaces:
-%~ \begin{equation*} \label{power}
-%~ \dot{\mathbf{q}}^T \bm{\tau} = \dot{\mathbf{p}}^T \mathbf{f}
-%~ \end{equation*}
-%~ 
-%~ 
-%~ Exploiting \eqref{jac}, we can easily see that the set of achievable forces in $\mathbb{R}^m$ subject to the constraint:
-%~ \begin{equation*} \label{ballforce}
-%~ ||\bm{\tau}||^2 \leq 1
-%~ \end{equation*}
-%~ is the so-called force ellipsoid (Figure~\ref{sec:efort_ellipsoid} - right):
-%~ \begin{equation} \label{ellipsoidforce}
-%~ \mathbf{f}^T (\mathbf{J}\mathbf{J}^T) \mathbf{f} \leq 1
-%~ \end{equation}
