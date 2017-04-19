@@ -105,7 +105,7 @@ $r$ or $f(\textbf{x})$.
 
 
 \medskip
-\textbf{A robot} is a kinematic chain $R$ composed of: a root $R^0$, and $l$ limbs $R^k, 1 \leq k \leq l$, attached to the root.
+\textbf{A robot} is a kinematic tree $R$ composed of: a root $R^0$, and $l$ limbs $R^k, 1 \leq k \leq l$, attached to the root.
 The root has $r \geq 6$ DoFs: for instance, HRP-2 has two extra DoFs in the torso, such that we have $r=8$.
 Therefore $R$ is fully described by a configuration $\mathbf{q} \in  \mathbb{R}^{r+n}$, with $n$ the number of joint DoFs.
 $\mathbf{q}$ is decomposed as follows:
@@ -119,7 +119,8 @@ $\mathbf{q}$ is decomposed as follows:
 %\subsubsection{Environment and other volumes} 
 %\label{sec:A}
 \medskip
-\noindent $W^0$ is a volume encompassing $R^0$ (Figure~\ref{fig:HyQ_roms}). \\
+\noindent $W^0$ is a volume encompassing $R^0$ (Figure~\ref{fig:HyQ_roms}), or equal to it. $W^0$ is typically a low-polygonal bounding shape
+of $R^0$ for performance reasons.\\
  %~ (Figure~\ref{fig:character}-right: central cylinder). 
  $W^k$ is the reachable workspace of a limb $R^k$: %(Figure~\ref{fig:character}-right: the four ellipses). 
 \begin{equation}
@@ -127,8 +128,10 @@ $\mathbf{q}$ is decomposed as follows:
 \end{equation}
 %~ \adnote{in this definition you don't account for joint limits}
 where $\mathbf{p}^k$ denotes the end-effector position (in the root frame) of $R^k$ (translation only) for $\mathbf{q}^0 = \mathbf{0}$ being the null displacement, and  $C^k_{j.lim}$ is the space
-of admissible limb joint configurations. We also define \mbox{$W = \bigcup_{k=1}^{l}W^k$}, and
-$W^k(\mathbf{q}^{0})$ (for $1 \leq k \leq l$) as the volume $W^k$ for the root configuration $\mathbf{q}^{0}$.
+of admissible limb joint configurations. We also define \mbox{$W = \bigcup_{k=1}^{l}W^k$}. 
+
+Each $W^i, 0 \leq i \leq l$ is  attached to one joint of the root, such that 
+$W^i(\mathbf{q}^{0})$ is the volume $W^i$ transformed the by root configuration $\mathbf{q}^{0}$.
 
 \medskip
 \textbf{The environment} $O$ is defined as the union of the obstacles $O_i$ that it contains.
