@@ -12,15 +12,15 @@ SAVE_DATA                   = True;
 SMOOTH_FILTER_WINDOW_LENGTH = 41;
 MAX_TEST_DURATION           = -1;
 dt                          = 1e-3;
-FOLDER = '/home_local/dev/hpp/src/2016_ijrr_traj/darpa_ok/'
+FOLDER = '/home/adelpret/repos/20151101_contact_planner_steve/code/hpp_serialization/'
 INPUT_FILE_NAME             = [FOLDER+'seq_1',FOLDER+'seq_2',FOLDER+'seq_3',FOLDER+'seq_4',FOLDER+'seq_5',FOLDER+'seq_6'];
 #INPUT_FILE_NAME             = [FOLDER+'seq_5', FOLDER+'seq_6'];
 RECORD_FILE_NAME             = 'seq_all';
-RECORD                      = True
-CAMERA_TRANSFORM            = [-1.9623876810073853, -5.876553058624268, 3.1662111282348633, 0.8184708952903748, 0.5468565821647644, -0.09847398102283478, -0.14613758027553558];
-model_path                  = ["/home_local/dev/hpp/install/share"];
+RECORD                      = False
+CAMERA_TRANSFORM            = False #[-1.9623876810073853, -5.876553058624268, 3.1662111282348633, 0.8184708952903748, 0.5468565821647644, -0.09847398102283478, -0.14613758027553558];
+model_path                  = ["/home/adelpret/repos/20151101_contact_planner_steve/code/data/hyq"];
 urdfFileName                = model_path[0] + "/hyq_description/urdf/hyq.urdf";
-sceneFileName               = model_path[0] + "/hpp-rbprm-corba/meshes/darpareduced.stl";
+sceneFileName               ="/home/adelpret/repos/20151101_contact_planner_steve/code/hpp_serialization/darpareduced.stl";
 freeFlyer                   = True;
 
 ''' CONTROLLER CONFIGURATION '''
