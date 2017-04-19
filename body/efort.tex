@@ -23,7 +23,7 @@ Only the horizontal and vertical speeds are shown (not the rotation speeds).}
 
 We consider: a limb configuration $\mathbf{q}^k$; its end effector position $\mathbf{p}^k$; its Jacobian matrix
 $\mathbf{J}^k(\mathbf{q}^k)$; a force $\mathbf{f}$ exerted by the end effector. For clarity in the rest of the section we omit the $k$ indices and write $\mathbf{J}^k(\mathbf{q}^k)$ as $\mathbf{J}$.
-\citeauthor{Yoshikawa1984} defines the velocity~\ref{eq:vel} and force~\ref{eq:vel} ellipsoids:
+Yoshikawa \citeauthor{Yoshikawa1984} defines the velocity~\ref{eq:vel} and force~\ref{eq:vel} ellipsoids:
  
  \begin{equation} 
  \label{eq:vel}
@@ -74,7 +74,7 @@ h_{vel}(\mathbf{q}, \mathbf{m}) = [\mathbf{m}^{T}(\mathbf{J}\mathbf{J}^T)^{-1}\m
 $h_{\textrm{\it EFORT}}$ and $h_{vel}$ will favor contacts that allow large efforts or fast modifications in the velocity.
 $EFORT$ in particular is useful for tasks such as standing up, pushing / pulling.
 In other less demanding cases, manipulability can also be considered to avoid singularities.
-To do so, we can consider the manipulability measure $h_{w}$, also given by \citeauthor{Yoshikawa1984}:
+To do so, we can consider the manipulability measure $h_{w}$, also given by Yoshikawa \citeauthor{Yoshikawa1984}:
 
 \begin{equation} \label{ellipsoid}
 h_{w}(\mathbf{q}) = \sqrt{det(\mathbf{J}\mathbf{J}^T)}
