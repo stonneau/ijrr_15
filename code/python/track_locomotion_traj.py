@@ -10,7 +10,7 @@ if cwd+'/data/config' not in sys.path:
 
 #import test1_planar as conf
 #~ import conf_hyq_hole as conf
-#~ import conf_hyq_bridge as conf
+#import conf_hyq_bridge as conf
 import conf_hyq_darpa as conf
 #import conf_hrp2_polaris as conf
 
@@ -450,7 +450,8 @@ controller_balance   = N_SOLVERS*[False,];
 gepgui = simulator.viewer.robot.viewer.gui
 simulator.viewer.addMesh("ground",conf.sceneFileName)
 gepgui.setColor('world/ground', [0.8,0.4,0.,1])
-gepgui.applyConfiguration("world/ground",[0,0,0.01,1,0,0,0]); 
+gepgui.applyConfiguration("world/ground",[0.02,0,0.01,1,0,0,0]);
+#gepgui.applyConfiguration("world/ground",[0.01,0.02,0.0,1,0,0,0]);
 gepgui.setVisibility('world/floor', 'OFF')
 gepgui.refresh()
 if(conf.CAMERA_TRANSFORM):
@@ -464,10 +465,16 @@ for s in conf.SOLVER_TO_INTEGRATE:
 
 gepgui.setVisibility('world/com', 'OFF')
 gepgui.setVisibility('world/cp', 'OFF')
+gepgui.setVisibility('world/LLEG_JOINT5', 'OFF')
+gepgui.setVisibility('world/RLEG_JOINT5', 'OFF')
+gepgui.setVisibility('world/LARM_JOINT5', 'OFF')
+gepgui.setVisibility('world/RARM_JOINT5', 'OFF')
 gepgui.setVisibility('world/lf_foot_joint', 'OFF')
 gepgui.setVisibility('world/rf_foot_joint', 'OFF')
 gepgui.setVisibility('world/lh_foot_joint', 'OFF')
 gepgui.setVisibility('world/rh_foot_joint', 'OFF')
+gepgui.setVisibility('world/robot1/RARM_LINK6_0', 'OFF')
+gepgui.setVisibility('world/robot1/LARM_LINK6_0', 'OFF')
 gepgui.refresh()
 
 if(conf.PLAY_MOTION_AT_THE_END):

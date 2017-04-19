@@ -14,17 +14,16 @@ The first approximation is the verification of \contactreachability\ ($\mathbf{q
 %~ contact we combine only-necessary and only-sufficient conditions which are trivial to estimate. Only-necessary conditions are appealing because they preserve the completeness of the search, while reducing 
 %~ the search space: they provide an outer approximation of $C_{Contact}^0$. On the other hand, only-sufficient conditions provide the guarantee that any configuration that satisfies them is indeed \gls{contact reachable}: they provide an inner approximation of $C_{Contact}^0$.
 
-The main source of computational cost identified in previous works is the verification of \equilibriumfeasibility. 
+Another source of computational cost identified in previous works is the verification of \equilibriumfeasibility. 
 The strong assumption of our work is that for the class of problems we consider \contactreachability\ implies \equilibriumfeasibility.
 Our scenarios show that the  assumption is verified in the majority of cases when at least one contact surface is \textit{quasi flat}~\cite{Prete2016}, that is when
 the friction cone of the contact surface contains the direction opposite to the gravity.
 Figure~\ref{fig:dedefeas} illustrates this observation, demonstrated empirically by the third column of Table~\ref{tab:requestpercent}. In the worst case, in our experiment
-the assumption was verified for 82\% of the total amount of trials.
-
+the assumption was verified for 82\% of the total amount of trials that verified \contactreachability\.
 In the example of \cite{Bouyarmane2009}, the verification of \equilibriumfeasibility\ implies a constructive demonstration by exhibiting a valid $\mathbf{q}^{\overline{0}}$, requiring
 several minutes of planning. Our method, in comparison, takes from a few milliseconds to several seconds.
 
-These results clearly justify the pragmatic decisions of this paper. What is lost in completeness is largely compensated by the computation times we obtain.
+These results clearly justify the pragmatic decisions of this paper.
 
 \subsection{Addressing $\mathcal{P}_3$}
 This paper focuses on contact planning of multi-contact locomotion. While it does not address directly the continuous motion generation,
@@ -60,14 +59,14 @@ Our contribution to \Pa is the introduction of a low-dimensional space $C_{reach
 $C_{reach}^0$ can be efficiently sampled and has a low-dimension. For these reasons we are able to solve \Pa much faster than previous approaches.
 
 %~ Our contribution to \Pa is a generic characterization of the properties that the guide path must satisfy, in particular to enforce the completeness of the acyclic contact planner. 
-Our contribution to \Pb is a fast contact generation scheme that canoptimize user-defined criteria.
+Our contribution to \Pb is a fast contact generation scheme that can optimize user-defined criteria.
 
 Our results demonstrate that our method allows a pragmatic compromise between three 
 criteria that are hard to conciliate: generality, performance, and quality of the solution, making it the first acyclic contact
 planner compatible with \gls{interactive} applications.
 %
 \textbf{Regarding generality}, the \textit{reachability condition}, coupled with an approach based on limb decomposition, 
-allows the method to address automatically arbitrary multiped robots.
+allows the method to address automatically arbitrary legged robots.
 %
 \textbf{Regarding performance}, our framework is efficient in addressing both \Pa and $\mathcal{P}_2$. This results in \gls{interactive} computation times.
 %
@@ -87,12 +86,13 @@ Considering the set of obstacles intersecting with the reachable workspace for a
 This would give us a necessary condition for \equilibriumfeasibility.
 
 While we have exhibited complete multi-contact locomotion obtained with our contact planner, our main concern for future work is to address the interpolation
-between contact sequences ($\mathcal{P}_3$), not addressed here, and which remains an open issue in highly-constrained scenarios.
-Solving $\mathcal{P}_3$ requires addressing efficiently the collision avoidance problem,	but also improving
-our plans with transition certificates, i.e. guarantees that the interpolation between two contact configurations is feasible.
+between contact sequences ($\mathcal{P}_3$), which remains an open issue in highly-constrained scenarios.
+Solving $\mathcal{P}_3$ requires addressing efficiently the collision avoidance problem in the interpolation phase, an issue 
+not addressed by existing frameworks. We aim at providing our plans with transition certificates, that would define constraints on $\mathcal{P}_3$, under which
+the transition between two contact configurations is feasible and collision-free.
 %~ Our current direction is to propose a geometric quantification of both the kinematic and dynamic constraints of the problem, expressed
 %~ at the center of mass of the robot.
  %~ We are also
 %~ working on new heuristics more closely related to the dynamics of the systems (for instance, choose the contacts that minimize the jerk between two contact configurations).
 Finally, we aim at performing kinodynamic planning to remove the constraint that configurations in the contact plan be in static equilibrium. We believe that the most promising direction in this regard is to integrate the notion of Admissible Velocity Propagation in our current work \citep{DBLP:conf/rss/PhamCN13}.
-Addressing these two issues is essential to bridge the gap between the planning and control aspects of multiped locomotion.
+Addressing these two issues is essential to bridge the gap between the planning and control aspects of legged locomotion.
