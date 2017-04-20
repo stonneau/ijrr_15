@@ -79,8 +79,8 @@ Our current implementation of these modifications is based on the Bi-RRT planner
 %~ \delst{However, to improve the sampling efficiency 
 %~ we bias the sampling process to generate near-obstacle configurations, similarly to cite{Amato98choosinggood}.}
 
-This Section has presented a guide path planner for the geometric root of a robot. This planner is implemented as a low-dimensional sampling-based 
-algorithm. Given start and goal configurations, it outputs a continuous path for the root of the robot. 
+This Section has presented a guide path planner for the geometric root of a robot, implemented as a low-dimensional sampling-based 
+algorithm. Given start and goal configurations, it outputs a continuous path for the robot's root. 
 %~ \deladp{Thanks to the \textit{reachability condition}, we assume that for any configuration in the path there exists a joint configuration that results in static equilibrium.}
 %~ Thanks to these modifications, the problem of planning a \gls{contact reachable} path is reduced to a geometric collision-checking problem, of low dimension (6 for HyQ, 8 for HRP-2 that has 2 joints in the torso).
 %~ By doing this we can solve the problem with a sampling-based approach, in \gls{interactive} computation times.
