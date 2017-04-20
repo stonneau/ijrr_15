@@ -398,14 +398,13 @@ The most efficient (and immediate) approach to obtain a valid contact plan as fa
 To validate our plans, we either use the framework of \cite{Carpentier2016}, or our own implementation of a $\mathcal{P}_3$ solver (Appendix~\ref{app:optim}).
 The companion video shows the obtained motions.
 
-Few contributions provided computation times on the complete problem. %, necessary to provide comparison between our approaches. 
+Few contributions provided computation times on the complete problem. To provide a completely fair comparison, it would be required to compare the methods on the same computers and exact same scenarios, which is not possible because the source code of the other methods is often not available. %, necessary to provide comparison between our approaches. 
 Furthermore, $\mathcal{P}_3$ remains an open problem in the presence of obstacles. The only valid scenarios addressed completely in previous works are thus the stair-climbing scenarios of different heights proposed by Hauser in \cite{Hauser06usingmotion}, and the table-egress scenario by Escande et al. in~\cite{DBLP:conf/iser/EscandeKMG08}, which we consider to be of similar complexity with respect to the car-egress scenario (we did not consider the stairs in the scene). Both scenarios are tested with HRP-2.
 
 Table~\ref{tab:compprev} presents the computation times for these scenarios, clearly demonstrating that our approach is order of magnitude faster than previous works.
 
-To provide a completely fair comparison, it would be required to compare the methods on the same computers and exact same scenarios, which is not possible
-because the source code of the other methods is often not available. Despite this observation and the fact that some results are old, we believe that the results show that our method
-performs better. Indeed, a difference in technology does not justify a difference as important as the one demonstrated in Table~\ref{tab:sucess_planning}.   
+ %~ Despite this observation and the fact that some results are old, we believe that the results show that our method
+%~ performs better. Indeed, a difference in technology does not justify a difference as important as the one demonstrated in Table~\ref{tab:sucess_planning}.   
 
 
 
