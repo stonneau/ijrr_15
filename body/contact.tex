@@ -30,8 +30,6 @@ As shown in the companion video, this allows our framework to produce dynamic mo
 Starting from an initial whole-body configuration, we compute a sequence
 of whole-body configurations  $\mathbf{Q}^{\overline{0}}$ along the root path $\mathbf{q}^0(t)$.
 The algorithm can be found in Appendix~\ref{app:contact}. Here we provide an intuition of it.
-%~ Although we address acyclic contact sequences, the algorithm is deterministic in the order in which 
-%~ the contacts are created, allowing it to break the combinatorial.
 
 First, the root path $\mathbf{q}^0(t)$ is discretized into a sequence of $j$ key configurations:  
 \begin{equation*}
@@ -68,7 +66,7 @@ Each root configuration of $\mathbf{Q}^0$ is then extended into a whole-body con
 
 %~ The function $g$ is defined independently by $g^k$ for each limb $R^k$. In defining $g^k$, two aspects must be considered. Is the limb $R^k$ in contact? And which criteria is it optimizing? 
 
-\subsubsection{Maintaining a contact in the sequence:}
+\subsubsection{Maintaining a contact in the sequence}
 
 %~ Figure~\ref{fig:break_contact} illustrates the contact-persistence strategy.
 If kinematically possible, a limb in contact at step $i-1$ remains in contact at step $i$ (Figure~\ref{fig:break_contact}). 
@@ -111,7 +109,7 @@ that at most one contact is broken between two sequential configurations.
 %~ \end{figure}
 
 %\subsection{Generation of a contact configuration}  
-\subsubsection{Creating contacts:}
+\subsubsection{Creating contacts}
 Contacts are created using a FIFO approach: we try first to create a contact with the limb that has been contact-free the longest. If the contact creation does not succeeds, the limb is pushed on top of the queue, and will only be tried again after the others.
 %~ \begin{enumerate}
 %~ \item \deladp{At most one contact creation happens between two consecutive steps. }
@@ -143,7 +141,7 @@ The contact generator treats each limb $R^k$ independently.
 Given a configuration of the root and the other limbs, it computes a configuration $\mathbf{q}^k$ such that $R^k$ is in contact and the robot $R$ is in static equilibrium:
 \begin{equation}
 \label{eq:contact_gen}
-	\mathbf{q}^{\overline{k}}  \longrightarrow \mathbf{q}^k, (\mathbf{q}^{k} \oplus \mathbf{q}^{\overline{k}}) \in  C_{Equil} \wedge \mathbf{q}^k \in  C_{Contact}^k 
+	\mathbf{q}^{\overline{k}}  \longrightarrow \mathbf{q}^k, (\mathbf{q}^{k} \oplus \mathbf{q}^{\overline{k}}) \in  C_{Equil} \textrm{ \textbf{and}}\ \mathbf{q}^k \in  C_{Contact}^k 
 \end{equation}
 
 Contact generation is typically adressed by randomly sampling a limb configuration, before projecting the effector onto the closest surface with an inverse kinematics solver.
