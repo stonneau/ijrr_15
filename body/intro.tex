@@ -4,20 +4,40 @@
 
 %~ Planning legged robot locomotion remains an open issue.
 \IEEEPARstart{L}{egged} robots move by sequentially creating contacts with the environment.
-After years of research, such robots can autonomously walk on flat ground, but struggle to navigate more complex environments.
-To climb stairs using a handrail, a humanoid robot must plan the contacts to create with its feet and hands. Computing such a contact sequence is an open motion planning problem called acyclic contact planning.
+After years of research, such robots can autonomously walk on flat ground, but struggle to navigate in more complex environments, e.g. to climb stairs using a handrail.
+In such a case a humanoid robot must plan the contacts it musts create with its feet and hands. Computing such a movement is an open motion-planning problem called acyclic contact planning.
+Most of the complexity of this problem lies in the choice of the sequence of contacts, i.e. the underlying decomposition of the trajectory into contact phases where specific points of the robot body are exerting forces on specific locations of the environment.
+%
+Once the contact plan is known, efficient approaches exist to generate a dynamically feasible motion~\citep{Carpentier2016}. 
 
-Once the contact plan is known, efficient approaches exist to generate a dynamically feasible motion~\citep{Carpentier2016}. However in general
-the contact plan is manually designed by a time consuming trial-and-error procedure. Automatically addressing the acyclic contact planning problem is thus a pre-requisite to the deployment of robots in cluttered, human-centered environments, which comprise constraining obstacles (stairs...).
+%% However in general
+%% the contact plan is manually designed by a time consuming trial-and-error procedure. Automatically addressing the acyclic contact planning problem is thus a pre-requisite to the deployment of robots in cluttered, human-centered environments, which comprise constraining obstacles (stairs...).
 
-To make a legged robot walk on flat ground, efficient tools such as the capture point~\citep{Pratt2006} can be used to compute the next contact location. Furthermore, choosing the effector with which to create a contact is trivial because walking follows a cyclic pattern (For a humanoid the left foot always follows the right foot).
-Unfortunately, in the general case planning complex contact interactions is extremely challenging:
-At any given time a contact must be chosen between infinitely many possibilities (often a combinatorial discrete choice for the effector and contact surface, and a continuous choice for the contact location). Furthermore, a contact choice constrains kinematically and dynamically the possible motions, and there is no analytical way to verify whether this choice brings the robot one step closer to the desired goal or to a dead end, especially in the presence of obstacles; we say that the contact manifold is foliated~\citep{simeon-manipulation-04}. Lastly, the contact manifold has a null measure and is thus impossible to sample. This restriction prevents the use of efficient sampling-based planners.
+In the specific (and simple) case of gaited biped locomotion on flat ground, choosing the effector with which to create a contact is trivial because walking follows a cyclic pattern (left foot always follows right foot).
+Efficient tools such as the capture point~\citep{Pratt2006} can be used to compute the next contact location. 
+%
+The general case of planning contact sequences is more challenging.
+At any given time a contact results of a combinatorial discrete choice for both the effector and contact surface, and a continuous choice for the contact location.
+Any choice of contact then kinematically and dynamically constrains the possible motion of the robot.
+Furthermore there is no analytical way to verify whether this choice brings the robot one step closer to the desired goal or to a dead end, especially in the presence of obstacles.
+From this property, we say that the contact manifold is foliated~\citep{simeon-manipulation-04}. 
+The foliation prevents the use of efficient sampling-based planners for two reasons.
+(i) First, each submanifold of the foliation has a zero measure and cannot be directly sample.
+A sample is rather obtained by sampling a ``free flying'' configuration and explicitly projecting it in contact (which is a costly numerical operation).
+(ii) Second, the foliated topology turns the exploration by spreading a graph of configurations (probability roadmap, rapidely exploring random trees) into an unefficient random process, where many useless nodes are sampled on parallel submanifolds.
+The total algorithm complexity of classical contact planners comes both from the number of nodes of the graph that are sampled during the exploration (ii) and to the cost of the projection when sampling a new configuration (i).
+%
+For this reason previous contributions having demonstrated acyclic contact locomotion on a real robot are too computationally expensive~\citep{Bretl:2006:MPM:1124573.1124585}. As a result at the DARPA Robotics Challenge, the participants stated that, except for egress, the robots did not use multi contact strategies: they relied on unsafe bipedal walking to climb stairs, instead of using the provided handrails to facilitate the motion~\citep{atkensondarpa}. 
 
 
-For this reason previous contributions having demonstrated acyclic contact locomotion on a real robot are too computationally expensive~\citep{Bretl:2006:MPM:1124573.1124585}. As a result at the DARPA Robotics Challenge, the participants stated that except for egress, the robots did not use multi contact strategies: they relied on unsafe bipedal walking to climb stairs, instead of using the provided handrails to facilitate the motion~\citep{atkensondarpa}. 
-
-Obtaining reasonable computation times is critical for a contact planner to be of any practical use. Our work thus aims at breaking the complexity of the acyclic contact planning problem.  To do so we deal sequentially with the two main issues associated to our problem: the null measure of the contact manifold, and the combinatorics of the contact selection problem. First we introduce a low-dimensional space, called the \textit{contact reachable} space, that can be sampled and mapped efficiently to the contact manifold. Then, given a path computed in the \textit{contact reachable} space, we propose a deterministic algorithm to generate a contact sequence along the path.
+%Obtaining reasonable computation times is critical for a contact planner to be of any practical use. 
+Our work aims at breaking the complexity of the acyclic contact planning problem.  
+To do so we deal sequentially with the two main issues associated to our problem: the null measure of the contact manifold (i), and the combinatorics of the contact selection problem (ii). 
+To that end, we introduce a reduction property that we name the reachability condition.
+This condition relaxes the strict contact condition.
+It induces a low-dimensional space, called the \textit{contact reachable} space, that has a Cartesian topology, i.e. it can be efficiently sampled.
+Under some hypothesis, a path in the \textit{contact reachable} space can be easily mapped to the (high-dimensionnal) contact manifold. 
+This approach of the problem enables us to separate the contact planning problem in two tractable subproblems.
 This decoupling presents pros and cons discussed in previous related literature, summarized in the following.
 %~ whole-body trajectory and the contact location and timings, we decouple path and contact planning, as suggested by \citeauthor{Bouyarmane2009}.
 %~ We first plan a path for the geometric root of the robot in a low dimensional space. We formulate this space as a computationally-efficient approximation
