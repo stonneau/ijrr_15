@@ -3,14 +3,18 @@
 \label{sec:results}
 In this section we present some of the results obtained with our planner. The complete sequences are shown in the companion video.
 Specifically, we demonstrate the planner for two legged robots, in a large variety of environments: the humanoid HRP-2 and the quadruped HyQ.
+For all scenarios, the video displays a valid contact sequence outputs by our planner (i.e. $\mathcal{P}_2$ result).
+They are then validated by exhibiting a dynamically-consistant solution to the interpolation problem $\mathcal{P}_3$, which is displayed at the video end.
 Finally, a last example suggests possible applications to dexterous manipulation.
+These scenarios complement our previous results with virtual avatars (Figure~\ref{fig:robots_old})~\citep{tonneauisrr15}.
+%
+%At the end of the video, we validate our contact plans by exhibiting a solution to the interpolation problem $\mathcal{P}_3$.
 
-At the end of the video, we validate our contact plans by exhibiting a solution to the interpolation problem $\mathcal{P}_3$.
+In this section, we first reports the scenarios that were solved by our planner (Sec.~\ref{sec:scenarios}) 
+before discussing  the role of the parameters of our planner (Sec.~\ref{sec:influence}) and its performances (\textit{interactive} computation times, success rates -- Sec.~\ref{sec:perf}). 
+%We then provide the \textit{interactive} computation times obtained in each case.
+%We also compare the times obtained with HRP-2 with respect to previous works.
 
-At the end of this section, we discuss the role of the parameters of our framework. We then provide the \textit{interactive} computation times obtained in each case.
-We also compare the times obtained with HRP-2 with respect to previous works.
-
-These scenarios complement the ones demonstrated on virtual avatars (Figure~\ref{fig:robots_old}) in our previous ISRR paper~\citep{tonneauisrr15} and video\footnote{\url{http://youtu.be/LmLAHgGQJGA}}.
 %~ (Figure~\ref{fig:robots_old}).
  %~ We invite the interested reader to watch the ISRR video (\url{http://youtu.be/LmLAHgGQJGA}), and 
 %~ to refer to the previous paper for a discussion on these results.
@@ -28,11 +32,11 @@ These scenarios complement the ones demonstrated on virtual avatars (Figure~\ref
 		%~ \put (37,27) {4.a)} 
 		%~ \put (68,27) {4.b)} 
 	\end{overpic}
-\caption{Virtual avatars in various scenarios demonstrated in our conference paper.}
+\caption{Virtual avatars in various scenarios demonstrated in our conference paper~\cite{tonneauisrr15} (see video on YouTube \url{http://youtu.be/LmLAHgGQJGA}).}
 		   \label{fig:robots_old}
 \end{figure}
 
-\subsection{Description of the scenarios}
+\subsection{Description of the scenarios}\label{sec:scenarios}
 In all the scenarios considered, the formulation of the problem is always the same:
 a start and goal root configurations are provided as input (except in the stair climbing scenario where the start whole body configuration is given).
 The framework computes the initial contact configuration, and outputs a sequence of contact configurations connecting it to the goal.
@@ -223,7 +227,7 @@ Although we do not address the hard issue of accounting for rolling motions, the
 \subsection{Role of the main parameters} \label{sec:influence}
 We discuss the factors that influence the outcome of our planner: the root scaling factor $s$ (Section~\ref{sec:scaling}), the heuristics for
 contact generation (Appendix~\ref{sec:heuristics}), and lastly, the discretization step for the guide path. The appropriate value for these parameters
-is computed empirically based on use-case analysis or trials and errors.
+is computed empirically based on use-case analysis or trials and errors (the same value is used in all the scenarios).
  
 \subsubsection{Choosing the scaling factor $s$} \label{sec:params}
 %~ \deladp{To find a convenient value $s^*$ of $s$, we proceeded as follows. }
@@ -234,7 +238,7 @@ The obtained results for HRP-2 are shown in Table~\ref{tab:scale}, averaged over
 statistical tests are not really conclusive since we are only interested in a small area of the environment).
 
 As it can be expected, the scaling results in a high increase of the sensitivity, with a decrease of the specificity.
-For HRP-2 we decided to set $s^*=1.2$.
+For HRP-2 and HyQ we decided to set $s^*=1.2$.
 %~ , and was also effective for the car egress scenario. 
 
 \begin{table}
@@ -259,7 +263,7 @@ For HRP-2 we decided to set $s^*=1.2$.
 In our conference paper~\citep{tonneauisrr15}, the computed motions were generated using the EFORT heuristic.
 EFORT is designed for tasks requiring to exert important forces (such as pushing / pulling / climbing). 
 In locomotion tasks, such as the stair scenario, one issue with EFORT is that it tends to generate
-configurations close to singularities (and joint limits). While this did not significantly impact
+configurations close to singularities and joint limits. While this did not significantly impact
 the generation of the plan, the resulting interpolation turned out to be harder.
 For this reason, we prefer to use our manipulability-based heuristic for the legs of the robot, but we still
 use EFORT for the arms, which results in fewer contact repositionings.
@@ -280,11 +284,12 @@ the planner may fail since we impose the constraint that only one contact change
 between two consecutive steps. On the other hand, a small step will not impact the success rate of the planner, 
 but may generate unnecessary states. In most scenarios the torso of HRP-2 moves about 15 cm between two postures, but only 3 cm
 for the car egress scenario to handle the geometry of the polaris.
+This parameter is similar to the step duration used e.g. in~\cite{Mordatch:2012:DCB:2185520.2185539}.
 For future work, we would like to automatically adapt the size of the discretization step to the complexity of the environment.
 
 \subsection{Performance analysis} \label{sec:perf}
 To analyze performance, we ran the planner 1000 times for each scenario.
-We measured the computation time spent in each part of the algorithm, and analyzed their success rate.
+We measured the computation time spent in each part of the algorithm and analyzed their success rate.
 
 
 \begin{table*}
@@ -312,13 +317,13 @@ column indicates the average time necessary to compute one contact transition. }
 \begin{tabular}{ l | c}
   &  Path planning success rate \\
  \hline
-   Stairs     	& 100\% \\
-   Standing			& 68\% 	\\
-   Car 			& 77\% 	\\
+   Steep stairs     	& 100\% \\
+   Standing up			& 68\% 	\\
+   Car egress			& 77\% 	\\
    Rubble 				& 97\% 	\\
-   Race        & 88.0\% 	\\
+   Obstacle race        & 88\% 	\\
  \end{tabular}
-\caption{ Percentage of successful complete contact planning rates for each scenario, rounded to the first decimal.}
+\caption{ Rates of successful complete contact planning for each scenario.}
 \label{tab:sucess_planning}
 \quad
 \end{table}
@@ -326,7 +331,7 @@ column indicates the average time necessary to compute one contact transition. }
 \begin{table}
 \centering
 \begin{tabular}{ l | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{35pt} | >{\centering\arraybackslash}m{35pt} | c}
-  &  Equilibrium success rate & Kinematic failure & Equilibrium failure \\
+  &  Success rate of the contact generator & Kinematic failure & Equilibrium failure \\
  \hline
    Steep stairs 	& 99.5\%  & 0.1\% 	& 0.4\% \\
    Standing up 		& 87.8\%  & 6.1\% 	& 6.1\% \\
@@ -334,10 +339,12 @@ column indicates the average time necessary to compute one contact transition. }
    Rubble 			& 97.54\% & 0.16\% 	& 2.3\% \\
    Obstacle race 	& 92.4\%  & 0.15\% 	& 7.45\% \\
  \end{tabular}
-\caption{Success rates obtained for the generation of static equilibrium contact configurations for each scenario, rounded to the first decimal. Column 1 indicates 
-indicates the rate of contact generation that suceeeded. In the cases where the generation fails, it can be
-either a kinematic issue (column 2), or because no contact configuration led to a static equilibrium configuration (column 3). Note that a failure in the contact generation
-is not equivalent to a failure of the contact planning algorithm.}
+\caption{Success rate of the contact generator , whose failures may be due to kinematic issue or equilibrium issue. 
+%% Success rates obtained for the generation of static equilibrium contact configurations for each scenario, rounded to the first decimal. Column 1 indicates 
+%% indicates the rate of contact generation that suceeeded. In the cases where the generation fails, it can be
+%% either a kinematic issue (column 2), or because no contact configuration led to a static equilibrium configuration (column 3). 
+%Note that a failure in the contact generation is not equivalent to a failure of the contact planning algorithm.
+}
 \label{tab:requestpercent}
 \quad
 \end{table}
@@ -358,14 +365,21 @@ thus allowing to consider \gls{interactive} applications and online autonomous p
 
 \subsubsection{Success rates (Table~\ref{tab:sucess_planning})}
 %~ Table~\ref{tab:sucess_planning} summarizes the successful planning rates.
-Despite the complexity of the scenarios and the approximations made in our formulation, our planner succeeded in the large majority of cases.
+Despite the complexity of the scenarios, our planner succeeded in the large majority of cases.
 
-Table~\ref{tab:requestpercent} presents the rate of successful contact generation. Note that a failure in contact generation for a root configuration is not equivalent to a failure in the contact plan. It simply means that another limb was tested for contact generation for the same root configuration.
+It is also interesting to observe the causes of failure of the contact generator (Table~\ref{tab:requestpercent}).
+As it iterates until sucess, one failure of the contact generator is not equivalent to a failure in the contact plan (but corresponds to increased computation time).
 As expected, the more constrained scenario, the car egress, provides the less satisfying results, despite the high success rate of the planner.
 
-These results confirm that our approach provides a satisfying compromise between completeness and efficiency, thus allowing to consider online planning
-while controlling the robot. Indeed, when the contact planning fails, it fails rapidly. This allows us to rapidly re-plan with a reasonable chance of success.
-The most efficient (and immediate) approach to obtain a valid contact plan as fast as possible would be to launch in parallel several instances of the planner (our current implementation is single-threaded) and to use any successful result as a plan for solver $\mathcal{P}_3$.
+These results correspond to an empirical validation of the \textit{reachibility condition}.
+As previously explained, this condition is not sufficient to guarantee that a path $\mathcal{P}_1$ is expendable in a sequence~$\mathcal{P}_2$.
+However we see in practice that, even in complex scenario, this condition is a fair approximation.
+Moreover, when the contact planning fails, it fails rapidly. 
+It is then immediate to simply invalidate the corresponding edge of the planning graph and to rapidly re-plan it with a reasonable chance of success.
+
+%% These results confirm that our approach provides a satisfying trade-off between completeness and efficiency, thus allowing to consider online planning
+%% while controlling the robot. Indeed, when the contact planning fails, it fails rapidly. This allows us to rapidly re-plan with a reasonable chance of success.
+%% The most efficient (and immediate) approach to obtain a valid contact plan as fast as possible would be to launch in parallel several instances of the planner (our current implementation is single-threaded) and to use any successful result as a plan for solver $\mathcal{P}_3$.
 
 
 \begin{table}
@@ -394,14 +408,33 @@ The most efficient (and immediate) approach to obtain a valid contact plan as fa
 \quad
 \end{table}
 
-\subsection{Validation of the contact plans, and comparison with previous work} \label{sec:compa}
-To validate our plans, we either use the framework of \cite{Carpentier2016}, or our own implementation of a $\mathcal{P}_3$ solver (Appendix~\ref{app:optim}).
+\subsection{Validation of the contact plans}
+The contact sequences computed by our planner are finally used to generate a whole dynamics trajectory using~$\mathcal{P}_3$.
+For this last stage, we relied on existing formulation, either directly using existing solvers~\cite{Carpentier2016} or implementing our own version a $\mathcal{P}_3$ solver, described in Appendix~\ref{app:optim}.
+Because $\mathcal{P}_3$ is not a contribution of this paper, we do not provide here computation scores (see~\cite{Carpentier2016} for details).
+The resulting whole trajectories are dynamically consistant: they are smooth; contact forces corresponds to the robot motion; joint motion and torques are within the acceptable ranges specified by the robot manufacturers.
+All the resulting movements have been executed in a complete dynamic simulator.
+We executed one of them using the real HRP-2 robot
+%
+%To validate our plans, we either use the framework of \cite{Carpentier2016}, or our own implementation of a $\mathcal{P}_3$ solver (Appendix~\ref{app:optim}).
 The companion video shows the obtained motions.
 
-Few contributions provided computation times on the complete problem. To provide a completely fair comparison, it would be required to compare the methods on the same computers and exact same scenarios, which is not possible because the source code of the other methods is often not available. %, necessary to provide comparison between our approaches. 
-Furthermore, $\mathcal{P}_3$ remains an open problem in the presence of obstacles. The only valid scenarios addressed completely in previous works are thus the stair-climbing scenarios of different heights proposed by Hauser in \cite{Hauser06usingmotion}, and the table-egress scenario by Escande et al. in~\cite{DBLP:conf/iser/EscandeKMG08}, which we consider to be of similar complexity with respect to the car-egress scenario (we did not consider the stairs in the scene). Both scenarios are tested with HRP-2.
+\subsection{Comparison with previous work} \label{sec:compa}
 
-Table~\ref{tab:compprev} presents the computation times for these scenarios, clearly demonstrating that our approach is order of magnitude faster than previous works.
+We did our best to provide a fair comparison of the computation complexity of our method with the state of the art. 
+%Few contributions provided computation times on the complete problem. 
+However existing benchmarks for motion planning algorithms~\cite{moll2014extensible} do not yet encompass contact planning.
+Moreover, the source code of the previous methods of the state of the art is often not available.
+Providing a fair comparison with the algorithms performing on the same computer and on the same scenarios is yet out of reach.
+A step in this direction is the open-source release of our source code (see Appendix~\ref{app:hpp}) that allows any reader to reproduce our results.
+%
+Furthermore, $\mathcal{P}_3$ remains an open problem in the presence of obstacles. 
+The only valid scenarios completely addressed  in previous works are thus the stair-climbing scenarios of different heights  in \cite{Hauser06usingmotion}, and the table-egress scenario in~\cite{DBLP:conf/iser/EscandeKMG08}(whose  complexity is similar to our car-egress scenario).
+Both our scenarios are tested with HRP-2.
+
+Table~\ref{tab:compprev} presents the computation times for these scenarios.
+The scores clearly demonstrate that our approach is order of magnitude faster than previous works.
+
 
  %~ Despite this observation and the fact that some results are old, we believe that the results show that our method
 %~ performs better. Indeed, a difference in technology does not justify a difference as important as the one demonstrated in Table~\ref{tab:sucess_planning}.   

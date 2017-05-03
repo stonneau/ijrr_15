@@ -1,10 +1,10 @@
 % !TEX root =  ../main.tex
-We present a contact planner for complex legged locomotion tasks: standing up, climbing stairs using a handrail, crossing rubble and getting out of a car. The need for such a planner was shown at the Darpa Robotics Challenge, where such behaviors
+We present a contact planner for complex legged locomotion tasks: standing up, climbing stairs using a handrail, crossing rubble, getting out of a car. The need for such a planner was shown at the Darpa Robotics Challenge, where such behaviors
 could not be demonstrated (except for egress).
 %
 %This planning problem is theoretically known to be a specific instance of a larger class of complex planning problems (``manipulation'' or ``rearrangement'' planning).
 Current planners suffer from prohibitive algorithmic complexity, because they deploy a tree of robot configurations projected in contact with the environment.
-Contact configurations are costly to compute (because sampled and projected in high dimension) and have no equivalence property (i.e. two neighbor configurations cannot be directly connected in the planning graph).
+%Contact configurations are costly to compute (because sampled and projected in high dimension) and have no equivalence property (i.e. two neighbor configurations cannot be directly connected in the planning graph).
 %
 We tackle this issue by introducing a reduction property: the reachability condition. 
 This condition defines a geometric approximation of the contact manifold, which is of low dimension, has Cartesian topology and can be efficiently sampled and explored.
@@ -18,10 +18,10 @@ second, we generate a discrete sequence of whole-body configurations in static e
 %Informally, the condition verifies that the root configuration of a robot is close, but not too close to obstacles: close to allow contact creation, not too close to avoid collision. Thanks to this condition we decompose the hard contact planning problem into two
 %sub-problems: first, planning a guide path for the root without considering the whole-body configuration, using a sampling-based algorithm; then, generating a discrete sequence of whole-body configurations in static equilibrium along this path, using a deterministic contact-selection algorithm. 
 %
-The reduction breaks the algorithm complexity encountered in other contact planners, logically leading to the open-source implementation of the first interactive multi-contact planner.
+The reduction breaks the algorithm complexity encountered in previous works, logically leading to the  first interactive implementation of a contact planner (open source).
 %
 While no contact planner has yet been proposed with theoretical completeness, we empirically show by a large number of trials ($>$10,000) that it is not an issue for our method:
 in a few seconds, with high success rates, we generate complex contact plans for various scenarios and robots: HRP-2, HyQ and a dexterous hand. 
-These plans are then validated either in dynamic simulations and on the real HRP-2 robot.
+These plans are validated either in dynamic simulations and on the real HRP-2 robot.
 %, thus demonstrating the first interactive multi-contact planner.
 %Our approach results from the pragmatic choice of favoring efficiency over completeness, which we justify empirically
