@@ -4,9 +4,11 @@
 
 %~ Planning legged robot locomotion remains an open issue.
 \IEEEPARstart{L}{egged} robots move by sequentially creating contacts with the environment.
-After years of research, such robots can autonomously walk on flat ground, but struggle to navigate in more complex environments, e.g. to climb stairs using a handrail.
-In such a case a humanoid robot must plan the contacts it musts create with its feet and hands. Computing such a movement is an open motion-planning problem called acyclic contact planning.
+After years of research, such robots can autonomously walk on flat ground, but struggle to navigate in more complex environments, where deciding where to create a contact with its feet and possibly its hands is nontrivial, e.g. to climb stairs using a handrail.
+%In such a case a humanoid robot must plan the contacts it musts create with its feet and hands.
+Computing such a movement is an open motion-planning problem called acyclic contact planning.
 Most of the complexity of this problem lies in the choice of the sequence of contacts, i.e. the underlying decomposition of the trajectory into contact phases where specific points of the robot body are exerting forces on specific locations of the environment.
+Tackling this complexity is the main objective of this paper.
 %
 Once the contact plan is known, efficient approaches exist to generate a dynamically feasible motion~\citep{Carpentier2016}. 
 
@@ -27,17 +29,17 @@ A sample is rather obtained by sampling a ``free flying'' configuration and expl
 (ii) Second, the foliated topology turns the exploration by spreading a graph of configurations (probability roadmap, rapidely exploring random trees) into an unefficient random process, where many useless nodes are sampled on parallel submanifolds.
 The total algorithm complexity of classical contact planners comes both from the number of nodes of the graph that are sampled during the exploration (ii) and to the cost of the projection when sampling a new configuration (i).
 %
-For this reason previous contributions having demonstrated acyclic contact locomotion on a real robot are too computationally expensive~\citep{Bretl:2006:MPM:1124573.1124585}. As a result at the DARPA Robotics Challenge, the participants stated that, except for egress, the robots did not use multi contact strategies: they relied on unsafe bipedal walking to climb stairs, instead of using the provided handrails to facilitate the motion~\citep{atkensondarpa}. 
+For this reason previous contributions having demonstrated acyclic contact locomotion on a real robot are too computationally expensive~\citep{Bretl:2006:MPM:1124573.1124585}. As a result at the DARPA Robotics Challenge, the participants stated that the robots did not use multi contact strategies (except for egress): they relied on unsafe bipedal walking to climb stairs, instead of using the provided handrails to facilitate the motion~\citep{atkensondarpa}. 
 
 
 %Obtaining reasonable computation times is critical for a contact planner to be of any practical use. 
 Our work aims at breaking the complexity of the acyclic contact planning problem.  
 To do so we deal sequentially with the two main issues associated to our problem: the null measure of the contact manifold (i), and the combinatorics of the contact selection problem (ii). 
-To that end, we introduce a reduction property that we name the reachability condition.
+To that end, we introduce a reduction property: the \textit{reachability condition}.
 This condition relaxes the strict contact condition.
-It induces a low-dimensional space, called the \textit{contact reachable} space, that has a Cartesian topology, i.e. it can be efficiently sampled.
+It induces a low-dimensional space, called the \textit{contact reachable} space, that has Cartesian topology, i.e. it can be efficiently sampled.
 Under some hypothesis, a path in the \textit{contact reachable} space can be easily mapped to the (high-dimensionnal) contact manifold. 
-This approach of the problem enables us to separate the contact planning problem in two tractable subproblems.
+This approach enables us to separate the contact planning problem in two tractable subproblems.
 This decoupling presents pros and cons discussed in previous related literature, summarized in the following.
 %~ whole-body trajectory and the contact location and timings, we decouple path and contact planning, as suggested by \citeauthor{Bouyarmane2009}.
 %~ We first plan a path for the geometric root of the robot in a low dimensional space. We formulate this space as a computationally-efficient approximation
@@ -89,8 +91,8 @@ but at the cost of prohibitive computation times (up to several hours) for const
 
 For completeness, we lastly mention a new kind of approach, recently proposed in the computer graphics field \citep{hamalainen_cpbp_2015}. The authors
 used black-box physics simulators to perform Model Predictive Control for a humanoid character, and managed to obtain dynamically-consistent motions
-at \gls{interactive} frame rates (a method is interactive when the computation time for planning is less than the
-execution time). While this new approach provides an exciting direction of research, currently the resulting motions
+at \gls{interactive} frame rates\footnote{We say that a method is \underline{interactive} when the computation time for planning is less than the
+execution time.}. While this new approach provides an exciting direction of research, currently the resulting motions
  do not seem applicable to real robots.
 
 As far as robotics applications are concerned, none of the existing planners is \gls{interactive}.
