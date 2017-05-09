@@ -3,7 +3,7 @@
 \label{overview}
 
 
-Figure~\ref{fig:framework} illustrates our workflow.
+Figure~\ref{fig:framework} illustrates our work flow.
 \Pa and \Pb are addressed sequentially: From a given problem (a) we first plan a root guide path (b), before
 extending it into a sequence of static equilibrium configurations(c). In the case where step c fails,
 our framework invalidates the computed guide path, and restarts the planning from b.
@@ -12,7 +12,7 @@ our framework invalidates the computed guide path, and restarts the planning fro
 
 \subsection{Computation of a guide path --- \Pa (Section~\ref{rbprm})}
 We first consider the problem of planning a root guide path (Figure~\ref{fig:framework}--$\mathcal{P}_1$).  The dimension of the path is equal to the number of degrees of freedom (DoFs) of the root of the robot.
-Similarly to previous work~\citep{Bouyarmane2009} the path must be \textit{equilibrium feasible}: there must exist a joint configuration that results in static equilibrium for each root configuration\footnote{Enforcing static equilibrium is a classical, conservative approach to reduce the search space and considering states  with non-zero accelerations and velocities, which can't be connected trivially. This does not mean that the final motion will necessary be quasi-static.}. Previous works verifiy \textit{equilibrium feasibility} by explicitly computing such a configuration. We preserve the low dimensionality of the problem by approximating \textit{equilibrium feasibility} with \textit{contact rechability}, illustrated in the following.
+Similarly to previous work~\citep{Bouyarmane2009} the path must be \textit{equilibrium feasible}: there must exist a joint configuration that results in static equilibrium for each root configuration\footnote{Enforcing static equilibrium is a classical, conservative approach to reduce the search space and considering states  with non-zero accelerations and velocities, which can't be connected trivially. This does not mean that the final motion will necessary be quasi-static.}. Previous works verify \textit{equilibrium feasibility} by explicitly computing such a configuration. We preserve the low dimensionality of the problem by approximating \textit{equilibrium feasibility} with \textit{contact reachability}, illustrated in the following.
 
 An intuitive description of \gls{contact reachable} configurations is ``close, but not too close'' to the environment: close, because a contact surface must be partially included in the reachable workspace of the robot to allow contact creation; not too close, because the robot must avoid collision.
 %~ \deladp{\textit{Contact reachability} is verified with the \textit{reachability condition}, a geometrical criterion based on this intuitive description (Figure~\ref{fig:reach_cond}).}

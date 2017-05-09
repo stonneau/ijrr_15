@@ -144,7 +144,7 @@ Given a configuration of the root and the other limbs, it computes a configurati
 	\mathbf{q}^{\overline{k}}  \longrightarrow \mathbf{q}^k, (\mathbf{q}^{k} \oplus \mathbf{q}^{\overline{k}}) \in  C_{Equil} \textrm{ \textbf{and}}\ \mathbf{q}^k \in  C_{Contact}^k 
 \end{equation}
 
-Contact generation is typically adressed by randomly sampling a limb configuration, before projecting the effector onto the closest surface with an inverse kinematics solver.
+Contact generation is typically addressed by randomly sampling a limb configuration, before projecting the effector onto the closest surface with an inverse kinematics solver.
 This process is repeated until either a solution for Eq.~(\ref{eq:contact_gen}) is found, or the generator fails, according to a user-defined maximum number of trials.
 We favor a modified implementation of this naive approach, more computationally efficient, introduced in our previous work~\citep{Tonneau2014}.
 
