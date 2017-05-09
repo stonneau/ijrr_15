@@ -4,8 +4,9 @@
 
 \subsection{Accuracy and performance gain of the reachability condition}
 
-As demonstrated in the results section, the main interest of our method is time performance. Time performance is critical for 
-online applications with the robot, a goal not satisfied by any of the previous contributions. Our method addresses highly constrained environments while improving the search time by orders of magnitude. This high performance is reached at the cost of some approximations that we discuss here. 
+As demonstrated in the results section, the main interest of our method is the reduction of the algorithmic complexity of the problem, which leads to an interactive 
+application. This property is critical for 
+online applications with the robot and was not proposed by any of the previous contributions. Our method addresses highly constrained environments while improving the search time by orders of magnitude. This high performance is reached at the cost of some approximations that we discuss here. 
 %~ In previous approaches, we identified 2 sources of high computational cost. 
 
 The first approximation is the verification of \contactreachability\ ($\mathbf{q}^0 \in C_{Contact}^0$).  Our \textit{reachability condition} ($\mathbf{q}^0 \in C_{Reach}^0$) is computationally efficient and provides an accurate approximation of $C_{Contact}^0$ (Section~\ref{sec:scaling}). This is demonstrated by the second column of Table~\ref{tab:requestpercent}, and illustrated by Figure~\ref{fig:dedefeas}. Indeed, in the large majority of cases, (84\% in the worst car egress case), we are able to find a contact configuration for any configuration in $C_{Reach}^0$.
