@@ -104,14 +104,14 @@ From a bent configuration, the robot has to stand up using a wall as support, an
 %~ though it remains compatible with \gls{interactive} performances. % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
 
 
-\subsubsection{HRP-2 -- Polaris car egress (Figure~\ref{fig:car})}
-In this scenario inspired from the DRC car egress HRP-2 has to step out of the Polaris car.
+\subsubsection{HRP-2 -- Car egress (Figure~\ref{fig:car})}
+In this scenario inspired from the DRC car egress HRP-2 has to step out of a car.
 
 \begin{figure}
   \centering
   \includegraphics[width=1\linewidth]{figures/polaris}
   \caption{
-           Selected frames from the polaris egress scenario. }
+           Selected frames from the car egress scenario. }
 		   \label{fig:car}
 \end{figure}
 
@@ -279,7 +279,7 @@ has an influence on the output of the planner: if too large steps are taken,
 the planner may fail since we impose the constraint that only one contact change might occur
 between two consecutive steps. On the other hand, a small step will not impact the success rate of the planner, 
 but may generate unnecessary states. In most scenarios the torso of HRP-2 moves about 15 cm between two postures, but only 3 cm
-for the car egress scenario to handle the geometry of the polaris.
+for the car egress scenario to handle the geometry of the car.
 For future work, we would like to automatically adapt the size of the discretization step to the complexity of the environment.
 
 \subsection{Performance analysis} \label{sec:perf}
