@@ -136,17 +136,27 @@ Contacts are created using a FIFO approach: we try first to create a contact wit
   \label{fig:contact_gen}
 \end{figure*}
 
-To generate contacts, we proceed as follows.
-The contact generator treats each limb $R^k$ independently.
-Given a configuration of the root and the other limbs, it computes a configuration $\mathbf{q}^k$ such that $R^k$ is in contact and the robot $R$ is in static equilibrium:
+Given a configuration of the root and the list of effectors that should be in contact, the contact generator computes the configuration of the limbs such that contacts are properly satisfied and the robot is in static equilibrium:
+
 \begin{equation}
 \label{eq:contact_gen}
 	\mathbf{q}^{\overline{k}}  \longrightarrow \mathbf{q}^k, (\mathbf{q}^{k} \oplus \mathbf{q}^{\overline{k}}) \in  C_{Equil} \textrm{ \textbf{and}}\ \mathbf{q}^k \in  C_{Contact}^k 
 \end{equation}
 
-Contact generation is typically addressed by randomly sampling a limb configuration, before projecting the effector onto the closest surface with an inverse kinematics solver.
-This process is repeated until either a solution for Eq.~(\ref{eq:contact_gen}) is found, or the generator fails, according to a user-defined maximum number of trials.
-We favor a modified implementation of this naive approach, more computationally efficient, introduced in our previous work~\citep{Tonneau2014}.
+In previous works~\cite{DBLP:conf/iser/EscandeKMG08,Bouyarmane2009}, the generation of contact is typically implemented by randomly sampling configurations and projecting the whole robot configuration onto the closest surfaces with an inverse kinematics solver.
+In case of failure of the projection, the process would randomly iterate.
+
+
+We propose two modifications of this general algorithm principle.
+First our contact generator handles each limb $R^k$ independently.
+By handling each limb separately, we reduce the complexity of the generation of contact configurations.
+This is made possible thanks to the reachability condition in $\mathcal{P}_1$ that produces a root path that we can afford not to modify in $\mathcal{P}_2$, and because we allow both a contact break and a contact creation between two consecutive configurations of the contact sequence.
+Second, we rely on off-line generation of configuration candidates.
+%~ Contact generation is typically addressed by randomly sampling a limb configuration, before projecting the effector onto the closest surface with an inverse kinematics solver.
+%~ This process is repeated until either a solution for Eq.~(\ref{eq:contact_gen}) is found, or the generator fails, according to a user-defined maximum number of trials.
+%~ We favor a modified implementation of this naive approach, more computationally efficient, introduced in our previous work~\citep{Tonneau2014}.
+
+
 
 %~ Given a configuration $\mathbf{q}^{\overline{k}}$ of the root and all the limbs but $R^k$, we look for a limb configuration $\mathbf{q}^k$ such that
 %~ $R^k$ is in contact, and not colliding (neither with parts of the robot nor with the environment).
@@ -164,7 +174,7 @@ We define $C_{Contact}^{\epsilon} \supset C_{Contact}$ as the set of configurati
 between an effector and an obstacle is less than $\epsilon \in \mathbb{R}$.
 We then apply the following steps:
 \begin{enumerate}
-\item Generate off-line $N$ valid sample limb configurations $\mathbf{q}^k_i,  0 \leq i < N$ (We choose $N=10^3$);
+\item Generate off-line $N$ valid sample limb configurations $\mathbf{q}^k_i,  0 \leq i < N$ (We choose $N=10^4$);
 \item Using the end-effector positions $\mathbf{p}(\mathbf{q}^k_i)$ as indices, store each sample in an octree data structure;
 \item At runtime, when contact creation is required, intersect the octree and the environment to retrieve the list of samples $S \subset C_{Contact}^{\epsilon}$ close to contact (Figure~\ref{fig:contact_gen} (b) and (c));
 \item Use a user-defined heuristic $h$ to sort $S$;
@@ -179,7 +189,7 @@ We then apply the following steps:
 %~ Furthermore, the fact that the candidates are already close to contact increases the odds that the inverse kinematics will converge to a valid solution in a small number of iterations.
 %~ Regarding convergence, it is immediate to verify that as $N$ grows, the probability of finding a solution if it exists converges to 1.
 %~ $N$ is a parameter that allows us to specify the trade-off between exhaustiveness and efficiency.
-The reader is invited to refer to our previous work for an extensive discussion on the benefits of this approach, and the optimal choice 
+The reader is referred to our previous work for an extensive discussion on the benefits of this approach, and the optimal choice 
 of the parameter $N$~\citep{Tonneau2014}. Our criterion to assert efficiently the static equilibrium of the robot, as well as the heuristics $h$ are detailed in Appendix~\ref{sec:heuristics}.
 
 %~ It should be noted that a failure case for our contact generator does not necessarily mean that the planner will globally fail. Indeed,
