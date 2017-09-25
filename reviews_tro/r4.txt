@@ -1,0 +1,91 @@
+The paper concerns the problem of planning legged locomotion tasks,
+assuming multi-contacts (i.e. not only feet can touch the environment)
+and arbitrary environment type, including complex obstacles (stairs,
+rubble). The work focuses on efficient solutions to two sub-problems,
+namely planning a guide path for the root of the robot, and planning a
+discrete sequence of equilibrium configurations of the robot along the
+guide path. For the interpolation of motion between the consecutive
+configurations this work relies upon already known methods, including
+the one described by the same authors in [1]. The main main scientific
+contribution is the reachability condition, which defines a geometric
+approximation of the contact manifold that can be efficiently sampled
+and explored. The use of this concept enables to split the motion
+planning problem into two sub-problems that are much easier to solve
+from the algorithmic point of view. The technological
+contribution are the two planning algorithm: the first one is a
+RRT-based fast guide path planner, which samples from an approximation
+of the contact reachable space, and the second one is a method that
+extends a contact reachable path into a sequence
+of whole-body statically stable configurations. It is remarkable, that
+the proposed algorithms are provided as open source software, which is
+a standard in robotic vision, SLAM, etc., but still quite rare in
+planning and control. The contributions are well
+explained in the introduction, making a good use of the presentation of
+related work.
+
+The significance of the problem being considered in this research, and
+the practical implications of the proposed solutions are also well
+explained in the introduction. A good point is that the authors
+motivate their solution from one side by a clear analysis
+of the relevant publications, but from the other side, they draw a
+practical motivation for the solution from the recent DARPA Robotics
+Challenge. Hence, their solution, which is not complete from the
+algorithmic point of view, is arguably still the best known
+approximation of the planning system we would like to have for our
+legged robots.
+
+although the paper is clearly written and well organized, I am a bit
+skeptical about the readability of the figures. Some of them seem to
+bee too small (e.g. Fig. 3, Fig. 4), some are of quite poor quality
+(why the robot silhouettes in Fig. 4 are blurred ?), and the purpose
+and meaning of Fig. 6 is rather unclear. In general, the simulation
+results presented qualitatively in the paper are a bit hard to
+interpret without the accompanying video, particularly if someone looks
+at a b/w print of the paper (as it may be looking in T-RO).
+
+The references are relevant and complete if it comes to the literature
+directly related to humanoid motion planning and planning of
+multi-contact sequences. However, I suggest that a few papers related
+to more general motion and contact planning for multi-legged robots can
+be added. Particularly, the problem of ``foothold selection'' for 4 or
+6-legged robots travelling over uneven terrains is a problem related to
+the one tackled in the paper. It would be nice to select a few
+representative works (e.g. from the DARPA Learning Locomotion project
+or
+papers related to the ETHZ StarlETH and ANYmal robots) and explain the
+differences between those approaches and the problem solved in the
+paper.
+
+The paper is technically sound, but in my opinion a T-RO regular paper
+should be more self-containing. In several points the authors heavily
+rely on previous publications, e.g. when presenting the RRT-based
+planner (Section IV-C). This part should be expanded, describing in
+more detail what exactly has been changed with respect to the reference
+paper. I also found the description of the environment model being
+used,
+and the way it is used in planning quite superficial. It is said, that
+``an octree data structure'' is used to keep the sampled the
+end-effector positions, and it is ``intersect'' with the environment.
+The idea is OK, I understand that the octree is a sample-based
+representation of the effector's workspace, and using some environment
+model it is possible to decide if the given configuration can provide a
+contact point or not. but how is the environment described ? Howe
+efficient is this intersection operation ? Does this method require the
+environment to be described by some specific objects (e.g. polygons) ?
+What about the (unavoidable) uncertainty if a world model acquired via
+on-line sensing is considered ? Perhaps some of these issues (e.g.
+uncertainty) are not in the scope of the paper, but I can imagine that
+a
+robotic researcher who reads the paper and is about to use the open
+source software it advertises is very interested in the answers.
+
+I appreciate the thorough presentation of results in the paper, however
+it seems that this presentation is somewhat biased towards simulation
+results. Simulation are perfectly OK for planning algorithms, but if
+you
+decided to present the experimental results (HRP-2), then at least some
+illustrations should be included in the paper. now they are only in the
+accompanying video. also a comparison between the results of the same
+task(s) executed in dynamic simulation and on the real robot should
+convince the reader that the planning method's good performance does
+not depend too much on the idealized simulation environment.

@@ -1,0 +1,179 @@
+The authors have interesting and useful work! However, its presentation
+in this paper can be significantly improved with some relatively minor
+(but important) editing.
+
+Here a quick/general overview, highlighting my main points (with more
+specific comments/suggestions saved for later):
+
+The organization sometimes leaves out too much "intuition" until
+details are presented in appendices, which makes the paper more
+challenging to follow (and reduces the likely impact of the
+publication).  Also, information on what content is new (compared with
+several past publications) should be a little more detailed, with a
+more specific "roadmap" of where this novel information appears within
+the paper. There should be a better description of the in-house
+simulation software used - and how it compares with "avatar" based
+modeling/tests from their previous work.  More information about
+computers used (etc.) would be useful (to interpret benchmarking
+results), too.
+
+*** Overall Review: ***
+
+-	Summary
+This paper presents a framework for motion planning for a multi-limb
+robot to locomotion within complex environments (i.e., avoiding
+obstacles and achieving required contacts). Planning is broken into 3
+basic problems (P1, P2, and P3):
+
+P1: guide path for root/trunk of robot. 
+P2: discrete equilibrium poses, including limb contacts. 
+P3: interpolating between contact postures, for full trajectory.  
+
+* Note: Figure 1 provides an excellent "visual description" of P1 and
+P2! (Nicely done!)
+
+This work focuses on P1 and P2, as decoupled problems, "while relying
+on [a?] state-of-the-art solution for P3" (in the authors' words), via
+use of a “reachability condition”, to reduce dimensionality of the
+problem as a trade-off in speed vs accuracy, gaining improved
+algorithmic speed by solving only a decoupled and
+reduced-dimensionality approximation of the full problem.
+
+An implementation of P3 is described/provided in Appendix C, to
+illustrate the full planning structure.
+
+In essence, the method (for addressing P1 and P2) looks for paths in
+which a core “trunk-like” shape (e.g., cylinder or rectangular prism,
+etc.) is out of collision with the environment, while the reachable WS
+of the limbs is "in collision" (as a heuristic for likely achieving
+needed contacts with the environment).	Adjusting (i.e., fictitiously
+super-sizing) the size of the "core" in turn affects how well this
+heuristic approach works, which is one issue the authors address
+through simulation.
+
+More specifically, Ws is a scaled version of nominal trunk shape Wo,the
+polygonal shape of the trunk, used in P1 (guiding the root). S=1 is the
+“true” size, and S>1 is explored.
+
+Full-body poses have only one contact change, between neighboring
+poses. Heuristics/criteria are described for ensuring "robustness" to
+slipping (via violation of an approximation of the friction cone), and
+for selecting "nice" limb configurations (e.g., away from
+singularities, or providing adequate end effector forces).
+
+[C_contact: whole body configs in contact AND collision-free.
+C_reach: an approximation, via simple geometries, which can be sampled
+efficiently.]
+
+-	Major Contributions
+
+This paper collates previous pieces by the authors and others (for
+motion planning of legged systems across/within complex environments)
+into a more complete and whole presentation, to explore trade-offs in
+approximations used and general performance characteristics of the
+approach.
+
+As for novel contributions, this did not seem to be addressed/explained
+until page 3 (in the last paragraph of Sec. I). Much of the methodology
+has already been presented in earlier work, and the particular aspects
+that set THIS paper apart seem (as claimed by the authors) to be: 
+
+(1)	“ a criterion for robust static equilibrium” – but it isn’t
+described until page 12, in Appendix B, Section B…  B is apparently
+based mostly on reference [29],  except for its LP formulation in the
+present work. It is a pretty intuitive/typical check for quantifying a
+margin for friction cone’esque violations (using an approximation for
+the friction cone, with x and y direction forces considered
+independently).  It would really help to describe this MUCH earlier in
+the paper (than page 13), if it is a significant novelty of your paper.
+
+(2)	Provides “complete pseudocode”.  This is great! However,it’s
+not fully clear how much of this is novel vs just re-presenting the
+same algorithms previously publilshed.	If only code in App. B and C
+are new, that should be clear. Conversely, if most of this presentation
+was NOT outlined in such detail before, that should also be clear (to
+the authors' credit). Either way, a brief clarification in the intro is
+recommended.
+
+(3)	The contribution to “provide a solution to P3” doesn’t happen
+until page 13 (Appendix C) – and as with contribution (1), it needs a
+better, intuitive summary (briefly) when first mentioned, as well as a
+“roadmap” for the reader as to where it will be described. It is also
+ambiguous in the paper whether to what extent (if any) this solution is
+novel, versus a presentation of work from [1]. "Provide a solution"
+seemed to imply novelty, in the context of this paragraph -- yet later,
+the authors (near the end of page 2) state they use a "state-of-the-art
+solution to P3", which implies the P3 solution is not a claim of
+novelty.
+
+(4)	The last contribution is validation using an in-house
+simulator, as opposed to more approximate (“unrealistic avatar”) models
+used in previous work.	As with the previous contributions claimed, you
+should flesh out just a bit more detail, along with a roadmap to where
+a particular contribution appears in the paper, to prepare and guide
+the reader a bit more. More precisely, what are the differences between
+these two “simulation” approaches (previous and current)? You need a
+better description of what your in-house simulator does and does not
+do; a vague citation to another paper based on that simulator [38] is
+not sufficient.
+
+-	Technical Accuracy
+
+I did not find any issues with technical accuracy, although
+presentation can be improved.
+
+-	Presentation
+
+As mentioned (see "Major Contributions"), the authors need to better
+distinguish what the novel contributions are, and to highlight where
+these contributions will be presented in the paper.  Also, many
+important details are in the appendices. The paper would be improved
+with more intuitive comments/summaries on these details, rather than
+just writing (for example), we use a bunch of heuristics, and they are
+described in Appendix X.  For example, you can at least say that
+contact between feet and the ground use a heuristic (h_EFORT) for
+ensuring adequate forces are achieved, while hand/arm contacts are more
+successfully planned via a well-known heuristic (h_w) to avoid
+singularities... (Not necessarily that particular description, but
+however you would summarize your general approach, I mean.) 
+
+Also, where you describe "sensitivity" vs "specificity", it would be
+useful to give a more intuitive explanation, example, e.g., "meaning
+the heuristic predicts a successful full-body pose where the true model
+fails to find a solution"; or "when a solution exists, the heuristic
+also correctly predicts this". (Again, not necessarily THAT
+description, but something brief, in your words, for improved
+readability...)
+
+There are other places where similar "brief intuitive descriptions" can
+help, but my review is getting a little long. (Check the attached
+"minor edit suggestions" for some of these...)
+
+I fully realize the authors are probably up against page limits for
+this paper already. However, I suggest the paper will be improved if
+the presentation focuses more on highlighting (a) what is novel, and
+(b)
+what take-away messages you have, about why the whole framework is
+designed the way it is [within the main text; not hidden in
+appendices].
+
+-	Adequate Citations?
+
+Citations of relevant work were useful and sufficient.
+
+-	Multimedia
+
+A nice video!  More detail on what the simulator used would be useful
+to interpret the results, however.
+
+*** Minor Suggestions, for consideration  ***
+
+-- SEE PDF ATTACHMENT...
+
+Yikes. Sorry my review is already so long!  You have done a nice body
+of work, and I'm only trying to help improve the long-term impact of
+the paper.... Anyway, I've attached specific potential edits as an
+attachment.
+
+- Finally, I apologize for any typos (or confusion) of my own, within
+this review. (I've tried to be clear and helpful.)

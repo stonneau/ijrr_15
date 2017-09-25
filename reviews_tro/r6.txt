@@ -1,0 +1,101 @@
+This paper presents a general planner to produce whole-body motions in
+multi-contact scenarios. The planner is divided into several stages:
+First, a trajectory is chosen for the root body of the robot using a 
+sampling-based planner, with a reachability heuristic used to guide the
+search towards configurations which are likely to admit feasible
+quasistatic contacts. Second, each root configuration is extended into
+a whole-body configuration by searching for the configuration of each
+limb independently, guided by additional heuristics. Finally, the
+configurations are interpolated by solving an optimal control problem.
+Results are presented on several simulated multiped robots and a
+physical HRP2 humanoids.
+
+
+This paper is clear and thorough in its description of the methods and
+results, and the level of detail is good. My primary concern, however,
+is that the elements described in this paper have been described in
+previous published work, which makes the particular contributions of
+this work unclear. To be specific, the reachability-guided planner
+appears identical to the planner in [20] (as stated by the authors in
+the end of Sect. I.B.), and the optimal control formulation is from [1]
+(again as stated in I.B.). The authors highlight a particular
+contribution of this work to be the efficient robust balance criterion,
+but I had trouble understanding this particular contribution. Does this
+refer to the approximation of equilibrium feasibility by contact
+reachability? In that case, how does this differ from just applying the
+planner in [20] directly? Or does this refer to the robustness
+parameter b_0 in Appendix B Eq. (15)?
+In addition, sections IV and V are very similar to the description of
+the planner in [20]. That's not surprising, of course, but there is no
+indication in those sections that the work being presented is a
+rephrasing of an earlier publication.
+
+
+All of this is not to say that I don't believe this work has
+publication value. The authors have clearly presented their approach
+and thoroughly documented their algorithms, heuristics, and results
+(which are impressive and certainly worth sharing). I do, however,
+believe that the fact that the technical approaches are rephrasings of
+prior work should be made more clear (or that sections which can be
+replaced by citations of [20] and [1] be removed).
+
+
+If the authors choose to follow this advice, then I have a few other
+suggestions and requests for clarification:
+
+
+* I think I understand what the authors mean by solving at
+"interactive" rates, but this is worth defining. In my mind, it means
+something like "before the human operator gets bored", or roughly > 0.5
+Hz. But since the authors make the claim that this is the "first
+interactive implementation of a contact planner", then that statement
+should be made quantitative and verifiable
+
+* In Section I.A. the authors refer to Bretl's work on multi-contact
+planning as the inspiration for the P1,P2,P3 decomposition of the
+problem. But it is not, as the authors state, always necessary to
+decompose motion planning into choosing a series of quasi-static
+configurations. There are a variety of feasible motions with no static
+equilibrium configurations, so it is worth mentioning that this
+decomposition only solves a subset of motion planning problem.
+
+* Also in Sect. I.A, the authors state that "optimization-based
+approaches only converge locally". This is not necessarily true, as
+convex or mixed-integer convex optimizations can (sometimes) be solved
+to a verifiable global optimum. I would suggest removing this sentence
+entirely.
+
+* I am not sure why the C_reach hypothesis is described as the "strong"
+hypothesis in, e.g., Sect. IV. Is there a corresponding weak
+hypothesis?
+
+* In Sect. IV.B, the authors state that the ideal shape B* "has no
+explicit definition". For a particular configuration q_0, B* is simply
+the surface of the robot, right? So I assume that this claim refers to
+there being no explicit definition of B* which is the volume around
+B*(q_0) for every q_0? I think I agree with the authors, but I found
+this claim hard to follow and would appreciate some clarification
+
+* In Sect. V.A., the authors mention that the ability to plan a contact
+break and creation with the same limb allows the creation of dynamic
+motions. This is quite an important ability for an otherwise
+quasi-static planner, but this ability isn't described again until the
+appendix. It would be worth explaining why this is true in the paper
+itself. 
+
+* In Sect. V.B, the authors mention inserting an additional state
+between contact configurations if two or more contacts cannot be
+maintained. Shouldn't this step appear somewhere in Alg. 1?
+
+* In Appendix A.A, it is mentioned that step 2 in the workspace
+computation is conservative, with reference to figure 17-right. But
+Fig. 17-right is the simplification of the convex hull, corresponding
+to step 3, and it's actually hard to tell from the figure that it is
+conservative. Not knowing anything about Blender's decimate tool, I
+assume it is operating by removing vertices, which would indeed be
+conservative, but some clarification would be useful here.
+
+* Finally, I would suggest providing explicit git SHAs or tags for all
+of the github links. I've personally made the mistake of linking to a
+github project in a paper, only to have that project change and
+eventually delete the specific code I was citing. 
