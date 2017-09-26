@@ -11,18 +11,38 @@
 \usepackage{color}
 \usepackage{listings}
 \usepackage{pdfpages}
+% Another method to track changes
+% Examples of usage:
+% - This is \added[id=per,remark={we need this}]{new} text.
+% - This is \deleted[id=per,remark=obsolete]{unnecessary}text.
+% - This is \replaced[id=per]{nice}{bad} text.
+% To print the list of change use: \listofchanges
+\usepackage{changes}	% use this for the working version
+%\usepackage[final]{changes} % use this for the final version
+\definechangesauthor[name={Andrea Del Prete}, color=orange]{adp}
+\newcommand{\deladp}[1]{\deleted[id=adp]{#1}}
+\newcommand{\addadp}[1]{\added[id=adp]{#1}}
+\newcommand{\repadp}[2]{\replaced[id=adp]{#1}{#2}}
+\definechangesauthor[name={Steve Tonneau}, color=blue]{st}
+\newcommand{\delst}[1]{\deleted[id=st]{#1}}
+\newcommand{\addst}[1]{\added[id=st]{#1}}
+\newcommand{\repst}[2]{\replaced[id=st]{#1}{#2}}
+\newcommand{\gls}[1]{\textit{#1}}
+\newcommand{\glslink}[2]{{#2}}
 
 \newcommand\dx{\dot{x}}
 \newcommand\dy{\dot{y}}
 \newcommand\ddx{\ddot{x}}
 \newcommand\ddy{\ddot{y}}
-\def\real{{\mathbb R}}
+\def\real{{\mathbb R} }
+\newcommand\quot[1]{\begin{quote} \textit{quote}: \textbf{#1}\end{quote}}
+\newcommand\as[1]{\begin{quote} \textit{answer}: {#1}\end{quote} \leavevmode \\ }
 \frenchbsetup%
 {%
 StandardItemLabels=true,%
 ItemLabels=\ding{43},%
 }%
-
+\DeclareUnicodeCharacter{00A0}{ }
 \author {}
 \title {Cover letter for the resubmission of our paper ``An efficient acyclic contact planner for multiped robots''}
 \date {}
@@ -30,38 +50,37 @@ ItemLabels=\ding{43},%
 \maketitle
 
 
-\begin{quote}
-  \textit{As for novel contributions, this did not seem to be addressed/explained
+\section{Answers to reviewer 1}
+
+\quot {As for novel contributions, this did not seem to be addressed/explained
 until page 3 (in the last paragraph of Sec. I). Much of the methodology
 has already been presented in earlier work, and the particular aspects
 that set THIS paper apart seem (as claimed by the authors) to be: 
 }
-\end{quote}
 
-We agree that our original submission is not clear on the novelty between this paper and previous contributions.
+\as{We agree that our original submission is not clear on the novelty between this paper and previous contributions.
 This paper must be understood as an extension of the ISRR paper [20], while the other cited contributions from our team 
 are exploited to validate our approach in a complete pipeline.
 In this extension, the algorithm used to compute a sequence of contacts is the same as in [20] (although this
 algorithm is not explicitely given in [20]), with the introduction of a fastest test for verifying the robust quasi static equilibrium of a contact posture.
 We reformulated the end of Sec I to state clearly that the novelty of this paper essentially lies in the experimental setup and validation we achieved with real robot models, in particular
 in the empirical justification of the method, and its validation in a dynamic simulation. This effort led to the proposal of the first open source, complete framework for multi contact motion synthesis, since 
-the validation required to write a solver for the problem P3. 
+the validation required to write a solver for the problem P3. }
 
-\begin{quote}  \textit{ (1) A criterion for robust static equilibrium, but it isn't
+\quot { (1) A criterion for robust static equilibrium, but it isn't
 described until page 12, in Appendix B, Section B. [\dots]  It would really help to describe this MUCH earlier in
 the paper (than page 13), if it is a significant novelty of your paper.}
-\end{quote}
 
-We agree with the remark. To better distinguish between what is novel and not, we modified the paper to move the content of Appendix B.B, as well as D  (the pseudo code of our algorithm) and E (reference to our source code) to the text itself. This results in the criterion being presented much earlier.
+\as{We agree with the remark. To better distinguish between what is novel and not, we modified the paper to move the content of Appendix B.B, as well as D  (the pseudo code of our algorithm) and E (reference to our source code) to the text itself. This results in the criterion being presented much earlier.}
 
-\begin{quote}  \textit{It is a pretty intuitive/typical check for quantifying a
+\quot{It is a pretty intuitive/typical check for quantifying a
 margin for friction conesque violations (using an approximation for
 the friction cone, with x and y direction forces considered
 independently). }
-\end{quote}
-Thanks for the comment. To our knowledge, what is common in the literature is to reduce the friction coefficient to obtain more conservative bounds on the admissible forces, and thus a ``safety margin'' to the real cone boundary. An issue with this formulation is that the resulting margin is really small near the origin of the cone, and really important as we go further away from it. With our formulation, the obtained margin is constant everywhere on the cone, and thus guaranteed to be greater than the value $b_0$ we compute. We believe this formulation is new, but would be happy to cite any relevant reference if we happen to be wrong. This formulation proves useful to us because the margin $b_0$ allows to choose the more robust candidate for static equilibrium.
 
-\begin{quote}  \textit{
+\as{Thanks for the comment. To our knowledge, what is common in the literature is to reduce the friction coefficient to obtain more conservative bounds on the admissible forces, and thus a ``safety margin'' to the real cone boundary. An issue with this formulation is that the resulting margin is really small near the origin of the cone, and really important as we go further away from it. With our formulation, the obtained margin is constant everywhere on the cone, and thus guaranteed to be greater than the value $b_0$ we compute. We believe this formulation is new, but would be happy to cite any relevant reference if we happen to be wrong. This formulation proves useful to us because the margin $b_0$ allows to choose the more robust candidate for static equilibrium.}
+
+\quot{
 Provides complete pseudocode.  This is great! However,it's
 not fully clear how much of this is novel vs just re-presenting the
 same algorithms previously publilshed.	If only code in App. B and C
@@ -69,12 +88,11 @@ are new, that should be clear. Conversely, if most of this presentation
 was NOT outlined in such detail before, that should also be clear (to
 the authors' credit). Either way, a brief clarification in the intro is
 recommended.}
-\end{quote}
 
-We agree with the comment. Indeed, the pseudocode was not present in [20]. We included it in the core of the paper and clarified that it is novel.
+\as{We agree with the comment. Indeed, the pseudocode was not present in [20]. We included it in the core of the paper and clarified that it is novel.}
 
 
-\begin{quote}  \textit{(3)	The contribution to provide a solution to P3 doesn't happen
+\quot{(3)	The contribution to provide a solution to P3 doesn't happen
 until page 13 (Appendix C) and as with contribution (1), it needs a
 better, intuitive summary (briefly) when first mentioned, as well as a
 roadmap for the reader as to where it will be described. It is also
@@ -84,15 +102,14 @@ seemed to imply novelty, in the context of this paragraph -- yet later,
 the authors (near the end of page 2) state they use a "state-of-the-art
 solution to P3", which implies the P3 solution is not a claim of
 novelty.}
-\end{quote}
 
-Indeed, we were not clear on P3. In the new version of the paper, we do not consider that our solution
+\as{Indeed, we were not clear on P3. In the new version of the paper, we do not consider that our solution
 is a new contribution, although our formulation differs from [1] (our control variable is the acceleration
 of the center of mass, where in [1] the control variable is the contact forces). We provide it here for completeness, because it corresponds to our implementation, and 
 was required to validate our approach. The main contribution of the paper is the proposal and validation of an algorithm for P1 and P2.
-We rephrased the text to clearly indicate that the algorithm is not a contribution. 
+We rephrased the text to clearly indicate that the algorithm is not a contribution. }
 
-\begin{quote}  \textit{
+\quot{
 (4)	The last contribution is validation using an in-house
 simulator, as opposed to more approximate (unrealistic avatar) models
 used in previous work.	As with the previous contributions claimed, you
@@ -103,9 +120,8 @@ these two simulation approaches (previous and current)? You need a
 better description of what your in-house simulator does and does not
 do; a vague citation to another paper based on that simulator [38] is
 not sufficient.}
-\end{quote}
 
-Thanks for the comment. Regarding the absence of details on the dynamic simulator, first of all we apologize because [38] is not the appropriate reference.
+\as{Thanks for the comment. Regarding the absence of details on the dynamic simulator, first of all we apologize because [38] is not the appropriate reference.
 We added a section where we describe the simulation in more details. 
 
 Regarding the difference between our previous and current work, the postures computed in [20] were never validated in a simulator, nor the complete motions since 
@@ -113,39 +129,88 @@ we did not have a solution to P3 at the time. Then the main
 difference between the avatars of [20] and the real robots we now address are the joint limitations and auto-collisions probabilities.
 The robots are much more constrained in this regard, which makes the planning harder. We thus had to demonstrate that our algorithm is also working
 for these models, while maintaining decent performances.
-We added this missing piece of information to the paper, at the end of Section I.
+We added this missing piece of information to the paper, at the end of Section I.}
 
 
-\begin{quote}  \textit{[\dots] the authors need to better
+\quot{[\dots] the authors need to better
 distinguish what the novel contributions are, and to highlight where
 these contributions will be presented in the paper.  Also, many
 important details are in the appendices. The paper would be improved
 with more intuitive comments/summaries on these details, rather than
 just writing (for example), we use a bunch of heuristics, and they are
 described in Appendix X.}
-\end{quote}
 
-We agree. The novel details of the paper have been moved from the appendix to the core of the paper, and are explicitely detailed at the end of Section I.
+\as{We agree. The novel details of the paper have been moved from the appendix to the core of the paper, and are explicitely detailed at the end of Section I.}
 
-\begin{quote}  \textit{
+\quot{
 Also, where you describe "sensitivity" vs "specificity", it would be
 useful to give a more intuitive explanation, example [\dots]}
-\end{quote}
-We updated Section TODO to illustrate the meaning of those terms.
 
-\begin{quote}  \textit{
+\as{We updated Section TODO to illustrate the meaning of those terms.}
+
+\quot{
 However, I suggest the paper will be improved if
 the presentation focuses more on highlighting (a) what is novel, and
 (b)
 what take-away messages you have, about why the whole framework is
 designed the way it is [within the main text; not hidden in
 appendices].}
-\end{quote}
 
-TODO
+\as{TODO}
+
+\quot{
+p.6 – this would be a great place to give more ``intuition'' for the heuristics. Hw seems to be used in essentially all foot contact, with $h_{efort}$ for hand/arm contacts, and ALSO $h_{vel}$ not seeming to be used at all.}
+\as{Thanks for the suggestion. The text was updated accordingly, and the heuristic $h_{vel}$ was removed since indeed it is not used.}
 
 
+\quot{
+p.6 six fingered hand is slightly misleading, since no rolling (as fully admitted in the text). I'd just cut this? \\
+p.9 Not sure if Fig. 14 is worth including. It looks like its just Fig. 9 from the ISRR paper (?) [20], and there is still no ``full solution'' here -
+ just an illustration of potential future work. 
+ (At a minimum, the figure/solution should probably be referenced as having already appeared in the previous ISSR paper?)
+}
 
+\as{As also suggested by reviewer TODO, we removed the references to the results of the previous work [20], including those.}
+
+\quot{
+p.8– somehow, “Table II” doesn’t appear until after “Table IV” – which is a frustrating choice for latex to make. Not sure what you can do to change that, but it would be preferable to have tables (and figures) appear in the correct order.
+}
+
+\as{We reorganized the paper such that the Table appear in the right order.}
+
+\quot{
+p.8. Need to define ``discretization step'' more precisely, I think(?)… Min distance? Max distance? Nominal distance? In time? In Distance? In all 6 DOF??
+}
+
+\as{We updated the text to indicate that the discretization step refers to the number of postures generated along a path. For instance, a discretization step of 0.1 means
+that 10 postures will be generated along a path of length 1. Here the length is the distance traversed by the root along the path, computed as a ponderation between the 3D position and joint variations of the root.
+
+Finally, we also took into account all of the remaining suggestions in the pdf file attached. We do not detail them here since they refer essentially to the style 
+and the writing of the paper.}
+
+\quot{
+p.9 ‘addresses highly constrained environment’ – actually, not very well, correct? This was the “exception” case, for which results were rather poor, right? Also a case where “heuristics” are not so good for getting true (reliable) holds on grasp points, etc.?
+}
+
+\as{\textbf{This quote annoys me, and I kind of want to maintain our statement. Addressing the car scenario, even with a success rate of 68 \%, seems like a nice achievement to me.
+Also, in my opinion all our scenarios are highly constrained. What do you guys think?}}
+
+\quot{
+The first part of App. B is referred to within this Appendix as “new minor contributions derived from previous work”. These aren’t so novel, perhaps, and what is more useful to the reader is a better intuition for when to use each within the MAIN BODY of the paper, where they are originally described/associated to particular simulations.
+}
+
+\as{Agreed. We removed the incriminated text and provided an intuition of the heuristic in the text.}
+
+\quot{github link seems to be dead? (The link on p. 15 is OK… should they be the same?)}
+
+\as{We are suprised by this comment because after testing it, the link seems to be valid. In any case, in accordance with reviewer TODO, we changed all the links source codes to provide a SHA link that will bring the user to the accurate revision of the projects considered.}
+
+\quot{remaining remarks in the pdf file provided by reviewer 1}
+\as{The remaining comments from reviewer 1 were all addressed. Because they did not call for a discussion, as they are essentially related to style or typos, we do not list them here.}
+
+\quot{p.14 – not a good description of the simulation software used \dots Ref [38] focuses on robustness of simulations, but presumably, the testing in the present work is deterministic.
+ just using the same simulator? }
+\as{Thanks for the comment. As mentionned before in this text, we added a paragraph (TODO location) where we describe more acccurately the simulator used to perform the validation.}
 %~ 
 %~ \begin{itemize}
 %~ \item \textbf{from avatars to real robots.} [20] presents a proof of concept applied to plan contact sequences for virtual avatars. The main
