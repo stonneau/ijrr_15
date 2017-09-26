@@ -192,8 +192,8 @@ and the writing of the paper.}
 p.9 ‘addresses highly constrained environment’ – actually, not very well, correct? This was the “exception” case, for which results were rather poor, right? Also a case where “heuristics” are not so good for getting true (reliable) holds on grasp points, etc.?
 }
 
-\as{\textbf{This quote annoys me, and I kind of want to maintain our statement. Addressing the car scenario, even with a success rate of 68 \%, seems like a nice achievement to me.
-Also, in my opinion all our scenarios are highly constrained. What do you guys think?}}
+\as{\textbf{\textcolor{red}{This quote annoys me, and I kind of want to maintain our statement. Addressing the car scenario, even with a success rate of 68 \%, seems like a nice achievement to me.
+Also, in my opinion all our scenarios are highly constrained. What do you guys think?}}}
 
 \quot{
 The first part of App. B is referred to within this Appendix as “new minor contributions derived from previous work”. These aren’t so novel, perhaps, and what is more useful to the reader is a better intuition for when to use each within the MAIN BODY of the paper, where they are originally described/associated to particular simulations.
@@ -231,7 +231,62 @@ The first part of App. B is referred to within this Appendix as “new minor con
 %~ This is not clearly stated in the original submission, and we thus rewrote the end of Section I to reflect this.
 
 \section{Answers to reviewer 4}
-\quot{I am a bit skeptical about the readability of the figures. Some of them seem to bee too small (e.g. Fig. 3, Fig. 4), some are of quite poor quality (why the robot silhouettes in Fig. 4 are blurred ?), and the purpose and meaning of Fig. 6 is rather unclear.}
-\as{Thanks for the comment, with which we agree in general. We increased the size of Fig. 3 and 4. The robot silhouettes in Fig. 4 are blurred when they describe a previous state of the robots. We added this precision in the text. \\Regarding the quality of our Figures, we are quite suprised by the comment. All of our simulation Figures are taken from high resolution rendering in blender. The other Figures are drawn from manually designed powerpoint vectorial graphics (converted to png). If the reviewer would be so kind as to point out specifically which Figures are of poor quality, we will gadly replace them.\\ As proposed also by reviewer 1, we removed references to previous results obtained in [20], so the Fig. 6 has been removed.}
 
+\quot{ I suggest that a few papers related to more general motion and contact planning for multi-legged robots can be added. Particularly, the problem of ``foothold selection'' for 4 or 6-legged robots travelling over uneven terrains is a problem related to the one tackled in the paper. It would be nice to select a few representative works (e.g. from the DARPA Learning Locomotion project or
+papers related to the ETHZ StarlETH and ANYmal robots) and explain the differences between those approaches and the problem solved in the paper.}
+\as{Thanks for the relevant comment. As observed by the reviewer, our state of the art voluntarily focuses on multi-contact planning related work, but it is relevant
+to mention the mentioned papers. We added a paragraph at the end of the state of the art to discuss them. As a matter of fact, we believe these approaches could be considered within
+our framework to replace specific parts.}
+
+\quot{in my opinion a T-RO regular paper should be more self-containing. In several points the authors heavily rely on previous publications, e.g. when presenting the RRT-based planner (Section IV-C). This part should be expanded, describing in more detail what exactly has been changed with respect to the reference paper. }
+\as{Thanks for the comment. As it is also suggested by reviewer 1 and the AE, we modified the paper for it to be self contained. The references to previous work now solely indicate
+that a detailed method is not a contribution of the present paper. \\ 
+
+In the particular case of Section IV-C, in fact the code of our implementation of the Bi-RRT with respect to the original one is exactly the same, with a single difference: when
+traditionally a collision detection predicate is called to validate a configuration, we replace this predicate with a call to the reachability condition. We modified the text to explain this more clearly. As the Bi-RRT is a famous standard algorithm in the literature, we do not think it is necessary to include it in this paper, but will gladly do so if required. }
+
+\quot{I am a bit skeptical about the readability of the figures. Some of them seem to be too small (e.g. Fig. 3, Fig. 4), some are of quite poor quality (why the robot silhouettes in Fig. 4 are blurred ?), and the purpose and meaning of Fig. 6 is rather unclear.}
+\as{Thanks for the comment, with which we agree in general.  \\We increased the size of Fig. 3 and 4. The robot silhouettes in Fig. 4 are blurred when they describe a previous state of the robots. We added this precision in the text. \\Regarding the quality of our Figures, we are quite suprised by the comment. All of our simulation Figures are taken from high resolution rendering in blender. The other Figures are drawn from manually designed powerpoint vectorial graphics (converted to png). If the reviewer would be so kind as to point out specifically which Figures are of poor quality, we will gadly replace them.\\ As proposed also by reviewer 1, we removed references to previous results obtained in [20], so the Fig. 6 has been removed.}
+
+\quot{In general, the simulation results presented qualitatively in the paper are a bit hard to interpret without the accompanying video, particularly if someone looks at a b/w print of the paper (as it may be looking in T-RO).}
+\as{\textbf{\textcolor{red}{TODO This is true, although I think he has a crappy printer because I don't think it's that bad. I don't know what to do about it though. I can't simply remove the Figures,
+because he tends to say he would like the paper to be more independent from the video...}}}
+
+
+\quot{ I also found the description of the environment model being
+used,
+and the way it is used in planning quite superficial. It is said, that
+``an octree data structure'' is used to keep the sampled the
+end-effector positions, and it is ``intersect'' with the environment.
+The idea is OK, I understand that the octree is a sample-based
+representation of the effector's workspace, and using some environment
+model it is possible to decide if the given configuration can provide a
+contact point or not. but how is the environment described ? How
+efficient is this intersection operation ? Does this method require the
+environment to be described by some specific objects (e.g. polygons) ?
+What about the (unavoidable) uncertainty if a world model acquired via
+on-line sensing is considered ? Perhaps some of these issues (e.g.
+uncertainty) are not in the scope of the paper, but I can imagine that
+a robotic researcher who reads the paper and is about to use the open
+source software it advertises is very interested in the answers.}
+
+\as{Thanks for the comment. The choice of not developing too much on the environment description and octree goes along with 
+our effort to maintain the paper as readable as possible, since it already contains various concepts. However,
+we agree that additional information must be added. We added a Section TODO where we indicate that the environment is represented as a polygon soup (or 3D mesh), and
+that we assume that it is fully known. Although the integration of on-line sensing and state estimation in the planner is an issue currently considered by our team, it is indeed
+out of the scope of this paper. We thus also indicate that we assume the environment and state of the robot are fully known. We also indicated the algorithmic complexity of the intersection
+method to describe how efficient the intersection operation is.} 
+
+\quot{I appreciate the thorough presentation of results in the paper, however
+it seems that this presentation is somewhat biased towards simulation
+results. Simulations are perfectly OK for planning algorithms, but if
+you decided to present the experimental results (HRP-2), then at least some
+illustrations should be included in the paper. now they are only in the
+accompanying video.  also a comparison between the results of the same
+task(s) executed in dynamic simulation and on the real robot should
+convince the reader that the planning method's good performance does
+not depend too much on the idealized simulation environment. }
+\as{We agree with the remark, and included some illustrations of the experimental results on HRP-2 in the paper. \\
+We now elaborate on the validity of the simulation with respect to an experiment on the real robot. As also suggested by reviewer 1, we added a paragraph
+in the paper (TODO where) to provide more information on the simulation we use to validate our motions. This simulation is an implementation of the state of the art approaches used by the community. Of course, it does not guarantee that any motion it validates will be accurately played on the robot, but it is used extensively by the community as a reasonable guarantee of feasibility.  The suggestion of the reviewer to compare the simulation results with those on the real robot is interesting. However, our robot HRP-2 is not torque controlled, but position controlled, therefore as of today a comparison is not possible.}
 \end{document}
