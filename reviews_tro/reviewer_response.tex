@@ -29,6 +29,7 @@
 \newcommand{\repst}[2]{\replaced[id=st]{#1}{#2}}
 \newcommand{\gls}[1]{\textit{#1}}
 \newcommand{\glslink}[2]{{#2}}
+\newcommand{\done}[0]{\textcolor{green}{DONE}}
 
 \newcommand\dx{\dot{x}}
 \newcommand\dy{\dot{y}}
@@ -65,13 +66,13 @@ In this extension, the algorithm used to compute a sequence of contacts is the s
 algorithm is not explicitely given in [20]), with the introduction of a fastest test for verifying the robust quasi static equilibrium of a contact posture.
 We reformulated the end of Sec I to state clearly that the novelty of this paper essentially lies in the experimental setup and validation we achieved with real robot models, in particular
 in the empirical justification of the method, and its validation in a dynamic simulation. This effort led to the proposal of the first open source, complete framework for multi contact motion synthesis, since 
-the validation required to write a solver for the problem P3. }
+the validation required to write a solver for the problem P3. }\done
 
 \quot { (1) A criterion for robust static equilibrium, but it isn't
 described until page 12, in Appendix B, Section B. [\dots]  It would really help to describe this MUCH earlier in
 the paper (than page 13), if it is a significant novelty of your paper.}
 
-\as{We agree with the remark. To better distinguish between what is novel and not, we modified the paper to move the content of Appendix B.B, as well as D  (the pseudo code of our algorithm) and E (reference to our source code) to the text itself. This results in the criterion being presented much earlier.}
+\as{We agree with the remark. To better distinguish between what is novel and not, we modified the paper to move the content of Appendix B.B, as well as D  (the pseudo code of our algorithm) and E (reference to our source code) to the text itself. This results in the criterion being presented much earlier.}\done
 
 \quot{It is a pretty intuitive/typical check for quantifying a
 margin for friction conesque violations (using an approximation for

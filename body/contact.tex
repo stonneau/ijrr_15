@@ -182,19 +182,16 @@ We then apply the following steps:
 \item If Eq.~\ref{eq:contact_gen} is verified, stop (success). Otherwise remove the element from $S$ and go to step 5.
 \end{enumerate}
 
-%~ This approach has two main advantages.
-%~ First, this allows us to select a large number of candidates in a single proximity request.
-%~ Having several candidates is interesting, because it allows to compare them using a user-selected heuristic $h$, thus obtaining
-%~ a locally-optimal candidate.
-%~ Furthermore, the fact that the candidates are already close to contact increases the odds that the inverse kinematics will converge to a valid solution in a small number of iterations.
-%~ Regarding convergence, it is immediate to verify that as $N$ grows, the probability of finding a solution if it exists converges to 1.
-%~ $N$ is a parameter that allows us to specify the trade-off between exhaustiveness and efficiency.
-The reader is referred to our previous work for an extensive discussion on the benefits of this approach, and the optimal choice 
-of the parameter $N$~\citep{Tonneau2014}. Our criterion to assert efficiently the static equilibrium of the robot, as well as the heuristics $h$ are detailed in Appendix~\ref{sec:heuristics}.
+%~ The reader is referred to our previous work for an extensive discussion on the benefits of this approach, and the optimal choice 
+%~ of the parameter $N$~\citep{Tonneau2014}. Our criterion to assert efficiently the static equilibrium of the robot, as well as the heuristics $h$ are detailed in Appendix~\ref{sec:heuristics}.
+In all our experiments, the heuristic $h$ is implemented as a variation of a manipulability-based heuristic~\cite{Yoshikawa1984}. The manipulability is a real number that quantifies how 
+``good'' a configuration is to perform a given task, based on the analysis of the Jacobian matrix. With such heuristics, a configuration can be chosen because it is far from singularities, and thus allows mobility in all directions. On the contrary, it can be chosen because it is particularly efficient to exert a force in a desired direction. In our experiments, the former solution is usually chosen for computing leg contacts, while the latter is used for computing hand contacts. We recall the manipulability measure and its derivatives in Appendix~\ref{sec:heuristics}.
 
-%~ It should be noted that a failure case for our contact generator does not necessarily mean that the planner will globally fail. Indeed,
-%~ for a given root configuration, if contact configurations are found for other limbs, resulting in static equilibrium, the configuration will be accepted despite
-%~ the failure to generate a contact.
+Finally, to verify that a configuration is in static equilibrium, we use a new robust LP formulation. It replaces the computationally inefficient double description
+approach used in our previous work~\cite{tonneauisrr15}.
 
-%~ In this Section, we have thus defined a deterministic contact planning algorithm.
-%~ The determinism of this algorithm makes it efficient, at the cost of not being probabilistically complete.
+
+
+%~ TODO: $h$ in appendix, the static equilibrium is here ~\ref{sec:Equil}
+
+\input{body/equilibrium}

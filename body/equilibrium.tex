@@ -1,21 +1,21 @@
 % !TEX root =  ../main.tex
 
-\subsection{A criterion for robust static equilibrium}
-The planner is designed so that any generated contact configuration is in static equilibrium.
-%~ Equilibrium is of course critical in legged locomotion. For this reason 
-We are interested in a robust 
-criterion, that ensures that the robot remains in equilibrium in a real-world application, regardless of perception and control uncertainties.
+\section{A criterion for robust static equilibrium}
+\label{sec:Equil}
+%~ The planner is designed so that any generated contact configuration is in static equilibrium.
+%~ We are interested in a robust 
+%~ criterion, that ensures that the robot remains in equilibrium in a real-world application, regardless of perception and control uncertainties.
 
-We first give a linear program (LP) that verifies whether a contact configuration allows for static equilibrium.
+We first give a linear program (LP) that verifies whether a contact configuration allows for static equilibrium. This LP is the same that was proposed in  \citep{Prete2016}.
 From this formulation we derive a new LP that quantifies the robustness of the equilibrium to uncertainties in the contact forces.
-In turn, from this value we can either choose the most robust candidate, or set a threshold on the required robustness. While the presented LP is original, it is based on an analysis of the problem that we proposed in \citep{Prete2016}, where the interested reader can find more details.
+In turn, from this value we can either choose the most robust candidate, or set a threshold on the required robustness. 
+%~ While the presented LP is original, it is based on an analysis of the problem that we proposed in, where the interested reader can find more details.
 
 
 \subsubsection{Conditions for static equilibrium}
 We first define the variables of the problem, for $e$ contact points, expressed in world coordinates:
 \begin{itemize}
 \item $\mathbf{c} \in \mathbb{R}^3$ is the robot center of mass (COM);
-%~ \item $\mathbf{L}  \in \mathbb{R}^3 $ is the angular momentum at the COM;
 \item $m \in \mathbb{R}$ is the robot mass;
 \item $\mathbf{g} = [0,0,-9.81]^T$ is the gravity acceleration;
 \item $\mu$ is the friction coefficient;
@@ -36,7 +36,6 @@ As classically done, we linearize the friction cone in a conservative fashion wi
 
 Any force belonging to the linearized cone
 can thus be expressed as a positive combination of its four generating rays.
-%~ \deleted{Therefore we can express the nonslipping constraint on $\mathbf{f}_i$ as:}
 
 \begin{equation*}
 \forall i  \qquad  \exists \bm{\beta}_i \in \mathbb{R}^{4} : \bm{\beta}_i \ge 0 \text{ and } \mathbf{f}_{i} = \mathbf{V}_{i} \bm{\beta}_i,
@@ -51,18 +50,6 @@ where $\mathbf{V} = \diag{ \{\mathbf{V}_1, \dots, \mathbf{V}_e\} }$, and $\mathb
 From the Newton-Euler equations, to be in static equilibrium the contact forces have to compensate the gravitational forces:
 
 
-%~ \begin{align}
-%~ \underbrace{\mat{m (\ddot{\mathbf{c}} - \mathbf{g})  \\ m \mathbf{c} \times (\ddot{\mathbf{c}} - \mathbf{g}) + \dot{\mathbf{L}}}}_\mathbf{w}
-%~ = 
-%~ \underbrace{
-%~ \mat{\mathbf{I}_3 & \dots & \mathbf{I}_3 \\
-%~ \hat{\mathbf{p}}_1 & \dots & \hat{\mathbf{p}}_e} \mathbf{V}
-%~ }_\mathbf{G}
-%~ \bm{\beta},
-%~ \end{align}
-%~ where $\mathbf{w}\in \Rv{6}$ is the so-called gravito-inertial wrench (GIW) \citep{qiu:dhm:2011, Caron2015} and $\hat{\mathbf{p}} \in \R{3}{3}$ is the cross-product matrix associated to $\mathbf{p}$.
-
-%~ Static balance assumes zero acceleration thus we can write:
 \begin{align} \label{eq:new_eul}
 \underbrace{
 \mat{\mathbf{I}_3 & \dots & \mathbf{I}_3 \\
@@ -72,10 +59,7 @@ From the Newton-Euler equations, to be in static equilibrium the contact forces 
 \underbrace{\mat{-m\mathbf{g} \\ \mathbf{0}}}_{\mathbf{d}}
 \end{align}
 where $\hat{\mathbf{x}} \in \R{3}{3}$ is the cross-product matrix associated to $\mathbf{x}$.
-%~ The right hand side of \eqref{eq:new_eul} is independent of $\mathbf{c}^z$ because of the cross product matrix $\hat{\mathbf{g}}$ inside $\mathbf{D}$, so we can rewrite it as: \adnote{It is not really necessary to show that equilibrium is independent of the com altitude here, anyway the com is given, not a variable, so it does not change the size of the problem}
-%~ \begin{align} \label{eq:new_eul2d}
-%~ \mathbf{w}_0 = \mathbf{D}^{xy} \mathbf{c}^{xy} + \mathbf{d}
-%~ \end{align}
+
 
 If there exists a $\bm{\beta}^*$ satisfying \eqref{eq:gen} and \eqref{eq:new_eul}, it means that the configuration is in static equilibrium.
 The problem can then be formulated as an LP:
@@ -111,6 +95,3 @@ In our implementation, rather than solving directly \eqref{eq:lin_prog_rob}, we 
 
 Indeed, from Slater's conditions \citep{Boyd:2004:CO:993483}, we know that the optimal values of an LP and its dual are equal. Thus the optimal value of the LP~\eqref{eq:dual} is indeed the optimal $b_0$.
 
-%~ In conclusion, the LP~\eqref{eq:dual} provides a method to check rapidly static equilibrium, and returns a robustness value.
-%~ This robustness criterion can be immediately transformed into a heuristic, and eventually be weighted with others.
-%~ Another option to enforce robustness is to set a minimum acceptable value for $b_0$, but as a result this conservative approach discards valid solutions.

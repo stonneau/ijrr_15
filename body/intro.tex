@@ -217,11 +217,21 @@ can result in failures. However, we demonstrate empirically its interest: the hi
 
 To further demonstrate the validity of our approach, we show that the generated contact plans  can be successfully executed (problem  $\mathcal{P}_3$), either in simulation or on the real HRP-2 robot. For HRP-2, we detail the complete computation times to address sequentially the three problems, and compare them to related work, demonstrating that our method is orders of magnitude faster.
 
-Finally, we provide an extensive discussion on the consequences of our approach in terms of efficiency and completeness regarding the contact planning problem. 
+Finally, we provide an extensive discussion on the consequences of our approach in terms of efficiency and completeness regarding the contact planning problem. \\
 
-The paper extends our previous papers presenting the reachability condition~\cite{tonneauisrr15} and the connection of our contact planner with a solver~$\mathcal{P}_3$~\cite{Carpentier2016}.
-In this paper, we introduce a new efficient criterion of the robot balance, provide the complete pseudo-code and release our source code that can be used to directly reproduce our results.
-We also provide a solution to $\mathcal{P}_3$.
-The planner is validated on robot models of HyQ and HRP-2 (while \cite{tonneauisrr15} used unrealistic avatar models) with complete performance analysis.
+\noindent \textbf{Comparison with our previous work:}
+The present paper is an extension of our conference paper~\cite{tonneauisrr15}. As such, the motion planning algorithm presented here is the same as the one presented in the
+previous work. Section~\ref{rbprm} and~\ref{sec:contact} of the present paper are thus paraphrasing the original paper. However, we provide the pseudo-code of the algorithm,
+absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on an new LP formulation.
+Compared with the original paper, we also release our source code, and provide the complete procedure to use our planner for any legged robot. We thus provide
+all the technical information required to use the planner.
+
+To validate our approach, in this paper we had to implement or integrate other tools based on previous publications from our team. We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work~\cite{Carpentier2016}. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of the state of the art simulator proposed in TODO.
+We do not consider these additions as contributions \textit{per se}, but describing them here is required to understand the experimental contribution of this paper.
+
+Indeed, thanks to these tools we have been able to design a complete pipeline for synthesizing multi contact motions from scratch.
+The novelty of the present paper lies in the rigorous experimental setup we propose to demonstrate its interest.
+As opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are much more constrained kinematically than the virtual avatars used before,
+thus making the planning problem even harder. Through an extensive empirical analysis, we demonstrate that the method remains interesting in this context, qualitatively and efficiently.
 
 %~ This paper extends our previous conference paper~\citep{tonneauisrr15} in several ways. Our approach is now demonstrated on actual robots and in simulation, contrary to virtual avatars before, in a large variety of contexts. To achieve this we introduce a new criterion to efficiently compute the equilibrium of the robot while accounting for uncertainties of the real world. We provide the complete pseudo code of algorithm. We give the complete procedure to use our planner with any legged robot and provide our source code, allowing any user to directly use our method. We also propose a solution to $\mathcal{P}_3$, making our framework complete. Finally we provide an in-depth analysis of the results we obtain, and a theoretical discussion on the capabilities of the planner and its current limitations.

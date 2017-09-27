@@ -1,7 +1,9 @@
-\section{Heuristics and criteria for contact selection}
-\label{sec:heuristics}
+%~ \section{Heuristics and criteria for contact selection}
+%~ \label{sec:heuristics}
 % !TEX root =  ../main.tex
-\subsection{Manipulability-based heuristics for contact selection}
+%~ \subsection{Manipulability-based heuristics for contact selection}
+\section{Manipulability-based heuristics for contact selection}
+\label{sec:heuristics}
 This Section proposes heuristics to select a contact that optimizes desired capabilities.
 %~ These heuristics allow to locally optimize a contact location with respect to a particular task.
 For instance, one can be interested in configurations that allow to efficiently exert a force in the global direction of motion,
@@ -69,7 +71,7 @@ h_{vel}(\mathbf{q}, \uprho) = [\uprho^{T}(\mathbf{J}\mathbf{J}^T)^{-1}\uprho]^{-
 $h_{\textrm{\it EFORT}}$ and $h_{vel}$ will favor contacts that allow large efforts or fast modifications in the velocity.
 $EFORT$ in particular is useful for tasks such as standing up, pushing / pulling.
 In other less demanding cases, manipulability can also be considered to avoid singularities.
-To do so, we can consider the manipulability measure $h_{w}$, also given by Yoshikawa:
+To do so, we can consider the manipulability measure $h_{w}$, also given by Yoshikawa~\cite{Yoshikawa1984}:
 
 \begin{equation} \label{ellipsoid}
 h_{w}(\mathbf{q}) = \sqrt{det(\mathbf{J}\mathbf{J}^T)}
