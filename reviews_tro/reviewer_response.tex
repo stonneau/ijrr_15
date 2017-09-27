@@ -289,4 +289,119 @@ not depend too much on the idealized simulation environment. }
 \as{We agree with the remark, and included some illustrations of the experimental results on HRP-2 in the paper. \\
 We now elaborate on the validity of the simulation with respect to an experiment on the real robot. As also suggested by reviewer 1, we added a paragraph
 in the paper (TODO where) to provide more information on the simulation we use to validate our motions. This simulation is an implementation of the state of the art approaches used by the community. Of course, it does not guarantee that any motion it validates will be accurately played on the robot, but it is used extensively by the community as a reasonable guarantee of feasibility.  The suggestion of the reviewer to compare the simulation results with those on the real robot is interesting. However, our robot HRP-2 is not torque controlled, but position controlled, therefore as of today a comparison is not possible.}
+
+\section{Answers to reviewer 6}
+\quot{ My primary concern, however,
+is that the elements described in this paper have been described in
+previous published work, which makes the particular contributions of
+this work unclear. To be specific, the reachability-guided planner
+appears identical to the planner in [20] (as stated by the authors in
+the end of Sect. I.B.), and the optimal control formulation is from [1]
+(again as stated in I.B.).}
+\as{Thanks for the comment. Indeed, all reviewers agreed that the contribution with respect to previous work was not clearly stated. We updated the paper to reflect the following. Firstly, our planner is almost identical to the one in [20], with important additions that are the pseudo code for the algorithm (the algorithm is not given in [20]), as well as the introduction of a more efficient criterion
+for checking static equilibrium (see next question). The optimal control is no longer a claimed contribution of the paper, even though it differs from [1] in its formulation. The main
+novelty of the paper resides in the experimental setup and analysis, as well as the empirical proof that the planner works with real robots that are more constrained kinematically than the virtual avatars from [20]. We believe that this paper is thus in accordance with the guidelines of T-RO regarding the extension of a conference paper.}
+
+\quot{The authors highlight a particular
+contribution of this work to be the efficient robust balance criterion,
+but I had trouble understanding this particular contribution. Does this
+refer to the approximation of equilibrium feasibility by contact
+reachability? In that case, how does this differ from just applying the
+planner in [20] directly? Or does this refer to the robustness
+parameter $b_0$ in Appendix B Eq. (15)?}
+\as{Indeed, this part was also not clear. The robust balance criterion (renamed equilibrium criterion) indeed refers to the parameter $b_0$ in Appendix B. The solved
+LP replaces the static equilibrium test performed in [20], which was not computationally efficient, and took up to 4ms per candidate to compute. We updated the paper to explain
+this in details.}
+
+\quot{In addition, sections IV and V are very similar to the description of
+the planner in [20]. That's not surprising, of course, but there is no
+indication in those sections that the work being presented is a
+rephrasing of an earlier publication.[\dots] }
+\as{We agree with the comment, and indeed made this clearer in the new submission.}
+
+\quot{I do, however,
+believe that the fact that the technical approaches are rephrasings of
+prior work should be made more clear (or that sections which can be
+replaced by citations of [20] and [1] be removed).}
+\as{Thanks for the advice. This suggestion was in contradiction with the other reviewers, who thought that the paper should be self-contained.
+The associate editor decided that the paper must be self contained, so we maintained the indicated sections, but made clearer the fact that they are rephrasing of previous work. }
+
+\quot{*I think I understand what the authors mean by solving at
+"interactive" rates, but this is worth defining. In my mind, it means
+something like "before the human operator gets bored", or roughly > 0.5
+Hz. But since the authors make the claim that this is the "first
+interactive implementation of a contact planner", then that statement
+should be made quantitative and verifiable}
+\as{We agree with the relevant comment, and updated the paper accordingly.}
+
+\quot{* In Section I.A. the authors refer to Bretl's work on multi-contact
+planning as the inspiration for the P1,P2,P3 decomposition of the
+problem. But it is not, as the authors state, always necessary to
+decompose motion planning into choosing a series of quasi-static
+configurations. There are a variety of feasible motions with no static
+equilibrium configurations, so it is worth mentioning that this
+decomposition only solves a subset of motion planning problem.}
+\as{We apologize if this was not made clear enough in our first submission. In the conclusion, we indicate that the planner is limited to specific scenarios (where quasi-static motion
+is always an option). We updated the state of the art to indicate that the decomposition in general is restricitve.}
+
+\quot{* Also in Sect. I.A, the authors state that "optimization-based
+approaches only converge locally". This is not necessarily true, as
+convex or mixed-integer convex optimizations can (sometimes) be solved
+to a verifiable global optimum. I would suggest removing this sentence
+entirely.}
+\as{Thanks for the suggestion. Our phrasing was indeed misleading and inaccurate. Our intention was to explain that the geometry of the scene make the problem highly non-convex, and
+that approaches such as the CIO, if not initialized with an appropriate initial guess, might never get out of the local minima. We followed the reviewer's advice and simply removed the sentence. }
+
+\quot{* I am not sure why the $C_{reach}$ hypothesis is described as the ``strong''
+hypothesis in, e.g., Sect. IV. Is there a corresponding weak
+hypothesis?}
+\as{We apologize for the confusion, that comes from a inaccurate use of English by the main author. What we meant was that the hypothesis is TODO}
+
+\quot{* In Sect. IV.B, the authors state that the ideal shape $B^*$ ``has no
+explicit definition''. For a particular configuration  $q_0$, $B^*$ is simply
+the surface of the robot, right? So I assume that this claim refers to
+there being no explicit definition of B* which is the volume around
+$B^*(q_0)$ for every $q_0$? I think I agree with the authors, but I found
+this claim hard to follow and would appreciate some clarification}
+\as{We updated the Section IV B. to better explain our claim. Indeed, as the reviewer states $B^*$  is the volume for every $q_0$. If such a volume existed, we would know exactly whether or not a given root configuration can result in a valid contact configuration.
+We of course doubt that $B^*$ actually exists. }
+
+\quot{* In Sect. V.A., the authors mention that the ability to plan a contact
+break and creation with the same limb allows the creation of dynamic
+motions. This is quite an important ability for an otherwise
+quasi-static planner, but this ability isn't described again until the
+appendix. It would be worth explaining why this is true in the paper
+itself. }
+\as{Thanks for the suggestion. We added a paragraph to better explain this in Section V.A.}
+
+\quot{In Sect. V.B, the authors mention inserting an additional state
+between contact configurations if two or more contacts cannot be
+maintained. Shouldn't this step appear somewhere in Alg. 1?}
+\as{We apologize for the lack of clarity. This is actually handled by the method \textsc{RepositionContacts}. We now realize that the name is misleading. Indeed,
+\textsc{RepositionContacts} either adds a new contact, or tries to reposition one already existing. In Appendix D, we state:
+\textit{Otherwise, the method \textsc{RepositionContacts} is called. It repositions one end effector (either a free
+limb, or the oldest active contact) towards a new contact
+position if possible. }
+
+We changed the name to \textsc{TODO}, with the hope that it makes things clearer.}
+
+\quot{* In Appendix A.A, it is mentioned that step 2 in the workspace
+computation is conservative, with reference to figure 17-right. But
+Fig. 17-right is the simplification of the convex hull, corresponding
+to step 3, and it's actually hard to tell from the figure that it is
+conservative. Not knowing anything about Blender's decimate tool, I
+assume it is operating by removing vertices, which would indeed be
+conservative, but some clarification would be useful here.}
+\as{Indeed, the decimate tools removes vertices, and this was not explained clearly in the paper. We updated the text accordingly}
+
+\quot{* Finally, I would suggest providing explicit git SHAs or tags for all
+of the github links. I've personally made the mistake of linking to a
+github project in a paper, only to have that project change and
+eventually delete the specific code I was citing. }
+\as{The reviewer is absolutely right. We indeed encounter the issue with other researchers that are currently using our planner. 
+To address this issue, the link for the code now points at a website, where instructions are given to install the correct version of the project.
+Regarding the link to the python code for the OCP that addresses P3, we provided an explicit git SHAs, as suggested by the reviewer.}
+
+
+
 \end{document}
