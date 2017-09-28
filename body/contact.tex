@@ -29,8 +29,9 @@ As shown in the companion video, this allows our framework to produce dynamic mo
 \subsection{Contact planning algorithm}
 Starting from an initial whole-body configuration, we compute a sequence
 of whole-body configurations  $\mathbf{Q}^{\overline{0}}$ along the root path $\mathbf{q}^0(t)$.
-The algorithm can be found in Appendix~\ref{app:contact}. Here we provide an intuition of it.
-
+We first give an intuition of the algorithm, before providing its complete pseudo-code.
+%~ The algorithm can be found in Appendix~\ref{app:contact}. Here we provide an intuition of it.
+\subsubsection{Algorithm overview}
 First, the root path $\mathbf{q}^0(t)$ is discretized into a sequence of $j$ key configurations:  
 \begin{equation*}
 	\mathbf{Q}^0 = [\mathbf{q}^0_{0}; \mathbf{q}^0_{i}; ..., \mathbf{q}^0_{j-1}]
@@ -66,7 +67,7 @@ Each root configuration of $\mathbf{Q}^0$ is then extended into a whole-body con
 
 %~ The function $g$ is defined independently by $g^k$ for each limb $R^k$. In defining $g^k$, two aspects must be considered. Is the limb $R^k$ in contact? And which criteria is it optimizing? 
 
-\subsubsection{Maintaining a contact in the sequence}
+\paragraph{Maintaining a contact in the sequence}
 
 %~ Figure~\ref{fig:break_contact} illustrates the contact-persistence strategy.
 If kinematically possible, a limb in contact at step $i-1$ remains in contact at step $i$ (Figure~\ref{fig:break_contact}). 
@@ -108,9 +109,10 @@ that at most one contact is broken between two sequential configurations.
 		   %~ \label{fig:generate_contact}
 %~ \end{figure}
 
+
 %\subsection{Generation of a contact configuration}  
-\subsubsection{Creating contacts}
-Contacts are created using a FIFO approach: we try first to create a contact with the limb that has been contact-free the longest. If the contact creation does not succeeds, the limb is pushed on top of the queue, and will only be tried again after the others.
+\paragraph{Creating contacts}
+Contacts are created using a FIFO approach: we try first to create a contact with the limb that has been contact-free the longest. If the contact creation does not succeeds, the limb is pushed on top of the queue, and will only be tried again after the others. \\ \\
 %~ \begin{enumerate}
 %~ \item \deladp{At most one contact creation happens between two consecutive steps. }
 %~ \item \deladp{A contact is validated if and only if the resulting configuration is in static equilibrium;}
@@ -119,6 +121,9 @@ Contacts are created using a FIFO approach: we try first to create a contact wit
 %~ \end{enumerate}
 
 %~ \deladp{However, in practice the planner is successful in the large majority of cases, as discussed in Section~\ref{sec:perf}.}
+
+
+\input{body/appendix_algo}
 
 \subsection{Contact generator}
 \label{sec:single_contact}
@@ -188,7 +193,7 @@ In all our experiments, the heuristic $h$ is implemented as a variation of a man
 ``good'' a configuration is to perform a given task, based on the analysis of the Jacobian matrix. With such heuristics, a configuration can be chosen because it is far from singularities, and thus allows mobility in all directions. On the contrary, it can be chosen because it is particularly efficient to exert a force in a desired direction. In our experiments, the former solution is usually chosen for computing leg contacts, while the latter is used for computing hand contacts. We recall the manipulability measure and its derivatives in Appendix~\ref{sec:heuristics}.
 
 Finally, to verify that a configuration is in static equilibrium, we use a new robust LP formulation. It replaces the computationally inefficient double description
-approach used in our previous work~\cite{tonneauisrr15}.
+approach used in our previous work~\cite{tonneauisrr15}, and presented in the following Section~\ref{sec:Equil}.
 
 
 

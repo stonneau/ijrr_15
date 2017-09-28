@@ -4,11 +4,10 @@
 %~ \subsection{Manipulability-based heuristics for contact selection}
 \section{Manipulability-based heuristics for contact selection}
 \label{sec:heuristics}
-This Section proposes heuristics to select a contact that optimizes desired capabilities.
+This Section proposes two heuristics to select a contact that optimizes desired capabilities.
 %~ These heuristics allow to locally optimize a contact location with respect to a particular task.
-For instance, one can be interested in configurations that allow to efficiently exert a force in the global direction of motion,
-a high velocity in a given direction, or to stay away from singular configurations.
-We derive three such heuristics from the work by \cite{Yoshikawa1984}, recalled here. %, that we present first.
+For instance, one can be interested in configurations that allow to efficiently exert a force in the global direction of motion, or to stay away from singular configurations.
+We derive these heuristics from the work by \cite{Yoshikawa1984}, recalled here. %, that we present first.
 
 \subsubsection{The force and velocity ellipsoids}
 
@@ -44,8 +43,8 @@ be reached under the constraint $||\dot{\mathbf{q}}||^2 \leq 1$ for the current 
 The longer the axis of the ellipsoid is, the more important the velocity (resp. force) of the end-effector the direction of the axis can be (Figure~\ref{sec:efort_ellipsoid}).
  
 \subsubsection{Manipulability-based heuristics}
-From these definitions, we can derive three useful heuristics, that all account for the environment and the task being performed.
-The first one, EFORT, was introduced by \cite{Tonneau2014}; the other two are new minor contributions, derived from these previous works.
+From these definitions, we can derive two useful heuristics, that all account for the environment and the task being performed.
+The first one, EFORT, was introduced by \cite{Tonneau2014}; the second one derives the manipulability measure proposed by Yoshikawa~\cite{Yoshikawa1984}.
 
 With EFORT, we define the efficiency of a configuration as the ability of a limb to exert a force in a given direction.
 We thus consider the force ellipsoid as a basis for our heuristic.
@@ -63,12 +62,13 @@ h_{\textrm{\it EFORT}}(\mathbf{q}, \uprho) = [\uprho^{T}(\mathbf{J}\mathbf{J}^T)
 where $\mu$ and $\mathbf{n}$ are respectively the friction coefficient and the normal vector of the contact surface.
 
 
-If the ability to generate large velocities at the effector is considered, we define a new heuristic $h_{vel}$ with a similar reasoning on the velocity ellipsoid:
-\begin{equation}
-h_{vel}(\mathbf{q}, \uprho) = [\uprho^{T}(\mathbf{J}\mathbf{J}^T)^{-1}\uprho]^{-\frac{1}{2}} ( \mu \mathbf{n}^T \uprho)
-\end{equation}
+%~ If the ability to generate large velocities at the effector is considered, we define a new heuristic $h_{vel}$ with a similar reasoning on the velocity ellipsoid:
+%~ \begin{equation}
+%~ h_{vel}(\mathbf{q}, \uprho) = [\uprho^{T}(\mathbf{J}\mathbf{J}^T)^{-1}\uprho]^{-\frac{1}{2}} ( \mu \mathbf{n}^T \uprho)
+%~ \end{equation}
 
-$h_{\textrm{\it EFORT}}$ and $h_{vel}$ will favor contacts that allow large efforts or fast modifications in the velocity.
+%~ $h_{\textrm{\it EFORT}}$ and $h_{vel}$ will favor contacts that allow large efforts or fast modifications in the velocity.
+$h_{\textrm{\it EFORT}}$ will favor contacts that allow large efforts.
 $EFORT$ in particular is useful for tasks such as standing up, pushing / pulling.
 In other less demanding cases, manipulability can also be considered to avoid singularities.
 To do so, we can consider the manipulability measure $h_{w}$, also given by Yoshikawa~\cite{Yoshikawa1984}:

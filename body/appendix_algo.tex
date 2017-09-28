@@ -1,4 +1,4 @@
-\section{Algorithms for the discretization of a path}
+\subsubsection{Pseudo-code of the Algorithm}
 \label{app:contact}
 
 
@@ -115,11 +115,13 @@ If it succeeds, the new limb configuration is assigned to $k$. If it fails, a ra
 
 The method \textsc{IsInStaticEquilibrium} returns whether a given state is in static equilibrium.
 
-\textsc{GenerateContact}$(\mathbf{q}^0,k)$ is a call to the contact generator presented in Section~\ref{sec:single_contact}. It generates a contact configuration in static equilibrium, and assigns the corresponding configuration to $k$.
+The pseudo code for the method \textsc{RepositionContacts} is given by Algorithm~\ref{alg:repo}.
+
+
+\textsc{GenerateContact}$(\mathbf{q}^0,k)$ is a call to the contact generator presented in the following Section~\ref{sec:single_contact}.
+ It generates a contact configuration in static equilibrium, and assigns the corresponding configuration to $k$.
 If it fails, $k$ remains unchanged if it is collision free, otherwise it is assigned a random collision free configuration.
 
-
-The pseudo code for the method \textsc{RepositionContacts} is given by Algorithm~\ref{alg:repo}.
 
 
 \begin{algorithm}

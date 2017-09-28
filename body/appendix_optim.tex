@@ -40,7 +40,7 @@ $\mathbf{q}_0$ to $\mathbf{q}_1$. We manually define the duration of each of the
 In each phase $s$ the centroidal wrench $\mathbf{w}$ is constrained to lie inside a cone $\mathcal{K}_u, u =0 \dots 2$.
 We call the total duration of the motion $T$, and formulate the following optimization problem:
 
-\begin{equation} \label{eq:lin_prog_rob} \begin{aligned}
+\begin{equation} \label{eq:qp_rob} \begin{aligned}
 %~ \find \quad & \mx{R} \in \Rv{3\times T}, \mxdd{C} \in  \Rv{6\times T} \\
 \minimize_{\mathbf{c}(t), \mathbf{\dot{c}}(t), \mathbf{\ddot{c}}(t), \mathbf{w}(t)}  \quad & \sum_{u=0}^{2} \int_{t_u}^{t_u + \Delta t_u}  \ell(\mathbf{c}(t), \mathbf{\dot{c}}(t), \mathbf{\ddot{c}}(t), \mathbf{w}(t)) \text{dt}  \\
 \st \quad & \mathbf{\ddot{c}}(t) = dyn(\mathbf{c}(t), \mathbf{\dot{c}}(t), \mathbf{w}(t)) \\

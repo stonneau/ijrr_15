@@ -30,6 +30,7 @@
 \newcommand{\gls}[1]{\textit{#1}}
 \newcommand{\glslink}[2]{{#2}}
 \newcommand{\done}[0]{\textcolor{green}{DONE}}
+\newcommand{\ndone}[0]{\textcolor{red}{TODO}}
 
 \newcommand\dx{\dot{x}}
 \newcommand\dy{\dot{y}}
@@ -64,7 +65,7 @@ This paper must be understood as an extension of the ISRR paper [20], while the 
 are exploited to validate our approach in a complete pipeline.
 In this extension, the algorithm used to compute a sequence of contacts is the same as in [20] (although this
 algorithm is not explicitely given in [20]), with the introduction of a fastest test for verifying the robust quasi static equilibrium of a contact posture.
-We reformulated the end of Sec I to state clearly that the novelty of this paper essentially lies in the experimental setup and validation we achieved with real robot models, in particular
+We reformulated the end of Section I.B to state clearly that the novelty of this paper essentially lies in the experimental setup and validation we achieved with real robot models, in particular
 in the empirical justification of the method, and its validation in a dynamic simulation. This effort led to the proposal of the first open source, complete framework for multi contact motion synthesis, since 
 the validation required to write a solver for the problem P3. }\done
 
@@ -72,14 +73,14 @@ the validation required to write a solver for the problem P3. }\done
 described until page 12, in Appendix B, Section B. [\dots]  It would really help to describe this MUCH earlier in
 the paper (than page 13), if it is a significant novelty of your paper.}
 
-\as{We agree with the remark. To better distinguish between what is novel and not, we modified the paper to move the content of Appendix B.B, as well as D  (the pseudo code of our algorithm) and E (reference to our source code) to the text itself. This results in the criterion being presented much earlier.}\done
+\as{We agree with the remark. To better distinguish between what is novel and not, we modified the paper to move the content of Appendix B.B (now Section VI), as well as D  (the pseudo code of our algorithm, now Section V.B.2) and E (reference to our source code, now Section VII) to the text itself. This results in the criterion being presented much earlier.}\done
 
 \quot{It is a pretty intuitive/typical check for quantifying a
 margin for friction conesque violations (using an approximation for
 the friction cone, with x and y direction forces considered
 independently). }
 
-\as{Thanks for the comment. To our knowledge, what is common in the literature is to reduce the friction coefficient to obtain more conservative bounds on the admissible forces, and thus a ``safety margin'' to the real cone boundary. An issue with this formulation is that the resulting margin is really small near the origin of the cone, and really important as we go further away from it. With our formulation, the obtained margin is constant everywhere on the cone, and thus guaranteed to be greater than the value $b_0$ we compute. We believe this formulation is new, but would be happy to cite any relevant reference if we happen to be wrong. This formulation proves useful to us because the margin $b_0$ allows to choose the more robust candidate for static equilibrium.}
+\as{Thanks for the comment. To our knowledge, what is common in the literature is to reduce the friction coefficient to obtain more conservative bounds on the admissible forces, and thus a ``safety margin'' to the real cone boundary. An issue with this formulation is that the resulting margin is really small near the origin of the cone, and really important as we go further away from it. With our formulation, the obtained margin is constant everywhere on the cone, and thus guaranteed to be greater than the value $b_0$ we compute. We believe this formulation is new, but would be happy to cite any relevant reference if we happen to be wrong. This formulation proves useful to us because the margin $b_0$ allows to choose the more robust candidate for static equilibrium.}\done
 
 \quot{
 Provides complete pseudocode.  This is great! However,it's
@@ -90,7 +91,8 @@ was NOT outlined in such detail before, that should also be clear (to
 the authors' credit). Either way, a brief clarification in the intro is
 recommended.}
 
-\as{We agree with the comment. Indeed, the pseudocode was not present in [20]. We included it in the core of the paper and clarified that it is novel.}
+\as{We agree with the comment. Indeed, the pseudocode was not present in [20]. We included it in the core of the paper and clarified that it is novel at the end
+of Section I.B.}\done
 
 
 \quot{(3)	The contribution to provide a solution to P3 doesn't happen
@@ -108,7 +110,9 @@ novelty.}
 is a new contribution, although our formulation differs from [1] (our control variable is the acceleration
 of the center of mass, where in [1] the control variable is the contact forces). We provide it here for completeness, because it corresponds to our implementation, and 
 was required to validate our approach. The main contribution of the paper is the proposal and validation of an algorithm for P1 and P2.
-We rephrased the text to clearly indicate that the algorithm is not a contribution. }
+We rephrased the text to clearly indicate that the algorithm is not a contribution. We made the choice not to give an intuition nor describe the solver in the core
+of the paper because it is not required to understand the contributions to P1 and P2.}\done
+
 
 \quot{
 (4)	The last contribution is validation using an in-house
@@ -130,7 +134,8 @@ we did not have a solution to P3 at the time. Then the main
 difference between the avatars of [20] and the real robots we now address are the joint limitations and auto-collisions probabilities.
 The robots are much more constrained in this regard, which makes the planning harder. We thus had to demonstrate that our algorithm is also working
 for these models, while maintaining decent performances.
-We added this missing piece of information to the paper, at the end of Section I.}
+We added this missing piece of information to the paper, at the end of Section I.B.}
+\textcolor{red}{TODO ANDREA}.
 
 
 \quot{[\dots] the authors need to better
@@ -141,13 +146,13 @@ with more intuitive comments/summaries on these details, rather than
 just writing (for example), we use a bunch of heuristics, and they are
 described in Appendix X.}
 
-\as{We agree. The novel details of the paper have been moved from the appendix to the core of the paper, and are explicitely detailed at the end of Section I.}
+\as{We agree. The novel details of the paper have been moved from the appendix to the core of the paper, and are explicitely detailed at the end of Section I.B.} \done
 
 \quot{
 Also, where you describe "sensitivity" vs "specificity", it would be
 useful to give a more intuitive explanation, example [\dots]}
 
-\as{We updated Section TODO to illustrate the meaning of those terms.}
+\as{We updated Section VIII.B.1) to illustrate the meaning of those terms.} \done
 
 \quot{
 However, I suggest the paper will be improved if
@@ -157,11 +162,11 @@ what take-away messages you have, about why the whole framework is
 designed the way it is [within the main text; not hidden in
 appendices].}
 
-\as{TODO}
+\as{TODO}\ndone
 
 \quot{
 p.6 – this would be a great place to give more ``intuition'' for the heuristics. Hw seems to be used in essentially all foot contact, with $h_{efort}$ for hand/arm contacts, and ALSO $h_{vel}$ not seeming to be used at all.}
-\as{Thanks for the suggestion. The text was updated accordingly, and the heuristic $h_{vel}$ was removed since indeed it is not used.}
+\as{Thanks for the suggestion. The text was updated accordingly, and the heuristic $h_{vel}$ was removed since indeed it is not used.} \done
 
 
 \quot{
@@ -171,13 +176,13 @@ p.9 Not sure if Fig. 14 is worth including. It looks like its just Fig. 9 from t
  (At a minimum, the figure/solution should probably be referenced as having already appeared in the previous ISSR paper?)
 }
 
-\as{As also suggested by reviewer TODO, we removed the references to the results of the previous work [20], including those.}
+\as{As also suggested by reviewer TODO, we removed the references to the results of the previous work [20], including those.}\done
 
 \quot{
 p.8– somehow, “Table II” doesn’t appear until after “Table IV” – which is a frustrating choice for latex to make. Not sure what you can do to change that, but it would be preferable to have tables (and figures) appear in the correct order.
 }
 
-\as{We reorganized the paper such that the Table appear in the right order.}
+\as{We reorganized the paper such that the Table appear in the right order.}\ndone
 
 \quot{
 p.8. Need to define ``discretization step'' more precisely, I think(?)… Min distance? Max distance? Nominal distance? In time? In Distance? In all 6 DOF??
@@ -187,27 +192,27 @@ p.8. Need to define ``discretization step'' more precisely, I think(?)… Min di
 that 10 postures will be generated along a path of length 1. Here the length is the distance traversed by the root along the path, computed as a ponderation between the 3D position and joint variations of the root.
 
 Finally, we also took into account all of the remaining suggestions in the pdf file attached. We do not detail them here since they refer essentially to the style 
-and the writing of the paper.}
+and the writing of the paper.}\ndone
 
 \quot{
 p.9 ‘addresses highly constrained environment’ – actually, not very well, correct? This was the “exception” case, for which results were rather poor, right? Also a case where “heuristics” are not so good for getting true (reliable) holds on grasp points, etc.?
 }
 
 \as{\textbf{\textcolor{red}{This quote annoys me, and I kind of want to maintain our statement. Addressing the car scenario, even with a success rate of 68 \%, seems like a nice achievement to me.
-Also, in my opinion all our scenarios are highly constrained. What do you guys think?}}}
+Also, in my opinion all our scenarios are highly constrained. What do you guys think?}}}\ndone
 
 \quot{
 The first part of App. B is referred to within this Appendix as “new minor contributions derived from previous work”. These aren’t so novel, perhaps, and what is more useful to the reader is a better intuition for when to use each within the MAIN BODY of the paper, where they are originally described/associated to particular simulations.
 }
 
-\as{Agreed. We removed the incriminated text and provided an intuition of the heuristic in the text.}
+\as{Agreed. We removed the incriminated text and provided an intuition of the heuristic in the text.}\ndone
 
 \quot{github link seems to be dead? (The link on p. 15 is OK… should they be the same?)}
 
-\as{We are suprised by this comment because after testing it, the link seems to be valid. In any case, in accordance with reviewer TODO, we changed all the links source codes to provide a SHA link that will bring the user to the accurate revision of the projects considered.}
+\as{We are suprised by this comment because after testing it, the link seems to be valid. In any case, in accordance with reviewer TODO, we changed all the links source codes to provide a SHA link that will bring the user to the accurate revision of the projects considered.}\ndone
 
 \quot{remaining remarks in the pdf file provided by reviewer 1}
-\as{The remaining comments from reviewer 1 were all addressed. Because they did not call for a discussion, as they are essentially related to style or typos, we do not list them here.}
+\as{The remaining comments from reviewer 1 were all addressed. Because they did not call for a discussion, as they are essentially related to style or typos, we do not list them here.}\ndone
 
 %~ \quot{p.14 – not a good description of the simulation software used \dots Ref [38] focuses on robustness of simulations, but presumably, the testing in the present work is deterministic.
  %~ just using the same simulator? Not much description is given of how/whether contacts/slipping are modeled\dots why isn’t a 3rd­‐part software used, or at least software with better 
@@ -237,7 +242,7 @@ The first part of App. B is referred to within this Appendix as “new minor con
 papers related to the ETHZ StarlETH and ANYmal robots) and explain the differences between those approaches and the problem solved in the paper.}
 \as{Thanks for the relevant comment. As observed by the reviewer, our state of the art voluntarily focuses on multi-contact planning related work, but it is relevant
 to mention the mentioned papers. We added a paragraph at the end of the state of the art to discuss them. As a matter of fact, we believe these approaches could be considered within
-our framework to replace specific parts.}
+our framework to replace specific parts.}\ndone
 
 \quot{in my opinion a T-RO regular paper should be more self-containing. In several points the authors heavily rely on previous publications, e.g. when presenting the RRT-based planner (Section IV-C). This part should be expanded, describing in more detail what exactly has been changed with respect to the reference paper. }
 \as{Thanks for the comment. As it is also suggested by reviewer 1 and the AE, we modified the paper for it to be self contained. The references to previous work now solely indicate
@@ -247,11 +252,11 @@ In the particular case of Section IV-C, in fact the code of our implementation o
 traditionally a collision detection predicate is called to validate a configuration, we replace this predicate with a call to the reachability condition. We modified the text to explain this more clearly. As the Bi-RRT is a famous standard algorithm in the literature, we do not think it is necessary to include it in this paper, but will gladly do so if required. }
 
 \quot{I am a bit skeptical about the readability of the figures. Some of them seem to be too small (e.g. Fig. 3, Fig. 4), some are of quite poor quality (why the robot silhouettes in Fig. 4 are blurred ?), and the purpose and meaning of Fig. 6 is rather unclear.}
-\as{Thanks for the comment, with which we agree in general.  \\We increased the size of Fig. 3 and 4. The robot silhouettes in Fig. 4 are blurred when they describe a previous state of the robots. We added this precision in the text. \\Regarding the quality of our Figures, we are quite suprised by the comment. All of our simulation Figures are taken from high resolution rendering in blender. The other Figures are drawn from manually designed powerpoint vectorial graphics (converted to png). If the reviewer would be so kind as to point out specifically which Figures are of poor quality, we will gadly replace them.\\ As proposed also by reviewer 1, we removed references to previous results obtained in [20], so the Fig. 6 has been removed.}
+\as{Thanks for the comment, with which we agree in general.  \\We increased the size of Fig. 3 and 4. The robot silhouettes in Fig. 4 are blurred when they describe a previous state of the robots. We added this precision in the text. \\Regarding the quality of our Figures, we are quite suprised by the comment. All of our simulation Figures are taken from high resolution rendering in blender. The other Figures are drawn from manually designed powerpoint vectorial graphics (converted to png). If the reviewer would be so kind as to point out specifically which Figures are of poor quality, we will gadly replace them.\\ As proposed also by reviewer 1, we removed references to previous results obtained in [20], so the Fig. 6 has been removed.}\ndone
 
 \quot{In general, the simulation results presented qualitatively in the paper are a bit hard to interpret without the accompanying video, particularly if someone looks at a b/w print of the paper (as it may be looking in T-RO).}
 \as{\textbf{\textcolor{red}{TODO This is true, although I think he has a crappy printer because I don't think it's that bad. I don't know what to do about it though. I can't simply remove the Figures,
-because he tends to say he would like the paper to be more independent from the video...}}}
+because he tends to say he would like the paper to be more independent from the video...}}}\ndone
 
 
 \quot{ I also found the description of the environment model being
@@ -276,7 +281,7 @@ our effort to maintain the paper as readable as possible, since it already conta
 we agree that additional information must be added. We added a Section TODO where we indicate that the environment is represented as a polygon soup (or 3D mesh), and
 that we assume that it is fully known. Although the integration of on-line sensing and state estimation in the planner is an issue currently considered by our team, it is indeed
 out of the scope of this paper. We thus also indicate that we assume the environment and state of the robot are fully known. We also indicated the algorithmic complexity of the intersection
-method to describe how efficient the intersection operation is.} 
+method to describe how efficient the intersection operation is.} \ndone
 
 \quot{I appreciate the thorough presentation of results in the paper, however
 it seems that this presentation is somewhat biased towards simulation
@@ -289,7 +294,7 @@ convince the reader that the planning method's good performance does
 not depend too much on the idealized simulation environment. }
 \as{We agree with the remark, and included some illustrations of the experimental results on HRP-2 in the paper. \\
 We now elaborate on the validity of the simulation with respect to an experiment on the real robot. As also suggested by reviewer 1, we added a paragraph
-in the paper (TODO where) to provide more information on the simulation we use to validate our motions. This simulation is an implementation of the state of the art approaches used by the community. Of course, it does not guarantee that any motion it validates will be accurately played on the robot, but it is used extensively by the community as a reasonable guarantee of feasibility.  The suggestion of the reviewer to compare the simulation results with those on the real robot is interesting. However, our robot HRP-2 is not torque controlled, but position controlled, therefore as of today a comparison is not possible.}
+in the paper (TODO where) to provide more information on the simulation we use to validate our motions. This simulation is an implementation of the state of the art approaches used by the community. Of course, it does not guarantee that any motion it validates will be accurately played on the robot, but it is used extensively by the community as a reasonable guarantee of feasibility.  The suggestion of the reviewer to compare the simulation results with those on the real robot is interesting. However, our robot HRP-2 is not torque controlled, but position controlled, therefore as of today a comparison is not possible.}\ndone
 
 \section{Answers to reviewer 6}
 \quot{ My primary concern, however,
@@ -301,7 +306,7 @@ the end of Sect. I.B.), and the optimal control formulation is from [1]
 (again as stated in I.B.).}
 \as{Thanks for the comment. Indeed, all reviewers agreed that the contribution with respect to previous work was not clearly stated. We updated the paper to reflect the following. Firstly, our planner is almost identical to the one in [20], with important additions that are the pseudo code for the algorithm (the algorithm is not given in [20]), as well as the introduction of a more efficient criterion
 for checking static equilibrium (see next question). The optimal control is no longer a claimed contribution of the paper, even though it differs from [1] in its formulation. The main
-novelty of the paper resides in the experimental setup and analysis, as well as the empirical proof that the planner works with real robots that are more constrained kinematically than the virtual avatars from [20]. We believe that this paper is thus in accordance with the guidelines of T-RO regarding the extension of a conference paper.}
+novelty of the paper resides in the experimental setup and analysis, as well as the empirical proof that the planner works with real robots that are more constrained kinematically than the virtual avatars from [20]. We believe that this paper is thus in accordance with the guidelines of T-RO regarding the extension of a conference paper.}\ndone
 
 \quot{The authors highlight a particular
 contribution of this work to be the efficient robust balance criterion,
@@ -312,20 +317,20 @@ planner in [20] directly? Or does this refer to the robustness
 parameter $b_0$ in Appendix B Eq. (15)?}
 \as{Indeed, this part was also not clear. The robust balance criterion (renamed equilibrium criterion) indeed refers to the parameter $b_0$ in Appendix B. The solved
 LP replaces the static equilibrium test performed in [20], which was not computationally efficient, and took up to 4ms per candidate to compute. We updated the paper to explain
-this in details.}
+this in details.}\ndone
 
 \quot{In addition, sections IV and V are very similar to the description of
 the planner in [20]. That's not surprising, of course, but there is no
 indication in those sections that the work being presented is a
 rephrasing of an earlier publication.[\dots] }
-\as{We agree with the comment, and indeed made this clearer in the new submission.}
+\as{We agree with the comment, and indeed made this clearer in the new submission.}\ndone
 
 \quot{I do, however,
 believe that the fact that the technical approaches are rephrasings of
 prior work should be made more clear (or that sections which can be
 replaced by citations of [20] and [1] be removed).}
 \as{Thanks for the advice. This suggestion was in contradiction with the other reviewers, who thought that the paper should be self-contained.
-The associate editor decided that the paper must be self contained, so we maintained the indicated sections, but made clearer the fact that they are rephrasing of previous work. }
+The associate editor decided that the paper must be self contained, so we maintained the indicated sections, but made clearer the fact that they are rephrasing of previous work. }\ndone
 
 \quot{*I think I understand what the authors mean by solving at
 "interactive" rates, but this is worth defining. In my mind, it means
@@ -333,7 +338,7 @@ something like "before the human operator gets bored", or roughly > 0.5
 Hz. But since the authors make the claim that this is the "first
 interactive implementation of a contact planner", then that statement
 should be made quantitative and verifiable}
-\as{We agree with the relevant comment, and updated the paper accordingly.}
+\as{We agree with the relevant comment, and updated the paper accordingly.}\ndone
 
 \quot{* In Section I.A. the authors refer to Bretl's work on multi-contact
 planning as the inspiration for the P1,P2,P3 decomposition of the
@@ -343,7 +348,7 @@ configurations. There are a variety of feasible motions with no static
 equilibrium configurations, so it is worth mentioning that this
 decomposition only solves a subset of motion planning problem.}
 \as{We apologize if this was not made clear enough in our first submission. In the conclusion, we indicate that the planner is limited to specific scenarios (where quasi-static motion
-is always an option). We updated the state of the art to indicate that the decomposition in general is restricitve.}
+is always an option). We updated the state of the art to indicate that the decomposition in general is restricitve.}\ndone
 
 \quot{* Also in Sect. I.A, the authors state that "optimization-based
 approaches only converge locally". This is not necessarily true, as
@@ -351,12 +356,12 @@ convex or mixed-integer convex optimizations can (sometimes) be solved
 to a verifiable global optimum. I would suggest removing this sentence
 entirely.}
 \as{Thanks for the suggestion. Our phrasing was indeed misleading and inaccurate. Our intention was to explain that the geometry of the scene make the problem highly non-convex, and
-that approaches such as the CIO, if not initialized with an appropriate initial guess, might never get out of the local minima. We followed the reviewer's advice and simply removed the sentence. }
+that approaches such as the CIO, if not initialized with an appropriate initial guess, might never get out of the local minima. We followed the reviewer's advice and simply removed the sentence. }\ndone
 
 \quot{* I am not sure why the $C_{reach}$ hypothesis is described as the ``strong''
 hypothesis in, e.g., Sect. IV. Is there a corresponding weak
 hypothesis?}
-\as{We apologize for the confusion, that comes from a inaccurate use of English by the main author. What we meant was that the hypothesis is TODO}
+\as{We apologize for the confusion, that comes from a inaccurate use of English by the main author. What we meant was that the hypothesis is TODO}\ndone
 
 \quot{* In Sect. IV.B, the authors state that the ideal shape $B^*$ ``has no
 explicit definition''. For a particular configuration  $q_0$, $B^*$ is simply
@@ -365,7 +370,7 @@ there being no explicit definition of B* which is the volume around
 $B^*(q_0)$ for every $q_0$? I think I agree with the authors, but I found
 this claim hard to follow and would appreciate some clarification}
 \as{We updated the Section IV B. to better explain our claim. Indeed, as the reviewer states $B^*$  is the volume for every $q_0$. If such a volume existed, we would know exactly whether or not a given root configuration can result in a valid contact configuration.
-We of course doubt that $B^*$ actually exists. }
+We of course doubt that $B^*$ actually exists. }\ndone
 
 \quot{* In Sect. V.A., the authors mention that the ability to plan a contact
 break and creation with the same limb allows the creation of dynamic
@@ -373,7 +378,7 @@ motions. This is quite an important ability for an otherwise
 quasi-static planner, but this ability isn't described again until the
 appendix. It would be worth explaining why this is true in the paper
 itself. }
-\as{Thanks for the suggestion. We added a paragraph to better explain this in Section V.A.}
+\as{Thanks for the suggestion. We added a paragraph to better explain this in Section V.A.}\ndone
 
 \quot{In Sect. V.B, the authors mention inserting an additional state
 between contact configurations if two or more contacts cannot be
@@ -384,7 +389,7 @@ maintained. Shouldn't this step appear somewhere in Alg. 1?}
 limb, or the oldest active contact) towards a new contact
 position if possible. }
 
-We changed the name to \textsc{TODO}, with the hope that it makes things clearer.}
+We changed the name to \textsc{TODO}, with the hope that it makes things clearer.}\ndone
 
 \quot{* In Appendix A.A, it is mentioned that step 2 in the workspace
 computation is conservative, with reference to figure 17-right. But
@@ -393,7 +398,7 @@ to step 3, and it's actually hard to tell from the figure that it is
 conservative. Not knowing anything about Blender's decimate tool, I
 assume it is operating by removing vertices, which would indeed be
 conservative, but some clarification would be useful here.}
-\as{Indeed, the decimate tools removes vertices, and this was not explained clearly in the paper. We updated the text accordingly}
+\as{Indeed, the decimate tools removes vertices, and this was not explained clearly in the paper. We updated the text accordingly}\ndone
 
 \quot{* Finally, I would suggest providing explicit git SHAs or tags for all
 of the github links. I've personally made the mistake of linking to a
@@ -401,7 +406,7 @@ github project in a paper, only to have that project change and
 eventually delete the specific code I was citing. }
 \as{The reviewer is absolutely right. We indeed encounter the issue with other researchers that are currently using our planner. 
 To address this issue, the link for the code now points at a website, where instructions are given to install the correct version of the project.
-Regarding the link to the python code for the OCP that addresses P3, we provided an explicit git SHAs, as suggested by the reviewer.}
+Regarding the link to the python code for the OCP that addresses P3, we provided an explicit git SHAs, as suggested by the reviewer.}\ndone
 
 
 

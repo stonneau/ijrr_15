@@ -10,7 +10,7 @@ At the end of the video, we validate our contact plans by exhibiting a solution 
 At the end of this section, we discuss the role of the parameters of our framework. We then provide the \textit{interactive} computation times obtained in each case.
 We also compare the times obtained with HRP-2 with respect to previous works.
 
-These scenarios complement the ones demonstrated on virtual avatars (Figure~\ref{fig:robots_old}) in our previous ISRR paper~\citep{tonneauisrr15} and video\footnote{\url{http://youtu.be/LmLAHgGQJGA}}.
+%~ These scenarios complement the ones demonstrated on virtual avatars (Figure~\ref{fig:robots_old}) in our previous ISRR paper~\citep{tonneauisrr15} and video\footnote{\url{http://youtu.be/LmLAHgGQJGA}}.
 %~ (Figure~\ref{fig:robots_old}).
  %~ We invite the interested reader to watch the ISRR video (\url{http://youtu.be/LmLAHgGQJGA}), and 
 %~ to refer to the previous paper for a discussion on these results.
@@ -18,19 +18,13 @@ These scenarios complement the ones demonstrated on virtual avatars (Figure~\ref
 %~ We say that the planning is \gls{interactive} when the computation time for one step is lesser than the
 %~ time to execute it. We arbitrarily approximate this time to one second.
 
-\begin{figure}[t]
-\centering
-  \begin{overpic}[width=1\linewidth]{figures/robots_old}
-		%~ \put (5,) {1)} 
-		%~ \put (37,) {2)} 
-		%~ \put (68,) {3.a)} 
-		%~ \put (5,27) {3.b)} 
-		%~ \put (37,27) {4.a)} 
-		%~ \put (68,27) {4.b)} 
-	\end{overpic}
-\caption{Virtual avatars in various scenarios demonstrated in our conference paper.}
-		   \label{fig:robots_old}
-\end{figure}
+%~ \begin{figure}[t]
+%~ \centering
+  %~ \begin{overpic}[width=1\linewidth]{figures/robots_old}
+	%~ \end{overpic}
+%~ \caption{Virtual avatars in various scenarios demonstrated in our conference paper.}
+		   %~ \label{fig:robots_old}
+%~ \end{figure}
 
 \subsection{Description of the scenarios}
 In all the scenarios considered, the formulation of the problem is always the same:
@@ -201,23 +195,23 @@ some stepping stones are removed, and part of the final staircase is deleted. Al
 %~ In the video, the footsteps indicating the contact sequence appear at the average speed of their computation (including the guide-path planning).
 
 
-\subsubsection{3-fingered hand -- Manipulation of a pen (Figure~\ref{fig:penrot})}
-This scenario is proposed to illustrate the generality of our approach: we consider a manipulation task for a robotic hand and use
-our contact planner to compute a contact sequence for the fingers, considered as effectors (Figure~\ref{fig:penrot}).
-Although we do not address the hard issue of accounting for rolling motions, the planner is able to compute the shown sequences in less than 5 seconds.
-
-\begin{figure*}
-\centering
-  \begin{overpic}[width=1\linewidth]{figures/penrot}
-	\end{overpic}
-\caption{Contact sequence found for a pen manipulation in a zero gravity environment.}
-		   \label{fig:penrot}
-\end{figure*}
-
- 
-\noindent\textbf{Contacts involved:} Three finger-tips.
-
-\noindent\textbf{Heuristics:} $h_{\textrm{\it EFORT}}$ for all fingers.
+%~ \subsubsection{3-fingered hand -- Manipulation of a pen (Figure~\ref{fig:penrot})}
+%~ This scenario is proposed to illustrate the generality of our approach: we consider a manipulation task for a robotic hand and use
+%~ our contact planner to compute a contact sequence for the fingers, considered as effectors (Figure~\ref{fig:penrot}).
+%~ Although we do not address the hard issue of accounting for rolling motions, the planner is able to compute the shown sequences in less than 5 seconds.
+%~ 
+%~ \begin{figure*}
+%~ \centering
+  %~ \begin{overpic}[width=1\linewidth]{figures/penrot}
+	%~ \end{overpic}
+%~ \caption{Contact sequence found for a pen manipulation in a zero gravity environment.}
+		   %~ \label{fig:penrot}
+%~ \end{figure*}
+%~ 
+ %~ 
+%~ \noindent\textbf{Contacts involved:} Three finger-tips.
+%~ 
+%~ \noindent\textbf{Heuristics:} $h_{\textrm{\it EFORT}}$ for all fingers.
  
  
 \subsection{Role of the main parameters} \label{sec:influence}
@@ -228,8 +222,15 @@ is computed empirically based on use-case analysis or trials and errors.
 \subsubsection{Choosing the scaling factor $s$} \label{sec:params}
 %~ \deladp{To find a convenient value $s^*$ of $s$, we proceeded as follows. }
 For several values of $s$, we generated $10 000$ configurations. 
-We then computed the sensitivity of the reachability condition (percentage of configurations in $C_{Reach}^0$, effectively belonging to \gls{$C_{Contact}^0$}).
-Similarly we computed the specificity of the condition (percentage of configurations \textbf{not} in $C_{Reach}^0$, effectively \textbf{not} belonging to \gls{$C_{Contact}^0$}).
+%~ We then computed the sensitivity of the reachability condition (percentage of configurations in $C_{Reach}^0$ belonging to \gls{$C_{Contact}^0$}).
+%~ Similarly we computed the specificity of the condition (percentage of configurations \textbf{not} in $C_{Reach}^0$ \textbf{not} belonging to \gls{$C_{Contact}^0$}).
+We then computed to sensitivity and specificity of the reachability condition.  In this context, the sensitivity refers to the percentage of configurations in $C_{Reach}^0$, effectively belonging to \gls{$C_{Contact}^0$}. If a sampled configuration is in $C_{Reach}^0$, but our method is unable to generate a contact configuration from it, as a result the sensitivity
+decreases. The sensitivity thus illustrates the confidence we have that any configuration in $C_{Reach}^0$ will effectively lead to a contact configuration.
+Conversely, the specificity refers to the percentage of configurations \textbf{not} in $C_{Reach}^0$, effectively \textbf{not} belonging to \gls{$C_{Contact}^0$}.
+If a sampled configuration is \textbf{not} in $C_{Reach}^0$, but our method is able to generate a contact configuration from it, as a result the specificity
+decreases. The specificity thus illustrates the confidence we have that all configurations that allow contact creation belong to in $C_{Reach}^0$ (or informally, the confidence that we are not missing too many valid solutions).
+We thus look for a compromise between sensitivity and specificity.
+
 The obtained results for HRP-2 are shown in Table~\ref{tab:scale}, averaged over all scenes (except for the car egress: in this scenario, 
 statistical tests are not really conclusive since we are only interested in a small area of the environment).
 
