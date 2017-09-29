@@ -97,7 +97,7 @@ margin for friction conesque violations (using an approximation for
 the friction cone, with x and y direction forces considered
 independently). }
 
-\as{Thanks for the comment. To our knowledge, what is common in the literature is to reduce the friction coefficient to obtain more conservative bounds on the admissible forces, and thus a ``safety margin'' to the real cone boundary. An issue with this formulation is that the resulting margin is really small near the origin of the cone, and really important as we go further away from it. With our formulation, the obtained margin is constant everywhere on the cone, and thus guaranteed to be greater than the value $b_0$ we compute. We believe this formulation is new, but would be happy to cite any relevant reference if we happen to be wrong. This formulation proves useful to us because the margin $b_0$ allows to choose the more robust candidate for static equilibrium.}\done
+\as{Thanks for the comment. To our knowledge, what is common in the literature is to reduce the friction coefficient to obtain more conservative bounds on the admissible forces, and thus a ``safety margin'' to the real cone boundary. An issue with this formulation is that the resulting margin may be too small for small forces, and too large for large contact forces. With our formulation, the obtained margin is constant, and thus guaranteed to be greater than the value $b_0$ we compute. We believe this formulation is new, but would be happy to cite any relevant reference if we happen to be wrong. This formulation proves useful to us because the margin $b_0$ allows to choose the more robust candidate for static equilibrium.}\done
 
 \quot{
 Provides complete pseudocode.  This is great! However,it's
@@ -128,7 +128,7 @@ novelty.}
 \as{The main contribution of the paper is the proposal and validation of an algorithm for P1 and P2. 
 In the new version of the paper, we do not consider that our solution to P3
 is a new contribution, although our formulation differs from [1] (our control variable is the acceleration
-of the center of mass, where in [1] the control variable is the contact forces). We provide it here for completeness, because it corresponds to our implementation, and 
+of the center of mass, whereas in [1] the control variable is the contact forces). We provide it here for completeness, because it corresponds to our implementation, and 
 was required to validate our approach. 
 We rephrased the text to clearly indicate that the algorithm is not a contribution. We made the choice not to give an intuition nor describe the solver in the core
 of the paper because it is not required to understand the contributions to P1 and P2.}
@@ -155,7 +155,7 @@ Regarding the difference between our previous and current work, the postures com
 we did not have a solution to P3 at the time. Then the main
 difference between the avatars of [20] and the real robots we now address are the joint limitations and auto-collisions probabilities.
 The robots are much more constrained in this regard, which makes the planning harder. We thus had to demonstrate that our algorithm is also working
-for these models, while maintaining decent performances.
+for these models, while maintaining good performance.
 We added this missing piece of information to the paper, at the end of Section I.B.}
 \textcolor{red}{TODO ANDREA}.
 
@@ -175,11 +175,11 @@ Also, where you describe "sensitivity" vs "specificity", it would be
 useful to give a more intuitive explanation, example [\dots]}
 
 \as{We updated Section VIII.B.1) to illustrate the meaning of those terms.}
-\qt{We then computed to sensitivity and specificity of the reachability condition.  In this context, the sensitivity refers to the percentage of configurations in $C_{Reach}^0$, effectively belonging to \gls{$C_{Contact}^0$}. If a sampled configuration is in $C_{Reach}^0$, but our method is unable to generate a contact configuration from it, as a result the sensitivity
+\qt{We then computed the sensitivity and specificity of the reachability condition.  In this context, the sensitivity refers to the percentage of configurations in $C_{Reach}^0$, effectively belonging to \gls{$C_{Contact}^0$}. If a sampled configuration is in $C_{Reach}^0$, but our method is unable to generate a contact configuration from it, as a result the sensitivity
 decreases. The sensitivity thus illustrates the confidence we have that any configuration in $C_{Reach}^0$ will effectively lead to a contact configuration.
 Conversely, the specificity refers to the percentage of configurations \textbf{not} in $C_{Reach}^0$, effectively \textbf{not} belonging to \gls{$C_{Contact}^0$}.
 If a sampled configuration is \textbf{not} in $C_{Reach}^0$, but our method is able to generate a contact configuration from it, as a result the specificity
-decreases. The specificity thus illustrates the confidence we have that all configurations that allow contact creation belong to in $C_{Reach}^0$ (or informally, the confidence that we are not missing too many valid solutions).
+decreases. The specificity thus illustrates the confidence we have that all configurations that allow contact creation belong to $C_{Reach}^0$ (or informally, the confidence that we are not missing valid solutions).
 We thus look for a compromise between sensitivity and specificity.} \done
 
 \quot{
@@ -231,10 +231,10 @@ p.9 ‘addresses highly constrained environment’ – actually, not very well, 
 \as{Thanks for the comment. On this particular point however, we wish to maintain our statement. For scenarios such as the car egress, a success rate of $68 \%$ means that the planner
 will fail at some point, but more importantly it means that if we restart the planning a few times with the same problem, there is a reasonable probability that it will find a feasible solution.
 In this regard, the car egress scenario is effectively addressed, because we found a solution for it. \\
-Furthermore, we believe that this result is to be compared with the current state of the art : we are not aware of any other method who was able
+Furthermore, we believe that this result is to be compared with the current state of the art: we are not aware of any other method that was able
 to compute a valid motion from scratch, even in simulation. The closest work to this achievement is the one from Escande et al., but the trajectories were manually interpolated
 after the contact plan was designed, and even so we do not have any idea on the success rate of the method. \\
-Now regarding the heuristics, we guess that the reviewer is referring to the large number of repositionnings that occured in the contact plan. We believe that this issue
+Now regarding the heuristics, we guess that the reviewer is referring to the large number of repositionings that occurred in the contact plan. We believe that this issue
 is more related to the kinematic and environmental constraints than the heuristic for the choice of contacts. Developing heuristics that would take into account the environment to limit 
 contact repositioning is indeed out of the scope of this work.}
 
@@ -280,25 +280,24 @@ The first part of App. B is referred to within this Appendix as “new minor con
 
 \quot{ I suggest that a few papers related to more general motion and contact planning for multi-legged robots can be added. Particularly, the problem of ``foothold selection'' for 4 or 6-legged robots travelling over uneven terrains is a problem related to the one tackled in the paper. It would be nice to select a few representative works (e.g. from the DARPA Learning Locomotion project or
 papers related to the ETHZ StarlETH and ANYmal robots) and explain the differences between those approaches and the problem solved in the paper.}
-\as{Thanks for the relevant comment. As observed by the reviewer, our state of the art voluntarily focuses on multi-contact planning related work, but it is relevant
-to mention the mentioned papers. We added a paragraph at the end of the state of the art to discuss them. As a matter of fact, we believe these approaches could be considered within
+\as{Thanks for the relevant comment. As observed by the reviewer, our state of the art voluntarily focuses on multi-contact planning related work, but it makes sense to cite the suggested papers. We added a paragraph at the end of the state of the art to discuss them. As a matter of fact, we believe these approaches could be considered within
 our framework to replace specific parts.}\ndone
 
 \quot{in my opinion a T-RO regular paper should be more self-containing. In several points the authors heavily rely on previous publications, e.g. when presenting the RRT-based planner (Section IV-C). This part should be expanded, describing in more detail what exactly has been changed with respect to the reference paper. }
-\as{Thanks for the comment. As it is also suggested by reviewer 1 and the AE, we modified the paper for it to be self contained. The references to previous work now solely indicate
-that a detailed method is not a contribution of the present paper. \\ 
+\as{Thanks for the comment. As it is also suggested by reviewer 1 and the AE, we modified the paper to make it self contained. The references to previous work now solely indicate
+that a certain method is not a contribution of the present paper. \\ 
 In the particular case of Section IV-C, in fact the code of our implementation of the Bi-RRT with respect to the original one is exactly the same, with a single difference: when
-traditionally a collision detection predicate is called to validate a configuration, we replace this predicate with a call to the reachability condition. We modified the text to explain this more clearly. As the Bi-RRT is a famous standard algorithm in the literature, we do not think it is necessary to include it in this paper, but will gladly do so if required. }
+traditionally a collision detection predicate is called to validate a configuration, we replace this predicate with a call to the reachability condition. We modified the text to explain this more clearly. As the Bi-RRT is a famous standard algorithm in the literature, we do not think it is necessary to include it in this paper, but we will gladly do so if required. }
 \qt{$C_{Reach}^0$ can be sampled efficiently thanks to Eq.~5, and can thus be used with any standard motion planner.
 Our current implementation uses the Bi-RRT planner [25] provided by the HPP software [26].
 Our implementation is exactly the same as the pseudo-code of the original planner (which does not detail the configuration validation method). With respect to a ``classic'' implementation, the only difference is that instead of validating a configuration using collision detection, we validate it with the \textit{reachability condition}.} \done
 
 \quot{I am a bit skeptical about the readability of the figures. Some of them seem to be too small (e.g. Fig. 3, Fig. 4), some are of quite poor quality (why the robot silhouettes in Fig. 4 are blurred ?), and the purpose and meaning of Fig. 6 is rather unclear.}
-\as{Thanks for the comment, with which we agree in general.  \\We increased the size of Fig. 3 and 4. The robot silhouettes in Fig. 4 are blurred when they describe a previous state of the robots. We added this precision in the text. \\Regarding the quality of our Figures, we are quite suprised by the comment. All of our simulation Figures are taken from high resolution rendering in blender. The other Figures are drawn from manually designed powerpoint vectorial graphics (converted to png). If the reviewer would be so kind as to point out specifically which Figures are of poor quality, we will gadly replace them.\\ As proposed also by reviewer 1, we removed references to previous results obtained in [20], so the Fig. 6 has been removed.}\ndone
+\as{Thanks for the comment, with which we agree in general.  \\We increased the size of Fig. 3 and 4. The robot silhouettes in Fig. 4 are blurred when they describe a previous state of the robots. We added this precision in the text. \\Regarding the quality of our Figures, we are quite surprised by the comment. All of our simulation Figures are taken from high resolution rendering in blender. The other Figures are drawn from manually designed powerpoint vectorial graphics (converted to png). If the reviewer would be so kind as to point out specifically which Figures are of poor quality, we will gadly replace them.\\ As proposed also by reviewer 1, we removed references to previous results obtained in [20], so the Fig. 6 has been removed.}\ndone
 
 \quot{In general, the simulation results presented qualitatively in the paper are a bit hard to interpret without the accompanying video, particularly if someone looks at a b/w print of the paper (as it may be looking in T-RO).}
-\as{\textbf{\textcolor{red}{TODO This is true, although I think he has a crappy printer because I don't think it's that bad. I don't know what to do about it though. I can't simply remove the Figures,
-because he tends to say he would like the paper to be more independent from the video...}}}\ndone
+\as{All of our simulation figures are taken from high resolution rendering in blender, so we wouldn't know how to improve their quality. If the reviewers think the paper would be better without these figures, we are willing to remove them. However, we believe that they would make the paper more dependent on the video, so we would prefer to leave them.}
+%\as{\textbf{\textcolor{red}{TODO This is true, although I think he has a crappy printer because I don't think it's that bad. I don't know what to do about it though. I can't simply remove the Figures, because he tends to say he would like the paper to be more independent from the video...}}}\ndone
 
 
 \quot{ I also found the description of the environment model being
@@ -318,18 +317,18 @@ uncertainty) are not in the scope of the paper, but I can imagine that
 a robotic researcher who reads the paper and is about to use the open
 source software it advertises is very interested in the answers.}
 
-\as{Thanks for the comment. The choice of not developing too much on the environment description and octree goes along with 
+\as{Thanks for the comment. The choice of not detailing too much the environment and octree description goes along with 
 our effort to maintain the paper as readable as possible, since it already contains various concepts. However,
 we agree that additional information must be added. In Section III we now indicate that the environment is represented as a polygon soup (or 3D mesh), and
 that we assume that it is fully known. Although the integration of on-line sensing and state estimation in the planner is an issue currently considered by our team, it is indeed
 out of the scope of this paper. We thus also indicate that we assume the environment and state of the robot are fully known. To perform the intersection computation, we use
 the fcl collision detection library, which natively proposes the intersection method. We added a reference to the library in the paper. The performance of the method is included
-in the ``collision'' column of Table II. We updated the legend of Table II to indicate that this time is negligeable in comparison to the other collision detections that occur.
+in the ``collision'' column of Table II. We updated the legend of Table II to indicate that this time is negligible in comparison to the other collision detections that occur.
 } 
 \qt{(Section III) \textbf{The environment} $O$ is defined as the union of the obstacles $O_i$ that it contains. $O$ is represented
 as a polygon soup (or mesh), where the normal of each surface is known. No further requirement is needed
 by our approach. In this work, we assume the environment is fully known. State uncertainty is out of the scope of the paper. \\
-(Legend of Table II)  The Collision column times includes the (negligeable) octree intersection operation necessary to retrieve the candidate samples.}
+(Legend of Table II)  The Collision column times includes the (negligible) octree intersection operation necessary to retrieve the candidate samples.}
 \done
 
 \quot{I appreciate the thorough presentation of results in the paper, however
@@ -343,7 +342,7 @@ convince the reader that the planning method's good performance does
 not depend too much on the idealized simulation environment. }
 \as{We agree with the remark, and included some illustrations of the experimental results on HRP-2 in the paper. \\
 We now elaborate on the validity of the simulation with respect to an experiment on the real robot. As also suggested by reviewer 1, we added a paragraph
-in the paper (TODO where) to provide more information on the simulation we use to validate our motions. This simulation is an implementation of the state of the art approaches used by the community. Of course, it does not guarantee that any motion it validates will be accurately played on the robot, but it is used extensively by the community as a reasonable guarantee of feasibility.  The suggestion of the reviewer to compare the simulation results with those on the real robot is interesting. However, our robot HRP-2 is not torque controlled, but position controlled, therefore as of today a comparison is not possible.}\ndone
+in the paper (TODO where) to provide more information on the simulation we use to validate our motions. This simulation is an implementation of the state of the art approaches used by the community. Of course, it does not guarantee that the motion could be executed on the robot, but it is used extensively by the community as a reasonable feasibility test. The suggestion of the reviewer to compare the simulation results with those on the real robot is interesting. However, our robot HRP-2 is not torque controlled, but position controlled, therefore as of today a comparison is not possible.}\ndone
 
 \section{Answers to reviewer 6}
 \quot{ My primary concern, however,
@@ -410,7 +409,7 @@ that approaches such as the CIO, if not initialized with an appropriate initial 
 \quot{* I am not sure why the $C_{reach}$ hypothesis is described as the ``strong''
 hypothesis in, e.g., Sect. IV. Is there a corresponding weak
 hypothesis?}
-\as{We apologize for the confusion, that comes from a inaccurate use of English by the main author. What we meant was that the hypothesis is TODO}\ndone
+\as{We apologize for the confusion, that comes from an inaccurate use of English. What we meant was that the hypothesis is TODO}\ndone
 
 \quot{* In Sect. IV.B, the authors state that the ideal shape $B^*$ ``has no
 explicit definition''. For a particular configuration  $q_0$, $B^*$ is simply
