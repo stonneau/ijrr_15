@@ -36,7 +36,11 @@ First, the root path $\mathbf{q}^0(t)$ is discretized into a sequence of $j$ key
 \begin{equation*}
 	\mathbf{Q}^0 = [\mathbf{q}^0_{0}; \mathbf{q}^0_{i}; ..., \mathbf{q}^0_{j-1}]
 \end{equation*} 
+
 where $\mathbf{q}^0_{0}$ and $\mathbf{q}^0_{j-1}$ are the start and goal configurations. %To ensure continuity in the contact transition phases,
+$j$ depends on a user-defined variable, called the discretization step. It corresponds to the ratio between the length of the path $\mathbf{q}^0(t)$\footnote{The length of the path is computed as the weighted 6D Euclidian distance
+travelled along the it, with a weight of $0.7$ for the translation part, and $0.3$ for the orientation part.}, and the number
+of configurations selected along it to create the contact configurations. 
 Each root configuration of $\mathbf{Q}^0$ is then extended into a whole-body configuration such that:
 \begin{itemize} 
 \item At most one contact is not maintained (\textit{broken}) between two consecutive configurations.

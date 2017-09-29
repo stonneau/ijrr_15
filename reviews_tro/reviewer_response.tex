@@ -218,30 +218,39 @@ p.8– somehow, “Table II” doesn’t appear until after “Table IV” – w
 p.8. Need to define ``discretization step'' more precisely, I think(?)… Min distance? Max distance? Nominal distance? In time? In Distance? In all 6 DOF??
 }
 
-\as{We updated the text to indicate that the discretization step refers to the number of postures generated along a path. For instance, a discretization step of 0.1 means
-that 10 postures will be generated along a path of length 1. Here the length is the distance traversed by the root along the path, computed as a ponderation between the 3D position and joint variations of the root.
-
-Finally, we also took into account all of the remaining suggestions in the pdf file attached. We do not detail them here since they refer essentially to the style 
-and the writing of the paper.}\ndone
+\as{The distance considered is the distance travelled along the path, computed as a weighted 6D Euclidian variation along it. We updated the text to clarify this}.
+\qt{(Section V.B.1) $j$ depends on a user-defined variable, called the discretization step. It corresponds to the ratio between the length of the path $\mathbf{q}^0(t)$, and the number
+of configurations selected along it to create the contact configurations. The length of the path is computed as the weighted 6D Euclidian distance
+travelled along the it, with a weight of 0.7 for the translation part, and 0.3
+for the orientation part.}
 
 \quot{
 p.9 ‘addresses highly constrained environment’ – actually, not very well, correct? This was the “exception” case, for which results were rather poor, right? Also a case where “heuristics” are not so good for getting true (reliable) holds on grasp points, etc.?
 }
 
-\as{\textbf{\textcolor{red}{This quote annoys me, and I kind of want to maintain our statement. Addressing the car scenario, even with a success rate of 68 \%, seems like a nice achievement to me.
-Also, in my opinion all our scenarios are highly constrained. What do you guys think?}}}\ndone
+\as{Thanks for the comment. On this particular point however, we wish to maintain our statement. For scenarios such as the car egress, a success rate of $68 \%$ means that the planner
+will fail at some point, but more importantly it means that if we restart the planning a few times with the same problem, there is a reasonable probability that it will find a feasible solution.
+In this regard, the car egress scenario is effectively addressed, because we found a solution for it. \\
+Furthermore, we believe that this result is to be compared with the current state of the art : we are not aware of any other method who was able
+to compute a valid motion from scratch, even in simulation. The closest work to this achievement is the one from Escande et al., but the trajectories were manually interpolated
+after the contact plan was designed, and even so we do not have any idea on the success rate of the method. \\
+Now regarding the heuristics, we guess that the reviewer is referring to the large number of repositionnings that occured in the contact plan. We believe that this issue
+is more related to the kinematic and environmental constraints than the heuristic for the choice of contacts. Developing heuristics that would take into account the environment to limit 
+contact repositioning is indeed out of the scope of this work.}
+
+\done
 
 \quot{
 The first part of App. B is referred to within this Appendix as “new minor contributions derived from previous work”. These aren’t so novel, perhaps, and what is more useful to the reader is a better intuition for when to use each within the MAIN BODY of the paper, where they are originally described/associated to particular simulations.
 }
 
-\as{Agreed. We removed the incriminated text and provided an intuition of the heuristic in the text.}\ndone
+\as{Agreed. We removed the incriminated text and provided an intuition of the heuristic in the text, as mentioned above.}\done
 
 \quot{github link seems to be dead? (The link on p. 15 is OK… should they be the same?)}
 
 \as{We are suprised by this comment because after testing it, the link seems to be valid. In any case, in accordance with reviewer TODO, we changed all the links source codes to provide a SHA link that will bring the user to the accurate revision of the projects considered.}\ndone
 
-\quot{remaining remarks in the pdf file provided by reviewer 1}
+\quot{remaining remarks by reviewer 1}
 \as{The remaining comments from reviewer 1 were all addressed. Because they did not call for a discussion, as they are essentially related to style or typos, we do not list them here.}\ndone
 
 %~ \quot{p.14 – not a good description of the simulation software used \dots Ref [38] focuses on robustness of simulations, but presumably, the testing in the present work is deterministic.
@@ -265,6 +274,7 @@ The first part of App. B is referred to within this Appendix as “new minor con
 %~ 
 %~ It seems to us that this new material answers the T-RO guidelines regarding the novelty with respect to a conference paper.
 %~ This is not clearly stated in the original submission, and we thus rewrote the end of Section I to reflect this.
+
 
 \section{Answers to reviewer 4}
 
