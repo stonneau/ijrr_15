@@ -37,8 +37,9 @@
 \newcommand\ddx{\ddot{x}}
 \newcommand\ddy{\ddot{y}}
 \def\real{{\mathbb R} }
-\newcommand\quot[1]{\begin{quote} \textit{quote}: \textbf{#1}\end{quote}}
-\newcommand\as[1]{\begin{quote} \textit{answer}: {#1}\end{quote} \leavevmode \\ }
+\newcommand\quot[1]{\begin{quote} \underline{quote}: \textbf{#1}\end{quote}}
+\newcommand\as[1]{\begin{quote} \underline{answer}: {#1}\end{quote} \leavevmode \\ }
+\newcommand\qt[1]{\begin{quote} \underline{added text in paper}: \textit{#1}\end{quote} \leavevmode \\ }
 \frenchbsetup%
 {%
 StandardItemLabels=true,%
@@ -60,14 +61,29 @@ has already been presented in earlier work, and the particular aspects
 that set THIS paper apart seem (as claimed by the authors) to be: 
 }
 
-\as{We agree that our original submission is not clear on the novelty between this paper and previous contributions.
-This paper must be understood as an extension of the ISRR paper [20], while the other cited contributions from our team 
-are exploited to validate our approach in a complete pipeline.
-In this extension, the algorithm used to compute a sequence of contacts is the same as in [20] (although this
-algorithm is not explicitely given in [20]), with the introduction of a fastest test for verifying the robust quasi static equilibrium of a contact posture.
-We reformulated the end of Section I.B to state clearly that the novelty of this paper essentially lies in the experimental setup and validation we achieved with real robot models, in particular
-in the empirical justification of the method, and its validation in a dynamic simulation. This effort led to the proposal of the first open source, complete framework for multi contact motion synthesis, since 
-the validation required to write a solver for the problem P3. }\done
+\as{Thanks for the comment. Indeed, all reviewers agreed that the contribution with respect to previous work was not clearly stated. We updated the paper to reflect the following. Firstly, our planner is almost identical to the one in [20], with important additions that are the pseudo code for the algorithm (the algorithm is not given in [20]), as well as the introduction of a more efficient criterion
+for checking static equilibrium (see next question). The optimal control is no longer a claimed contribution of the paper, even though it differs from [1] in its formulation. The main
+novelty of the paper resides in the experimental setup and analysis, as well as the empirical proof that the planner works with real robots that are more constrained kinematically than the virtual avatars from [20]. We believe that this paper is thus in accordance with the guidelines of T-RO regarding the extension of a conference paper.}
+\qt{The present paper is an extension of our conference paper[20]. As such, the motion planning algorithm presented here is the same as the one presented in the
+previous work. Section IV and V of the present paper are thus paraphrasing the original paper, with the exception of Section V.B.2, where we additionally provide the pseudo-code of the algorithm absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on an new LP formulation presented in Section 6. \\
+Compared with the original paper, we also release our source code, and provide the complete procedure to use our planner for any legged robot. We thus provide
+all the technical information required to use the planner. \\
+To validate our approach, in this paper we had to implement or integrate other tools based on previous publications from our team. We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work[1]. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of the state of the art simulator proposed in \textcolor{red}{TODO}.
+We do not consider these additions as contributions per se, but describing them here is required to understand the experimental contribution of this paper.
+Indeed, thanks to these tools we have been able to design a complete pipeline for synthesizing multi contact motions from scratch.
+The novelty of the present paper lies in the rigorous experimental setup we propose to demonstrate its interest.
+As opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are much more constrained kinematically than the virtual avatars used before,
+thus making the planning problem even harder. Through an extensive empirical analysis, we demonstrate that the method remains interesting in this context, qualitatively and efficiently.}
+\done
+
+%~ \as{We agree that our original submission is not clear on the novelty between this paper and previous contributions.
+%~ This paper must be understood as an extension of the ISRR paper [20], while the other cited contributions from our team 
+%~ are exploited to validate our approach in a complete pipeline.
+%~ In this extension, the algorithm used to compute a sequence of contacts is the same as in [20] (although this
+%~ algorithm is not explicitely given in [20]), with the introduction of a fastest test for verifying the robust quasi static equilibrium of a contact posture.
+%~ We reformulated the end of Section I.B to state clearly that the novelty of this paper essentially lies in the experimental setup and validation we achieved with real robot models, in particular
+%~ in the empirical justification of the method, and its validation in a dynamic simulation. This effort led to the proposal of the first open source, complete framework for multi contact motion synthesis, since 
+%~ the validation required to write a solver for the problem P3. }\done
 
 \quot { (1) A criterion for robust static equilibrium, but it isn't
 described until page 12, in Appendix B, Section B. [\dots]  It would really help to describe this MUCH earlier in
@@ -355,7 +371,7 @@ approaches only converge locally". This is not necessarily true, as
 convex or mixed-integer convex optimizations can (sometimes) be solved
 to a verifiable global optimum. I would suggest removing this sentence
 entirely.}
-\as{Thanks for the suggestion. Our phrasing was indeed misleading and inaccurate. Our intention was to explain that the geometry of the scene make the problem highly non-convex, and
+\as{Thanks for the suggestion. Our phrasing was indeed misleading and inaccurate. Our intention was to explain that the geometry of the scene makes the problem highly non-convex, and
 that approaches such as the CIO, if not initialized with an appropriate initial guess, might never get out of the local minima. We followed the reviewer's advice and simply removed the sentence. }\ndone
 
 \quot{* I am not sure why the $C_{reach}$ hypothesis is described as the ``strong''
