@@ -1,3 +1,4 @@
+% !TEX root =  ../main_tro.tex
 \subsubsection{Pseudo-code of the Algorithm}
 \label{app:contact}
 
@@ -34,7 +35,7 @@ we create the initial state $s0$.
 Algorithm~\ref{alg:interpolate}  is then called with $s0$, as well as the discretized path 
 $\mathbf{Q}^0$, as input parameters.
 
-\begin{algorithm}
+\begin{algorithm}[!tbp]
 \caption{Discretization of a path} \label{interpolate}
 	\begin{algorithmic}[1]
 	%~ \Function{GenerateConfiguration}{}
@@ -72,7 +73,7 @@ It repositions one end effector (either a free limb, or the oldest active contac
 This repositioning allows to increase the odds that the contact can be maintained at the next step.
 Algorithm~\ref{alg:pi} gives the pseudo code for \textsc{GenFullBody}.
 
-\begin{algorithm}
+\begin{algorithm}[!tbp]
 \caption{Full body contact generation method} \label{interpolate}
 	\begin{algorithmic}[1]
 	%~ \Function{GenerateConfiguration}{}
@@ -124,7 +125,7 @@ If it fails, $k$ remains unchanged if it is collision free, otherwise it is assi
 
 
 
-\begin{algorithm}
+\begin{algorithm}[!tbp]
 \caption{Performs contact repositioning for one limb} \label{interpolate}
 	\begin{algorithmic}[1]
 	\Function{RepositionContacts}{$state$}

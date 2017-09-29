@@ -58,7 +58,7 @@ We call the total duration of the motion $T$, and formulate the following optimi
     %~ \quad & [\vc{c}_0\tra, \vcd{c}_0\tra]\tra = \vc{x}_0 \\
     %~ \quad & \vc{c}_T = \vc{c}_T^{input} \\
 \end{aligned} \end{equation}
-
+\adnote{Did you really use w as a variable of your problem? Or do you compute it inside your constraint function as a function of the CoM pos and acc? And what about dL? It appears in the definition of w but then it is no longer there in the problem definition!}
 The cost function $\ell$ is a weighted sum of the angular momentum and center-of-mass acceleration variation over the whole trajectory. 
 The system dynamics $dyn$ tie together the position, velocity and acceleration of the center of mass. 
 $\mathbf{Y}_u$ and $\mathbf{y}_u$ denote stacked kinematic constraints on the center of mass position, determined by the active contact locations.
@@ -76,5 +76,5 @@ the computed trajectory. This is achieved using a constraint-based RRT planner~\
 
 The entire resolution takes approximatively 1.5 seconds for a complete contact transition.
 
-This motion is then validated in our dynamic simulator~\citep{DelPrete2015b}, using the trajectory as a reference postural task for an inverse-dynamics
-controller that accounts for all the robot constraints. This final result is shown in the companion video.
+%This motion is then validated in our dynamic simulator~\citep{DelPrete2015b}, using the trajectory as a reference postural task for an inverse-dynamics
+%controller that accounts for all the robot constraints. This final result is shown in the companion video.
