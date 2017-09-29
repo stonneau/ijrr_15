@@ -320,10 +320,17 @@ source software it advertises is very interested in the answers.}
 
 \as{Thanks for the comment. The choice of not developing too much on the environment description and octree goes along with 
 our effort to maintain the paper as readable as possible, since it already contains various concepts. However,
-we agree that additional information must be added. We added a Section TODO where we indicate that the environment is represented as a polygon soup (or 3D mesh), and
+we agree that additional information must be added. In Section III we now indicate that the environment is represented as a polygon soup (or 3D mesh), and
 that we assume that it is fully known. Although the integration of on-line sensing and state estimation in the planner is an issue currently considered by our team, it is indeed
-out of the scope of this paper. We thus also indicate that we assume the environment and state of the robot are fully known. We also indicated the algorithmic complexity of the intersection
-method to describe how efficient the intersection operation is.} \ndone
+out of the scope of this paper. We thus also indicate that we assume the environment and state of the robot are fully known. To perform the intersection computation, we use
+the fcl collision detection library, which natively proposes the intersection method. We added a reference to the library in the paper. The performance of the method is included
+in the ``collision'' column of Table II. We updated the legend of Table II to indicate that this time is negligeable in comparison to the other collision detections that occur.
+} 
+\qt{(Section III) \textbf{The environment} $O$ is defined as the union of the obstacles $O_i$ that it contains. $O$ is represented
+as a polygon soup (or mesh), where the normal of each surface is known. No further requirement is needed
+by our approach. In this work, we assume the environment is fully known. State uncertainty is out of the scope of the paper. \\
+(Legend of Table II)  The Collision column times includes the (negligeable) octree intersection operation necessary to retrieve the candidate samples.}
+\done
 
 \quot{I appreciate the thorough presentation of results in the paper, however
 it seems that this presentation is somewhat biased towards simulation

@@ -185,7 +185,7 @@ We then apply the following steps:
 \begin{enumerate}
 \item Generate off-line $N$ valid sample limb configurations $\mathbf{q}^k_i,  0 \leq i < N$ (We choose $N=10^4$);
 \item Using the end-effector positions $\mathbf{p}(\mathbf{q}^k_i)$ as indices, store each sample in an octree data structure;
-\item At runtime, when contact creation is required, intersect the octree and the environment to retrieve the list of samples $S \subset C_{Contact}^{\epsilon}$ close to contact (Figure~\ref{fig:contact_gen} (b) and (c));
+\item At runtime, when contact creation is required, intersect the octree and the environment\footnote{this operation is achieved natively by the fcl library https://flexible-collision-library.github.io/} to retrieve the list of samples $S \subset C_{Contact}^{\epsilon}$ close to contact (Figure~\ref{fig:contact_gen} (b) and (c));
 \item Use a user-defined heuristic $h$ to sort $S$;
 \item If $S$ is empty, stop (failure). Else select the first configuration of $S$. Project it onto contact using inverse kinematics. (Figure~\ref{fig:contact_gen} (d) and (e));
 \item If Eq.~\ref{eq:contact_gen} is verified, stop (success). Otherwise remove the element from $S$ and go to step 5.
