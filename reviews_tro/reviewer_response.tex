@@ -27,8 +27,8 @@
 %~ \newcommand{\delst}[1]{\deleted[id=st]{#1}}
 %~ \newcommand{\addst}[1]{\added[id=st]{#1}}
 %~ \newcommand{\repst}[2]{\replaced[id=st]{#1}{#2}}
-%~ \newcommand{\gls}[1]{\textit{#1}}
-%~ \newcommand{\glslink}[2]{{#2}}
+\newcommand{\gls}[1]{\textit{#1}}
+\newcommand{\glslink}[2]{{#2}}
 \newcommand{\done}[0]{\textcolor{green}{DONE}}
 \newcommand{\ndone}[0]{\textcolor{red}{TODO}}
 
@@ -38,8 +38,9 @@
 \newcommand\ddy{\ddot{y}}
 \def\real{{\mathbb R} }
 \newcommand\quot[1]{\begin{quote} \underline{quote}: \textbf{#1}\end{quote}}
-\newcommand\as[1]{\begin{quote} \underline{answer}: {#1}\end{quote} \leavevmode \\ }
+\newcommand\as[1]{\begin{quote} \underline{answer}: {#1}\end{quote} }
 \newcommand\qt[1]{\begin{quote} \underline{added text in paper}: \textit{#1}\end{quote} \leavevmode \\ }
+\newcommand\jp{ \leavevmode \\}
 \frenchbsetup%
 {%
 StandardItemLabels=true,%
@@ -89,7 +90,7 @@ thus making the planning problem even harder. Through an extensive empirical ana
 described until page 12, in Appendix B, Section B. [\dots]  It would really help to describe this MUCH earlier in
 the paper (than page 13), if it is a significant novelty of your paper.}
 
-\as{We agree with the remark. To better distinguish between what is novel and not, we modified the paper to move the content of Appendix B.B (now Section VI), as well as D  (the pseudo code of our algorithm, now Section V.B.2) and E (reference to our source code, now Section VII) to the text itself. This results in the criterion being presented much earlier.}\done
+\as{We agree with the remark. To better distinguish between what is novel and not, we modified the paper to move the content of Appendix B.B (now Section VI), as well as D  (the pseudo code of our algorithm, now Section V.B.2) and E (reference to our source code, now Section VII) to the text itself. This results in the criterion being presented much earlier.}\done \jp
 
 \quot{It is a pretty intuitive/typical check for quantifying a
 margin for friction conesque violations (using an approximation for
@@ -108,7 +109,9 @@ the authors' credit). Either way, a brief clarification in the intro is
 recommended.}
 
 \as{We agree with the comment. Indeed, the pseudocode was not present in [20]. We included it in the core of the paper and clarified that it is novel at the end
-of Section I.B.}\done
+of Section I.B.}
+\qt{Section IV and V of the present paper are thus paraphrasing the original paper, with the exception of Section V.B.2, where we additionally provide the pseudo-code of the algorithm absent from the original paper.}
+\done
 
 
 \quot{(3)	The contribution to provide a solution to P3 doesn't happen
@@ -122,12 +125,15 @@ the authors (near the end of page 2) state they use a "state-of-the-art
 solution to P3", which implies the P3 solution is not a claim of
 novelty.}
 
-\as{Indeed, we were not clear on P3. In the new version of the paper, we do not consider that our solution
+\as{The main contribution of the paper is the proposal and validation of an algorithm for P1 and P2. 
+In the new version of the paper, we do not consider that our solution to P3
 is a new contribution, although our formulation differs from [1] (our control variable is the acceleration
 of the center of mass, where in [1] the control variable is the contact forces). We provide it here for completeness, because it corresponds to our implementation, and 
-was required to validate our approach. The main contribution of the paper is the proposal and validation of an algorithm for P1 and P2.
+was required to validate our approach. 
 We rephrased the text to clearly indicate that the algorithm is not a contribution. We made the choice not to give an intuition nor describe the solver in the core
-of the paper because it is not required to understand the contributions to P1 and P2.}\done
+of the paper because it is not required to understand the contributions to P1 and P2.}
+\qt{ We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work[1]. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of the state of the art simulator proposed in \textcolor{red}{TODO}.
+We do not consider these additions as contributions per se, but describing them here is required to understand the experimental contribution of this paper.}\done
 
 
 \quot{
@@ -168,7 +174,13 @@ described in Appendix X.}
 Also, where you describe "sensitivity" vs "specificity", it would be
 useful to give a more intuitive explanation, example [\dots]}
 
-\as{We updated Section VIII.B.1) to illustrate the meaning of those terms.} \done
+\as{We updated Section VIII.B.1) to illustrate the meaning of those terms.}
+\qt{We then computed to sensitivity and specificity of the reachability condition.  In this context, the sensitivity refers to the percentage of configurations in $C_{Reach}^0$, effectively belonging to \gls{$C_{Contact}^0$}. If a sampled configuration is in $C_{Reach}^0$, but our method is unable to generate a contact configuration from it, as a result the sensitivity
+decreases. The sensitivity thus illustrates the confidence we have that any configuration in $C_{Reach}^0$ will effectively lead to a contact configuration.
+Conversely, the specificity refers to the percentage of configurations \textbf{not} in $C_{Reach}^0$, effectively \textbf{not} belonging to \gls{$C_{Contact}^0$}.
+If a sampled configuration is \textbf{not} in $C_{Reach}^0$, but our method is able to generate a contact configuration from it, as a result the specificity
+decreases. The specificity thus illustrates the confidence we have that all configurations that allow contact creation belong to in $C_{Reach}^0$ (or informally, the confidence that we are not missing too many valid solutions).
+We thus look for a compromise between sensitivity and specificity.} \done
 
 \quot{
 However, I suggest the paper will be improved if
