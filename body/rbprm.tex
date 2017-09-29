@@ -72,9 +72,10 @@ The computation of $s^*$ is detailed in Section~\ref{sec:params}.
 In Appendix~\ref{app:rom}, we give a generic method to compute the $W$ volumes appearing in the definition of $C_{Reach}^0$.
 
 \subsection{Computing the guide path in $C_{reach}^0$}
-$C_{Reach}^0$ can be sampled efficiently thanks to Eq.~\ref{eq:reachc}, and can thus be used with a standard motion planner.
-The only significant change is to replace the collision checking with the \textit{reachability condition}.
-Our current implementation of these modifications is based on the Bi-RRT planner \citep{770022} provided by the HPP software~\citep{7759083}. \\
+$C_{Reach}^0$ can be sampled efficiently thanks to Eq.~\ref{eq:reachc}, and can thus be used with any standard motion planner.
+%~ The only significant change is to replace the collision checking with the \textit{reachability condition}.
+Our current implementation uses the Bi-RRT planner \citep{770022} provided by the HPP software~\citep{7759083}.
+Our implementation is exactly the same as the pseudo-code of the original planner (which does not detail the configuration validation method). With respect to a ``classic'' implementation, the only difference is that instead of validating a configuration using collision detection, we validate it with the \textit{reachability condition}.\\
 
 %~ \delst{However, to improve the sampling efficiency 
 %~ we bias the sampling process to generate near-obstacle configurations, similarly to cite{Amato98choosinggood}.}
