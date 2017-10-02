@@ -55,7 +55,7 @@ ItemLabels=\ding{43},%
 
 
 \section{Answers to reviewer 1}
-\ndone reecriture p3
+\ndone reecriture p3 + enlever main video
 
 \quot {As for novel contributions, this did not seem to be addressed/explained
 until page 3 (in the last paragraph of Sec. I). Much of the methodology
@@ -66,8 +66,8 @@ that set THIS paper apart seem (as claimed by the authors) to be:
 \as{Thanks for the comment. Indeed, all reviewers agreed that the contribution with respect to previous work was not clearly stated. We updated the paper to reflect the following. Firstly, our planner is almost identical to the one in [20], with important additions that are the pseudo code for the algorithm (the algorithm is not given in [20]), as well as the introduction of a more efficient criterion
 for checking static equilibrium (see next question). The optimal control is no longer a claimed contribution of the paper, even though it differs from [1] in its formulation. The main
 novelty of the paper resides in the experimental setup and analysis, as well as the empirical proof that the planner works with real robots that are more constrained kinematically than the virtual avatars from [20]. We believe that this paper is thus in accordance with the guidelines of T-RO regarding the extension of a conference paper.}
-\qt{The present paper is an extension of our conference paper[20]. As such, the motion planning algorithm presented here is the same as the one presented in the
-previous work. Section IV and V of the present paper are thus paraphrasing the original paper, with the exception of Section V.B.2, where we additionally provide the pseudo-code of the algorithm absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on an new LP formulation presented in Section 6. \\
+\qt{The present paper is an extension of our conference paper [20]. As such, the motion planning algorithm presented here is the same as the one presented in the
+previous work. Section IV and V of the present paper are thus paraphrasing the original paper, with the exception of Section V.B.2, where we additionally provide the pseudo-code of the algorithm absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on an new LP formulation presented in Section VI. \\
 Compared with the original paper, we also release our source code, and provide the complete procedure to use our planner for any legged robot. We thus provide
 all the technical information required to use the planner. \\
 To validate our approach, in this paper we had to implement or integrate other tools based on previous publications from our team. We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work[1]. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of the state of the art simulator proposed in \textcolor{red}{TODO}.
@@ -150,7 +150,7 @@ do; a vague citation to another paper based on that simulator [38] is
 not sufficient.}
 
 \as{Thanks for the comment. Regarding the absence of details on the dynamic simulator, first of all we apologize because [38] is not the appropriate reference.
-We added a section where we describe the simulation in more details. 
+We added a section VIII.A where we describe the simulation in more details. 
 
 Regarding the difference between our previous and current work, the postures computed in [20] were never validated in a simulator, nor the complete motions since 
 we did not have a solution to P3 at the time. Then the main
@@ -158,7 +158,14 @@ difference between the avatars of [20] and the real robots we now address are th
 The robots are much more constrained in this regard, which makes the planning harder. We thus had to demonstrate that our algorithm is also working
 for these models, while maintaining good performance.
 We added this missing piece of information to the paper, at the end of Section I.B.}
-\textcolor{red}{TODO ANDREA}.
+\qt{(Section VIII.A) To generate continuous movements from our contact plans we used either the framework proposed in [1], or our own implementation of a $\mathcal{P}_3$ solver (Appendix C).
+The resulting movements have been validated either on the real HRP-2 robot (details can be found in [1]), or with our dynamic simulator, based on a state-of-the-art algorithm [25].
+In the simulations we controlled the robot with a standard inverse-dynamics controller[31].
+This controller tries to follow the given whole-body trajectories, giving higher priority to the center-of-mass and end-effectors tracking with respect to the joint tracking.
+The controller also makes sure that the resulting contact forces lie inside the specified friction cones (we used a friction coefficient of 0.3), and that the joint position, velocity and torque limits are satisfied.
+The companion video shows the obtained motions.}
+\done
+%~ \textcolor{red}{TODO ANDREA}.
 
 
 \quot{[\dots] the authors need to better
@@ -343,7 +350,14 @@ convince the reader that the planning method's good performance does
 not depend too much on the idealized simulation environment. }
 \as{We agree with the remark, and included some illustrations of the experimental results on HRP-2 in the paper. \\
 We now elaborate on the validity of the simulation with respect to an experiment on the real robot. As also suggested by reviewer 1, we added a paragraph
-in the paper (TODO where) to provide more information on the simulation we use to validate our motions. This simulation is an implementation of the state of the art approaches used by the community. Of course, it does not guarantee that the motion could be executed on the robot, but it is used extensively by the community as a reasonable feasibility test. The suggestion of the reviewer to compare the simulation results with those on the real robot is interesting. However, our robot HRP-2 is not torque controlled, but position controlled, therefore as of today a comparison is not possible.}\ndone
+in the paper (Section VIII.A)  to provide more information on the simulation we use to validate our motions. This simulation is an implementation of the state of the art approaches used by the community. Of course, it does not guarantee that the motion could be executed on the robot, but it is used extensively by the community as a reasonable feasibility test. The suggestion of the reviewer to compare the simulation results with those on the real robot is interesting. However, our robot HRP-2 is not torque controlled, but position controlled, therefore as of today a comparison is not possible.}
+\qt{(Section VIII.A) To generate continuous movements from our contact plans we used either the framework proposed in [1], or our own implementation of a $\mathcal{P}_3$ solver (Appendix C).
+The resulting movements have been validated either on the real HRP-2 robot (details can be found in [1]), or with our dynamic simulator, based on a state-of-the-art algorithm [25].
+In the simulations we controlled the robot with a standard inverse-dynamics controller[31].
+This controller tries to follow the given whole-body trajectories, giving higher priority to the center-of-mass and end-effectors tracking with respect to the joint tracking.
+The controller also makes sure that the resulting contact forces lie inside the specified friction cones (we used a friction coefficient of 0.3), and that the joint position, velocity and torque limits are satisfied.
+The companion video shows the obtained motions.}
+\done
 
 \section{Answers to reviewer 6}
 \quot{ My primary concern, however,
@@ -351,11 +365,21 @@ is that the elements described in this paper have been described in
 previous published work, which makes the particular contributions of
 this work unclear. To be specific, the reachability-guided planner
 appears identical to the planner in [20] (as stated by the authors in
-the end of Sect. I.B.), and the optimal control formulation is from [1]
+the end of Section I.B.), and the optimal control formulation is from [1]
 (again as stated in I.B.).}
 \as{Thanks for the comment. Indeed, all reviewers agreed that the contribution with respect to previous work was not clearly stated. We updated the paper to reflect the following. Firstly, our planner is almost identical to the one in [20], with important additions that are the pseudo code for the algorithm (the algorithm is not given in [20]), as well as the introduction of a more efficient criterion
 for checking static equilibrium (see next question). The optimal control is no longer a claimed contribution of the paper, even though it differs from [1] in its formulation. The main
-novelty of the paper resides in the experimental setup and analysis, as well as the empirical proof that the planner works with real robots that are more constrained kinematically than the virtual avatars from [20]. We believe that this paper is thus in accordance with the guidelines of T-RO regarding the extension of a conference paper.}\ndone
+novelty of the paper resides in the experimental setup and analysis, as well as the empirical proof that the planner works with real robots that are more constrained kinematically than the virtual avatars from [20]. We believe that this paper is thus in accordance with the guidelines of T-RO regarding the extension of a conference paper.}
+\qt{(Section I.B) The present paper is an extension of our conference paper [20]. As such, the motion planning algorithm presented here is the same as the one presented in the
+previous work. Section IV and V of the present paper are thus paraphrasing the original paper, with the exception of Section V.B.2, where we additionally provide the pseudo-code of the algorithm absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on an new LP formulation presented in Section VI. \\
+Compared with the original paper, we also release our source code, and provide the complete procedure to use our planner for any legged robot. We thus provide
+all the technical information required to use the planner. \\
+To validate our approach, in this paper we had to implement or integrate other tools based on previous publications from our team. We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work[1]. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of the state of the art simulator proposed in \textcolor{red}{TODO}.
+We do not consider these additions as contributions per se, but describing them here is required to understand the experimental contribution of this paper.
+Indeed, thanks to these tools we have been able to design a complete pipeline for synthesizing multi contact motions from scratch.
+The novelty of the present paper lies in the rigorous experimental setup we propose to demonstrate its interest.
+As opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are much more constrained kinematically than the virtual avatars used before,
+thus making the planning problem even harder. Through an extensive empirical analysis, we demonstrate that the method remains interesting in this context, qualitatively and efficiently.}\done
 
 \quot{The authors highlight a particular
 contribution of this work to be the efficient robust balance criterion,
@@ -364,22 +388,27 @@ refer to the approximation of equilibrium feasibility by contact
 reachability? In that case, how does this differ from just applying the
 planner in [20] directly? Or does this refer to the robustness
 parameter $b_0$ in Appendix B Eq. (15)?}
-\as{Indeed, this part was also not clear. The robust balance criterion (renamed equilibrium criterion) indeed refers to the parameter $b_0$ in Appendix B. The solved
+\as{Indeed, this part was also not clear. The robust balance criterion (renamed equilibrium criterion) indeed refers to the parameter $b_0$ in Appendix B (now Section VI). The solved
 LP replaces the static equilibrium test performed in [20], which was not computationally efficient, and took up to 4ms per candidate to compute. We updated the paper to explain
-this in details.}\ndone
+this in details.}
+\qt{(Section I.B) We also improve the computational performance
+of the method by replacing the static equilibrium test with a more efficient test based on an
+new LP formulation presented in Section VI.}
+\done
 
 \quot{In addition, sections IV and V are very similar to the description of
 the planner in [20]. That's not surprising, of course, but there is no
 indication in those sections that the work being presented is a
 rephrasing of an earlier publication.[\dots] }
-\as{We agree with the comment, and indeed made this clearer in the new submission.}\ndone
+\as{We agree with the comment, and indeed made this clearer in the new submission.}
+\qt{(Section I.B) Section IV and V of the present paper are thus paraphrasing the original paper, with the exception of Section V.B.2, where we additionally provide the pseudo-code of the algorithm absent from the original paper.}\done
 
 \quot{I do, however,
 believe that the fact that the technical approaches are rephrasings of
 prior work should be made more clear (or that sections which can be
 replaced by citations of [20] and [1] be removed).}
 \as{Thanks for the advice. This suggestion was in contradiction with the other reviewers, who thought that the paper should be self-contained.
-The associate editor decided that the paper must be self contained, so we maintained the indicated sections, but made clearer the fact that they are rephrasing of previous work. }\ndone
+The associate editor decided that the paper must be self contained, so we maintained the indicated sections, but made clearer the fact that they are rephrasing of previous work. }\done
 
 \quot{*I think I understand what the authors mean by solving at
 "interactive" rates, but this is worth defining. In my mind, it means
@@ -387,7 +416,8 @@ something like "before the human operator gets bored", or roughly > 0.5
 Hz. But since the authors make the claim that this is the "first
 interactive implementation of a contact planner", then that statement
 should be made quantitative and verifiable}
-\as{We agree with the relevant comment, and updated the paper accordingly.}\ndone
+\as{We agree with the relevant comment, and updated the paper accordingly.}
+\qt{(End of Section I.A.) We define an interactive planner as one that outputs a solution in a few seconds or less.}\done
 
 \quot{* In Section I.A. the authors refer to Bretl's work on multi-contact
 planning as the inspiration for the P1,P2,P3 decomposition of the
@@ -397,7 +427,12 @@ configurations. There are a variety of feasible motions with no static
 equilibrium configurations, so it is worth mentioning that this
 decomposition only solves a subset of motion planning problem.}
 \as{We apologize if this was not made clear enough in our first submission. In the conclusion, we indicate that the planner is limited to specific scenarios (where quasi-static motion
-is always an option). We updated the state of the art to indicate that the decomposition in general is restricitve.}\ndone
+is always an option) ``\textit{Our method applies to any scenario where at least one
+contact friction cone contains the direction opposed to the
+gravity (i.e. quasi-flat)[\dots]}''. We updated the state of the art to indicate that the decomposition in general is restricitve.}
+\qt{(End of before last paragraph of Section I.A) A limitation with
+this kind of approach, shared by our own method, is that most of the existing planners only address a subset of the problem, because their ability to find a solution depends
+on the existence of quasi-static equilibrium configurations along a feasible path, which is too restrictive in the general case.}\done
 
 \quot{* Also in Sect. I.A, the authors state that "optimization-based
 approaches only converge locally". This is not necessarily true, as

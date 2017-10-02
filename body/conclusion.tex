@@ -2,7 +2,7 @@
  \section{Discussion: validity and interest of our contact planner} 
 \label{sec:discussion}
 
-\subsection{Accuracy and performance gain of the reachability condition}
+%~ \subsection{Accuracy and performance gain of the reachability condition}
 
 As demonstrated in the results section, the main interest of our method is the reduction of the algorithmic complexity of the problem, which leads to an interactive 
 application. This property is critical for 
@@ -26,15 +26,14 @@ several minutes of planning. Our method, in comparison, takes from a few millise
 
 These results clearly justify our pragmatic approach.
 
-\subsection{Addressing $\mathcal{P}_3$}
-\adnote{This subsection seems redundant to me}
-This paper focuses on contact planning of multi-contact locomotion.It does not address directly the continuous motion generation
-. Problem $\mathcal{P}_3$ remains an active research topic~\cite{Carpentier2016, herzog2015trajectory},
-for which no off-the shelf solution exists thus far. We thus implemented a dedicated solution, described in Appendix~\ref{app:optim}.
-The companion video shows the results that we obtained in simulation and on the real HRP-2 robot.
-In these scenarios the robot is able to execute our plans, while respecting the constraints inherent to the problem: joint kinematics and torque limits and
-collision avoidance.
-%~ \adnote{Probably you should add in appendix an explanation of how you solve $P_3$ and refer to it here.}
+%~ \subsection{Addressing $\mathcal{P}_3$}
+%~ \adnote{This subsection seems redundant to me}
+%~ This paper focuses on contact planning of multi-contact locomotion.It does not address directly the continuous motion generation
+%~ . Problem $\mathcal{P}_3$ remains an active research topic~\cite{Carpentier2016, herzog2015trajectory},
+%~ for which no off-the shelf solution exists thus far. We thus implemented a dedicated solution, described in Appendix~\ref{app:optim}.
+%~ The companion video shows the results that we obtained in simulation and on the real HRP-2 robot.
+%~ In these scenarios the robot is able to execute our plans, while respecting the constraints inherent to the problem: joint kinematics and torque limits and
+%~ collision avoidance.
 
 \begin{figure}[t]
 \centering
@@ -48,7 +47,6 @@ is only described by two positional parameters (x and y). The root of the robot 
 		   \label{fig:dedefeas}
 \end{figure}
 
-%~ \subsection{feasibility }
 
 \section{Conclusion} 
 \label{sec:conclusion}
@@ -85,7 +83,7 @@ Our method applies to any scenario where at least one contact friction cone cont
 the direction opposed to the gravity (i.e. \textit{quasi-flat}). This class of scenarios include all the problems proposed at the DARPA Robotics Challenge.
 One way to further extend its range of application, which we consider for future work, is to include the equilibrium criterion when solving $\mathcal{P}_1$.
 Considering the set of obstacles intersecting with the reachable workspace for a given root configuration as candidate surfaces, we can use them to verify the equilibrium criterion.
-This would give us a necessary condition for \equilibriumfeasibility.
+This would give us a necessary condition for \equilibriumfeasibility. %, which we investigate in~\cite{fernbach:hal-01486933}.
 
 While we have exhibited complete multi-contact locomotion obtained with our contact planner, our main concern for future work is to address the interpolation
 between contact sequences ($\mathcal{P}_3$), which remains an open issue in highly-constrained scenarios.
