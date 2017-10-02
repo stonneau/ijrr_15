@@ -3,7 +3,7 @@
 \label{app:optim}
 The stair climbing and the standing up scenarios were validated with the trajectory optimization scheme provided in \citeauthor{Carpentier2016}. 
 %~ \deladp{The optimization is formulated as an optimal control problem that aims at generating a valid trajectory for the center of mass.}
-To address the other scenarios, we propose a new implementation, entirely open source (\url{https://github.com/stonneau/python_sandbox}), which can be integrated directly in our motion planner software. This formulation uses the center of mass acceleration and angular momentum as input variables, while previously the contact forces were used.
+To address the other scenarios, we propose a new implementation, entirely open source (\url{https://github.com/stonneau/python_sandbox/releases/tag/tro_paper} ), which can be integrated directly in our motion planner software. This formulation uses the center of mass acceleration and angular momentum as input variables, while previously the contact forces were used.
 The center-of-mass trajectory resulting from the optimization is then turned into a collision-free whole-body trajectory.
 
 We rewrite Eq.~\ref{eq:new_eul} in the general case:

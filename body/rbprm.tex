@@ -13,7 +13,7 @@ Given a start and a goal configurations, we aim at computing a guide path $\math
 This means that any root configuration must be extended into a whole-body, static equilibrium configuration.
 $C_{Equil}^0$  cannot be described analytically.
 
-The strong hypothesis of this work is that for a large variety of locomotion tasks, we can define a space  $C_{Reach}^0 \simeq C_{Contact}^0$, such that 
+The main hypothesis of this work is that for a large variety of locomotion tasks, we can define a space  $C_{Reach}^0 \simeq C_{Contact}^0$, such that 
 \begin{equation} \label{eq:creach}
 \forall t \in [0,1], \mathbf{q}^0(t) \in C_{Reach}^0 \Rightarrow \mathbf{q}^0(t)  \in C_{Equil}^0
 \end{equation}
@@ -50,7 +50,9 @@ Similarly we can define an inner approximation \mbox{$\mathcal{C}^0_{\textrm{\it
 
 \subsection{The compromising reachability condition}
 \label{sec:scaling}
-The ideal shape $B^*, W^0 \subset B* \subset B^{\textrm{\it Suf}}$ that defines a necessary \textbf{and} sufficient condition for contact creation has no explicit definition.
+The ideal shape $B^*, W^0 \subset B^* \subset B^{\textrm{\it Suf}}$ would define a necessary \textbf{and} sufficient condition for contact creation. 
+It would guarantee that any root configuration $\mathbf{q}^{0} \in B^*$ would result in a contact configuration, while any $\mathbf{q}^{0} \notin B^*$ could not.
+To our knowledge  $B^*$ has no explicit definition.
 Therefore, we approximate $B^*$ to define the contact reachable space $C_{Reach}^0$.
 
 %~ However, using a shape between $W^0$ and $B^{\textrm{\it Suf}}$ leads to a trade-off between a necessary and a sufficient condition. 

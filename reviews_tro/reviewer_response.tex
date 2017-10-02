@@ -440,12 +440,13 @@ convex or mixed-integer convex optimizations can (sometimes) be solved
 to a verifiable global optimum. I would suggest removing this sentence
 entirely.}
 \as{Thanks for the suggestion. Our phrasing was indeed misleading and inaccurate. Our intention was to explain that the geometry of the scene makes the problem highly non-convex, and
-that approaches such as the CIO, if not initialized with an appropriate initial guess, might never get out of the local minima. We followed the reviewer's advice and simply removed the sentence. }\ndone
+that approaches such as the CIO, if not initialized with an appropriate initial guess, might never get out of the local minima. We followed the reviewer's advice and simply removed the sentence. }\done
 
 \quot{* I am not sure why the $C_{reach}$ hypothesis is described as the ``strong''
 hypothesis in, e.g., Sect. IV. Is there a corresponding weak
 hypothesis?}
-\as{We apologize for the confusion, that comes from an inaccurate use of English. What we meant was that the hypothesis is TODO}\ndone
+\as{We apologize for the confusion, that comes from an inaccurate use of English. What we meant by ``strong'' is that the hypothesis is constraining, because
+it defines a solution space different than the real one, and that we need to demonstrate that it makes sense.  We removed ``strong'' and replaced it by ``main'' to clarify. }\done
 
 \quot{* In Sect. IV.B, the authors state that the ideal shape $B^*$ ``has no
 explicit definition''. For a particular configuration  $q_0$, $B^*$ is simply
@@ -454,7 +455,11 @@ there being no explicit definition of B* which is the volume around
 $B^*(q_0)$ for every $q_0$? I think I agree with the authors, but I found
 this claim hard to follow and would appreciate some clarification}
 \as{We updated the Section IV B. to better explain our claim. Indeed, as the reviewer states $B^*$  is the volume for every $q_0$. If such a volume existed, we would know exactly whether or not a given root configuration can result in a valid contact configuration.
-We of course doubt that $B^*$ actually exists. }\ndone
+We of course doubt that $B^*$ actually exists. }
+\qt{The ideal shape $B^*, W^0 \subset B^* \subset B^{\textrm{\it Suf}}$ would define a necessary \textbf{and} sufficient condition for contact creation. 
+It would guarantee that any root configuration $\mathbf{q}^{0} \in B^*$ would result in a contact configuration, while any $\mathbf{q}^{0} \notin B^*$ could not.
+To our knowledge  $B^*$ has no explicit definition.
+Therefore, we approximate $B^*$ to define the contact reachable space $C_{Reach}^0$.}\done
 
 \quot{* In Sect. V.A., the authors mention that the ability to plan a contact
 break and creation with the same limb allows the creation of dynamic
@@ -473,7 +478,7 @@ maintained. Shouldn't this step appear somewhere in Alg. 1?}
 limb, or the oldest active contact) towards a new contact
 position if possible. }
 
-We changed the name to \textsc{TODO}, with the hope that it makes things clearer.}\ndone
+We changed the name to \textsc{IntermediateContactState}, with the hope that it makes things clearer.}\done
 
 \quot{* In Appendix A.A, it is mentioned that step 2 in the workspace
 computation is conservative, with reference to figure 17-right. But
@@ -482,16 +487,22 @@ to step 3, and it's actually hard to tell from the figure that it is
 conservative. Not knowing anything about Blender's decimate tool, I
 assume it is operating by removing vertices, which would indeed be
 conservative, but some clarification would be useful here.}
-\as{Indeed, the decimate tools removes vertices, and this was not explained clearly in the paper. We updated the text accordingly}\ndone
+\as{Indeed, the decimate tools removes vertices, and this was not explained clearly in the paper. We updated the text accordingly}
+\qt{The resulting polytope can contain a very large number of faces. A last step is thus to simplify it with the blender decimate tool (\url{http://wiki.blender.org/index.php/Doc:2.4/Manual/Modifiers/Generate/Decimate}). This tool removes a user-defined amount of vertices (and faces) of the polytope, thus resulting
+in a convervative approximation of the original shape. For HRP-2 we apply the operator with a ratio of $0.06$, resulting in a polytope of 38 faces for the arms and the legs.}\done
 
 \quot{* Finally, I would suggest providing explicit git SHAs or tags for all
 of the github links. I've personally made the mistake of linking to a
 github project in a paper, only to have that project change and
 eventually delete the specific code I was citing. }
 \as{The reviewer is absolutely right. We indeed encounter the issue with other researchers that are currently using our planner. 
-To address this issue, the link for the code now points at a website, where instructions are given to install the correct version of the project.
-Regarding the link to the python code for the OCP that addresses P3, we provided an explicit git SHAs, as suggested by the reviewer.}\ndone
-
+To address this issue, the link for the code now points at a website, where instructions are given to install the correct version of the project, on a separate branch
+dedicated to the installation of the planner.
+Regarding the link to the python code for the OCP that addresses P3, we provided an explicit git SHAs, as suggested by the reviewer.}
+\qt{(Section VII) Both HPP and our planner can be simply downloaded and compiled by following the instructions on
+\url{https://humanoid-path-planner.github.io/hpp-doc/download.html?branch=rbprm}. \\
+(Appendix C) To address the other scenarios, we propose a new implementation, entirely open source (\url{https://github.com/stonneau/python_sandbox/releases/tag/tro_paper} ), which can be integrated directly in our motion planner software. }
+\done
 
 
 \end{document}

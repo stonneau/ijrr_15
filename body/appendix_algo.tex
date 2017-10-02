@@ -55,7 +55,7 @@ $\mathbf{Q}^0$, as input parameters.
 				\If {$nb\_fail == MAX\_TRIES$}
 					\State \textbf{return} $FAILURE$
 				\EndIf				
-				\State $s = $\textsc{RepositionContacts}$(pState)$
+				\State $s = $\textsc{IntermediateContactState}$(pState)$
 			\EndIf
 			\State $push\_back(states, s)$
 		\EndWhile
@@ -68,7 +68,7 @@ $\mathbf{Q}^0$, as input parameters.
 At each step, \textsc{GenFullBody} is called with the previous state as a parameter, as well
 as a new root configuration. \textsc{GenFullBody} returns a new contact configuration, if it succeeded
 in computing a configuration with only one contact switch occurring.
-Otherwise, the method \textsc{RepositionContacts} is called.
+Otherwise, the method \textsc{IntermediateContactState} is called.
 It repositions one end effector (either a free limb, or the oldest active contact) towards a new contact position if possible.
 This repositioning allows to increase the odds that the contact can be maintained at the next step.
 Algorithm~\ref{alg:pi} gives the pseudo code for \textsc{GenFullBody}.
@@ -116,7 +116,7 @@ If it succeeds, the new limb configuration is assigned to $k$. If it fails, a ra
 
 The method \textsc{IsInStaticEquilibrium} returns whether a given state is in static equilibrium.
 
-The pseudo code for the method \textsc{RepositionContacts} is given by Algorithm~\ref{alg:repo}.
+The pseudo code for the method \textsc{IntermediateContactState} is given by Algorithm~\ref{alg:repo}.
 
 
 \textsc{GenerateContact}$(\mathbf{q}^0,k)$ is a call to the contact generator presented in the following Section~\ref{sec:single_contact}.
@@ -126,9 +126,9 @@ If it fails, $k$ remains unchanged if it is collision free, otherwise it is assi
 
 
 \begin{algorithm}[!tbp]
-\caption{Performs contact repositioning for one limb} \label{interpolate}
+\caption{Adds or repositions a contact for one limb} \label{interpolate}
 	\begin{algorithmic}[1]
-	\Function{RepositionContacts}{$state$}
+	\Function{IntermediateContactState}{$state$}
 		\State $i=0$
 		\While {$i<length(states.freeLimbs)$}
 			\State Limb $k = pop(states.freeLimbs)$
