@@ -254,9 +254,23 @@ The first part of App. B is referred to within this Appendix as “new minor con
 
 \as{Agreed. We removed the incriminated text and provided an intuition of the heuristic in the text, as mentioned above.}\done
 
-\quot{github link seems to be dead? (The link on p. 15 is OK… should they be the same?)}
+\quot{github link seems to be dead? (The link on p. 15 is OK\dots should they be the same?)}
 
-\as{We are suprised by this comment because after testing it, the link seems to be valid. In any case, in accordance with reviewer TODO, we changed all the links source codes to provide a SHA link that will bring the user to the accurate revision of the projects considered.}\ndone
+\as{We are suprised by this comment because after testing it, the link seems to be valid. In any case, in accordance with reviewer 6, we changed all the links source codes to provide a SHA link that will bring the user to the accurate revision of the projects considered.}
+\qt{(Section VII) Both HPP and our planner can be simply downloaded and compiled by following the instructions on
+\url{https://humanoid-path-planner.github.io/hpp-doc/download.html?branch=rbprm}. \\
+(Appendix C) To address the other scenarios, we propose a new implementation, entirely open source (\url{https://github.com/stonneau/python_sandbox/releases/tag/tro_paper} ), which can be integrated directly in our motion planner software. }\done
+
+\quot{p.5, on right, ``less than epsilon'' between end effector and world - but doesn’t the orientation of the end effector matter tremendously here, too?}
+\as{
+The orientation of the end effector matters, but is not problematic regarding the way we generate contacts.
+Using an epsilon is an effective way to remove many unrelevant configurations, and
+we believe that more complex solutions aiming at taking into account the orientation would end up being counter productive.
+ Indeed, using only 3D distance, we will end up with a few configurations
+that can't be projected correctly, and will end up being discarded. But the majority of irrelevant configurations would already have been rejected with
+the efficient 3D intersection query. Conversely, introducing a 6D octree rather than the current 3D one would make the problem much more complex: instead
+of using well known 3D operations to retrieve our candidate configurations, we would have to implement our own, new solutions. The added cost of doing this is probably 
+much higher than the computational cost of discarding a few configurations that could not be projected.  } \done
 
 \quot{remaining remarks by reviewer 1}
 \as{The remaining comments from reviewer 1 were all addressed. Because they did not call for a discussion, as they are essentially related to style or typos, we do not list them here.}\ndone

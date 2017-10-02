@@ -40,7 +40,7 @@ The companion video shows the obtained motions.
 
 \subsection{Description of the scenarios}
 In all the scenarios considered, the formulation of the problem is always the same:
-a start and goal root configurations are provided as input (except in the stair climbing scenario where the start whole body configuration is given).
+a start and goal root configuration are provided as input (except in the stair climbing scenario where the start whole body configuration is given).
 The framework computes the initial contact configuration, and outputs a sequence of contact configurations connecting it to the goal.
 In each scenario we detail the contacts involved and the heuristics chosen (either $h_{\textrm{\it EFORT}}$, $h_{vel}$ or $h_{w}$, all of which are defined in the Appendix~\ref{sec:heuristics}).
  %~ and the constraints on the reachable workspaces (for instance in all the scenarios, the reachable workspaces of the legs of HRP-2 are always required to intersect with the environment). 
@@ -48,13 +48,13 @@ In each scenario we detail the contacts involved and the heuristics chosen (eith
 
 % \subsubsection*{Truck egress (Figure~\ref{res_truck_pres} and Figure~\ref{res_truck_bd}) -- Humanoid and insectoid robots.}
 %\subsubsection*{Truck egress -- Humanoid and insectoid robots (Figure~\ref{res_truck_bd}).}
-\subsubsection{HRP-2 -- Steep staircase (Figure~\ref{fig:stair_robust})}
+\subsubsection{HRP-2 -- Staircase with high steps (Figure~\ref{fig:stair_robust})}
 
 \begin{figure}
   \centering
   \includegraphics[width=1\linewidth]{figures/stair}
   \caption{
-           HRP-2 in the steep stair climbing scenario. }
+           HRP-2 in the stair climbing scenario. }
 		   \label{fig:stair_robust}
 \end{figure}
 
@@ -270,7 +270,7 @@ For HRP-2 we decided to set $s^*=1.2$.
 
 \subsubsection{Choosing the heuristics} \label{sec:heuristichoices}
 In our conference paper~\citep{tonneauisrr15}, the computed motions were generated using the EFORT heuristic.
-EFORT is designed for tasks requiring to exert important forces (such as pushing / pulling / climbing). 
+EFORT is designed for tasks requiring large magnitude contact forces (such as pushing / pulling / climbing). 
 In locomotion tasks, such as the stair scenario, one issue with EFORT is that it tends to generate
 configurations close to singularities (and joint limits). While this did not significantly impact
 the generation of the plan, the resulting interpolation turned out to be harder.
@@ -297,7 +297,7 @@ For future work, we would like to automatically adapt the size of the discretiza
 
 \subsection{Performance analysis} \label{sec:perf}
 To analyze performance, we ran the planner 1000 times for each scenario.
-We measured the computation time spent in each part of the algorithm, and analyzed their success rate.
+We measured the computation time spent in each part of the algorithm, and analyzed success rate.
 
 
 \begin{table*}
@@ -341,7 +341,7 @@ column indicates the average time necessary to compute one contact transition. T
 \begin{tabular}{ l | >{\centering\arraybackslash}m{65pt} | >{\centering\arraybackslash}m{35pt} | >{\centering\arraybackslash}m{35pt} | c}
   &  Equilibrium success rate & Kinematic failure & Equilibrium failure \\
  \hline
-   Steep stairs 	& 99.5\%  & 0.1\% 	& 0.4\% \\
+   High stairs 	& 99.5\%  & 0.1\% 	& 0.4\% \\
    Standing up 		& 87.8\%  & 6.1\% 	& 6.1\% \\
    Car egress 		& 66.2\%  & 15.9\% 	& 17.9\% \\
    Rubble 			& 97.54\% & 0.16\% 	& 2.3\% \\
@@ -374,9 +374,9 @@ thus allowing to consider \gls{interactive} applications and online autonomous p
 Despite the complexity of the scenarios and the approximations made in our formulation, our planner succeeded in the large majority of cases.
 
 Table~\ref{tab:requestpercent} presents the rate of successful contact generation. Note that a failure in contact generation for a root configuration is not equivalent to a failure in the contact plan. It simply means that another limb was tested for contact generation for the same root configuration.
-As expected, the more constrained scenario, the car egress, provides the less satisfying results, despite the high success rate of the planner.
+As expected, a more constrained scenario such as the car egress provides less satisfying results, despite the high success rate of the planner.
 
-These results confirm that our approach provides a satisfying compromise between completeness and efficiency, thus allowing to consider online planning
+These results confirm that our approach provides a satisfying compromise between completeness and efficiency, thus enabling online planning
 while controlling the robot. Indeed, when the contact planning fails, it fails rapidly. This allows us to rapidly re-plan with a reasonable chance of success.
 The most efficient (and immediate) approach to obtain a valid contact plan as fast as possible would be to launch in parallel several instances of the planner (our current implementation is single-threaded) and to use any successful result as a plan for solver $\mathcal{P}_3$.
 
