@@ -198,7 +198,19 @@ what take-away messages you have, about why the whole framework is
 designed the way it is [within the main text; not hidden in
 appendices].}
 
-\as{TODO}\ndone
+\as{Thanks for the comments. We believe our new version of the papers answers to a). In particular, as mentionned above the novel content have been moved from the Appendix
+to the core of the paper. Regarding b), the take-away message is that to address the hard problem of multi contact planning, it is necessary to use 
+abstraction and simplification, through the decomposition of the problem into three sub-problems, and through dimensionality reduction.
+We believe that the paper develops these aspects to explain the design of this planner. In the introduction, it is done
+with an extensive state of the art that explains how the community came up with the P1, P2, P3 decomposition to tackle a problem that is too hard. In the conclusion, it is explained 
+with an analysis of the results we obtain, that justify our pragmatic choice of going further in the abstraction to obtain interactive planning performances. To follow the reviewer's advice, we updated the conclusion
+to include a synthesized give away message.}
+\qt{In this paper we consider the multi-contact planning problem, formulated as three sub-problems  $\mathcal{P}_1$,  $\mathcal{P}_2$,  $\mathcal{P}_3$, addressed sequentially. While we propose a global framework that handles all these problems, our contribution focuses on  $\mathcal{P}_1$ and  $\mathcal{P}_2$.
+The first problem $\mathcal{P}_1$ consists in computing an \gls{equilibrium feasible} guide path for the root of the robot;
+the second problem $\mathcal{P}_2$ is the computation of a discrete sequence of whole-body configurations along the root path.
+We believe that this decomposition is currently the most promising approach towards
+a global resolution of the problem. We also claim to have achieved a significant step towards this objective thanks to the dimensionality reduction provided by
+the reachability condition. With our results and the release of our source code, we hope to inspire further research in this direction.}\done
 
 \quot{
 p.6 – this would be a great place to give more ``intuition'' for the heuristics. Hw seems to be used in essentially all foot contact, with $h_{efort}$ for hand/arm contacts, and ALSO $h_{vel}$ not seeming to be used at all.}
@@ -214,7 +226,7 @@ p.9 Not sure if Fig. 14 is worth including. It looks like its just Fig. 9 from t
  (At a minimum, the figure/solution should probably be referenced as having already appeared in the previous ISSR paper?)
 }
 
-\as{As also suggested by reviewer TODO, we removed the references to the results of the previous work [20], including those.}\done
+\as{As also suggested by reviewer 4, we removed the references to the results of the previous work [20], including those.}\done
 
 \quot{
 p.8– somehow, “Table II” doesn’t appear until after “Table IV” – which is a frustrating choice for latex to make. Not sure what you can do to change that, but it would be preferable to have tables (and figures) appear in the correct order.
@@ -273,7 +285,7 @@ of using well known 3D operations to retrieve our candidate configurations, we w
 much higher than the computational cost of discarding a few configurations that could not be projected.  } \done
 
 \quot{remaining remarks by reviewer 1}
-\as{The remaining comments from reviewer 1 were all addressed. Because they did not call for a discussion, as they are essentially related to style or typos, we do not list them here.}\ndone
+\as{The remaining comments from reviewer 1 were all addressed. Because they did not call for a discussion, as they are essentially related to style or typos, we do not list them here.}\done
 
 %~ \quot{p.14 – not a good description of the simulation software used \dots Ref [38] focuses on robustness of simulations, but presumably, the testing in the present work is deterministic.
  %~ just using the same simulator? Not much description is given of how/whether contacts/slipping are modeled\dots why isn’t a 3rd­‐part software used, or at least software with better 
@@ -481,7 +493,11 @@ motions. This is quite an important ability for an otherwise
 quasi-static planner, but this ability isn't described again until the
 appendix. It would be worth explaining why this is true in the paper
 itself. }
-\as{Thanks for the suggestion. We added a paragraph to better explain this in Section V.A.}\ndone
+\as{Thanks for the suggestion. We added a paragraph to better explain this in Section V.A.}
+\qt{This representation is sufficient to describe all the contact phases, because the single support phase is implicitely described. Furthermore it removes the need to compute a single-support quasi-static configuration as in the example. Indeed, there might be a case where no quasi-static solution exists for the single support phase (because of the environment), but
+there exists a dynamic motion connecting the two double support states. Such motion will be computed by our framework, because the quasi-static constraint is only required at the contact planning phase; as shown in the companion video, and explained in Appendix C, our framework is able to produce dynamic motions.
+}
+\done
 
 \quot{In Sect. V.B, the authors mention inserting an additional state
 between contact configurations if two or more contacts cannot be

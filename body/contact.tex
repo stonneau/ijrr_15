@@ -23,8 +23,8 @@ for each contact phase. For instance, a walk cycle would be described by three k
 Our definition of contact plan differs: between two consecutive configurations we allow both a contact break and a contact creation---if they are on the same effector. 
 In the previous example, our contact plan would simply consist of the two double-support configurations. 
 %However, if the contact broken and the contact created sequentially are not on the same effector, our planner outputs two distinct states.
-This representation is sufficient to describe all the contact phases. Furthermore it removes the need to have single-support quasi-static configurations as in the example. 
-As shown in the companion video, this allows our framework to produce dynamic motions. 
+This representation is sufficient to describe all the contact phases, because the single support phase is implicitely described. Furthermore it removes the need to compute a single-support quasi-static configuration as in the example. Indeed, there might be a case where no quasi-static solution exists for the single support phase (because of the environment), but
+there exists a dynamic motion connecting the two double support states. Such motion will be computed by our framework, because the quasi-static constraint is only required at the contact planning phase; as shown in the companion video, and explained in Appendix~\ref{app:optim}, our framework is able to produce dynamic motions.
 
 \subsection{Contact planning algorithm}
 Starting from an initial whole-body configuration, we compute a sequence
