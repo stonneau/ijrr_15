@@ -2,21 +2,7 @@
 \section{Overview}
 \label{overview}
 
-\begin{figure}[t]
-\centering
-  \begin{overpic}[width=0.8\linewidth]{figures/reachability_cond}
-	\end{overpic}
-\caption{The reachability condition is verified by the right configuration: the trunk (red) is free of collisions while the limbs reachable workspace (green) intersect the environment.}
-		   \label{fig:reach_cond}
-\end{figure}
 
-\begin{figure*}[!htbp]
-  \centering
-  \includegraphics[width=0.7\linewidth]{figures/HyQ_roms}
-  \caption{
-           Reachable workspace and torso bounding box of HyQ. Each green shape represent a reachable workspace $W^k$ of a limb. The red shape is $W^0$.}
-		   \label{fig:HyQ_roms}
-\end{figure*}
 Figure~\ref{fig:framework} illustrates our work flow.
 \Pa and \Pb are addressed sequentially: From a given problem (a) we first plan a root guide path (b), before
 extending it into a sequence of static equilibrium configurations (c). In the case where step (c) fails,
@@ -34,6 +20,14 @@ More precisely, a root configuration is \textit{contact reachable} if the root s
 %~ Verifying the \textit{reachability condition} is very efficient in practice.
 To plan a root path, we then use an RRT planner where, instead of checking collision to validate a configuration, we verify the \textit{reachability condition}.
 %~ In Section~\ref{rbprm} we detail how  we define and use the \textit{reachability condition} to compute a guide path with the Reachability-Based RRT (Figure~\ref{fig:framework}---\Pa).
+
+\begin{figure}[t]
+\centering
+  \begin{overpic}[width=0.8\linewidth]{figures/reachability_cond}
+	\end{overpic}
+\caption{The reachability condition is verified by the right configuration: the trunk (red) is free of collisions while the limbs reachable workspace (green) intersect the environment.}
+		   \label{fig:reach_cond}
+\end{figure}
 
 
 
@@ -83,7 +77,6 @@ It takes advantage of the fact that each root configuration is fixed to generate
 
 %~ To create a contact, we consider each limb of the robot as a manipulator arm attached to the root. We store a database of configurations for each manipulator. Figure~\ref{fig:contact_gen} -- 2 presents a few configurations for the right arm of the robot. The configurations in the database which are close to contact are considered (Figure~\ref{fig:contact_gen} -- 2 and 3). Among the candidates, 3 criteria are considered to choose the most relevant: the ideal candidate is free of collision, allows to maintain static balance if necessary, and  contributes to the motion in an optimal way. We call the measure of this contribution task efficiency: it represents the ability the limb has to exert a force compatible with the direction of motion. In Figure~\ref{fig:contact_gen} -- 4, the black arrow represents the direction of motion. Among the candidates, the most relevant to achieve a vertical motion is chosen, and projected on the contact surface using an inverse kinematics solver (Figure~\ref{fig:contact_gen} -- 5). The task efficiency is measured using the Extended FORce Transmission ratio (EFORT), proposed by ~\cite{Tonneau:2014:TEC:2619648.2619652}.
 
-%~ Finally, we define $dist(\mathbf{x}, O)$ as the minimal distance between a point $\mathbf{x}$ and the closest surface of the environment.
 
 
 \section{Notation and definitions} \label{notations}
@@ -160,4 +153,11 @@ For any set $C_{X}$, we define $C_{X}^0$:
   C_{X}^0 = \left\{ \mathbf{q}^{0},  \exists \mathbf{q}^{\overline{0}}: \mathbf{q}^0  \oplus \mathbf{q}^{\overline{0}} \in C_{X} \right\}
 \end{equation*}
 
-
+%~ Finally, we define $dist(\mathbf{x}, O)$ as the minimal distance between a point $\mathbf{x}$ and the closest surface of the environment.
+\begin{figure}
+  \centering
+  \includegraphics[width=1\linewidth]{figures/HyQ_roms}
+  \caption{
+           Reachable workspace and torso bounding box of HyQ. Each green shape represent a reachable workspace $W^k$ of a limb. The red shape is $W^0$.}
+		   \label{fig:HyQ_roms}
+\end{figure}

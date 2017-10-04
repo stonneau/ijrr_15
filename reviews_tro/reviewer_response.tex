@@ -66,13 +66,13 @@ that set THIS paper apart seem (as claimed by the authors) to be:
 \as{Thanks for the comment. Indeed, all reviewers agreed that the contribution with respect to previous work was not clearly stated. We updated the paper to reflect the following. Firstly, our planner is almost identical to the one in [20], with important additions that are the pseudo code for the algorithm (the algorithm is not given in [20]), as well as the introduction of a more efficient criterion
 for checking static equilibrium (see next question). The optimal control is no longer a claimed contribution of the paper, even though it differs from [1] in its formulation. The main
 novelty of the paper resides in the experimental setup and analysis, as well as the empirical proof that the planner works with real robots that are more constrained kinematically than the virtual avatars from [20]. We believe that this paper is thus in accordance with the guidelines of T-RO regarding the extension of a conference paper.}
-\qt{The present paper is an extension of our conference paper [20]. As such, the motion planning algorithm presented here is the same as the one presented in the
-previous work. Section IV and V of the present paper are thus paraphrasing the original paper, with the exception of Section V.B.2, where we additionally provide the pseudo-code of the algorithm absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on an new LP formulation presented in Section VI. \\
+\qt{(Section I.B) The present paper is an extension of our conference paper[20]. As such, the motion planning algorithm presented here is the same as the one presented in the
+previous work. Section IV and V of the present paper are thus paraphrasing the original paper, with the exception of Section V.B.2, where we additionally provide the pseudo-code of the algorithm absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on a new LP formulation presented in Section VI.
 Compared with the original paper, we also release our source code, and provide the complete procedure to use our planner for any legged robot. We thus provide
-all the technical information required to use the planner. \\
-To validate our approach, in this paper we had to implement or integrate other tools based on previous publications from our team. We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work[1]. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of the state of the art simulator proposed in \textcolor{red}{TODO}.
-We do not consider these additions as contributions per se, but describing them here is required to understand the experimental contribution of this paper.
-Indeed, thanks to these tools we have been able to design a complete pipeline for synthesizing multi contact motions from scratch.
+all the technical information required to use the planner.\\
+To validate our approach, in this paper we had to implement or integrate other tools based on previous publications from our team. We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work[1]. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm [28].
+We do not consider these additions as contributions per se, but describing them here is required to understand the experimental contribution of this paper.\\
+Indeed, thanks to these tools we have been able to design a complete pipeline for synthesizing multi-contact motions from scratch.
 The novelty of the present paper lies in the rigorous experimental setup we propose to demonstrate its interest.
 As opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are much more constrained kinematically than the virtual avatars used before,
 thus making the planning problem even harder. Through an extensive empirical analysis, we demonstrate that the method remains interesting in this context, qualitatively and efficiently.}
@@ -133,7 +133,7 @@ of the center of mass, whereas in [1] the control variable is the contact forces
 was required to validate our approach. 
 We rephrased the text to clearly indicate that the algorithm is not a contribution. We made the choice not to give an intuition nor describe the solver in the core
 of the paper because it is not required to understand the contributions to P1 and P2.}
-\qt{ We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work[1]. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of the state of the art simulator proposed in \textcolor{red}{TODO}.
+\qt{(Section I.B) We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work[1]. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm [28].
 We do not consider these additions as contributions per se, but describing them here is required to understand the experimental contribution of this paper.}\done
 
 
@@ -182,8 +182,8 @@ described in Appendix X.}
 Also, where you describe "sensitivity" vs "specificity", it would be
 useful to give a more intuitive explanation, example [\dots]}
 
-\as{We updated Section VIII.B.1) to illustrate the meaning of those terms.}
-\qt{We then computed the sensitivity and specificity of the reachability condition.  In this context, the sensitivity refers to the percentage of configurations in $C_{Reach}^0$, effectively belonging to \gls{$C_{Contact}^0$}. If a sampled configuration is in $C_{Reach}^0$, but our method is unable to generate a contact configuration from it, as a result the sensitivity
+\as{We updated Section VIII.B.1 to illustrate the meaning of those terms.}
+\qt{(Section VIII.B.1) We then computed the sensitivity and specificity of the reachability condition.  In this context, the sensitivity refers to the percentage of configurations in $C_{Reach}^0$, effectively belonging to \gls{$C_{Contact}^0$}. If a sampled configuration is in $C_{Reach}^0$, but our method is unable to generate a contact configuration from it, as a result the sensitivity
 decreases. The sensitivity thus illustrates the confidence we have that any configuration in $C_{Reach}^0$ will effectively lead to a contact configuration.
 Conversely, the specificity refers to the percentage of configurations \textbf{not} in $C_{Reach}^0$, effectively \textbf{not} belonging to \gls{$C_{Contact}^0$}.
 If a sampled configuration is \textbf{not} in $C_{Reach}^0$, but our method is able to generate a contact configuration from it, as a result the specificity
@@ -199,13 +199,13 @@ designed the way it is [within the main text; not hidden in
 appendices].}
 
 \as{Thanks for the comments. We believe our new version of the papers answers to a). In particular, as mentionned above the novel content have been moved from the Appendix
-to the core of the paper. Regarding b), the take-away message is that to address the hard problem of multi contact planning, it is necessary to use 
+to the core of the paper. Regarding b), the take-away message is that to address the hard problem of multi-contact planning, it is necessary to use 
 abstraction and simplification, through the decomposition of the problem into three sub-problems, and through dimensionality reduction.
 We believe that the paper develops these aspects to explain the design of this planner. In the introduction, it is done
 with an extensive state of the art that explains how the community came up with the P1, P2, P3 decomposition to tackle a problem that is too hard. In the conclusion, it is explained 
 with an analysis of the results we obtain, that justify our pragmatic choice of going further in the abstraction to obtain interactive planning performances. To follow the reviewer's advice, we updated the conclusion
 to include a synthesized give away message.}
-\qt{In this paper we consider the multi-contact planning problem, formulated as three sub-problems  $\mathcal{P}_1$,  $\mathcal{P}_2$,  $\mathcal{P}_3$, addressed sequentially. While we propose a global framework that handles all these problems, our contribution focuses on  $\mathcal{P}_1$ and  $\mathcal{P}_2$.
+\qt{(Section X) In this paper we consider the multi-contact planning problem, formulated as three sub-problems  $\mathcal{P}_1$,  $\mathcal{P}_2$,  $\mathcal{P}_3$, addressed sequentially. While we propose a global framework that handles all these problems, our contribution focuses on  $\mathcal{P}_1$ and  $\mathcal{P}_2$.
 The first problem $\mathcal{P}_1$ consists in computing an \gls{equilibrium feasible} guide path for the root of the robot;
 the second problem $\mathcal{P}_2$ is the computation of a discrete sequence of whole-body configurations along the root path.
 We believe that this decomposition is currently the most promising approach towards
@@ -215,7 +215,7 @@ the reachability condition. With our results and the release of our source code,
 \quot{
 p.6 – this would be a great place to give more ``intuition'' for the heuristics. Hw seems to be used in essentially all foot contact, with $h_{efort}$ for hand/arm contacts, and ALSO $h_{vel}$ not seeming to be used at all.}
 \as{Thanks for the suggestion. The text was updated accordingly, and the heuristic $h_{vel}$ was removed since indeed it is not used.} 
-\qt{In all our experiments, the heuristic $h$ is implemented as a variation of a manipulability-based heuristic [27]. The manipulability is a real number that quantifies how 
+\qt{(Section V.C) In all our experiments, the heuristic $h$ is implemented as a variation of a manipulability-based heuristic [27]. The manipulability is a real number that quantifies how 
 ``good'' a configuration is to perform a given task, based on the analysis of the Jacobian matrix. With such heuristics, a configuration can be chosen because it is far from singularities, and thus allows mobility in all directions. On the contrary, it can be chosen because it is particularly efficient to exert a force in a desired direction. In our experiments, the former solution is usually chosen for computing leg contacts, while the latter is used for computing hand contacts. We recall the manipulability measure and its derivatives in Appendix B.}\done
 
 
@@ -314,20 +314,27 @@ much higher than the computational cost of discarding a few configurations that 
 
 \quot{ I suggest that a few papers related to more general motion and contact planning for multi-legged robots can be added. Particularly, the problem of ``foothold selection'' for 4 or 6-legged robots travelling over uneven terrains is a problem related to the one tackled in the paper. It would be nice to select a few representative works (e.g. from the DARPA Learning Locomotion project or
 papers related to the ETHZ StarlETH and ANYmal robots) and explain the differences between those approaches and the problem solved in the paper.}
-\as{Thanks for the relevant comment. As observed by the reviewer, our state of the art voluntarily focuses on multi-contact planning related work, but it makes sense to cite the suggested papers. We added a paragraph at the end of the state of the art to discuss them. As a matter of fact, we believe these approaches could be considered within
-our framework to replace specific parts.}\ndone
+\as{Thanks for the relevant comment. As observed by the reviewer, our state of the art voluntarily focuses on multi-contact planning related work, but it makes sense to cite the suggested papers. We added a paragraph at the end of the state of the art to discuss them. As a matter of fact, we believe that the learning approaches 
+proposed for computing relevant effector locations could be considered within
+our framework to provide good contact generation heuristics.}
+\qt{(Section I.A) Other contributions to legged locomotion, not directly related to multi-contact motion, are worth mentioning, as they rely on a similar decomposition of the problem. First a discrete sequence 
+of contact sets is planned (at the so-called footstep planning phase), using a low-dimensional abstraction of the robot to account for its kinematic constraints [22,23]. In [23], a ``pose certificate'' is obtained by generating a whole-body configuration for each set through inverse kinematics, as done in $\mathcal{P}_2$. Then a
+motion is generated along the sequence through the use of optimization techniques. 
+The solutions proposed are designed for cyclic locomotion in quasi-flat scenarios, where the support polygon is a relevant method for equilibrium checks. They thus cannot be generalized to to multi contact locomotion. 
+However, some contributions on specific parts of the problem could be applied directly in our case. 
+For instance, learning ``terrain costs'', based on expert knowledge as proposed in [24], could define good heuristics to compute the next contact location for an effector. Although we did not try to include such formulation in this paper, it would be straightforward to integrate such heuristic in our planner.}\done
 
 \quot{in my opinion a T-RO regular paper should be more self-containing. In several points the authors heavily rely on previous publications, e.g. when presenting the RRT-based planner (Section IV-C). This part should be expanded, describing in more detail what exactly has been changed with respect to the reference paper. }
 \as{Thanks for the comment. As it is also suggested by reviewer 1 and the AE, we modified the paper to make it self contained. The references to previous work now solely indicate
 that a certain method is not a contribution of the present paper. \\ 
 In the particular case of Section IV-C, in fact the code of our implementation of the Bi-RRT with respect to the original one is exactly the same, with a single difference: when
 traditionally a collision detection predicate is called to validate a configuration, we replace this predicate with a call to the reachability condition. We modified the text to explain this more clearly. As the Bi-RRT is a famous standard algorithm in the literature, we do not think it is necessary to include it in this paper, but we will gladly do so if required. }
-\qt{$C_{Reach}^0$ can be sampled efficiently thanks to Eq.~5, and can thus be used with any standard motion planner.
+\qt{(Section IV-C) $C_{Reach}^0$ can be sampled efficiently thanks to Eq.~5, and can thus be used with any standard motion planner.
 Our current implementation uses the Bi-RRT planner [25] provided by the HPP software [26].
 Our implementation is exactly the same as the pseudo-code of the original planner (which does not detail the configuration validation method). With respect to a ``classic'' implementation, the only difference is that instead of validating a configuration using collision detection, we validate it with the \textit{reachability condition}.} \done
 
 \quot{I am a bit skeptical about the readability of the figures. Some of them seem to be too small (e.g. Fig. 3, Fig. 4), some are of quite poor quality (why the robot silhouettes in Fig. 4 are blurred ?), and the purpose and meaning of Fig. 6 is rather unclear. \\ In general, the simulation results presented qualitatively in the paper are a bit hard to interpret without the accompanying video, particularly if someone looks at a b/w print of the paper (as it may be looking in T-RO).}
-\as{Thanks for the comment, with which we agree in general.  \\We increased the size of Fig. 3 and 4. The robot silhouettes in Fig. 4 are blurred when they describe a previous state of the robots. We added this precision in the text. \\Regarding the quality of our Figures,  our simulation Figures are taken from high resolution rendering in blender. The other Figures are drawn from manually designed powerpoint vectorial graphics (converted to png). We assume that the issue encountered comes from the compression of the pdf file to fit the size constraints of the 
+\as{Thanks for the comment, with which we agree in general.  \\We increased the size of Fig. 3 and 4 as much as possible to hold on one column, because we were not satisfied with the result obtained after trying to put them on a double column. The robot silhouettes in Fig. 4 are blurred when they describe a previous state of the robots. We added this precision in the text. \\Regarding the quality of our Figures,  our simulation Figures are taken from high resolution rendering in blender. The other Figures are drawn from manually designed powerpoint vectorial graphics (converted to png). We assume that the issue encountered comes from the compression of the pdf file to fit the size constraints of the 
 submission site. We tried to improve this compression, but if the paper is accepted, we believe that the uncompressed pdf obtained from the source of the paper will result in good quality pictures. If the reviewers think the paper would be better without these figures, we are willing to remove them. However, we believe that they would make the paper more dependent on the video, so we would prefer to leave them. \\ As proposed also by reviewer 1, we removed references to previous results obtained in [20], so the Fig. 6 has been removed.}\ndone
 
 %~ \quot{In general, the simulation results presented qualitatively in the paper are a bit hard to interpret without the accompanying video, particularly if someone looks at a b/w print of the paper (as it may be looking in T-RO).}
@@ -364,7 +371,7 @@ in the ``collision'' column of Table II. We updated the legend of Table II to in
 as a polygon soup (or mesh), where the normal of each surface is known. No further requirement is needed
 by our approach. In this work, we assume the environment is fully known. State uncertainty is out of the scope of the paper. \\
 (Legend of Table II)  The Collision column times includes the (negligible) octree intersection operation necessary to retrieve the candidate samples.}
-\done
+\ndone
 
 \quot{I appreciate the thorough presentation of results in the paper, however
 it seems that this presentation is somewhat biased towards simulation
@@ -397,13 +404,13 @@ the end of Section I.B.), and the optimal control formulation is from [1]
 \as{Thanks for the comment. Indeed, all reviewers agreed that the contribution with respect to previous work was not clearly stated. We updated the paper to reflect the following. Firstly, our planner is almost identical to the one in [20], with important additions that are the pseudo code for the algorithm (the algorithm is not given in [20]), as well as the introduction of a more efficient criterion
 for checking static equilibrium (see next question). The optimal control is no longer a claimed contribution of the paper, even though it differs from [1] in its formulation. The main
 novelty of the paper resides in the experimental setup and analysis, as well as the empirical proof that the planner works with real robots that are more constrained kinematically than the virtual avatars from [20]. We believe that this paper is thus in accordance with the guidelines of T-RO regarding the extension of a conference paper.}
-\qt{(Section I.B) The present paper is an extension of our conference paper [20]. As such, the motion planning algorithm presented here is the same as the one presented in the
-previous work. Section IV and V of the present paper are thus paraphrasing the original paper, with the exception of Section V.B.2, where we additionally provide the pseudo-code of the algorithm absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on an new LP formulation presented in Section VI. \\
+\qt{(Section I.B)  The present paper is an extension of our conference paper[20]. As such, the motion planning algorithm presented here is the same as the one presented in the
+previous work. Section IV and V of the present paper are thus paraphrasing the original paper, with the exception of Section V.B.2, where we additionally provide the pseudo-code of the algorithm absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on a new LP formulation presented in Section VI.
 Compared with the original paper, we also release our source code, and provide the complete procedure to use our planner for any legged robot. We thus provide
-all the technical information required to use the planner. \\
-To validate our approach, in this paper we had to implement or integrate other tools based on previous publications from our team. We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work[1]. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of the state of the art simulator proposed in \textcolor{red}{TODO}.
-We do not consider these additions as contributions per se, but describing them here is required to understand the experimental contribution of this paper.
-Indeed, thanks to these tools we have been able to design a complete pipeline for synthesizing multi contact motions from scratch.
+all the technical information required to use the planner.\\
+To validate our approach, in this paper we had to implement or integrate other tools based on previous publications from our team. We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work[1]. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm [28].
+We do not consider these additions as contributions per se, but describing them here is required to understand the experimental contribution of this paper.\\
+Indeed, thanks to these tools we have been able to design a complete pipeline for synthesizing multi-contact motions from scratch.
 The novelty of the present paper lies in the rigorous experimental setup we propose to demonstrate its interest.
 As opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are much more constrained kinematically than the virtual avatars used before,
 thus making the planning problem even harder. Through an extensive empirical analysis, we demonstrate that the method remains interesting in this context, qualitatively and efficiently.}\done
@@ -444,7 +451,7 @@ Hz. But since the authors make the claim that this is the "first
 interactive implementation of a contact planner", then that statement
 should be made quantitative and verifiable}
 \as{We agree with the relevant comment, and updated the paper accordingly.}
-\qt{(End of Section I.A.) We define an interactive planner as one that outputs a solution in a few seconds or less.}\done
+\qt{(End of Section I.A.) We define an interactive planner as one for which the time to plan a motion is in the same order of magnitude as the time to execute it (For instance, computing one contact change should take about one or two seconds).}\done
 
 \quot{* In Section I.A. the authors refer to Bretl's work on multi-contact
 planning as the inspiration for the P1,P2,P3 decomposition of the
@@ -498,7 +505,7 @@ itself. }
 \qt{This representation is sufficient to describe all the contact phases, because the single support phase is implicitely described. Furthermore it removes the need to compute a single-support quasi-static configuration as in the example. Indeed, there might be a case where no quasi-static solution exists for the single support phase (because of the environment), but
 there exists a dynamic motion connecting the two double support states. Such motion will be computed by our framework, because the quasi-static constraint is only required at the contact planning phase; as shown in the companion video, and explained in Appendix C, our framework is able to produce dynamic motions.
 }
-\done
+\ndone
 
 \quot{In Sect. V.B, the authors mention inserting an additional state
 between contact configurations if two or more contacts cannot be
