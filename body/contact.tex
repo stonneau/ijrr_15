@@ -1,6 +1,25 @@
 % !TEX root =  ../main.tex
+\begin{figure*}[!hbtp]
+\centering
+  \begin{overpic}[width=0.6\linewidth]{figures/break_contact}
+		\put (0,4) {1} 
+		\put (25,4) {2} 
+		\put (50,4) {3} 
+		\put (76,4) {4} 
+		%~ \put (68,58) {3.a)} 
+		%~ \put (5,27) {3.b)} 
+		%~ \put (37,27) {4.a)} 
+		%~ \put (68,27) {4.b)} 
+	\end{overpic}
+\caption{Contacts are maintained if joint limits and collisions constraints are respected (2). They are broken otherwise(3,4). The green line represents the root path. The blurred character
+represents the previous contact configuration.}
+		   \label{fig:break_contact}
+\end{figure*}
+
 \section{From a guide path to a discrete sequence of contact configurations ($\mathcal{P}_2$)}
 \label{sec:contact}
+
+
 In the second phase, we compute a discrete sequence of static equilibrium configurations $\mathbf{Q}^{\overline{0}}$ given a root path
 $\mathbf{q}^0(t) : [0,1] \longrightarrow$ \gls{$C_{Reach}^0$}. This contact planner uses a contact generator, used to generate static equilibrium configurations. We first describe the contact planning algorithm, before describing
 the contact generator.
@@ -83,21 +102,7 @@ that at most one contact is broken between two sequential configurations.
 %~ For these steps the root configuration is the same as for the previous step, with the difference that
 %~ one faulty contact is repositioned, in the hope that it will not be broken at the next step.
 
-\begin{figure}[t]
-\centering
-  \begin{overpic}[width=0.9\linewidth]{figures/break_contact}
-		\put (0,4) {1} 
-		\put (25,4) {2} 
-		\put (50,4) {3} 
-		\put (76,4) {4} 
-		%~ \put (68,58) {3.a)} 
-		%~ \put (5,27) {3.b)} 
-		%~ \put (37,27) {4.a)} 
-		%~ \put (68,27) {4.b)} 
-	\end{overpic}
-\caption{Contacts are maintained if joint limits and collisions constraints are respected (2). They are broken otherwise(3,4). The green line represents the root path.}
-		   \label{fig:break_contact}
-\end{figure}
+
 
 %~ \begin{figure}[t]
 %~ \centering
