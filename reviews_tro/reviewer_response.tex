@@ -1,5 +1,5 @@
 \documentclass[a4paper]{article}
- \usepackage{fullpage}
+\usepackage{fullpage}
 \usepackage{amsfonts} % pour les lettres maths creuses \mathbb
 \usepackage{amsmath}
 \usepackage[T1]{fontenc}
@@ -50,8 +50,43 @@ ItemLabels=\ding{43},%
 \author {}
 \title {Cover letter for the resubmission of our paper ``An efficient acyclic contact planner for multiped robots''}
 \date {}
+
+%% \addtolength{\oddsidemargin}{-.6in}
+%% \linespread{1.5}
+%% \addtolength{\textwidth}{-1.5in}
+
 \begin{document}
 \maketitle
+
+\section{Summary of the modifications}
+
+First of all, we would like to thank all the reviewer and the associate editor (AE).
+We received three detailed and technical reviews that helped us to improve our paper.
+In general, we agreed we most of the reviews and take them into account in the revised version of the paper.
+The two main points that were raised by all reviewers was about i) the contributions of the paper with respect to our previous papers [20] and in a lesser extend [1] and ii) the organization of the paper, with some details postponed to appendix and some other deferred to cited papers.
+
+\textbf{About the contribution of this paper with respect to our previous papers [20] and [1]}.
+This paper is an extension of [20] (presented in the conference ISRR), that it aims at replacing.
+Like [20], the main contribution of our paper is an efficient and generic method for planning contact sequences of multi-contact locomotion, which leads to the first interactive contact planner in realistic \emph{robotic} scenarios.
+Our take-home message is  is that to address the hard problem of multi contact planning, it is necessary to use abstraction and simplification, through the decomposition of the problem into sub-problems and through dimensionality reduction.
+In particular, the planner (core algorithm) presented in this paper is almost identical to the one in [20].
+The main addition with respect to [20] is the empirical validation, with realistic robot model imposing true (difficult) kinematic  constraints.
+Specifically, the extension with respect to [20] consist in:
+\begin{itemize}
+\item the addition of the pseudo-code (the algorithm is not given in [20]);
+\item the introduction of a more efficient equilibrium criterion;
+\item the new experimental setup and analysis: validation with real robot models (while [20] was only using unrealistic avatars with are much less kinematically constrained); statistical analysis of the validity of the planner models and heuristics; generation of the complete movement through the implementation of a P3 solver; validation that the movements are feasible in a complete dynamic simulator and, for one of them, on a physical robot;
+\item the release of our source code: we provide the complete procedure to use our planner for any legged robot.
+\end{itemize}
+The optimal control is no longer a claimed contribution of the paper, even though it differs from [1] in its formulation. We believe that this paper is thus in accordance with the guidelines of T-RO regarding the extension of a conference paper.
+
+\textbf{About the organization of the paper and the use of appendices and citation to reduce the core of the paper}. In order to try to make the paper more readable, the first version was mixing three styles: details given in the core of the paper; details given in the appendices; details deferred in cited papers. While all reviewers agreed that using all three styles together was a bad idea, we received contradictory reviews about how to modify the paper. Following the recommandation of the AE, we have worked to make the paper self-contained with all the contributions in the core of the paper. 
+We have brought all the material from [20] in the revised paper so that no references to this preliminary paper is necessary anymore in the technical description, and removed trivial reference to [20] but in the introduction.
+We merged Appendices B.B (equilibrium criterion), D (pseudo code) and E (referernce to the source code) in the core of the paper. We kept in the appendices the manipulability computations which is necessary for completeness but is well-known. We also prefered to keep the trajectory solver P3 in the appendix, although some details are novel, in order to keep clear that the main contributions of the paper are on P1 and P2.
+
+\bigskip
+
+In the following, we list all the questions and remarks of the reviewers, answer to direct questions and point the modifications that were brought to the paper.
 
 
 \section{Answers to reviewer 1}
