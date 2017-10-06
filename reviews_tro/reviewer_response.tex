@@ -346,7 +346,7 @@ projections. However, because of the joint limits constraints, computing a relev
 in earlier versions of the planner, and did not obtain significant gains in the performance. We believe it is explained by the fact that the majority of unfeasible samples is already
 efficiently rejected by the simple ``epsilon distance'' check. We updated the text of the paper to explain this.
 }
-\qt{Because the distance computation $\epsilon$ does not account for the variation in orientation, several samples of $ C_{Contact}^{\epsilon}$  may turn out to be unfeasible at the time of projection. One could consider additionally filtering $ C_{Contact}^{\epsilon}$ based on the orientation with respect to the obstacle normal, but in our experience we did not notice
+\qt{Because the distance $\epsilon$ does not account for the variation in orientation, several samples of $ C_{Contact}^{\epsilon}$  may turn out to be unfeasible at the time of projection. One could consider additionally filtering $ C_{Contact}^{\epsilon}$ based on the orientation with respect to the obstacle normal, but in our experience we did not notice
 any major improvement in the computational performances of the planner, so we do not perform this additional step. }
 %~ Using an epsilon is an effective way to remove many irrelevant configurations.  and
 %~ we believe that more complex solutions aiming at taking into account the orientation would end up being counter productive.

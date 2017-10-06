@@ -194,7 +194,7 @@ We then apply the following steps:
 
 %~ The reader is referred to our previous work for an extensive discussion on the benefits of this approach, and the optimal choice 
 %~ of the parameter $N$~\citep{Tonneau2014}. Our criterion to assert efficiently the static equilibrium of the robot, as well as the heuristics $h$ are detailed in Appendix~\ref{sec:heuristics}.
-Because the distance computation $\epsilon$ does not account for the variation in orientation, several samples of $ C_{Contact}^{\epsilon}$  may turn out to be unfeasible at the time of projection. One could consider additionally filtering $ C_{Contact}^{\epsilon}$ based on the orientation with respect to the obstacle normal, but in our experience we did not notice
+Because the distance $\epsilon$ does not account for the variation in orientation, several samples of $ C_{Contact}^{\epsilon}$  may turn out to be unfeasible at the time of projection. One could consider additionally filtering $ C_{Contact}^{\epsilon}$ based on the orientation with respect to the obstacle normal, but in our experience we did not notice
 any major improvement in the computational performances of the planner, so we do not perform this additional step. 
  
 In all our experiments, the heuristic $h$ is implemented as a variation of a manipulability-based heuristic~\cite{Yoshikawa1984}. The manipulability is a real number that quantifies how 
