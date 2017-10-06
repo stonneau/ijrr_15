@@ -17,11 +17,11 @@
 % - This is \deleted[id=per,remark=obsolete]{unnecessary}text.
 % - This is \replaced[id=per]{nice}{bad} text.
 % To print the list of change use: \listofchanges
-\usepackage{changes}	% use this for the working version
+%~ \usepackage{changes}	% use this for the working version
 %\usepackage[final]{changes} % use this for the final version
-\definechangesauthor[name={Andrea Del Prete}, color=orange]{adp}
-\newcommand{\deladp}[1]{\deleted[id=adp]{#1}}
-\newcommand{\addadp}[1]{\added[id=adp]{#1}}
+%~ \definechangesauthor[name={Andrea Del Prete}, color=orange]{adp}
+\newcommand{\deladp}[1]{\textcolor{red}{#1}}
+\newcommand{\addadp}[1]{\textcolor{green}{#1}}
 %~ \newcommand{\repadp}[2]{\replaced[id=adp]{#1}{#2}}
 %~ \definechangesauthor[name={Steve Tonneau}, color=blue]{st}
 %~ \newcommand{\delst}[1]{\deleted[id=st]{#1}}
@@ -29,7 +29,8 @@
 %~ \newcommand{\repst}[2]{\replaced[id=st]{#1}{#2}}
 \newcommand{\gls}[1]{\textit{#1}}
 \newcommand{\glslink}[2]{{#2}}
-\newcommand{\done}[0]{\textcolor{green}{DONE}}
+%~ \newcommand{\done}[0]{\textcolor{green}{DONE}}
+\newcommand{\done}[0]{}
 \newcommand{\ndone}[0]{\textcolor{red}{TODO}}
 
 \newcommand\dx{\dot{x}}
@@ -340,14 +341,18 @@ The first part of App. B is referred to within this Appendix as “new minor con
 
 \quot{p.5, on right, ``less than epsilon'' between end effector and world - but doesn’t the orientation of the end effector matter tremendously here, too?}
 \as{
-The orientation of the end effector matters, but is not problematic regarding the way we generate contacts.
-Using an epsilon is an effective way to remove many irrelevant configurations, and
-we believe that more complex solutions aiming at taking into account the orientation would end up being counter productive.
- Indeed, using only 3D distance, we will end up with a few configurations
-that can't be projected correctly, and will end up being discarded. But the majority of irrelevant configurations would already have been rejected with
-the efficient 3D intersection query. Conversely, introducing a 6D octree rather than the current 3D one would make the problem much more complex: instead
-of using well-known 3D operations to retrieve our candidate configurations, we would have to implement our own, new solutions. The added cost of doing this is probably 
-much higher than the computational cost of discarding a few configurations that could not be projected.  \addadp{Maybe add this discussion to the paper?}} 
+We agree that the orientation of the end effector matters. Indeed, we could consider to further filter the set of candidates samples regarding orientation, to reduce the number of failed
+projections. However, because of the joint limits constraints, computing a relevant orientation distance is less trivial than in the 3D case. We tried to implement this
+in earlier versions of the planner, and did not obtain significant gains in the performance. We believe it is explained by the fact that the majority of unfeasible samples is already
+efficiently rejected by the simple ``epsilon distance'' check. We updated the text of the paper to explain this.
+}
+\qt{Because the distance computation $\epsilon$ does not account for the variation in orientation, several samples of $ C_{Contact}^{\epsilon}$  may turn out to be unfeasible at the time of projection. One could consider additionally filtering $ C_{Contact}^{\epsilon}$ based on the orientation with respect to the obstacle normal, but in our experience we did not notice
+any major improvement in the computational performances of the planner, so we do not perform this additional step. }
+%~ Using an epsilon is an effective way to remove many irrelevant configurations.  and
+%~ we believe that more complex solutions aiming at taking into account the orientation would end up being counter productive.
+ %~ Indeed, using only 3D distance, we will end up with a few configurations
+%~ that can't be projected correctly, and will end up being discarded. But the majority of irrelevant configurations would already have been rejected with
+%~ the efficient 3D intersection query. Introducing additional filtering . } 
 \done
 
 \quot{remaining remarks by reviewer 1}
@@ -403,8 +408,9 @@ Our implementation is exactly the same as the pseudo-code of the original planne
 \as{Thanks for the comment, with which we agree in general.  \\We increased the size of Fig. 3 and 4 as much as possible to hold on one column, because we were not satisfied with the result obtained after trying to put them on a double column. The robot silhouettes in Fig. 4 are blurred when they describe a previous state of the robots. We added this information in the text. \\ As proposed also by reviewer 1, we removed references to previous results obtained in [20], so Fig. 6 has been removed.
 \\Regarding the quality of our Figures,  our simulation Figures are taken from high resolution rendering in blender. The other Figures are drawn from manually designed powerpoint vectorial graphics (converted to png). We assume that the issue encountered comes from the compression of the pdf file to fit the size constraints of the 
 submission site. We tried to improve this compression, but if the paper is accepted, we believe that the uncompressed pdf obtained from the source of the paper will result in good quality pictures.
-Regarding the interpretation of the results without the video, we agree with the reviewer and believe that the accompanying video is essential to the comprehension of the results. We considered three options: a) displaying several sequences of contact (as currently done); b) only displaying 2 or 3 representative consecutive contact stances; c)
-not providing any picture and referring to the video. We chose a) because we wanted the paper to be remain as independent from the video as possible, but are willing to opt for option b) or c) (or any other option) if preferred by the reviewer.}\done
+Regarding the interpretation of the results without the video, we agree with the reviewer and believe that the accompanying video is essential to the comprehension of the results. We considered three options: a) displaying several sequences of contact (as currently done in most cases); b) only displaying 2 or 3 representative consecutive contact stances (currently done
+in the car scenario and in the real robot scenario, for which using a large number of pictures is not readable); c)
+not providing any picture and referring to the video. We chose a mix between a) and b), because we wanted the paper to be remain as independent from the video as possible, but are willing to opt for any other option if preferred by the reviewer.}\done
 
 %~ \quot{In general, the simulation results presented qualitatively in the paper are a bit hard to interpret without the accompanying video, particularly if someone looks at a b/w print of the paper (as it may be looking in T-RO).}
 %~ \as{ThAll of our simulation figures are taken from high resolution rendering in blender, so we wouldn't know how to improve their quality. If the reviewers think the paper would be better without these figures, we are willing to remove them. However, we believe that they would make the paper more dependent on the video, so we would prefer to leave them.}
@@ -424,9 +430,7 @@ efficient is this intersection operation ? Does this method require the
 environment to be described by some specific objects (e.g. polygons) ?
 }
 
-\as{Thanks for the comment. \deladp{The choice of not detailing too much the environment and octree description goes along with 
-our effort to maintain the paper as readable as possible, since it already contains various concepts. However,}
-we agree that additional information must be added. In Section III we now indicate that the environment is represented as a polygon soup (or 3D mesh), and
+\as{Thanks for the comment. We agree that additional information must be added. In Section III we now indicate that the environment is represented as a polygon soup (or 3D mesh), and
 that we assume that it is fully known.  We thus also indicate that we assume the environment and state of the robot are fully known. To perform the intersection computation, we use
 the fcl collision detection library, which natively proposes the intersection method. We added a reference to the library in the paper. The performance of the method is included
 in the ``collision'' column of Table II. We updated the legend of Table II to indicate that this time is negligible in comparison to the other collision detections that occur.
@@ -443,7 +447,7 @@ uncertainty) are not in the scope of the paper, but I can imagine that
 a robotic researcher who reads the paper and is about to use the open
 source software it advertises is very interested in the answers.}
 \as{That is a good observation. Although the integration of on-line sensing and state estimation in the planner is an issue currently considered by our team, it is indeed
-out of the scope of this paper. As reported in the previous answer we indicated it in Section III. We \deladp{assume}\addadp{think} that our planner could work similarly with 
+out of the scope of this paper. As reported in the previous answer we indicated it in Section III. We think that our planner could work similarly with 
 a sensing system that would output data easily interpreted as a polygon soup (as for a LIDAR), otherwise additional treatment would be required. In any case additional work would be required to plan motions robust to the uncertainty of the sensing and the estimation. } \done
 
 \quot{I appreciate the thorough presentation of results in the paper, however
@@ -457,7 +461,7 @@ convince the reader that the planning method's good performance does
 not depend too much on the idealized simulation environment. }
 \as{We agree with the remark, and included some illustrations of the experimental results on HRP-2 in the paper. \\
 We now elaborate on the validity of the simulation with respect to an experiment on the real robot. As also suggested by reviewer 1, we added a paragraph
-in the paper (Section VIII.A)  to provide more information on the simulation we use to validate our motions. This simulation is an implementation of the state of the art approaches used by the community. Of course, it does not guarantee that the motion could be executed on the robot, but it is used extensively by the community as a reasonable feasibility test. The suggestion of the reviewer to compare the simulation results with those on the real robot is interesting. \addadp{However, in our simulations HRP-2 is torque controlled, whereas in our experiments HRP-2 is position controlled. This makes the usefulness of a comparison between simulation and experiments extremely doubtful, because we would be comparing motions obtained with different controllers. For these reasons, we prefer not to do this comparison.}}
+in the paper (Section VIII.A)  to provide more information on the simulation we use to validate our motions. This simulation is an implementation of the state of the art approaches used by the community. Of course, it does not guarantee that the motion could be executed on the robot, but it is used extensively by the community as a reasonable feasibility test. The suggestion of the reviewer to compare the simulation results with those on the real robot is interesting. However, in our simulations HRP-2 is torque controlled, whereas in our experiments HRP-2 is position controlled. This makes the usefulness of a comparison between simulation and experiments extremely doubtful, because we would be comparing motions obtained with different controllers. For these reasons, we prefer not to do this comparison.}
 \qt{(Section VIII.A) To generate continuous movements from our contact plans we used either the framework proposed in [1], or our own implementation of a $\mathcal{P}_3$ solver (Appendix C).
 The resulting movements have been validated either on the real HRP-2 robot (details can be found in [1]), or with our dynamic simulator, based on a state-of-the-art algorithm [25].
 In the simulations we controlled the robot with a standard inverse-dynamics controller[31].
@@ -476,7 +480,7 @@ the end of Section I.B.), and the optimal control formulation is from [1]
 (again as stated in I.B.).}
 \as{Thanks for the comment. Indeed, all reviewers agreed that the contribution with respect to previous work was not clearly stated. We updated the paper to reflect the following. Firstly, our planner is almost identical to the one in [20], with important additions that are the pseudo code for the algorithm (the algorithm is not given in [20]), as well as the introduction of a more efficient criterion
 for checking static equilibrium (see next question). The optimal control is no longer a claimed contribution of the paper, even though it differs from [1] in its formulation. The main
-novelty of the paper resides in the experimental setup and analysis, as well as the empirical proof that the planner works with real robots that are more constrained kinematically than the virtual avatars from [20]. \deladp{We believe that this paper is thus in accordance with the guidelines of T-RO regarding the extension of a conference paper.}}
+novelty of the paper resides in the experimental setup and analysis, as well as the empirical proof that the planner works with real robots that are more constrained kinematically than the virtual avatars from [20].}
 \qt{(Section I.B)  The present paper is an extension of our conference paper[20]. As such, the motion planning algorithm presented here is the same as the one presented in the
 previous work. Section IV and V of the present paper are thus paraphrasing the original paper, with the exception of Section V.B.2, where we additionally provide the pseudo-code of the algorithm absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on a new LP formulation presented in Section VI.
 Compared with the original paper, we also release our source code, and provide the complete procedure to use our planner for any legged robot. We thus provide
