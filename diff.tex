@@ -1,7 +1,7 @@
 
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL out_old.tex   Mon Oct  9 10:58:49 2017
-%DIF ADD out_new.tex   Mon Oct  9 16:06:13 2017
+%DIF ADD out_new.tex   Mon Oct  9 18:06:36 2017
 %% bare_jrnl.tex
 %% V1.4b
 %% 2015/08/26
@@ -884,22 +884,27 @@ To further demonstrate the validity of our approach, we show that the generated 
 Finally, we provide an extensive discussion on the consequences of our approach in terms of efficiency and completeness regarding the contact planning problem. \DIFaddbegin \\
 \DIFaddend 
 
-\DIFdelbegin \DIFdel{The paper extends our previous papers presenting the reachability condition~\cite{tonneauisrr15}and the connection of our contact planner with a solver~$\mathcal{P}_3$~\cite{Carpentier2016}}\DIFdelend \DIFaddbegin \noindent \DIFadd{\textbf{Comparison with our previous work:}
+\DIFdelbegin \DIFdel{The paper extends our previous papers presenting the reachability condition~\cite{tonneauisrr15}}\DIFdelend \DIFaddbegin \noindent \DIFadd{\textbf{Comparison with our previous work:}
 The present paper is an extension of our ISRR conference paper~\cite{tonneauisrr15}. 
-As such, our solution to address $\mathcal{P}_1$ and $\mathcal{P}_2$ is the same motion planner as the one presented at ISRR (reformulated in Section~\ref{rbprm} and~\ref{sec:contact})}\DIFaddend . 
-\DIFdelbegin \DIFdel{we introduce a new efficient criterion of the robot balance, provide the complete }\DIFdelend \DIFaddbegin \DIFadd{However, three important novelties have been added to the planner: the }\DIFaddend pseudo-code \DIFdelbegin \DIFdel{and release our source code that can be used to directly reproduce our results. We also provide a }\DIFdelend \DIFaddbegin \DIFadd{of the algorithm  (Section~\ref{app:contact}), a novel criterion for
-static equilibrium (Section~\ref{sec:Equil}), and the release of the source code of the planner (Section~\ref{app:hpp}).
+As such, our solution to address $\mathcal{P}_1$ and $\mathcal{P}_2$ is the same motion planner as the one presented at ISRR (reformulated in Section~\ref{rbprm} and~\ref{sec:contact}). 
+However three important novelties have been added to the planner: the pseudo-code of the algorithm (Section~\ref{app:contact}), a novel criterion for
+static equilibrium (Section~\ref{sec:Equil}), }\DIFaddend and \DIFdelbegin \DIFdel{the connection of our contact planner with a solver~$\mathcal{P}_3$~\cite{Carpentier2016}. 
+In this paper, we introduce a new efficient criterion of the robot balance, provide the complete pseudo-code and release our source code that can be used to directly reproduce our results. We also provide a }\DIFdelend \DIFaddbegin \DIFadd{the release of the source code of the planner (Section~\ref{app:hpp}).
 }
 
 \DIFadd{The other novelty of the paper is a rigorous experimental validation of the approach on actual robot models (Section~\ref{sec:results}).
 To validate our contact plans we introduced a complete framework for multi-contact motion synthesis. This framework additionally comprises an interpolation method to solve the problem $\mathcal{P}_3$,  based on a reformulation of our previous work~\cite{Carpentier2016}. Our }\DIFaddend solution to $\mathcal{P}_3$ \DIFdelbegin \DIFdel{.
-The planner is validated on robot models of HyQ and HRP-2 (while \cite{tonneauisrr15} used unrealistic avatar models) with complete performance analysis.
+The planner is validated on robot modelsof HyQ and HRP-2 (while \cite{tonneauisrr15} used unrealistic avatar models ) with complete performance analysis.
 }\DIFdelend \DIFaddbegin \DIFadd{allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm~\cite{Kaufman2008}. 
 We do not consider these additions as contributions \textit{per se}, but describing them here is required to understand our experimental contribution.
-%DIF > ~ These aspects of the framework are presented in details in the paper, but are not novel \textit{per se}. The novelty lies in the validation of the method with real robot models, for which the planning is harder with respect to the avatars used in [20], because of stricter kinematic constraints
 }\DIFaddend 
 
 %DIF < ~ This paper extends our previous conference paper~\citep{tonneauisrr15} in several ways. Our approach is now demonstrated on actual robots and in simulation, contrary to virtual avatars before, in a large variety of contexts. To achieve this we introduce a new criterion to efficiently compute the equilibrium of the robot while accounting for uncertainties of the real world. We provide the complete pseudo code of algorithm. We give the complete procedure to use our planner with any legged robot and provide our source code, allowing any user to directly use our method. We also propose a solution to $\mathcal{P}_3$, making our framework complete. Finally we provide an in-depth analysis of the results we obtain, and a theoretical discussion on the capabilities of the planner and its current limitations.
+\DIFaddbegin \DIFadd{Finally, as opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are more constrained kinematically than the virtual avatars used before,
+thus making the planning problem harder. Through an extensive empirical analysis, we demonstrate that the method remains efficient and applicable in this context.
+%DIF > ~ These aspects of the framework are presented in details in the paper, but are not novel \textit{per se}. The novelty lies in the validation of the method with real robot models, for which the planning is harder with respect to the avatars used in [20], because of stricter kinematic constraints
+}
+
 %DIF > ~ As such, the motion planning algorithm presented here is the same as the one presented in the
 %DIF > ~ previous work. Section~\ref{rbprm} and~\ref{sec:contact} of the present paper are thus paraphrasing the original paper, with the exception of Section~\ref{app:contact}, where we additionally provide the pseudo-code of the algorithm absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on a new LP formulation presented in Section~\ref{sec:Equil}.
 %DIF > ~ Compared with the original paper, we also release our source code, and provide the complete procedure to use our planner for any legged robot. We thus provide
@@ -907,12 +912,12 @@ We do not consider these additions as contributions \textit{per se}, but describ
 %DIF > ~ 
 %DIF > ~ To validate our approach, in this paper we had to implement or integrate other tools based on previous publications from our team. We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work~\cite{Carpentier2016}. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm~\cite{Kaufman2008}.
 %DIF > ~ We do not consider these additions as contributions \textit{per se}, but describing them here is required to understand the experimental contribution of this paper.
-\DIFaddbegin 
 
 %DIF > ~ Indeed, thanks to these tools we have been able to design a complete pipeline for synthesizing multi-contact motions from scratch.
-\DIFadd{Finally, as opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are more constrained kinematically than the virtual avatars used before,
-thus making the planning problem harder. Through an extensive empirical analysis, we demonstrate that the method remains efficient and applicable in this context.
-}\DIFaddend % !TEX root =  ../main.tex
+%DIF > ~ Indeed, the novelty of the present paper lies in the rigorous experimental setup we propose to demonstrate its interest.
+%DIF > ~ As opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are more constrained kinematically than the virtual avatars used before,
+%DIF > ~ thus making the planning problem harder. Through an extensive empirical analysis, we demonstrate that the method is remains efficient and qualitatively relevant in this context.
+\DIFaddend % !TEX root =  ../main.tex
 \section{Overview}
 \label{overview}
 
@@ -1569,7 +1574,7 @@ Our criterion to assert efficiently the static equilibrium of the robot, as well
 }\DIFdelend %DIF > ~ The reader is referred to our previous work for an extensive discussion on the benefits of this approach, and the optimal choice 
 %DIF > ~ of the parameter $N$~\citep{Tonneau2014}. Our criterion to assert efficiently the static equilibrium of the robot, as well as the heuristics $h$ are detailed in Appendix~\ref{sec:heuristics}.
 \DIFaddbegin \DIFadd{Because the distance $\epsilon$ does not account for the variation in orientation, several samples of $ C_{Contact}^{\epsilon}$  may turn out to be unfeasible at the time of projection. One could consider additionally filtering $ C_{Contact}^{\epsilon}$ based on the orientation with respect to the obstacle normal, but in our experience we did not notice
-any major improvement in the computational performances of the planner, so we do not perform this additional step. 
+any significant improvement in the computational performances of the planner, so we do not perform this additional step. 
  }\DIFaddend 
 
 %DIF < ~ It should be noted that a failure case for our contact generator does not necessarily mean that the planner will globally fail. Indeed,
@@ -1683,17 +1688,21 @@ The problem can then be formulated as an LP:
 
 \DIFadd{We observe that if $b_0$ is positive then }\eqref{eq:lin_prog} \DIFadd{admits a solution, and $b_0$ is proportional to the minimum distance of the contact forces to the boundaries of the friction cones.
 If $b_0$ is negative, the configuration is not in static equilibrium, and $b_0$ indicates ``how far'' from equilibrium the configuration is. We thus use $b_0$ as a measure of robustness.
+%DIF > ~ One advantage of $b_0$ is that it gives a constant margin 
+A simple approach to robustness consists in choosing a smaller friction coefficient, to constrain the forces to lie away from the boundaries of the real cone.  However, this would result in a small safety margin for forces of low magnitude, and an excessively big safety margin for large forces as the boundaries grow more and more appart. In comparison, our margin $b_0$ is constant, and provides a helpful mean to compare the robustness of different contact configurations.
 }
 
 \DIFadd{In our implementation, rather than solving directly }\eqref{eq:lin_prog_rob}\DIFadd{, we solve an equivalent problem of smaller dimension that we get by taking the dual of }\eqref{eq:lin_prog_rob} \DIFadd{and eliminating the Lagrange multipliers associated to the inequality constraints:
 }\begin{equation} \DIFadd{\label{eq:dual} \begin{aligned}
 \find \quad & \bm{\nu} \in \Rv{6}\\
-\maximize  \quad & -(\mathbf{D} \mathbf{c} + \mathbf{d})^T \nu \\
+\maximize  \quad & -(\mathbf{D} \mathbf{c} + \mathbf{d})^T \bm{\nu} \\
 \st \quad &\mathbf{G}^T \bm{\nu} \ge 0 \\
 & \mathbf{1}^T \mathbf{G}^T \bm{\nu} = 1 \\
 \end{aligned} }\end{equation}
 
-\DIFadd{Indeed, from Slater's conditions \citep{Boyd:2004:CO:993483}, we know that the optimal values of an LP and its dual are equal. Thus the optimal value of the LP~}\eqref{eq:dual} \DIFadd{is indeed the optimal $b_0$.
+\DIFadd{Indeed, from Slater's conditions \citep{Boyd:2004:CO:993483}, we know that the optimal values of an LP and its dual are equal.
+Therefore the optimal value $\bm{\nu}^*$ gives the optimal value $b_0^*$ through the equality $b_0^* = (\mathbf{D} \mathbf{c} + \mathbf{d})^T \bm{\nu}^*$.
+ %DIF > ~ Thus the optimal value of the LP~\eqref{eq:dual} is indeed the optimal $b_0$.
 }
 
 \section{\DIFadd{Source code of our planner}}
@@ -2388,7 +2397,7 @@ Table~\ref{tab:compprev} presents the computation times for these scenarios, cle
 
 %DIF <  !TEX root =  ../main.tex
  %DIF >  !TEX root =  ../main_tro.tex
- \section{Discussion: validity and purpose of our contact planner} 
+ \section{Discussion: validity and \DIFdelbegin \DIFdel{interest }\DIFdelend \DIFaddbegin \DIFadd{purpose }\DIFaddend of our contact planner} 
 \label{sec:discussion}
 
 \DIFdelbegin \subsection{\DIFdel{Accuracy and performance gain of the reachability condition}}
@@ -2396,7 +2405,7 @@ Table~\ref{tab:compprev} presents the computation times for these scenarios, cle
 \addtocounter{subsection}{-1}%DIFAUXCMD
 \DIFdelend %DIF > ~ \subsection{Accuracy and performance gain of the reachability condition}
 
-As demonstrated in the results section, the main purpose of our method is the reduction of the algorithmic complexity of the problem, which leads to an interactive 
+As demonstrated in the results section, the main \DIFdelbegin \DIFdel{interest }\DIFdelend \DIFaddbegin \DIFadd{purpose }\DIFaddend of our method is the reduction of the algorithmic complexity of the problem, which leads to an interactive 
 application. This property is critical for 
 online applications with the robot and was not proposed by any of the previous contributions. Our method addresses highly constrained environments while improving the search time by orders of magnitude. This high performance is reached at the cost of some approximations that we discuss here. 
 %~ In previous approaches, we identified 2 sources of high computational cost. 
@@ -2839,7 +2848,7 @@ In turn, from this value we can either choose the most robust candidate, or set 
 
 %DIFDELCMD < %%%
 \DIFdel{According to Coulomb's law, the non-slipping condition is verified if all the contact forces lie in the friction cone defined by the surface.
-As classically done, we linearize the friction cone in a conservative fashion with a pyramid included in it, described by four generating rays of unit length. We choose for instance:
+As classically done, we linearize the friction cone in a conservative fashion with a pyramid, described by four generating rays of unit length. We choose for instance:
 }\begin{displaymath}
 \DIFdel{\mathbf{V}_{i} = \mat{\mathbf{n}_{i} + \mu \mathbf{\boldsymbol\upgamma}_{i1} & \mathbf{n}_{i} -\mu \mathbf{\boldsymbol\upgamma}_{i1} & \mathbf{n}_{i} + \mu \mathbf{\boldsymbol\upgamma}_{i2} & \mathbf{n}_{i} - \mu \mathbf{\boldsymbol\upgamma}_{i2}}^T
 }\end{displaymath}
@@ -2991,7 +3000,7 @@ We rewrite Eq.~\ref{eq:new_eul} in the general case:
 %~ \underbrace{m (\mathbf{\ddot{c}} - \mathbf{g})  \\ m (\mathbf{\ddot{dc}} - \mathbf{g}) + \mathbf{\dot{L}} }_{\mathbf{w}}
 \end{align}
 
-\noindent where $\dot{L}$ is the angular momentum expressed at the com.
+\DIFaddbegin \noindent \DIFaddend where $\dot{L}$ is the angular momentum expressed at the com.
 Eq.~\ref{eq:new_eul_acc} defines a 6-dimensional cone $\mathcal{K}$ ~\citep{qiu:dhm:2011,Caron2015}. For a given set of contacts,
 this cone determines all the admissible wrenches $\mathbf{w}$ that can be generated by contact forces inside their friction cones.
 The face form of $\mathcal{K}$ can be computed using the double description method~\citep{Fukuda1996}, resulting in the following linear inequalities:

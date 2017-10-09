@@ -84,6 +84,8 @@ Let $b_0 \in \mathbb{R}$ be a scalar value. We now define the following LP:
 
 We observe that if $b_0$ is positive then \eqref{eq:lin_prog} admits a solution, and $b_0$ is proportional to the minimum distance of the contact forces to the boundaries of the friction cones.
 If $b_0$ is negative, the configuration is not in static equilibrium, and $b_0$ indicates ``how far'' from equilibrium the configuration is. We thus use $b_0$ as a measure of robustness.
+%~ One advantage of $b_0$ is that it gives a constant margin 
+A simple approach to robustness consists in choosing a smaller friction coefficient, to constrain the forces to lie away from the boundaries of the real cone.  However, this would result in a small safety margin for forces of low magnitude, and an excessively big safety margin for large forces as the boundaries grow more and more appart. In comparison, our margin $b_0$ is constant, and provides a helpful mean to compare the robustness of different contact configurations.
 
 In our implementation, rather than solving directly \eqref{eq:lin_prog_rob}, we solve an equivalent problem of smaller dimension that we get by taking the dual of \eqref{eq:lin_prog_rob} and eliminating the Lagrange multipliers associated to the inequality constraints:
 \begin{equation} \label{eq:dual} \begin{aligned}
