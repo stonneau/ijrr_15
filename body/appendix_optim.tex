@@ -62,7 +62,7 @@ We call the total duration of the motion $T$, and formulate the following optimi
 \end{aligned} \end{equation}
 %~ \adnote{Did you really use w as a variable of your problem? Or do you compute it inside your constraint function as a function of the CoM pos and acc? And what about dL? It appears in the definition of w but then it is no longer there in the problem definition!}
 The cost function $\ell$ is a weighted sum of the angular momentum and center-of-mass acceleration variation over the whole trajectory.
-The center-of-mass positions and velocities $\mathbf{c}(t)$, $\mathbf{\dot{c}}(t)$ are interval variables, obtained through the double integration of $\mathbf{\ddot{c}}(t)$.
+The center-of-mass positions and velocities $\mathbf{c}(t)$, $\mathbf{\dot{c}}(t)$ are internal variables, obtained through the double integration of $\mathbf{\ddot{c}}(t)$.
 Then $\mathbf{w}(t)$ is obtained directly from these variables. $\mathbf{c}_{\mathbf{q}_0}$ and $\mathbf{c}_{\mathbf{q}_1}$ are the center-of-mass positions for configurations
  $\mathbf{q}_0$ and $\mathbf{q}_1$ respectively.
 %~ The system dynamics $dyn$ tie together the position, velocity and acceleration of the center of mass. 

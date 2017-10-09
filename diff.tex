@@ -1,7 +1,7 @@
 
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL out_old.tex   Mon Oct  9 10:58:49 2017
-%DIF ADD out_new.tex   Mon Oct  9 10:47:41 2017
+%DIF ADD out_new.tex   Mon Oct  9 13:17:22 2017
 %% bare_jrnl.tex
 %% V1.4b
 %% 2015/08/26
@@ -1779,9 +1779,39 @@ In each scenario we detail the contacts involved and the heuristics chosen (eith
 
 % \subsubsection*{Truck egress (Figure~\ref{res_truck_pres} and Figure~\ref{res_truck_bd}) -- Humanoid and insectoid robots.}
 %\subsubsection*{Truck egress -- Humanoid and insectoid robots (Figure~\ref{res_truck_bd}).}
-\subsubsection{HRP-2 -- \DIFdelbegin \DIFdel{Steep staircase }\DIFdelend \DIFaddbegin \DIFadd{Staircase with high steps }\DIFaddend (Figure~\ref{fig:stair_robust})}
-\DIFaddbegin \newcommand{\widthValue}{0.13\linewidth}
-\DIFaddend 
+\subsubsection{HRP-2 -- \DIFdelbegin \DIFdel{Steep staircase }\DIFdelend \DIFaddbegin \DIFadd{Standing up }\DIFaddend (Figure~\DIFdelbegin \DIFdel{\ref{fig:stair_robust}}\DIFdelend \DIFaddbegin \DIFadd{\ref{fig:standing}}\DIFaddend )}
+\DIFaddbegin \DIFadd{From a bent configuration, the robot has to stand up using a wall as support, and climbing a 25-cm high step.
+}\DIFaddend 
+
+\begin{figure}
+  \centering
+  \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=1\linewidth]{figures/stair}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=1\linewidth]{figures/standing}
+  \DIFaddendFL \caption{
+           HRP-2 in the \DIFdelbeginFL \DIFdelFL{steep stair climbing }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{standing }\DIFaddendFL scenario. }
+		   \DIFdelbeginFL %DIFDELCMD < \label{fig:stair_robust}
+%DIFDELCMD < %%%
+\DIFdelendFL \DIFaddbeginFL \label{fig:standing}
+\DIFaddendFL \end{figure}
+
+
+\DIFaddbegin \noindent\DIFadd{\textbf{Contacts involved:} All (both feet and hands).
+}
+
+\noindent\DIFadd{\textbf{Heuristics:} $h_w$ for the feet, $h_{\textrm{\it EFORT}}$  for the hands.
+}
+
+%DIF > ~ \noindent\textbf{Observations:} The scenario illustrates well the acyclic aspect of the planning. For instance, in the four first frames of Figure~\ref{fig:standing}, we can see that the right foot
+%DIF > ~ is moved twice, with the left foot in between, before the configuration allows HRP-2 to move its hand.
+%DIF > ~ Because the contacts are tried in a FIFO manner, the fact that the output contact sequence is acyclic shows that a cyclic approach (with a finite state machine for instance) is not sufficient
+%DIF > ~ for the computed path. The reason for this is not reachability, but equilibrium. The planning is slower than for the stair scenario (because the contact generation fails more),
+%DIF > ~ though it remains compatible with \gls{interactive} performances. % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
+
+
+
+\subsubsection{HRP-2 -- Staircase with high steps (Figure~\ref{fig:stair_robust})}
+\newcommand{\widthValue}{0.13\linewidth}
 
 \begin{figure*}[h!t!]
   \begin{center}
@@ -1814,7 +1844,6 @@ In each scenario we detail the contacts involved and the heuristics chosen (eith
            %DIF > ~ HRP-2 in the stair climbing scenario. }
 		   %DIF > ~ \label{fig:stair_robust}
 %DIF > ~ \end{figure}
-\DIFaddbegin 
 
 \DIFaddend The goal is to climb three 15-cm high steps.
 
@@ -1845,30 +1874,44 @@ In each scenario we detail the contacts involved and the heuristics chosen (eith
 		   %~ \label{fig:stair_comp}
 %~ \end{figure}
 
-\subsubsection{HRP-2 -- Standing up (Figure~\ref{fig:standing})}
-From a bent configuration, the robot has to stand up using a wall as support, and climbing a 25-cm high step.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=1\linewidth]{figures/standing}
-  \caption{
-           HRP-2 in the standing scenario. }
-		   \label{fig:standing}
-\end{figure}
 
 
-\noindent\textbf{Contacts involved:} All (both feet and hands).
+\DIFdelbegin \subsubsection{\DIFdel{HRP-2 -- Standing up (Figure~\ref{fig:standing})}}
+%DIFAUXCMD
+\addtocounter{subsubsection}{-1}%DIFAUXCMD
+\DIFdel{From a bent configuration, the robot has to stand up using a wall as support, and climbing a 25-cm high step.
+}%DIFDELCMD < 
 
-\noindent\textbf{Heuristics:} $h_w$ for the feet, $h_{\textrm{\it EFORT}}$  for the hands.
+%DIFDELCMD < \begin{figure}
+%DIFDELCMD <   \centering
+%DIFDELCMD <   \includegraphics[width=1\linewidth]{figures/standing}
+%DIFDELCMD <   %%%
+%DIFDELCMD < \caption{%
+{%DIFAUXCMD
+\DIFdelFL{HRP-2 in the standing scenario. }}
+		   %DIFAUXCMD
+%DIFDELCMD < \label{fig:standing}
+%DIFDELCMD < \end{figure}
+%DIFDELCMD < 
 
-%~ \noindent\textbf{Observations:} The scenario illustrates well the acyclic aspect of the planning. For instance, in the four first frames of Figure~\ref{fig:standing}, we can see that the right foot
-%~ is moved twice, with the left foot in between, before the configuration allows HRP-2 to move its hand.
-%~ Because the contacts are tried in a FIFO manner, the fact that the output contact sequence is acyclic shows that a cyclic approach (with a finite state machine for instance) is not sufficient
-%~ for the computed path. The reason for this is not reachability, but equilibrium. The planning is slower than for the stair scenario (because the contact generation fails more),
-%~ though it remains compatible with \gls{interactive} performances. % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
+%DIFDELCMD < \noindent%%%
+\DIFdel{\textbf{Contacts involved:} All (both feet and hands).
+}%DIFDELCMD < 
 
+%DIFDELCMD < \noindent%%%
+\DIFdel{\textbf{Heuristics:} $h_w$ for the feet, $h_{\textrm{\it EFORT}}$  for the hands.
+}%DIFDELCMD < 
 
-\subsubsection{HRP-2 -- Car egress (Figure~\ref{fig:car})}
+%DIFDELCMD < %%%
+%DIF < ~ \noindent\textbf{Observations:} The scenario illustrates well the acyclic aspect of the planning. For instance, in the four first frames of Figure~\ref{fig:standing}, we can see that the right foot
+%DIF < ~ is moved twice, with the left foot in between, before the configuration allows HRP-2 to move its hand.
+%DIF < ~ Because the contacts are tried in a FIFO manner, the fact that the output contact sequence is acyclic shows that a cyclic approach (with a finite state machine for instance) is not sufficient
+%DIF < ~ for the computed path. The reason for this is not reachability, but equilibrium. The planning is slower than for the stair scenario (because the contact generation fails more),
+%DIF < ~ though it remains compatible with \gls{interactive} performances. % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
+%DIFDELCMD < 
+
+%DIFDELCMD < %%%
+\DIFdelend \subsubsection{HRP-2 -- Car egress (Figure~\ref{fig:car})}
 In this scenario inspired from the DRC car egress HRP-2 has to step out of a car.
 
 \begin{figure}
@@ -2989,7 +3032,7 @@ We call the total duration of the motion $T$, and formulate the following optimi
 \DIFdelend %DIF > ~ \adnote{Did you really use w as a variable of your problem? Or do you compute it inside your constraint function as a function of the CoM pos and acc? And what about dL? It appears in the definition of w but then it is no longer there in the problem definition!}
 The cost function $\ell$ is a weighted sum of the angular momentum and center-of-mass acceleration variation over the whole trajectory.
 The \DIFdelbegin \DIFdel{system dynamics $dyn$ tie together the position, velocity and acceleration of the center of mass.
-}\DIFdelend \DIFaddbegin \DIFadd{center-of-mass positions and velocities $\mathbf{c}(t)$, $\mathbf{\dot{c}}(t)$ are interval variables, obtained through the double integration of $\mathbf{\ddot{c}}(t)$.
+}\DIFdelend \DIFaddbegin \DIFadd{center-of-mass positions and velocities $\mathbf{c}(t)$, $\mathbf{\dot{c}}(t)$ are internal variables, obtained through the double integration of $\mathbf{\ddot{c}}(t)$.
 Then $\mathbf{w}(t)$ is obtained directly from these variables. $\mathbf{c}_{\mathbf{q}_0}$ and $\mathbf{c}_{\mathbf{q}_1}$ are the center-of-mass positions for configurations
  $\mathbf{q}_0$ and $\mathbf{q}_1$ respectively.
 %DIF > ~ The system dynamics $dyn$ tie together the position, velocity and acceleration of the center of mass. 
