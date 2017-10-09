@@ -88,10 +88,12 @@ If $b_0$ is negative, the configuration is not in static equilibrium, and $b_0$ 
 In our implementation, rather than solving directly \eqref{eq:lin_prog_rob}, we solve an equivalent problem of smaller dimension that we get by taking the dual of \eqref{eq:lin_prog_rob} and eliminating the Lagrange multipliers associated to the inequality constraints:
 \begin{equation} \label{eq:dual} \begin{aligned}
 \find \quad & \bm{\nu} \in \Rv{6}\\
-\maximize  \quad & -(\mathbf{D} \mathbf{c} + \mathbf{d})^T \nu \\
+\maximize  \quad & -(\mathbf{D} \mathbf{c} + \mathbf{d})^T \bm{\nu} \\
 \st \quad &\mathbf{G}^T \bm{\nu} \ge 0 \\
 & \mathbf{1}^T \mathbf{G}^T \bm{\nu} = 1 \\
 \end{aligned} \end{equation}
 
-Indeed, from Slater's conditions \citep{Boyd:2004:CO:993483}, we know that the optimal values of an LP and its dual are equal. Thus the optimal value of the LP~\eqref{eq:dual} is indeed the optimal $b_0$.
+Indeed, from Slater's conditions \citep{Boyd:2004:CO:993483}, we know that the optimal values of an LP and its dual are equal.
+Therefore the optimal value $\bm{\nu}^*$ gives the optimal value $b_0^*$ through the equality $b_0^* = (\mathbf{D} \mathbf{c} + \mathbf{d})^T \bm{\nu}^*$.
+ %~ Thus the optimal value of the LP~\eqref{eq:dual} is indeed the optimal $b_0$.
 
