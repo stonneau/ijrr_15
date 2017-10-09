@@ -132,16 +132,15 @@ that set THIS paper apart seem (as claimed by the authors) to be:
 
 \as{Thanks for the comment. As mentioned in the summary, our planner is almost identical to the one in [20], but the paper comprises important additions that are the pseudo code for the algorithm (the algorithm is not given in [20]), as well as the introduction of a more efficient criterion
 for checking static equilibrium.  The main novelty of the paper resides in the experimental setup and analysis, as well as the empirical proof that the planner works with real robots that are more constrained kinematically than the virtual avatars from [20]. This is now explained in details in the introduction.}
-\qt{(Section I.B) The present paper is an extension of our conference paper[20]. As such, the motion planning algorithm presented here is the same as the one presented in the
-previous work. Section IV and V of the present paper are thus paraphrasing the original paper, with the exception of Section V.B.2, where we additionally provide the pseudo-code of the algorithm absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on a new LP formulation presented in Section VI.
-Compared with the original paper, we also release our source code, and provide the complete procedure to use our planner for any legged robot. We thus provide
-all the technical information required to use the planner.\\
-To validate our approach, in this paper we had to implement or integrate other tools based on previous publications from our team. We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work[1]. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm [28].
-We do not consider these additions as contributions per se, but describing them here is required to understand the experimental contribution of this paper.\\
-Indeed, thanks to these tools we have been able to design a complete pipeline for synthesizing multi-contact motions from scratch.
-The novelty of the present paper lies in the rigorous experimental setup we propose to demonstrate its interest.
-As opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are much more constrained kinematically than the virtual avatars used before,
-thus making the planning problem even harder. Through an extensive empirical analysis, we demonstrate that the method remains interesting in this context, qualitatively and efficiently.}
+\qt{(Section I.B) The present paper is an extension of our ISRR conference paper [20]. 
+As such, our solution to address $\mathcal{P}_1$ and $\mathcal{P}_2$ is the same motion planner as the one presented at ISRR (reformulated in Section IV and V). 
+However three important novelties have been added to the planner: the pseudo-code of the algorithm (Section V.B.2), a novel criterion for
+static equilibrium (Section VI), and the release of the source code of the planner (Section VII). \\
+The other contribution of the paper is a rigorous experimental validation of the approach on actual robot models (Section VIII).
+To validate our contact plans we introduced a complete framework for multi-contact motion synthesis. This framework additionally comprises an interpolation method to solve the problem $\mathcal{P}_3$,  based on a reformulation of our previous work [1]. Our solution to $\mathcal{P}_3$ allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm [28]. 
+We do not consider these additions as contributions \textit{per se}, but describing them here is required to understand our experimental contribution. \\
+Finally, as opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are more constrained kinematically than the virtual avatars used before,
+thus making the planning problem harder. Through an extensive empirical analysis, we demonstrate that the method remains efficient and applicable in this context.}
 \done
 
 %~ \as{We agree that our original submission is not clear on the novelty between this paper and previous contributions.
@@ -199,9 +198,8 @@ of the center of mass, whereas in [1] the problem variables are the contact forc
 was required to validate our approach. 
 We rephrased the text to clearly indicate that the algorithm is not a contribution. We made the choice not to give an intuition nor describe the solver in the core
 of the paper because it is not required to understand the contributions to P1 and P2.}
-\qt{(Section I.B) We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work[1]. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm [28].
-We do not consider these additions as contributions per se, but describing them here is required to understand the experimental contribution of this paper.}\done
-
+\qt{(Section I.B) To validate our contact plans we introduced a complete framework for multi-contact motion synthesis. This framework additionally comprises an interpolation method to solve the problem $\mathcal{P}_3$,  based on a reformulation of our previous work [1]. Our solution to $\mathcal{P}_3$ allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm [28]. 
+We do not consider these additions as contributions \textit{per se}, but describing them here is required to understand our experimental contribution.}\done
 
 \quot{
 (4)	The last contribution is validation using an in-house
@@ -482,16 +480,16 @@ the end of Section I.B.), and the optimal control formulation is from [1]
 \as{Thanks for the comment. Indeed, all reviewers agreed that the contribution with respect to previous work was not clearly stated. We updated the paper to reflect the following. Firstly, our planner is almost identical to the one in [20], with important additions that are the pseudo code for the algorithm (the algorithm is not given in [20]), as well as the introduction of a more efficient criterion
 for checking static equilibrium (see next question). The optimal control is no longer a claimed contribution of the paper, even though it differs from [1] in its formulation. The main
 novelty of the paper resides in the experimental setup and analysis, as well as the empirical proof that the planner works with real robots that are more constrained kinematically than the virtual avatars from [20].}
-\qt{(Section I.B)  The present paper is an extension of our conference paper[20]. As such, the motion planning algorithm presented here is the same as the one presented in the
-previous work. Section IV and V of the present paper are thus paraphrasing the original paper, with the exception of Section V.B.2, where we additionally provide the pseudo-code of the algorithm absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on a new LP formulation presented in Section VI.
-Compared with the original paper, we also release our source code, and provide the complete procedure to use our planner for any legged robot. We thus provide
-all the technical information required to use the planner.\\
-To validate our approach, in this paper we had to implement or integrate other tools based on previous publications from our team. We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work[1]. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm [28].
-We do not consider these additions as contributions per se, but describing them here is required to understand the experimental contribution of this paper.\\
-Indeed, thanks to these tools we have been able to design a complete pipeline for synthesizing multi-contact motions from scratch.
-The novelty of the present paper lies in the rigorous experimental setup we propose to demonstrate its interest.
-As opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are much more constrained kinematically than the virtual avatars used before,
-thus making the planning problem even harder. Through an extensive empirical analysis, we demonstrate that the method remains interesting in this context, qualitatively and efficiently.}\done
+\qt{(Section I.B) 
+The present paper is an extension of our ISRR conference paper [20]. 
+As such, our solution to address $\mathcal{P}_1$ and $\mathcal{P}_2$ is the same motion planner as the one presented at ISRR (reformulated in Section IV and V). 
+However three important novelties have been added to the planner: the pseudo-code of the algorithm (Section V.B.2), a novel criterion for
+static equilibrium (Section VI), and the release of the source code of the planner (Section VII). \\
+The other contribution of the paper is a rigorous experimental validation of the approach on actual robot models (Section VIII).
+To validate our contact plans we introduced a complete framework for multi-contact motion synthesis. This framework additionally comprises an interpolation method to solve the problem $\mathcal{P}_3$,  based on a reformulation of our previous work [1]. Our solution to $\mathcal{P}_3$ allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm [28]. 
+We do not consider these additions as contributions \textit{per se}, but describing them here is required to understand our experimental contribution. \\
+Finally, as opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are more constrained kinematically than the virtual avatars used before,
+thus making the planning problem harder. Through an extensive empirical analysis, we demonstrate that the method remains efficient and applicable in this context.}\done
 
 \quot{The authors highlight a particular
 contribution of this work to be the efficient robust balance criterion,

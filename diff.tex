@@ -1,7 +1,7 @@
 
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL out_old.tex   Mon Oct  9 10:58:49 2017
-%DIF ADD out_new.tex   Mon Oct  9 13:17:22 2017
+%DIF ADD out_new.tex   Mon Oct  9 16:06:13 2017
 %% bare_jrnl.tex
 %% V1.4b
 %% 2015/08/26
@@ -884,28 +884,35 @@ To further demonstrate the validity of our approach, we show that the generated 
 Finally, we provide an extensive discussion on the consequences of our approach in terms of efficiency and completeness regarding the contact planning problem. \DIFaddbegin \\
 \DIFaddend 
 
-\DIFdelbegin \DIFdel{The paper extends our previous papers presenting the reachability condition~\cite{tonneauisrr15}and the connection of our contact planner with a solver~$\mathcal{P}_3$~\cite{Carpentier2016}.
-In this paper , we introduce a new efficient criterion of the robot balance, provide the complete }\DIFdelend \DIFaddbegin \noindent \DIFadd{\textbf{Comparison with our previous work:}
-The present paper is an extension of our conference paper~\cite{tonneauisrr15}. As such, the motion planning algorithm presented here is the same as the one presented in the
-previous work. Section~\ref{rbprm} and~\ref{sec:contact} of the present paper are thus paraphrasing the original paper, with the exception of Section~\ref{app:contact}, where we additionally provide the }\DIFaddend pseudo-code \DIFdelbegin \DIFdel{and }\DIFdelend \DIFaddbegin \DIFadd{of the algorithm absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on a new LP formulation presented in Section~\ref{sec:Equil}.
-Compared with the original paper, we also }\DIFaddend release our source code\DIFdelbegin \DIFdel{that can be used to directly reproduce our results. We also provide
-}\DIFdelend \DIFaddbegin \DIFadd{, and provide the complete procedure to use our planner for any legged robot. We thus provide
-all the technical information required to use the planner.
+\DIFdelbegin \DIFdel{The paper extends our previous papers presenting the reachability condition~\cite{tonneauisrr15}and the connection of our contact planner with a solver~$\mathcal{P}_3$~\cite{Carpentier2016}}\DIFdelend \DIFaddbegin \noindent \DIFadd{\textbf{Comparison with our previous work:}
+The present paper is an extension of our ISRR conference paper~\cite{tonneauisrr15}. 
+As such, our solution to address $\mathcal{P}_1$ and $\mathcal{P}_2$ is the same motion planner as the one presented at ISRR (reformulated in Section~\ref{rbprm} and~\ref{sec:contact})}\DIFaddend . 
+\DIFdelbegin \DIFdel{we introduce a new efficient criterion of the robot balance, provide the complete }\DIFdelend \DIFaddbegin \DIFadd{However, three important novelties have been added to the planner: the }\DIFaddend pseudo-code \DIFdelbegin \DIFdel{and release our source code that can be used to directly reproduce our results. We also provide a }\DIFdelend \DIFaddbegin \DIFadd{of the algorithm  (Section~\ref{app:contact}), a novel criterion for
+static equilibrium (Section~\ref{sec:Equil}), and the release of the source code of the planner (Section~\ref{app:hpp}).
 }
 
-\DIFadd{To validate our approach, in this paper we had to implement or integrate other tools based on previous publications from our team. We implemented }\DIFaddend a solution to $\mathcal{P}_3$ \DIFaddbegin \DIFadd{based on a reformulation of our previous work~\cite{Carpentier2016}. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm~\cite{Kaufman2008}.
-We do not consider these additions as contributions \textit{per se}, but describing them here is required to understand the experimental contribution of this paper.
-}
+\DIFadd{The other contribution of the paper is a rigorous experimental validation of the approach on actual robot models (Section~\ref{sec:results}).
+To validate our contact plans we introduced a complete framework for multi-contact motion synthesis. This framework additionally comprises an interpolation method to solve the problem $\mathcal{P}_3$,  based on a reformulation of our previous work~\cite{Carpentier2016}. Our }\DIFaddend solution to $\mathcal{P}_3$ \DIFdelbegin \DIFdel{.
+The planner is validated on robot models of HyQ and HRP-2 (while \cite{tonneauisrr15} used unrealistic avatar models) with complete performance analysis.
+}\DIFdelend \DIFaddbegin \DIFadd{allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm~\cite{Kaufman2008}. 
+We do not consider these additions as contributions \textit{per se}, but describing them here is required to understand our experimental contribution.
+%DIF > ~ These aspects of the framework are presented in details in the paper, but are not novel \textit{per se}. The novelty lies in the validation of the method with real robot models, for which the planning is harder with respect to the avatars used in [20], because of stricter kinematic constraints
+}\DIFaddend 
 
-\DIFadd{Indeed, thanks to these tools we have been able to design a complete pipeline for synthesizing multi-contact motions from scratch.
-The novelty of the present paper lies in the rigorous experimental setup we propose to demonstrate its interest.
-As opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are much more constrained kinematically than the virtual avatars used before,
-thus making the planning problem even harder. Through an extensive empirical analysis, we demonstrate that the method remains interesting in this context, qualitatively and efficiently}\DIFaddend .
-\DIFdelbegin \DIFdel{The planner is validated on robot models of HyQ and HRP-2 (while \cite{tonneauisrr15} used unrealistic avatar models) with complete performance analysis.
-}\DIFdelend 
+%DIF < ~ This paper extends our previous conference paper~\citep{tonneauisrr15} in several ways. Our approach is now demonstrated on actual robots and in simulation, contrary to virtual avatars before, in a large variety of contexts. To achieve this we introduce a new criterion to efficiently compute the equilibrium of the robot while accounting for uncertainties of the real world. We provide the complete pseudo code of algorithm. We give the complete procedure to use our planner with any legged robot and provide our source code, allowing any user to directly use our method. We also propose a solution to $\mathcal{P}_3$, making our framework complete. Finally we provide an in-depth analysis of the results we obtain, and a theoretical discussion on the capabilities of the planner and its current limitations.
+%DIF > ~ As such, the motion planning algorithm presented here is the same as the one presented in the
+%DIF > ~ previous work. Section~\ref{rbprm} and~\ref{sec:contact} of the present paper are thus paraphrasing the original paper, with the exception of Section~\ref{app:contact}, where we additionally provide the pseudo-code of the algorithm absent from the original paper. We also improve the computational performance of the method by replacing the static equilibrium test with a more efficient test based on a new LP formulation presented in Section~\ref{sec:Equil}.
+%DIF > ~ Compared with the original paper, we also release our source code, and provide the complete procedure to use our planner for any legged robot. We thus provide
+%DIF > ~ all the technical information required to use the planner.
+%DIF > ~ 
+%DIF > ~ To validate our approach, in this paper we had to implement or integrate other tools based on previous publications from our team. We implemented a solution to $\mathcal{P}_3$ based on a reformulation of our previous work~\cite{Carpentier2016}. The implementation of this solution is also provided as an open-source project, which can be integrated directly in our framework. Our solution to $\mathcal{P}_3$ then allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm~\cite{Kaufman2008}.
+%DIF > ~ We do not consider these additions as contributions \textit{per se}, but describing them here is required to understand the experimental contribution of this paper.
+\DIFaddbegin 
 
-%~ This paper extends our previous conference paper~\citep{tonneauisrr15} in several ways. Our approach is now demonstrated on actual robots and in simulation, contrary to virtual avatars before, in a large variety of contexts. To achieve this we introduce a new criterion to efficiently compute the equilibrium of the robot while accounting for uncertainties of the real world. We provide the complete pseudo code of algorithm. We give the complete procedure to use our planner with any legged robot and provide our source code, allowing any user to directly use our method. We also propose a solution to $\mathcal{P}_3$, making our framework complete. Finally we provide an in-depth analysis of the results we obtain, and a theoretical discussion on the capabilities of the planner and its current limitations.
-% !TEX root =  ../main.tex
+%DIF > ~ Indeed, thanks to these tools we have been able to design a complete pipeline for synthesizing multi-contact motions from scratch.
+\DIFadd{Finally, as opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are more constrained kinematically than the virtual avatars used before,
+thus making the planning problem harder. Through an extensive empirical analysis, we demonstrate that the method remains efficient and applicable in this context.
+}\DIFaddend % !TEX root =  ../main.tex
 \section{Overview}
 \label{overview}
 
@@ -1779,36 +1786,105 @@ In each scenario we detail the contacts involved and the heuristics chosen (eith
 
 % \subsubsection*{Truck egress (Figure~\ref{res_truck_pres} and Figure~\ref{res_truck_bd}) -- Humanoid and insectoid robots.}
 %\subsubsection*{Truck egress -- Humanoid and insectoid robots (Figure~\ref{res_truck_bd}).}
-\subsubsection{HRP-2 -- \DIFdelbegin \DIFdel{Steep staircase }\DIFdelend \DIFaddbegin \DIFadd{Standing up }\DIFaddend (Figure~\DIFdelbegin \DIFdel{\ref{fig:stair_robust}}\DIFdelend \DIFaddbegin \DIFadd{\ref{fig:standing}}\DIFaddend )}
-\DIFaddbegin \DIFadd{From a bent configuration, the robot has to stand up using a wall as support, and climbing a 25-cm high step.
-}\DIFaddend 
+\DIFdelbegin \subsubsection{\DIFdel{HRP-2 -- Steep staircase (Figure~\ref{fig:stair_robust})}}
+%DIFAUXCMD
+\addtocounter{subsubsection}{-1}%DIFAUXCMD
+\DIFdelend 
+
+
+\DIFdelbegin %DIFDELCMD < \begin{figure}
+%DIFDELCMD <   \centering
+%DIFDELCMD <   \includegraphics[width=1\linewidth]{figures/stair}
+%DIFDELCMD <   %%%
+%DIFDELCMD < \caption{%
+{%DIFAUXCMD
+\DIFdelFL{HRP-2 in the steep stair climbing scenario. }}
+		   %DIFAUXCMD
+%DIFDELCMD < \label{fig:stair_robust}
+%DIFDELCMD < \end{figure}
+%DIFDELCMD < 
+
+%DIFDELCMD < %%%
+\DIFdel{The goal is to climb three 15-cm high steps.
+}%DIFDELCMD < 
+
+%DIFDELCMD < \noindent%%%
+\DIFdel{\textbf{Contacts involved:} Feet and right arm.
+}%DIFDELCMD < 
+
+%DIFDELCMD < \noindent%%%
+\DIFdel{\textbf{Heuristics:} The manipulability $h_w$ is chosen for the feet; $h_{\textrm{\it EFORT}}$ is chosen for the right arm.
+%DIF < ~ Regarding equilibrium, the video demonstrates two sequences computed for two different threshold values of $b_0$: $0$ and $2$ (Figure~\ref{fig:stair_robust}). 
+}%DIFDELCMD < 
+
+%DIFDELCMD < %%%
+%DIF < ~ \noindent\textbf{Observations:}
+%DIF < ~ This scenario illustrates best the importance of the equilibrium-robustness criterion.
+%DIF < ~ With a robust approach, more states are required to reach the last step (15 rather than 13 in average).
+%DIF < ~ However, when the last step is reached by both feet, in the nonrobust case the contacts are extremely close to 
+%DIF < ~ the cone limits (Figure~\ref{fig:stair_comp}).
+%DIF < ~ 
+%DIF < ~ 
+%DIF < ~ The geometry of the environment is easily addressed by our planner, and the contact planning is several times faster than real time in this scenario.
+%DIF < ~ 
+%DIF < ~ Again, the interpolation motion between the contact steps is out of the scope of this paper. However it should be noted that the computed plan in this scenario has been executed successfully on the robot (\url{http://youtu.be/YjL-DBQgXwk#t=0m28s}).
+%DIF < ~ 
+%DIF < ~ \begin{figure}
+  %DIF < ~ \centering
+  %DIF < ~ \begin{overpic}[width=0.5\linewidth]{figures/stair_robust}
+		%DIF < ~ \put (17,5) {\small{\color{red}$b_0 = 0.23$}} 
+		%DIF < ~ \put (79,5) {\small{\color{green}$b_0 = 6.16$}} 
+	%DIF < ~ \end{overpic}
+  %DIF < ~ \caption{
+           %DIF < ~ Evaluation of the robustness $b_0$ of two contact configurations. Although in equilibrium, the left configuration is on the verge of slipping.}
+		   %DIF < ~ \label{fig:stair_comp}
+%DIF < ~ \end{figure}
+%DIFDELCMD < 
+
+%DIFDELCMD < %%%
+\DIFdelend \subsubsection{HRP-2 -- Standing up (Figure~\ref{fig:standing})}
+From a bent configuration, the robot has to stand up using a wall as support, and climbing a 25-cm high step.
 
 \begin{figure}
   \centering
-  \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=1\linewidth]{figures/stair}
-%DIFDELCMD <   %%%
-\DIFdelendFL \DIFaddbeginFL \includegraphics[width=1\linewidth]{figures/standing}
-  \DIFaddendFL \caption{
-           HRP-2 in the \DIFdelbeginFL \DIFdelFL{steep stair climbing }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{standing }\DIFaddendFL scenario. }
-		   \DIFdelbeginFL %DIFDELCMD < \label{fig:stair_robust}
-%DIFDELCMD < %%%
-\DIFdelendFL \DIFaddbeginFL \label{fig:standing}
-\DIFaddendFL \end{figure}
+  \includegraphics[width=1\linewidth]{figures/standing}
+  \caption{
+           HRP-2 in the standing scenario. }
+		   \label{fig:standing}
+\end{figure}
 
 
-\DIFaddbegin \noindent\DIFadd{\textbf{Contacts involved:} All (both feet and hands).
-}
+\noindent\textbf{Contacts involved:} All (both feet and hands).
 
-\noindent\DIFadd{\textbf{Heuristics:} $h_w$ for the feet, $h_{\textrm{\it EFORT}}$  for the hands.
-}
+\noindent\textbf{Heuristics:} $h_w$ for the feet, $h_{\textrm{\it EFORT}}$  for the hands.
 
-%DIF > ~ \noindent\textbf{Observations:} The scenario illustrates well the acyclic aspect of the planning. For instance, in the four first frames of Figure~\ref{fig:standing}, we can see that the right foot
-%DIF > ~ is moved twice, with the left foot in between, before the configuration allows HRP-2 to move its hand.
-%DIF > ~ Because the contacts are tried in a FIFO manner, the fact that the output contact sequence is acyclic shows that a cyclic approach (with a finite state machine for instance) is not sufficient
-%DIF > ~ for the computed path. The reason for this is not reachability, but equilibrium. The planning is slower than for the stair scenario (because the contact generation fails more),
-%DIF > ~ though it remains compatible with \gls{interactive} performances. % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
+%~ \noindent\textbf{Observations:} The scenario illustrates well the acyclic aspect of the planning. For instance, in the four first frames of Figure~\ref{fig:standing}, we can see that the right foot
+%~ is moved twice, with the left foot in between, before the configuration allows HRP-2 to move its hand.
+%~ Because the contacts are tried in a FIFO manner, the fact that the output contact sequence is acyclic shows that a cyclic approach (with a finite state machine for instance) is not sufficient
+%~ for the computed path. The reason for this is not reachability, but equilibrium. The planning is slower than for the stair scenario (because the contact generation fails more),
+%~ though it remains compatible with \gls{interactive} performances. % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
 
 
+\subsubsection{HRP-2 -- Car egress (Figure~\ref{fig:car})}
+In this scenario inspired from the DRC car egress HRP-2 has to step out of a car.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\linewidth]{figures/polaris}
+  \caption{
+           Selected frames from the car egress scenario. }
+		   \label{fig:car}
+\end{figure}
+
+
+\noindent\textbf{Contacts involved:} All (both feet and hands).
+
+\noindent\textbf{Heuristics:} $h_w$.
+
+%~ \noindent\textbf{Observations:} The difficulty of this scenario lies in the strong reduction of the reachable workspace induced 
+%~ by the extreme proximity of all obstacles. The planner is able to find a sequence, that consists in many steps.
+%~ The proximity of the obstacles invalidate a large number of contact candidates because of collisions. To avoid breaking more than one contact between each step, the motion has to be decomposed into a large number of steps (61 in average).
+%~ While this scenario is the slowest to solve, the planner still computes a solution \glslink{interactive}{interactively}.
 
 \subsubsection{HRP-2 -- Staircase with high steps (Figure~\ref{fig:stair_robust})}
 \newcommand{\widthValue}{0.13\linewidth}
@@ -1832,7 +1908,6 @@ In each scenario we detail the contacts involved and the heuristics chosen (eith
   \caption{
            HRP-2 in the stair climbing scenario. }
 		   \label{fig:stair_robust}
-  \label{fig:moviepicture2}
   \end{center}
   \vspace{-0.5cm}
 \end{figure*}
@@ -1845,95 +1920,40 @@ In each scenario we detail the contacts involved and the heuristics chosen (eith
 		   %DIF > ~ \label{fig:stair_robust}
 %DIF > ~ \end{figure}
 
-\DIFaddend The goal is to climb three 15-cm high steps.
+\DIFadd{The goal is to climb three 15-cm high steps.
+}
 
-\noindent\textbf{Contacts involved:} Feet and right arm.
+\noindent\DIFadd{\textbf{Contacts involved:} Feet and right arm.
+}
 
-\noindent\textbf{Heuristics:} The manipulability $h_w$ is chosen for the feet; $h_{\textrm{\it EFORT}}$ is chosen for the right arm.
-%~ Regarding equilibrium, the video demonstrates two sequences computed for two different threshold values of $b_0$: $0$ and $2$ (Figure~\ref{fig:stair_robust}). 
+\noindent\DIFadd{\textbf{Heuristics:} The manipulability $h_w$ is chosen for the feet; $h_{\textrm{\it EFORT}}$ is chosen for the right arm.
+%DIF > ~ Regarding equilibrium, the video demonstrates two sequences computed for two different threshold values of $b_0$: $0$ and $2$ (Figure~\ref{fig:stair_robust}). 
+}
 
-%~ \noindent\textbf{Observations:}
-%~ This scenario illustrates best the importance of the equilibrium-robustness criterion.
-%~ With a robust approach, more states are required to reach the last step (15 rather than 13 in average).
-%~ However, when the last step is reached by both feet, in the nonrobust case the contacts are extremely close to 
-%~ the cone limits (Figure~\ref{fig:stair_comp}).
-%~ 
-%~ 
-%~ The geometry of the environment is easily addressed by our planner, and the contact planning is several times faster than real time in this scenario.
-%~ 
-%~ Again, the interpolation motion between the contact steps is out of the scope of this paper. However it should be noted that the computed plan in this scenario has been executed successfully on the robot (\url{http://youtu.be/YjL-DBQgXwk#t=0m28s}).
-%~ 
-%~ \begin{figure}
-  %~ \centering
-  %~ \begin{overpic}[width=0.5\linewidth]{figures/stair_robust}
-		%~ \put (17,5) {\small{\color{red}$b_0 = 0.23$}} 
-		%~ \put (79,5) {\small{\color{green}$b_0 = 6.16$}} 
-	%~ \end{overpic}
-  %~ \caption{
-           %~ Evaluation of the robustness $b_0$ of two contact configurations. Although in equilibrium, the left configuration is on the verge of slipping.}
-		   %~ \label{fig:stair_comp}
-%~ \end{figure}
-
-
-
-\DIFdelbegin \subsubsection{\DIFdel{HRP-2 -- Standing up (Figure~\ref{fig:standing})}}
-%DIFAUXCMD
-\addtocounter{subsubsection}{-1}%DIFAUXCMD
-\DIFdel{From a bent configuration, the robot has to stand up using a wall as support, and climbing a 25-cm high step.
-}%DIFDELCMD < 
-
-%DIFDELCMD < \begin{figure}
-%DIFDELCMD <   \centering
-%DIFDELCMD <   \includegraphics[width=1\linewidth]{figures/standing}
-%DIFDELCMD <   %%%
-%DIFDELCMD < \caption{%
-{%DIFAUXCMD
-\DIFdelFL{HRP-2 in the standing scenario. }}
-		   %DIFAUXCMD
-%DIFDELCMD < \label{fig:standing}
-%DIFDELCMD < \end{figure}
-%DIFDELCMD < 
-
-%DIFDELCMD < \noindent%%%
-\DIFdel{\textbf{Contacts involved:} All (both feet and hands).
-}%DIFDELCMD < 
-
-%DIFDELCMD < \noindent%%%
-\DIFdel{\textbf{Heuristics:} $h_w$ for the feet, $h_{\textrm{\it EFORT}}$  for the hands.
-}%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-%DIF < ~ \noindent\textbf{Observations:} The scenario illustrates well the acyclic aspect of the planning. For instance, in the four first frames of Figure~\ref{fig:standing}, we can see that the right foot
-%DIF < ~ is moved twice, with the left foot in between, before the configuration allows HRP-2 to move its hand.
-%DIF < ~ Because the contacts are tried in a FIFO manner, the fact that the output contact sequence is acyclic shows that a cyclic approach (with a finite state machine for instance) is not sufficient
-%DIF < ~ for the computed path. The reason for this is not reachability, but equilibrium. The planning is slower than for the stair scenario (because the contact generation fails more),
-%DIF < ~ though it remains compatible with \gls{interactive} performances. % \adnote{Maybe define what you mean by 'interactive' and 'real-time' at some point.}
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend \subsubsection{HRP-2 -- Car egress (Figure~\ref{fig:car})}
-In this scenario inspired from the DRC car egress HRP-2 has to step out of a car.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=1\linewidth]{figures/polaris}
-  \caption{
-           Selected frames from the car egress scenario. }
-		   \label{fig:car}
-\end{figure}
+%DIF > ~ \noindent\textbf{Observations:}
+%DIF > ~ This scenario illustrates best the importance of the equilibrium-robustness criterion.
+%DIF > ~ With a robust approach, more states are required to reach the last step (15 rather than 13 in average).
+%DIF > ~ However, when the last step is reached by both feet, in the nonrobust case the contacts are extremely close to 
+%DIF > ~ the cone limits (Figure~\ref{fig:stair_comp}).
+%DIF > ~ 
+%DIF > ~ 
+%DIF > ~ The geometry of the environment is easily addressed by our planner, and the contact planning is several times faster than real time in this scenario.
+%DIF > ~ 
+%DIF > ~ Again, the interpolation motion between the contact steps is out of the scope of this paper. However it should be noted that the computed plan in this scenario has been executed successfully on the robot (\url{http://youtu.be/YjL-DBQgXwk#t=0m28s}).
+%DIF > ~ 
+%DIF > ~ \begin{figure}
+  %DIF > ~ \centering
+  %DIF > ~ \begin{overpic}[width=0.5\linewidth]{figures/stair_robust}
+		%DIF > ~ \put (17,5) {\small{\color{red}$b_0 = 0.23$}} 
+		%DIF > ~ \put (79,5) {\small{\color{green}$b_0 = 6.16$}} 
+	%DIF > ~ \end{overpic}
+  %DIF > ~ \caption{
+           %DIF > ~ Evaluation of the robustness $b_0$ of two contact configurations. Although in equilibrium, the left configuration is on the verge of slipping.}
+		   %DIF > ~ \label{fig:stair_comp}
+%DIF > ~ \end{figure}
 
 
-\noindent\textbf{Contacts involved:} All (both feet and hands).
-
-\noindent\textbf{Heuristics:} $h_w$.
-
-%~ \noindent\textbf{Observations:} The difficulty of this scenario lies in the strong reduction of the reachable workspace induced 
-%~ by the extreme proximity of all obstacles. The planner is able to find a sequence, that consists in many steps.
-%~ The proximity of the obstacles invalidate a large number of contact candidates because of collisions. To avoid breaking more than one contact between each step, the motion has to be decomposed into a large number of steps (61 in average).
-%~ While this scenario is the slowest to solve, the planner still computes a solution \glslink{interactive}{interactively}.
-
-
-\subsubsection{HyQ -- DRC-style rubble (Figure~\ref{fig:darpa})}
+\DIFaddend \subsubsection{HyQ -- DRC-style rubble (Figure~\ref{fig:darpa})}
 The quadruped robot must cross a rubble composed of bricks rotated at different angles and directions.
 
 \begin{figure}

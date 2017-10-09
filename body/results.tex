@@ -48,69 +48,7 @@ In each scenario we detail the contacts involved and the heuristics chosen (eith
 
 % \subsubsection*{Truck egress (Figure~\ref{res_truck_pres} and Figure~\ref{res_truck_bd}) -- Humanoid and insectoid robots.}
 %\subsubsection*{Truck egress -- Humanoid and insectoid robots (Figure~\ref{res_truck_bd}).}
-\subsubsection{HRP-2 -- Staircase with high steps (Figure~\ref{fig:stair_robust})}
-\newcommand{\widthValue}{0.13\linewidth}
 
-\begin{figure*}[h!t!]
-  \begin{center}
-  \includegraphics[trim={7.0cm 0.0cm 20.0cm 0.0cm}, clip, width=\widthValue]
-    {./video/stairclimbing1.jpeg}
-  \includegraphics[trim={7.0cm 0.0cm 20.0cm 0.0cm}, clip, width=\widthValue]
-    {./video/stairclimbing2.jpeg}
-  \includegraphics[trim={7.0cm 0.0cm 20.0cm 0.0cm}, clip, width=\widthValue]
-    {./video/stairclimbing3.jpeg}
-  \includegraphics[trim={7.0cm 0.0cm 20.0cm 0.0cm}, clip, width=\widthValue]
-    {./video/stairclimbing4.jpeg}
-  \includegraphics[trim={7.0cm 0.0cm 20.0cm 0.0cm}, clip, width=\widthValue]
-    {./video/stairclimbing5.jpeg}
-  \includegraphics[trim={7.0cm 0.0cm 20.0cm 0.0cm}, clip, width=\widthValue]
-    {./video/stairclimbing6.jpeg}
-  \includegraphics[trim={7.0cm 0.0cm 20.0cm 0.0cm}, clip, width=\widthValue]
-    {./video/stairclimbing7.jpeg}
-  \caption{
-           HRP-2 in the stair climbing scenario. }
-		   \label{fig:stair_robust}
-  \label{fig:moviepicture2}
-  \end{center}
-  \vspace{-0.5cm}
-\end{figure*}
-
-%~ \begin{figure}
-  %~ \centering
-  %~ \includegraphics[width=1\linewidth]{figures/stair}
-  %~ \caption{
-           %~ HRP-2 in the stair climbing scenario. }
-		   %~ \label{fig:stair_robust}
-%~ \end{figure}
-
-The goal is to climb three 15-cm high steps.
-
-\noindent\textbf{Contacts involved:} Feet and right arm.
-
-\noindent\textbf{Heuristics:} The manipulability $h_w$ is chosen for the feet; $h_{\textrm{\it EFORT}}$ is chosen for the right arm.
-%~ Regarding equilibrium, the video demonstrates two sequences computed for two different threshold values of $b_0$: $0$ and $2$ (Figure~\ref{fig:stair_robust}). 
-
-%~ \noindent\textbf{Observations:}
-%~ This scenario illustrates best the importance of the equilibrium-robustness criterion.
-%~ With a robust approach, more states are required to reach the last step (15 rather than 13 in average).
-%~ However, when the last step is reached by both feet, in the nonrobust case the contacts are extremely close to 
-%~ the cone limits (Figure~\ref{fig:stair_comp}).
-%~ 
-%~ 
-%~ The geometry of the environment is easily addressed by our planner, and the contact planning is several times faster than real time in this scenario.
-%~ 
-%~ Again, the interpolation motion between the contact steps is out of the scope of this paper. However it should be noted that the computed plan in this scenario has been executed successfully on the robot (\url{http://youtu.be/YjL-DBQgXwk#t=0m28s}).
-%~ 
-%~ \begin{figure}
-  %~ \centering
-  %~ \begin{overpic}[width=0.5\linewidth]{figures/stair_robust}
-		%~ \put (17,5) {\small{\color{red}$b_0 = 0.23$}} 
-		%~ \put (79,5) {\small{\color{green}$b_0 = 6.16$}} 
-	%~ \end{overpic}
-  %~ \caption{
-           %~ Evaluation of the robustness $b_0$ of two contact configurations. Although in equilibrium, the left configuration is on the verge of slipping.}
-		   %~ \label{fig:stair_comp}
-%~ \end{figure}
 
 \subsubsection{HRP-2 -- Standing up (Figure~\ref{fig:standing})}
 From a bent configuration, the robot has to stand up using a wall as support, and climbing a 25-cm high step.
@@ -155,6 +93,69 @@ In this scenario inspired from the DRC car egress HRP-2 has to step out of a car
 %~ by the extreme proximity of all obstacles. The planner is able to find a sequence, that consists in many steps.
 %~ The proximity of the obstacles invalidate a large number of contact candidates because of collisions. To avoid breaking more than one contact between each step, the motion has to be decomposed into a large number of steps (61 in average).
 %~ While this scenario is the slowest to solve, the planner still computes a solution \glslink{interactive}{interactively}.
+
+\subsubsection{HRP-2 -- Staircase with high steps (Figure~\ref{fig:stair_robust})}
+\newcommand{\widthValue}{0.13\linewidth}
+
+\begin{figure*}[h!t!]
+  \begin{center}
+  \includegraphics[trim={7.0cm 0.0cm 20.0cm 0.0cm}, clip, width=\widthValue]
+    {./video/stairclimbing1.jpeg}
+  \includegraphics[trim={7.0cm 0.0cm 20.0cm 0.0cm}, clip, width=\widthValue]
+    {./video/stairclimbing2.jpeg}
+  \includegraphics[trim={7.0cm 0.0cm 20.0cm 0.0cm}, clip, width=\widthValue]
+    {./video/stairclimbing3.jpeg}
+  \includegraphics[trim={7.0cm 0.0cm 20.0cm 0.0cm}, clip, width=\widthValue]
+    {./video/stairclimbing4.jpeg}
+  \includegraphics[trim={7.0cm 0.0cm 20.0cm 0.0cm}, clip, width=\widthValue]
+    {./video/stairclimbing5.jpeg}
+  \includegraphics[trim={7.0cm 0.0cm 20.0cm 0.0cm}, clip, width=\widthValue]
+    {./video/stairclimbing6.jpeg}
+  \includegraphics[trim={7.0cm 0.0cm 20.0cm 0.0cm}, clip, width=\widthValue]
+    {./video/stairclimbing7.jpeg}
+  \caption{
+           HRP-2 in the stair climbing scenario. }
+		   \label{fig:stair_robust}
+  \end{center}
+  \vspace{-0.5cm}
+\end{figure*}
+
+%~ \begin{figure}
+  %~ \centering
+  %~ \includegraphics[width=1\linewidth]{figures/stair}
+  %~ \caption{
+           %~ HRP-2 in the stair climbing scenario. }
+		   %~ \label{fig:stair_robust}
+%~ \end{figure}
+
+The goal is to climb three 15-cm high steps.
+
+\noindent\textbf{Contacts involved:} Feet and right arm.
+
+\noindent\textbf{Heuristics:} The manipulability $h_w$ is chosen for the feet; $h_{\textrm{\it EFORT}}$ is chosen for the right arm.
+%~ Regarding equilibrium, the video demonstrates two sequences computed for two different threshold values of $b_0$: $0$ and $2$ (Figure~\ref{fig:stair_robust}). 
+
+%~ \noindent\textbf{Observations:}
+%~ This scenario illustrates best the importance of the equilibrium-robustness criterion.
+%~ With a robust approach, more states are required to reach the last step (15 rather than 13 in average).
+%~ However, when the last step is reached by both feet, in the nonrobust case the contacts are extremely close to 
+%~ the cone limits (Figure~\ref{fig:stair_comp}).
+%~ 
+%~ 
+%~ The geometry of the environment is easily addressed by our planner, and the contact planning is several times faster than real time in this scenario.
+%~ 
+%~ Again, the interpolation motion between the contact steps is out of the scope of this paper. However it should be noted that the computed plan in this scenario has been executed successfully on the robot (\url{http://youtu.be/YjL-DBQgXwk#t=0m28s}).
+%~ 
+%~ \begin{figure}
+  %~ \centering
+  %~ \begin{overpic}[width=0.5\linewidth]{figures/stair_robust}
+		%~ \put (17,5) {\small{\color{red}$b_0 = 0.23$}} 
+		%~ \put (79,5) {\small{\color{green}$b_0 = 6.16$}} 
+	%~ \end{overpic}
+  %~ \caption{
+           %~ Evaluation of the robustness $b_0$ of two contact configurations. Although in equilibrium, the left configuration is on the verge of slipping.}
+		   %~ \label{fig:stair_comp}
+%~ \end{figure}
 
 
 \subsubsection{HyQ -- DRC-style rubble (Figure~\ref{fig:darpa})}
