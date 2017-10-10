@@ -74,7 +74,7 @@ The main points of concern raised by the Reviewers regarded:
 as an extension of [20] (presented at the ISRR conference). As a self-contained journal paper, the present paper aims at replacing [20]. We present two contributions. The first one, as in [20], is an efficient and generic planning method for multi-contact locomotion (problems P1 and P2).
 The second one is a rigorous experimental validation of the approach on actual robot models, either in simulation or on the real HRP-2 robot.
 
-Regarding the first contribution, the algorithm presented here is the same as in [20], but with three important novelties: a novel criterion for
+Regarding the first contribution, the algorithm presented here is the same as in [20], with three novelties: a novel criterion for
 static equilibrium, the pseudo-code of the algorithm,
 as well as  the release of the source code of the planner.
 
@@ -104,7 +104,7 @@ the paper architecture in such a way that all the novel details are now directly
 in the paper, and also help him distinguishing between what is novel and what is not. As a result,  Appendices B.B (equilibrium criterion), D (pseudo code) and E (reference to the source code) are now integrated in the core of the paper. The manipulability-based heuristics used for contact generation, as well as our solution to the problem P3 remain in the Appendix as they are not novel. However, as suggested by the Reviewers, they are described in more details in the core. 
 
 Following the recommendation of the associate editor who ruled over some contradictory opinions of the Reviewers, we made the paper self-contained,
-in such a way that the paper [20] is now obsolete with respect to this submission, and is only mentioned in the introduction, or to describe an improvement
+in such a way that the paper [20] is now obsolete with respect to this submission, and is only mentioned in the introduction, or to emphasize an improvement
 of the original algorithm. The missing information pointed out by the Reviewers has been 
 included in the paper, as explained in the detailed answers that follow. As a result, we believe that the new version of the paper is self-contained and can be understood if read linearly.\\
 
@@ -112,7 +112,7 @@ included in the paper, as explained in the detailed answers that follow. As a re
 %~ We have brought all the material from [20] in the revised paper so that no references to this preliminary paper is necessary anymore in the technical description, and removed trivial reference to [20] but in the introduction.
 %~ We merged Appendices B.B (equilibrium criterion), D (pseudo code) and E (referernce to the source code) in the core of the paper. We kept in the appendices the manipulability computations which is necessary for completeness but is well-known. We also prefered to keep the trajectory solver P3 in the appendix, although some details are novel, in order to keep clear that the main contributions of the paper are on P1 and P2.
 
-We thus believe to have significantly improved the paper by addressing the majority of the comments and questions raised by the Reviewers.
+We have thus addressed the majority of the comments and questions raised by the Reviewers. In our opinion, these modifications result in a significant improvement of the paper.
 
 \bigskip
 
@@ -203,6 +203,7 @@ of the paper because it is not required to understand the contributions to P1 an
 \qt{(Section I.B) To validate our contact plans we introduced a complete framework for multi-contact motion synthesis. This framework additionally comprises an interpolation method to solve the problem $\mathcal{P}_3$,  based on a reformulation of our previous work [1]. Our solution to $\mathcal{P}_3$ allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm [28]. 
 We do not consider these additions as contributions \textit{per se}, but describing them here is required to understand our experimental contribution.}\done
 
+    
 \quot{
 (4)	The last contribution is validation using an in-house
 simulator, as opposed to more approximate (unrealistic avatar) models
@@ -226,13 +227,19 @@ for these models, while maintaining good performance.
 We added this missing piece of information to the paper, at the end of Section I.B.}
 \qt{(Section VIII.A) To generate continuous movements from our contact plans we used either the framework proposed in [1], or our own implementation of a $\mathcal{P}_3$ solver (Appendix C).
 The resulting movements have been validated either on the real HRP-2 robot (details can be found in [1]), or with our dynamic simulator, based on a state-of-the-art algorithm [25].
-In the simulations we controlled the robot with a standard inverse-dynamics controller[31].
+In the simulations we controlled the robot with a standard inverse-dynamics controller[31]. The code source of the simulator is available at \url{https://github.com/andreadelprete/pinocchio_inv_dyn/releases/tag/rbprm}.
 This controller tries to follow the given whole-body trajectories, giving higher priority to the center-of-mass and end-effectors tracking with respect to the joint tracking.
 The controller also makes sure that the resulting contact forces lie inside the specified friction cones (we used a friction coefficient of 0.3), and that the joint position, velocity and torque limits are satisfied.
 The companion video shows the obtained motions.}
 \done
 %~ \textcolor{red}{TODO ANDREA}.
 
+
+\quot{p.14 - not a good description of the simulation software used [\dots]Ref [38] focuses on robustness of simulations, but presumably, the testing in the present work is deterministic.
+ just using the same simulator? Not much description is given of how/whether contacts/slipping are modeled [\dots] Why isn't a 3rd party software used, or at least software with better documentation ? Better info is needed to understand what the simulation truly represents.}
+\as{Thanks for the comment. In summary, we had to implement our simulator because we were not satisfied with commercial simulators. Our simulator implements the paper ``Staggered projections for frictional contact in multibody systems'', by Kauffman, Sueda, James and Pai, which corresponds to a state-of-the-art solution to the problem.
+We considered other simulators, namely Mujoco, ODE, Gazebo, Bullet and Open-HRP. We discarded Mujoco because we work on Linux and it only provides a windows implementation. In our tests, we were not able to obtain coherent results with ODE and Gazebo, even for simple pendulum models. At the time of choosing which simulator to use, Bullet did not allow to express the dynamics
+equations using joint coordinates, but only cartesian coordinates, which made the formulation much more complex. Finally, Open-HRP is a great tool, but it only provides an interface for position-controlled models, and not torque-controlled. For these reasons, and other historical ones, we implemented our own simulator. We understand that because we use an in-house implementation, it is harder to trust the results we obtain. However, the implementation is from a state of the art LCP solver, used by many in the community. In this new submission, we also provide the source of the simulator. As for the paper itself and the rest of the code, we put a considerable effort in providing the reader with all the elements that will lead to an objective opinion of the paper.}
 
 \quot{[\dots] the authors need to better
 distinguish what the novel contributions are, and to highlight where
@@ -284,6 +291,11 @@ p.6 – this would be a great place to give more ``intuition'' for the heuristic
 \qt{(Section V.C) In all our experiments, the heuristic $h$ is implemented as a variation of a manipulability-based heuristic [27]. The manipulability is a real number that quantifies how 
 ``good'' a configuration is to perform a given task, based on the analysis of the Jacobian matrix. With such heuristics, a configuration can be chosen because it is far from singularities, and thus allows mobility in all directions. On the contrary, it can be chosen because it is particularly efficient to exert a force in a desired direction. In our experiments, the former solution is usually chosen for computing leg contacts, while the latter is used for computing hand contacts. We recall the manipulability measure and its derivatives in Appendix B.}\done
 
+\quot{
+The first part of App. B is referred to within this Appendix as “new minor contributions derived from previous work”. These aren’t so novel, perhaps, and what is more useful to the reader is a better intuition for when to use each within the MAIN BODY of the paper, where they are originally described/associated to particular simulations.
+}
+
+\as{Agreed. We removed the incriminated text and provided an intuition of the heuristic in the text, as mentioned above.}\done
 
 \quot{
 p.6 six fingered hand is slightly misleading, since no rolling (as fully admitted in the text). I'd just cut this? \\
@@ -327,11 +339,7 @@ contact repositioning is out of the scope of this work.}
 
 \done
 
-\quot{
-The first part of App. B is referred to within this Appendix as “new minor contributions derived from previous work”. These aren’t so novel, perhaps, and what is more useful to the reader is a better intuition for when to use each within the MAIN BODY of the paper, where they are originally described/associated to particular simulations.
-}
 
-\as{Agreed. We removed the incriminated text and provided an intuition of the heuristic in the text, as mentioned above.}\done
 
 \quot{github link seems to be dead? (The link on p. 15 is OK\dots should they be the same?)}
 
@@ -470,7 +478,7 @@ not depend too much on the idealized simulation environment. }
 in the paper (Section VIII.A)  to provide more information on the simulation we use to validate our motions. This simulation is an implementation of the state of the art approaches used by the community. Of course, it does not guarantee that the motion could be executed on the robot, but it is used extensively by the community as a reasonable feasibility test. The suggestion of the Reviewer to compare the simulation results with those on the real robot is interesting. However, in our simulations HRP-2 is torque controlled, whereas in our experiments HRP-2 is position controlled. This makes the usefulness of a comparison between simulation and experiments extremely doubtful, because we would be comparing motions obtained with different controllers. For these reasons, we prefer not to do this comparison, although we plan to do it in the future, since we are currently working on making HRP-2 torque controlled.}
 \qt{(Section VIII.A) To generate continuous movements from our contact plans we used either the framework proposed in [1], or our own implementation of a $\mathcal{P}_3$ solver (Appendix C).
 The resulting movements have been validated either on the real HRP-2 robot (details can be found in [1]), or with our dynamic simulator, based on a state-of-the-art algorithm [25].
-In the simulations we controlled the robot with a standard inverse-dynamics controller[31].
+In the simulations we controlled the robot with a standard inverse-dynamics controller[31]. The code source of the simulator is available at \url{https://github.com/andreadelprete/pinocchio_inv_dyn/releases/tag/rbprm}.
 This controller tries to follow the given whole-body trajectories, giving higher priority to the center-of-mass and end-effectors tracking with respect to the joint tracking.
 The controller also makes sure that the resulting contact forces lie inside the specified friction cones (we used a friction coefficient of 0.3), and that the joint position, velocity and torque limits are satisfied.
 The companion video shows the obtained motions.}
