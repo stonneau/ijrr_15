@@ -204,7 +204,7 @@ obtain
 the
 whole
 movement.
-\textbf{Our
+Our
 main
 contribution
 is
@@ -212,42 +212,38 @@ the
 definition        
 of
 a reduction property, the reachability condition.
-}
+
 %~ because we believe it is the most promising direction~\citep{DBLP:conf/iser/EscandeKMG08} to break the complexity of acyclic contact planning. 
-Compared to previous approaches of the litterature, our solution has two main novelties: 
+Compared to previous approaches, our solution has two main novelties: 
 
 \noindent \textbf{Regarding $\mathcal{P}_1$}, we propose a fast guide path planning algorithm. The key to its efficiency is that it does not sample directly the contact manifold, but an approximation of the \textit{contact reachable} space. The \textit{contact reachable} space is a low-dimensional space for which there exists a mapping to the contact manifold.
 
 \noindent \textbf{Regarding $\mathcal{P}_2$},  we propose a fast method to extend a \textit{contact reachable} path into a sequence of whole-body configurations in static equilibrium. This  requires the explicit computation of contact configurations. It is guided by dedicated heuristics that quickly synthesize feasible configurations.
 
-\textbf{The reachability condition is the key to the strict separation between $\mathcal{P}_1$ and $\mathcal{P}_2$}, hence to the low complexity of our planner.
-However, the reduction may result in failures. We demonstrate empirically its interest, both in the high success rate and in the low computation times, by a deep experimental validation, with two realistic robot models (humanoid and quadruped) in various scenarios, involving statistics of the relevance of our hypotheses.
-These two properties allow us to plan, and re-plan upon failure, multi-contact sequences at \gls{interactive}$^1$ rates.
+The reachability condition is the key to the strict separation between $\mathcal{P}_1$ and $\mathcal{P}_2$, hence to the low complexity of our planner. However the reduction
+can result in failures. We demonstrate empirically its interest, through an extensive experimental validation with real robot models on a dynamic simulator. The high success rate and low computation times we obtain allow us to plan (and re-plan upon failure) multi-contact sequences at \gls{interactive} rates.
 
-%% To further demonstrate the validity of our approach, we show that the generated contact plans  can be successfully executed (problem  $\mathcal{P}_3$), either in simulation or on the real HRP-2 robot. For HRP-2, we detail the complete computation times to address sequentially the three problems, and compare them to related work, demonstrating that our method is orders of magnitude faster.
+To further demonstrate the validity of our approach, we show that the generated contact plans  can be successfully executed (problem  $\mathcal{P}_3$), either in simulation or on the real HRP-2 robot. For HRP-2, we detail the complete computation times to address sequentially the three problems, and compare them to related work, demonstrating that our method is orders of magnitude faster.
 
-%% Finally, we provide an extensive discussion on the consequences of our approach in terms of efficiency and completeness regarding the contact planning problem. \\
+Finally, we provide an extensive discussion on the consequences of our approach in terms of efficiency and completeness regarding the contact planning problem. \\
 
-%\noindent \textbf{Comparison with our previous work:}
-\subsection{Organization and comparison with preliminary paper~\cite{tonneauisrr15}}
-The present paper is an extension of our ISRR conference paper~\cite{tonneauisrr15}, that it aims at replacing.
-The core methodological part corresponds to the same motion planner, with important complements listed below.
-The present paper also proposes a novel experimental section, with statistical validation of the planner hypothesis using realistic robot models.
- 
-After presenting an overview of our method (Sec.~\ref{overview}) and introducing our notations (Sec.~\ref{notations}),
-we present our solution to address $\mathcal{P}_1$ (Sec.~\ref{rbprm}) and $\mathcal{P}_2$ (Sec.~\ref{sec:contact}) , which corresponds to the same motion planner as the one presented at \cite{tonneauisrr15}. The two sections hence are reformulation of the preliminary paper. 
-Three important novelties have been added to the planner: the pseudo-code of the algorithm (Sec.~\ref{app:contact}), a novel criterion for
-static equilibrium (Sec.~\ref{sec:Equil}), and the release of the source code of the planner (Sec.~\ref{app:hpp}).
+\noindent \textbf{Comparison with our previous work:}
+The present paper is an extension of our ISRR conference paper~\cite{tonneauisrr15}. 
+As such, our solution to address $\mathcal{P}_1$ and $\mathcal{P}_2$ is the same motion planner as the one presented at ISRR (reformulated in Section~\ref{rbprm} and~\ref{sec:contact}). 
+However three important novelties have been added to the planner: the pseudo-code of the algorithm (Section~\ref{app:contact}), a novel criterion for
+static equilibrium (Section~\ref{sec:Equil}), and the release of the source code of the planner (Section~\ref{app:hpp}).
 
-The other novelty of the paper is a rigorous experimental validation of the approach on actual robot models (Sec.~\ref{sec:results}).
-We had to introduce a complete framework for multi-contact motion synthesis, in order to validate our contact plans. It comprises an interpolation method to solve the problem $\mathcal{P}_3$, based on a reformulation of our previous work~\cite{Carpentier2016}. The generated motions are verified to be physically consistent, using our implementation of a state-of-the-art simulation algorithm~\cite{Kaufman2008}. 
-These aspects of the framework are presented in details in the paper, but are not novel \textit{per se}. The novelty lies in the complete validation of the contact planner with real robot models, for which the planning is much harder with respect to the avatars used in \cite{tonneauisrr15}, because of stricter kinematic constraints.
+The other novelty of the paper is a rigorous experimental validation of the approach on actual robot models (Section~\ref{sec:results}).
+To validate our contact plans we introduced a complete framework for multi-contact motion synthesis. This framework additionally comprises an interpolation method to solve the problem $\mathcal{P}_3$,  based on a reformulation of our previous work~\cite{Carpentier2016}. Our solution to $\mathcal{P}_3$ allows us to verify that the synthesized motions are physically consistent, using our implementation of a state-of-the-art simulation algorithm~\cite{Kaufman2008}. 
+These aspects of the framework are presented in details in the
+paper, but are not novel \textit{per se}. %Describing them here is required to understand our experimental contribution.
+The novelty lies in the complete
+validation of the contact planner with real robot models, for
+which the planning is much harder with respect to the avatars
+used in~\cite{tonneauisrr15}, because of more restrictive kinematic constraints.
 
-%We do not consider these additions as contributions \textit{per se}, but describing them here is required to understand our experimental contribution.
-
-%Finally, as opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are more constrained kinematically than the virtual avatars used before, thus making the planning problem harder. Through an extensive empirical analysis, we demonstrate that the method remains efficient and applicable in this context.
-
-
+%~ Finally, as opposed to our previous paper, we demonstrate the algorithms with actual robotic models. These models are more constrained kinematically than the virtual avatars used before,
+%~ thus making the planning problem harder. Through an extensive empirical analysis, we demonstrate that the method remains efficient and applicable in this context.
 %~ These aspects of the framework are presented in details in the paper, but are not novel \textit{per se}. The novelty lies in the validation of the method with real robot models, for which the planning is harder with respect to the avatars used in [20], because of stricter kinematic constraints
 
 %~ As such, the motion planning algorithm presented here is the same as the one presented in the
