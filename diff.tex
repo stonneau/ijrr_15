@@ -1,7 +1,7 @@
 
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL out_old.tex   Mon Oct  9 10:58:49 2017
-%DIF ADD out_new.tex   Mon Oct  9 18:06:36 2017
+%DIF ADD out_new.tex   Tue Oct 10 09:38:59 2017
 %% bare_jrnl.tex
 %% V1.4b
 %% 2015/08/26
@@ -1568,25 +1568,17 @@ We then apply the following steps:
 %DIF < ~ Furthermore, the fact that the candidates are already close to contact increases the odds that the inverse kinematics will converge to a valid solution in a small number of iterations.
 %DIF < ~ Regarding convergence, it is immediate to verify that as $N$ grows, the probability of finding a solution if it exists converges to 1.
 %DIF < ~ $N$ is a parameter that allows us to specify the trade-off between exhaustiveness and efficiency.
-\DIFdelbegin \DIFdel{The reader is referred to our previous work for an extensive discussion on the benefits of this approach, and the optimal choice 
-of the parameter $N$~\citep{Tonneau2014}.
-Our criterion to assert efficiently the static equilibrium of the robot, as well as the heuristics $h$ are detailed inAppendix~\ref{sec:heuristics}.
-}\DIFdelend %DIF > ~ The reader is referred to our previous work for an extensive discussion on the benefits of this approach, and the optimal choice 
+\DIFdelbegin \DIFdel{The reader is referred to our previous work for an extensive discussion on the benefits of this approach, }\DIFdelend %DIF > ~ The reader is referred to our previous work for an extensive discussion on the benefits of this approach, and the optimal choice 
 %DIF > ~ of the parameter $N$~\citep{Tonneau2014}. Our criterion to assert efficiently the static equilibrium of the robot, as well as the heuristics $h$ are detailed in Appendix~\ref{sec:heuristics}.
 \DIFaddbegin \DIFadd{Because the distance $\epsilon$ does not account for the variation in orientation, several samples of $ C_{Contact}^{\epsilon}$  may turn out to be unfeasible at the time of projection. One could consider additionally filtering $ C_{Contact}^{\epsilon}$ based on the orientation with respect to the obstacle normal, but in our experience we did not notice
 any significant improvement in the computational performances of the planner, so we do not perform this additional step. 
- }\DIFaddend 
+ }
 
-%DIF < ~ It should be noted that a failure case for our contact generator does not necessarily mean that the planner will globally fail. Indeed,
-%DIF < ~ for a given root configuration, if contact configurations are found for other limbs, resulting in static equilibrium, the configuration will be accepted despite
-%DIF < ~ the failure to generate a contact.
-\DIFaddbegin \DIFadd{In all our experiments, the heuristic $h$ is implemented as a variation of a manipulability-based heuristic~\cite{Yoshikawa1984}. The manipulability is a real number that quantifies how 
+\DIFadd{In all our experiments, the heuristic $h$ is implemented as a variation of a manipulability-based heuristic~\cite{Yoshikawa1984}. The manipulability is a real number that quantifies how 
 ``good'' a configuration is to perform a given task, based on the analysis of the Jacobian matrix. With such heuristics, a configuration can be chosen because it is far from singularities, and thus allows mobility in all directions. On the contrary, it can be chosen because it is particularly efficient to exert a force in a desired direction. In our experiments, the former solution is usually chosen for computing leg contacts, while the latter is used for computing hand contacts. We recall the manipulability measure and its derivatives in Appendix~\ref{sec:heuristics}.
-}\DIFaddend 
+}
 
-%DIF < ~ In this Section, we have thus defined a deterministic contact planning algorithm.
-%DIF < ~ The determinism of this algorithm makes it efficient, at the cost of not being probabilistically complete.
-\DIFaddbegin \DIFadd{Finally, to verify that a configuration is in static equilibrium, we use a new robust LP formulation. It replaces the computationally inefficient double description
+\DIFadd{Finally, to verify that a configuration is in static equilibrium, we use a new robust LP formulation. It replaces the computationally inefficient double description
 approach used in our previous work~\cite{tonneauisrr15}, and presented in the following Section~\ref{sec:Equil}.
 }
 
@@ -1594,8 +1586,7 @@ approach used in our previous work~\cite{tonneauisrr15}, and presented in the fo
 
 %DIF > ~ TODO: $h$ in appendix, the static equilibrium is here ~\ref{sec:Equil}
 
-\DIFaddend % !TEX root =  ../main.tex
-\DIFaddbegin 
+%DIF >  !TEX root =  ../main_tro.tex
 
 \section{\DIFadd{A criterion for robust static equilibrium}}
 \label{sec:Equil}
@@ -1663,18 +1654,28 @@ We can then stack all the constraints to obtain:
 }
 
 
-\DIFadd{If there exists a $\bm{\beta}^*$ satisfying }\eqref{eq:gen} \DIFadd{and }\eqref{eq:new_eul}\DIFadd{, it means that the configuration is in static equilibrium.
+\DIFadd{If there exists a $\bm{\beta}^*$ satisfying }\eqref{eq:gen} \DIFaddend and \DIFdelbegin \DIFdel{the optimal choice 
+of the parameter $N$~\citep{Tonneau2014}.
+Our criterion to assert efficiently the static equilibrium of the robot, as well as the heuristics $h$ are detailed inAppendix~\ref{sec:heuristics}.
+}\DIFdelend \DIFaddbegin \eqref{eq:new_eul}\DIFadd{, it means that the configuration is in static equilibrium.
 The problem can then be formulated as an LP:
-}
+}\DIFaddend 
 
-\begin{equation} \DIFadd{\label{eq:lin_prog} \begin{aligned}
+%DIF < ~ It should be noted that a failure case for our contact generator does not necessarily mean that the planner will globally fail. Indeed,
+%DIF < ~ for a given root configuration, if contact configurations are found for other limbs, resulting in static equilibrium, the configuration will be accepted despite
+%DIF < ~ the failure to generate a contact.
+\DIFaddbegin \begin{equation} \DIFadd{\label{eq:lin_prog} \begin{aligned}
 \find \quad & \bm{\beta} \in \Rv{4e} \\
 %~ \st \quad &\mathbf{G} \bm{\beta} = \mathbf{D}^{xy} \mathbf{c}^{xy} + \mathbf{d} \\
 \st \quad &\mathbf{G} \bm{\beta} = \mathbf{D} \mathbf{c} + \mathbf{d} \\
 & \bm{\beta} \ge 0 \\
 \end{aligned} }\end{equation}
+\DIFaddend 
 
-\subsubsection{\DIFadd{Formulation of a robust LP}}
+%DIF < ~ In this Section, we have thus defined a deterministic contact planning algorithm.
+%DIF < ~ The determinism of this algorithm makes it efficient, at the cost of not being probabilistically complete.
+%DIF <  !TEX root =  ../main.tex
+\DIFaddbegin \subsubsection{\DIFadd{Formulation of a robust LP}}
 \DIFadd{Let $b_0 \in \mathbb{R}$ be a scalar value. We now define the following LP:
 }
 
@@ -1689,7 +1690,7 @@ The problem can then be formulated as an LP:
 \DIFadd{We observe that if $b_0$ is positive then }\eqref{eq:lin_prog} \DIFadd{admits a solution, and $b_0$ is proportional to the minimum distance of the contact forces to the boundaries of the friction cones.
 If $b_0$ is negative, the configuration is not in static equilibrium, and $b_0$ indicates ``how far'' from equilibrium the configuration is. We thus use $b_0$ as a measure of robustness.
 %DIF > ~ One advantage of $b_0$ is that it gives a constant margin 
-A simple approach to robustness consists in choosing a smaller friction coefficient, to constrain the forces to lie away from the boundaries of the real cone.  However, this would result in a small safety margin for forces of low magnitude, and an excessively big safety margin for large forces as the boundaries grow more and more appart. In comparison, our margin $b_0$ is constant, and provides a helpful mean to compare the robustness of different contact configurations.
+A simple approach to robustness consists in choosing a smaller friction coefficient, to constrain the forces to lie away from the boundaries of the real cone.  However, this would result in a small safety margin for forces of low magnitude, and an excessively large safety margin for large forces as the boundaries grow more and more apart. In comparison, our margin $b_0$ is constant, and provides a helpful mean to compare the robustness of different contact configurations.
 }
 
 \DIFadd{In our implementation, rather than solving directly }\eqref{eq:lin_prog_rob}\DIFadd{, we solve an equivalent problem of smaller dimension that we get by taking the dual of }\eqref{eq:lin_prog_rob} \DIFadd{and eliminating the Lagrange multipliers associated to the inequality constraints:
