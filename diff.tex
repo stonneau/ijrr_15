@@ -1,7 +1,7 @@
 
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL out_old.tex   Mon Oct  9 10:58:49 2017
-%DIF ADD out_new.tex   Tue Oct 10 09:38:59 2017
+%DIF ADD out_new.tex   Tue Oct 10 10:33:35 2017
 %% bare_jrnl.tex
 %% V1.4b
 %% 2015/08/26
@@ -1745,7 +1745,7 @@ We also compare the times obtained with HRP-2 with respect to previous works.
 %DIF > ~ \adnote{I added the description of the simulations here, but I wonder whether this part should not be moved to the beginning of the Results section.}
 \DIFadd{To generate continuous movements from our contact plans we used either the framework proposed in \cite{Carpentier2016}, or our own implementation of a $\mathcal{P}_3$ solver (Appendix~\ref{app:optim}).
 The resulting movements have been validated either on the real HRP-2 robot (details can be found in~\cite{Carpentier2016}), or with our dynamic simulator, based on a state-of-the-art algorithm~\cite{Kaufman2008}.
-In the simulations we controlled the robot with a standard inverse-dynamics controller~\cite{DelPrete2015b}.
+In the simulations we controlled the robot with a standard inverse-dynamics controller~\cite{DelPrete2015b}. The code source of the simulator is available at }\url{https://github.com/andreadelprete/pinocchio_inv_dyn/releases/tag/rbprm}\DIFadd{.
 This controller tries to follow the given whole-body trajectories, giving higher priority to the center-of-mass and end-effectors tracking with respect to the joint tracking.
 The controller also makes sure that the resulting contact forces lie inside the specified friction cones (we used a friction coefficient of 0.3), and that the joint position, velocity and torque limits are satisfied.
 The companion video shows the obtained motions.
