@@ -31,7 +31,7 @@
 %~ \end{lstlisting}
 
 From the start configuration, given as an input by the user,
-we create the initial state $s0$.
+we create the initial state $s0$. A state is described by a whole-body configuration, as well as the list of currently active contacts.
 Algorithm~\ref{alg:interpolate}  is then called with $s0$, as well as the discretized path 
 $\mathbf{Q}^0$, as input parameters.
 
@@ -57,7 +57,7 @@ $\mathbf{Q}^0$, as input parameters.
 				\EndIf				
 				\State $s \gets $\textsc{IntermediateContactState}$(pState)$
 			\EndIf
-			\State $push_back(states, s)$
+			\State $push\_back(states, s)$
 		\EndWhile
 		\State \textbf{return} $states$
 	\EndFunction
@@ -80,33 +80,30 @@ Algorithm~\ref{alg:pi} gives the pseudo code for \textsc{GenFullBody}.
 	\begin{algorithmic}[1]
 	%~ \Function{GenerateConfiguration}{}
 	\Function{\textsc{GenFullBody}}{$pState$,$\mathbf{q}^0$}
-		\State State $newState$
-		\State $newState.q0 = \mathbf{q}^0$
-		\State $newState.freeLimbs = pState.freeLimbs$
+		\State $newState \gets create\_state(q0, FreeLimbs(pState))$
 		\State /*First try to maintain previous contacts*/
-		\State $nbContactsBroken = 0$
-		\For {\textbf{each} Limb $k$ in $pState.contactLimbs$}
+		\State $nConBroken \gets 0$
+		\For {\textbf{each} $k$ in $ContactLimbs(pState)$}
 			\If {$!$\textsc{MaintainContact}$(pState,\mathbf{q}^0,k)$}
-				\State $nbContactsBroken += 1$
-				\If {$nbContactsBroken > 1$}				
-					\State \textbf{return} $NULL$
+				\State $nConBroken \gets nConBroken +1$
+				\If {$nConBroken > 1$}				
+					\State \textbf{return} $0$
 				\EndIf				
-				\State $push(newState.freeLimbs,k)$
+				\State $add\_free\_limb(newState,k)$
 			\Else 					
-				\State $push(newState.contactLimbs,k)$
+				\State $add\_contact\_limb(newState,k)$
 			\EndIf
 		\EndFor
-		\For {\textbf{each} Limb $k$ in $pState.freeLimbs$}
+		\For {\textbf{each} $k$ in $FreeLimbs(pState)$}
 			\If {\textsc{GenerateContact}$(\mathbf{q}^0,k)$}	
-				\State $push(newState.contactLimbs,k)$
-				\State $remove(newState.freeLimbs,k)$		
+				\State $add\_contact\_limb(newState,k)$
 				\State \textbf{return} $newState$
 			\EndIf
 		\EndFor
 		\If {\textsc{IsInStaticEquilibrium}$(newState)$}
 			\State \textbf{return} $newState$
 		\Else
-			\State \textbf{return} $NULL$
+			\State \textbf{return} $0$
 		\EndIf
 	\EndFunction
 \end{algorithmic}
@@ -117,6 +114,8 @@ The method \textsc{MaintainContact}$(pState,\mathbf{q}^0,k)$ performs inverse ki
 If it succeeds, the new limb configuration is assigned to $k$. If it fails, a random collision free configuration is assigned to $k$.
 
 The method \textsc{IsInStaticEquilibrium} returns whether a given state is in static equilibrium.
+$ContactLimbs$ (respectively $FreeLimbs$) returns the list of limbs that are in contact (respectively \textit{not} in contact) at a given state. $add\_contact\_limb$ (respectively $add\_free\_limb$)  marks a limb as in contact (respectively \textit{not} in contact) at a given state.
+%~ $add\_contact\_limb(newState,k)$ marks a limb as in contact at a given state.
 
 The pseudo code for the method \textsc{IntermediateContactState} is given by Algorithm~\ref{alg:repo}.
 
