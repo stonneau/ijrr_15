@@ -3,32 +3,32 @@
 \label{app:contact}
 
 
-First, we define an abstract structure State,
-that describes a contact configuration.
-The use of queues allows a FIFO approach regarding the order 
-in which contacts are tested: we try to replace older contacts first when necessary.
-Thus the algorithm is deterministic even though it can handle acyclic motions. \\
-
-\begin{lstlisting}]
-Struct Limb
-{
-    // Limb Configuration
-    Configuration qk;
-    // Effector position in
-    // world coordinates
-    vector6 pk;
-};
-
-Struct State
-{
-    // root location
-    Configuration q0;
-    // List of limbs not in contact
-    queue<Limb> freeLimbs;
-    // List of limbs in contact
-    queue<Limb> contactLimbs;
-};
-\end{lstlisting}
+%~ First, we define an abstract structure State,
+%~ that describes a contact configuration.
+%~ The use of queues allows a FIFO approach regarding the order 
+%~ in which contacts are tested: we try to replace older contacts first when necessary.
+%~ Thus the algorithm is deterministic even though it can handle acyclic motions. \\
+%~ 
+%~ \begin{lstlisting}]
+%~ Struct Limb
+%~ {
+    %~ // Limb Configuration
+    %~ Configuration qk;
+    %~ // Effector position in
+    %~ // world coordinates
+    %~ vector6 pk;
+%~ };
+%~ 
+%~ Struct State
+%~ {
+    %~ // root location
+    %~ Configuration q0;
+    %~ // List of limbs not in contact
+    %~ queue<Limb> freeLimbs;
+    %~ // List of limbs in contact
+    %~ queue<Limb> contactLimbs;
+%~ };
+%~ \end{lstlisting}
 
 From the start configuration, given as an input by the user,
 we create the initial state $s0$.
@@ -40,24 +40,24 @@ $\mathbf{Q}^0$, as input parameters.
 	\begin{algorithmic}[1]
 	%~ \Function{GenerateConfiguration}{}
 	\Function{Interpolate}{$s0$,$\mathbf{Q}^0$, $MAX\_TRIES$}
-		\State $list<$State$>$ $states = [s0]$
-		\State $nb\_fail = 0$ 
-		\State $i = 1;$ /*Current index in the list*/
+		\State $states \gets (s0)$ \Comment{List of states intialized with $s0$}
+		\State $nb\_fail \gets 0$ 
+		\State $i \gets 1;$ \Comment{Current index in the list}
 		\While {$i < length(\mathbf{Q}^0)$}
-			\State State $pState = last\_element(states)$
-			\State State $s =$ \textsc{GenFullBody}$(pState, \mathbf{Q}^0[i])$
-			\If {$s != NULL $}
-				\State $nb\_fail = 0$
-				\State $i += 1$
+			\State $pState \gets last\_element(states)$
+			\State $s \gets$ \textsc{GenFullBody}$(pState, element(\mathbf{Q}^0,i))$
+			\If {$s \not= 0 $}
+				\State $nb\_fail \gets 0$
+				\State $i \gets i+1$
 				\State \textbf{return} $\mathbf{q}^{0}$
 			\Else
-				\State $nb\_fail += 1$
+				\State $nb\_fail \gets nb\_fail + 1$
 				\If {$nb\_fail == MAX\_TRIES$}
 					\State \textbf{return} $FAILURE$
 				\EndIf				
-				\State $s = $\textsc{IntermediateContactState}$(pState)$
+				\State $s \gets $\textsc{IntermediateContactState}$(pState)$
 			\EndIf
-			\State $push\_back(states, s)$
+			\State $push_back(states, s)$
 		\EndWhile
 		\State \textbf{return} $states$
 	\EndFunction
@@ -71,6 +71,8 @@ in computing a configuration with only one contact switch occurring.
 Otherwise, the method \textsc{IntermediateContactState} is called.
 It repositions one end effector (either a free limb, or the oldest active contact) towards a new contact position if possible.
 This repositioning allows to increase the odds that the contact can be maintained at the next step.
+The method \textit{last\_element} returns the last element
+of the list, \textit{element} returns the element contained by a list at a given index, and \textit{push\_back} inserts an element at the end of a list.
 Algorithm~\ref{alg:pi} gives the pseudo code for \textsc{GenFullBody}.
 
 \begin{algorithm}[!tbp]
