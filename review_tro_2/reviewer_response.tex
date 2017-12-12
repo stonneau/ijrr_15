@@ -152,10 +152,30 @@ something similar to your HyQ simulated example
 \quot{
 While the answer about the environment model is satisfying, I think
 that you should no only refer to the FCL library in a footnote, but to
-cite the paper that explains how it works:
-http://ieeexplore.ieee.org/document/6225337/?reload=true
+cite the paper that explains how it works.
 }
 \as{Thanks for the suggestion. The citation has indeed been included, as reference TODO}
+\leavevmode \\
+
+\quot{
+In Tab. V you refer to the computation time in units - seconds,
+minutes and hours. If so, you should be more specific as to the
+source(s) of the numbers you give in that table. I understand the fact
+that it is practically impossible to have a fair comparison in that
+point, and the whole community is working toward changing this
+situation (as you explain). But you should write explicitly that you
+took the numbers from the respective papers, or from your
+re-implementation of the algorithms you consider (I think it is not the
+case). Well, the papers [8], [17], [18] are quite old, and comparing
+the computation times achieved on the computers available 10 years ago
+and nowadays isn't convincing. 
+}
+\as{Thanks for the comment. Indeed, we did not reimplement the solutions, so we modified the paper to state explicitely that the times indicated are those found in the original papers. Although we agree that the times do not stand as proofs, we still believe that the order of magnitude of the time computations remains significant, because an algorithm that took hours to compute 10 years ago is unlikely to perform in less than a few seconds on a modern computer, especially since our implementation is single threaded, and does not take any advantages of recent advances such as GPU programming. In any case, the reviewer is right when he says that this section should be clarified.
+Thus, we removed our over-statement ``\textit{Table V presents the computation times for these scenarios, clearly demonstrating that our approach is order of magnitude faster than previous works}'' and added the following comment in Section VIII E.}
+\qt{
+Table V presents the computation times for these scenarios. Since no implementation of the previous methods is available, we had no choice but to indicate the times directly taken from their corresponding papers.
+In the case of older contributions such as [8], [17], [18], because of the technological progress, it appears that our results would have been more meaningful if the benchmarks were run on a modern computer. However, we believe that the order of magnitudes between the performance of each method remain significant to suggest that our method is faster.
+}
 \leavevmode \\
 
 \end{document}
