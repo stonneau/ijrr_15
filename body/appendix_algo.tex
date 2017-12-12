@@ -71,8 +71,8 @@ in computing a configuration with only one contact switch occurring.
 Otherwise, the method \textsc{IntermediateContactState} is called.
 It repositions one end effector (either a free limb, or the oldest active contact) towards a new contact position if possible.
 This repositioning allows to increase the odds that the contact can be maintained at the next step.
-The method \textit{last\_element} returns the last element
-of the list, \textit{element} returns the element contained by a list at a given index, and \textit{push\_back} inserts an element at the end of a list.
+The method \textit{length} returns the length of a list, \textit{last\_element} returns the last element
+of a list, \textit{element} returns the element contained by a list at a given index, and \textit{push\_back} inserts an element at the end of a list.
 Algorithm~\ref{alg:pi} gives the pseudo code for \textsc{GenFullBody}.
 
 \begin{algorithm}[!tbp]
@@ -80,8 +80,8 @@ Algorithm~\ref{alg:pi} gives the pseudo code for \textsc{GenFullBody}.
 	\begin{algorithmic}[1]
 	%~ \Function{GenerateConfiguration}{}
 	\Function{\textsc{GenFullBody}}{$pState$,$\mathbf{q}^0$}
-		\State $newState \gets create\_state(q0, FreeLimbs(pState))$
-		\State /*First try to maintain previous contacts*/
+		\State $newState \gets CreateState(q0, ContactLimbs(pState))$
+		%~ \State /*First try to maintain previous contacts*/
 		\State $nConBroken \gets 0$
 		\For {\textbf{each} $k$ in $ContactLimbs(pState)$}
 			\If {$!$\textsc{MaintainContact}$(pState,\mathbf{q}^0,k)$}
@@ -89,14 +89,14 @@ Algorithm~\ref{alg:pi} gives the pseudo code for \textsc{GenFullBody}.
 				\If {$nConBroken > 1$}				
 					\State \textbf{return} $0$
 				\EndIf				
-				\State $add\_free\_limb(newState,k)$
+				\State $MarkFree(newState,k)$
 			\Else 					
-				\State $add\_contact\_limb(newState,k)$
+				\State $MarkContact(newState,k)$
 			\EndIf
 		\EndFor
 		\For {\textbf{each} $k$ in $FreeLimbs(pState)$}
 			\If {\textsc{GenerateContact}$(\mathbf{q}^0,k)$}	
-				\State $add\_contact\_limb(newState,k)$
+				\State $MarkContact(newState,k)$
 				\State \textbf{return} $newState$
 			\EndIf
 		\EndFor
@@ -113,8 +113,9 @@ Algorithm~\ref{alg:pi} gives the pseudo code for \textsc{GenFullBody}.
 The method \textsc{MaintainContact}$(pState,\mathbf{q}^0,k)$ performs inverse kinematics to reach the previous contact position for the Limb.
 If it succeeds, the new limb configuration is assigned to $k$. If it fails, a random collision free configuration is assigned to $k$.
 
-The method \textsc{IsInStaticEquilibrium} returns whether a given state is in static equilibrium.
-$ContactLimbs$ (respectively $FreeLimbs$) returns the list of limbs that are in contact (respectively \textit{not} in contact) at a given state. $add\_contact\_limb$ (respectively $add\_free\_limb$)  marks a limb as in contact (respectively \textit{not} in contact) at a given state.
+The method \textsc{IsInStaticEquilibrium} returns whether a given state is in static equilibrium. $CreateState$ creates a new state, given
+a configuration and the list of active contacts.
+$ContactLimbs$ (respectively $FreeLimbs$) returns the list of limbs that are in contact (respectively \textit{not} in contact).  $MarkContact$ (respectively $MarkFree$)  marks a limb as in contact (respectively \textit{not} in contact).
 %~ $add\_contact\_limb(newState,k)$ marks a limb as in contact at a given state.
 
 The pseudo code for the method \textsc{IntermediateContactState} is given by Algorithm~\ref{alg:repo}.
