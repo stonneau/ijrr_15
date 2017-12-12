@@ -23,7 +23,7 @@ for each contact phase. For instance, a walk cycle would be described by three k
 Our definition of contact plan differs: between two consecutive configurations we allow both a contact break and a contact creation---if they are on the same effector. 
 In the previous example, our contact plan would simply consist of the two double-support configurations. 
 %However, if the contact broken and the contact created sequentially are not on the same effector, our planner outputs two distinct states.
-This representation is sufficient to describe all the contact phases, because the single support phase is implicitely described. Furthermore it removes the need to compute a single-support quasi-static configuration as in the example. Indeed, there might be a case where no quasi-static solution exists for the single support phase (because of the environment), but
+This representation is sufficient to describe all the contact phases, because the single support phase is implicitly described. Furthermore it removes the need to compute a single-support quasi-static configuration as in the example. Indeed, there might be a case where no quasi-static solution exists for the single support phase (because of the environment), but
 there exists a dynamic motion connecting the two double support states. Such motion will be computed by our framework, because the quasi-static constraint is only required at the contact planning phase; as shown in the companion video, and explained in Appendix~\ref{app:optim}, our framework is able to produce dynamic motions.
 
 \subsection{Contact planning algorithm}
@@ -38,8 +38,8 @@ First, the root path $\mathbf{q}^0(t)$ is discretized into a sequence of $j$ key
 \end{equation*} 
 
 where $\mathbf{q}^0_{0}$ and $\mathbf{q}^0_{j-1}$ are the start and goal configurations. %To ensure continuity in the contact transition phases,
-$j$ depends on a user-defined variable, called the discretization step. It corresponds to the ratio between the length of the path $\mathbf{q}^0(t)$\footnote{The length of the path is computed as the weighted 6D Euclidian distance
-travelled along the it, with a weight of $0.7$ for the translation part, and $0.3$ for the orientation part.}, and the number
+$j$ depends on a user-defined variable, called the discretization step. It corresponds to the ratio between the length of the path $\mathbf{q}^0(t)$\footnote{The length of the path is computed as the weighted 6D Euclidean distance
+traveled along the it, with a weight of $0.7$ for the translation part, and $0.3$ for the orientation part.}, and the number
 of configurations selected along it to create the contact configurations. 
 Each root configuration of $\mathbf{Q}^0$ is then extended into a whole-body configuration such that:
 \begin{itemize} 
