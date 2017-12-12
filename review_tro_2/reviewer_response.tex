@@ -59,11 +59,9 @@ ItemLabels=\ding{43},%
 \begin{document}
 \maketitle
 
-\section{Summary of the modifications}
 
 First of all, we would like to thank all the Reviewers and the associate editor (AE) for considering our resubmission.
 We are glad to find them satisfied with our modifications, and made our best to answer to the remaining comments as well as possible.
-
 In the following lines, we will quote all the remaining comments and answer to explain how exactly we updated the paper to address them.
 
 
@@ -77,6 +75,7 @@ in the text.
 }
 
 \as{TODO}
+\leavevmode \\
 
 \quot {The URLs in the paper seem rather brittle and are not suitable for
 archival purposes.  Two URLs point to specific branches of various
@@ -86,6 +85,8 @@ software which is guaranteed to persist for years to come... }
 
 \as{TODO}
 
+\leavevmode \\
+
 \quot {... and to refer
 to the underlying method used by the Blender tool.}
 
@@ -94,13 +95,23 @@ to the underlying method used by the Blender tool.}
 \section{Answers to Reviewer 1}
 %~ \ndone reecriture p3 + enlever main video
 
+\quot{First of all, I would like to thank the authors for the significant
+improvements to the paper. The contributions are much clearer, the
+algorithms are better described, and I believe that my initial concerns
+about the paper have been addressed. In particular, I would like to
+thank the authors for the detailed inline responses.}
+
+\as{We in turn thank the reviewer, who significantly helped us improving the paper with his comments.}
+
+\leavevmode \\
 \quot {It looks like that sentence was not actually removed from the
 paper (referring to the sentence ``optimization-based approaches
 only converge locally'')
 }
 
-\as{Indeed, due to a misguided merge, the sentence was reintroduced against our will. We apologize for that, and guarantee that this time it was indeed removed!}
+\as{Indeed, the sentence was somehow not removed from our latest version. We apologize for that, and guarantee that this time it was indeed removed!}
 
+\leavevmode \\
 \quot {
 The dual reformulation of the LP in (11) in Sect. VI is fine, but is
 a perfectly standard procedure (that, in fact, many LP solvers will
@@ -110,7 +121,41 @@ Whether the authors include the formulation is up to them.}
 
 \as{Thanks for the comment. Indeed, using the dual formulation is quite common for LP solvers. However, after computing the dual in our case, it turns out that some of the constraints can be solved trivially, which allows to reduce the dimensionality of the problem, resulting in (11). We experimentally verified that this form is faster to solve with respect to the one from equation (10). For this reason, we believe that equation (11) is worth mentioning, and prefer to leave it, since it was given as an option by the reviewer. Finally, we removed the reference to the Slater's conditions since we agree with the reviewer that the procedure is standard.}
 
+\leavevmode \\
 \section{Answers to Reviewer 2}
+\quot{All the issues I raised in the first review have been addressed in
+the revised version. I'm satisfied with most of the answers and the
+changes made to the paper. In particular the novelty of the paper with
+respect to the conference works is clarified. I appreciate also the new
+structure of the manuscript that integrates material previously
+relegated to the Appendices into the main body. Now, this work seems to
+be self contained enough for a journal. }
+\as{Thanks for the comment. We agree with the reviewer that the paper is better this way.}
 
+\leavevmode \\
+\quot{
+1. I understand the point of view of the authors who focus on
+multi-contact planning and would like to refer only briefly to previous
+work in motion planning for multi-legged, statically-stable robots. In
+principle that is OK, but I suggest to extend the paragraph added at
+the end of Section I.A by few sentences that clarify what are the
+advantages of your motion planning system with respect to these older
+approaches. You are focusing on humanoids, for which these gains are
+pretty obvious, but what about multi-legged robots? As an inspiration I
+recommend this youtube video showing a simulated hexapod that does
+something similar to your HyQ simulated example
+\url{https://www.youtube.com/watch?v=Xio1TbjAK80}}
+
+\as{TODO}
+\leavevmode \\
+
+\quot{
+While the answer about the environment model is satisfying, I think
+that you should no only refer to the FCL library in a footnote, but to
+cite the paper that explains how it works:
+http://ieeexplore.ieee.org/document/6225337/?reload=true
+}
+\as{Thanks for the suggestion. The citation has indeed been included, as reference TODO}
+\leavevmode \\
 
 \end{document}
