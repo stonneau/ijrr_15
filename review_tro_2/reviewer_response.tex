@@ -1,0 +1,116 @@
+\documentclass[a4paper]{article}
+\usepackage{fullpage}
+\usepackage{amsfonts} % pour les lettres maths creuses \mathbb
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[frenchb]{babel}
+\usepackage{aeguill}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{pdfpages}
+% Another method to track changes
+% Examples of usage:
+% - This is \added[id=per,remark={we need this}]{new} text.
+% - This is \deleted[id=per,remark=obsolete]{unnecessary}text.
+% - This is \replaced[id=per]{nice}{bad} text.
+% To print the list of change use: \listofchanges
+%~ \usepackage{changes}	% use this for the working version
+%\usepackage[final]{changes} % use this for the final version
+%~ \definechangesauthor[name={Andrea Del Prete}, color=orange]{adp}
+\newcommand{\deladp}[1]{\textcolor{red}{#1}}
+\newcommand{\addadp}[1]{\textcolor{green}{#1}}
+%~ \newcommand{\repadp}[2]{\replaced[id=adp]{#1}{#2}}
+%~ \definechangesauthor[name={Steve Tonneau}, color=blue]{st}
+%~ \newcommand{\delst}[1]{\deleted[id=st]{#1}}
+%~ \newcommand{\addst}[1]{\added[id=st]{#1}}
+%~ \newcommand{\repst}[2]{\replaced[id=st]{#1}{#2}}
+\newcommand{\gls}[1]{\textit{#1}}
+\newcommand{\glslink}[2]{{#2}}
+%~ \newcommand{\done}[0]{\textcolor{green}{DONE}}
+\newcommand{\done}[0]{}
+\newcommand{\ndone}[0]{\textcolor{red}{TODO}}
+
+\newcommand\dx{\dot{x}}
+\newcommand\dy{\dot{y}}
+\newcommand\ddx{\ddot{x}}
+\newcommand\ddy{\ddot{y}}
+\def\real{{\mathbb R} }
+\newcommand\quot[1]{\begin{quote} \underline{quote}: \textbf{#1}\end{quote}}
+\newcommand\as[1]{\begin{quote} \underline{answer}: {#1}\end{quote} }
+\newcommand\qt[1]{\begin{quote} \underline{added text in paper}: \textit{#1}\end{quote} \leavevmode \\ }
+\newcommand\jp{ \leavevmode \\}
+\frenchbsetup%
+{%
+StandardItemLabels=true,%
+ItemLabels=\ding{43},%
+}%
+\DeclareUnicodeCharacter{00A0}{ }
+\author {}
+\title {Cover letter for the resubmission of the conditionally accepted paper ``An efficient acyclic contact planner for multiped robots''}
+\date {}
+
+%% \addtolength{\oddsidemargin}{-.6in}
+%% \linespread{1.5}
+%% \addtolength{\textwidth}{-1.5in}
+
+\begin{document}
+\maketitle
+
+\section{Summary of the modifications}
+
+First of all, we would like to thank all the Reviewers and the associate editor (AE) for considering our resubmission.
+We are glad to find them satisfied with our modifications, and made our best to answer to the remaining comments as well as possible.
+
+In the following lines, we will quote all the remaining comments and answer to explain how exactly we updated the paper to address them.
+
+
+\section{Answers to the associate editor}
+
+\quot {The C++/Java-style code listings are unnecessary and do not conform
+to journal standards.  The authors rewrite their pseudocode to use
+rigorous mathematical notation.  Suggest replacing "object.attribute"
+with "Attribute(object)", and describing the attributes of the objects
+in the text.
+}
+
+\as{TODO}
+
+\quot {The URLs in the paper seem rather brittle and are not suitable for
+archival purposes.  Two URLs point to specific branches of various
+Github repositories, and another refers to the documentation of a
+Blender tool.  The authors should create a static web page for their
+software which is guaranteed to persist for years to come... }
+
+\as{TODO}
+
+\quot {... and to refer
+to the underlying method used by the Blender tool.}
+
+\as{TODO}
+
+\section{Answers to Reviewer 1}
+%~ \ndone reecriture p3 + enlever main video
+
+\quot {It looks like that sentence was not actually removed from the
+paper (referring to the sentence ``optimization-based approaches
+only converge locally'')
+}
+
+\as{Indeed, due to a misguided merge, the sentence was reintroduced against our will. We apologize for that, and guarantee that this time it was indeed removed!}
+
+\quot {
+The dual reformulation of the LP in (11) in Sect. VI is fine, but is
+a perfectly standard procedure (that, in fact, many LP solvers will
+perform internally automatically). It would be sufficient to mention
+that the dual problem is solved without giving its full formulation.
+Whether the authors include the formulation is up to them.}
+
+\as{Thanks for the comment. Indeed, using the dual formulation is quite common for LP solvers. However, after computing the dual in our case, it turns out that some of the constraints can be solved trivially, which allows to reduce the dimensionality of the problem, resulting in (11). We experimentally verified that this form is faster to solve with respect to the one from equation (10). For this reason, we believe that equation (11) is worth mentioning, and prefer to leave it, since it was given as an option by the reviewer. Finally, we removed the reference to the Slater's conditions since we agree with the reviewer that the procedure is standard.}
+
+\section{Answers to Reviewer 2}
+
+
+\end{document}
