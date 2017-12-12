@@ -49,13 +49,16 @@ $\mathbf{Q}^0$, as input parameters.
 			\If {$s \not= 0 $}
 				\State $nb\_fail \gets 0$
 				\State $i \gets i+1$
-				\State \textbf{return} $\mathbf{q}^{0}$
+				%~ \State \textbf{return} $\mathbf{q}^{0}$
 			\Else
 				\State $nb\_fail \gets nb\_fail + 1$
-				\If {$nb\_fail == MAX\_TRIES$}
-					\State \textbf{return} $FAILURE$
-				\EndIf				
+				%~ \If {$nb\_fail == MAX\_TRIES$}
+					%~ \State \textbf{return} $FAILURE$
+				%~ \EndIf				
 				\State $s \gets $\textsc{IntermediateContactState}$(pState)$
+				\If {$s == 0 \lor nb\_fail == MAX\_TRIES$}
+					\State \textbf{return} $FAILURE$
+				\EndIf		
 			\EndIf
 			\State $push\_back(states, s)$
 		\EndWhile
@@ -80,7 +83,7 @@ Algorithm~\ref{alg:pi} gives the pseudo code for \textsc{GenFullBody}.
 	\begin{algorithmic}[1]
 	%~ \Function{GenerateConfiguration}{}
 	\Function{\textsc{GenFullBody}}{$pState$,$\mathbf{q}^0$}
-		\State $newState \gets CreateState(q0, ContactLimbs(pState))$
+		\State $newState \gets CreateState(\mathbf{q}^0, ContactLimbs(pState))$
 		%~ \State /*First try to maintain previous contacts*/
 		\State $nConBroken \gets 0$
 		\For {\textbf{each} $k$ in $ContactLimbs(pState)$}
@@ -94,8 +97,8 @@ Algorithm~\ref{alg:pi} gives the pseudo code for \textsc{GenFullBody}.
 				\State $MarkContact(newState,k)$
 			\EndIf
 		\EndFor
-		\For {\textbf{each} $k$ in $FreeLimbs(pState)$}
-			\If {\textsc{GenerateContact}$(\mathbf{q}^0,k)$}	
+		\For {\textbf{each} $k$ in $FreeLimbs(newState)$}
+			\If {\textsc{GenerateContact}$(newState,k)$}	
 				\State $MarkContact(newState,k)$
 				\State \textbf{return} $newState$
 			\EndIf
@@ -115,14 +118,14 @@ If it succeeds, the new limb configuration is assigned to $k$. If it fails, a ra
 
 The method \textsc{IsInStaticEquilibrium} returns whether a given state is in static equilibrium. $CreateState$ creates a new state, given
 a configuration and the list of active contacts.
-$ContactLimbs$ (respectively $FreeLimbs$) returns the list of limbs that are in contact (respectively \textit{not} in contact).  $MarkContact$ (respectively $MarkFree$)  marks a limb as in contact (respectively \textit{not} in contact).
+$ContactLimbs$ (respectively $FreeLimbs$) returns the list of limbs that are in contact (respectively \textit{not} in contact).  $MarkContact$ (respectively $MarkFree$)  marks a limb as in contact (respectively \textit{not} in contact). These methods follow a FIFO approach: the first Limb chronologically marked as in contact (respectively not in contact) is returned first by $ContactLimbs$ (respectively $FreeLimbs$). This allows the algorithm to be deterministic even though it can handle acyclic motions.
 %~ $add\_contact\_limb(newState,k)$ marks a limb as in contact at a given state.
 
 The pseudo code for the method \textsc{IntermediateContactState} is given by Algorithm~\ref{alg:repo}.
 
 
-\textsc{GenerateContact}$(\mathbf{q}^0,k)$ is a call to the contact generator presented in the following Section~\ref{sec:single_contact}.
- It generates a contact configuration in static equilibrium, and assigns the corresponding configuration to $k$.
+\textsc{GenerateContact}$(state,k)$ is a call to the contact generator presented in the following Section~\ref{sec:single_contact}.
+It generates a contact configuration in static equilibrium, and assigns the corresponding configuration of the Limb $k$ to the state configuration.
 If it fails, $k$ remains unchanged if it is collision free, otherwise it is assigned a random collision free configuration.
 
 
@@ -130,32 +133,57 @@ If it fails, $k$ remains unchanged if it is collision free, otherwise it is assi
 \begin{algorithm}[!tbp]
 \caption{Adds or repositions a contact for one limb} \label{interpolate}
 	\begin{algorithmic}[1]
-	\Function{IntermediateContactState}{$state$}
-		\State $i=0$
-		\While {$i<length(states.freeLimbs)$}
-			\State Limb $k = pop(states.freeLimbs)$
-			\If {\textsc{GenerateContact}$(state.q0,k)$}	
-				\State $push(newState.contactLimbs,k)$			
-				\State \textbf{return}
-			\Else
-				\State $i+=1$
-				\State $push(states.freeLimbs,k)$		
+	\Function{IntermediateContactState}{$state$}        
+        \State $newState \gets state$
+		\For {\textbf{each} $k$ in $FreeLimbs(newState)$}
+			\If {\textsc{GenerateContact}$(newState,k)$}	
+				\State $MarkContact(newState,k)$			
+				\State \textbf{return} $newState$
+			%~ \Else
+				%~ \State $MarkFree(newState,k)$	\comment{Mark }
+				%~ \State $push(states.freeLimbs,k)$		
 			\EndIf
-		\EndWhile
-		\State $i=0$
-		\While {$i<length(states.contactLimbs)$}
-			\State Limb $k = pop(states.contactLimbs)$
-			\State Limb $copy = k$
-			\State $i+=1$
-			\If {\textsc{GenerateContact}$(state.q0,k)$}	
-				\State $push(newState.contactLimbs,k)$			
-				\State \textbf{return}
-			\Else
-				\State $push(newState.contactLimbs,copy)$	
+		\EndFor
+		\For {\textbf{each} $k$ in $ContactLimbs(newState)$}
+			\If {\textsc{GenerateContact}$(newState,k)$}	
+				\State /*Account for repositioning in FIFO queue*/		
+				\State $MarkContact(newState,k)$
+				\State \textbf{return} $newState$
+			%~ \Else
+				%~ \State $MarkFree(newState,k)$	\comment{Mark }
+				%~ \State $push(states.freeLimbs,k)$		
 			\EndIf
-		\EndWhile
+		\EndFor
+        \State
 		/*Fails if impossible to relocate any effector*/
-		\State \textbf{return} $FAILURE$
+		\State \textbf{return} $0$
+        %~ 
+        %~ 
+		%~ \State $i \gets 0$
+		%~ \While {$i<length(states.freeLimbs)$}
+			%~ \State Limb $k = pop(states.freeLimbs)$
+			%~ \If {\textsc{GenerateContact}$(state,k)$}	
+				%~ \State $push(newState.contactLimbs,k)$			
+				%~ \State \textbf{return}
+			%~ \Else
+				%~ \State $i+=1$
+				%~ \State $push(states.freeLimbs,k)$		
+			%~ \EndIf
+		%~ \EndWhile
+		%~ \State $i=0$
+		%~ \While {$i<length(states.contactLimbs)$}
+			%~ \State Limb $k = pop(states.contactLimbs)$
+			%~ \State Limb $copy = k$
+			%~ \State $i+=1$
+			%~ \If {\textsc{GenerateContact}$(state.q0,k)$}	
+				%~ \State $push(newState.contactLimbs,k)$			
+				%~ \State \textbf{return}
+			%~ \Else
+				%~ \State $push(newState.contactLimbs,copy)$	
+			%~ \EndIf
+		%~ \EndWhile
+		%~ /*Fails if impossible to relocate any effector*/
+		%~ \State \textbf{return} $FAILURE$
 	\EndFunction
 \end{algorithmic}
 \label{alg:repo}
