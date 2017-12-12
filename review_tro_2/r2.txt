@@ -1,0 +1,46 @@
+This is the second-round review of a submission I reviewed previously,
+hence I focus on the improvements made to the revised manuscript, and
+on the few remaining issues that should be clarified before the paper
+gets accepted. 
+I. All the issues I raised in the first review have been addressed in
+the revised version. I'm satisfied with most of the answers and the
+changes made to the paper. In particular the novelty of the paper with
+respect to the conference works is clarified. I appreciate also the new
+structure of the manuscript that integrates material previously
+relegated to the Appendices into the main body. Now, this work seems to
+be self contained enough for a journal. 
+II. However, reading the paper again I found a couple of minor issues
+that in my opinion should be solved in the final version, to make this
+contribution better and more beneficial to the T-RO readers. Here they
+go:
+1. I understand the point of view of the authors who focus on
+multi-contact planning and would like to refer only briefly to previous
+work in motion planning for multi-legged, statically-stable robots. In
+principle that is OK, but I suggest to extend the paragraph added at
+the end of Section I.A by few sentences that clarify what are the
+advantages of your motion planning system with respect to these older
+approaches. You are focusing on humanoids, for which these gains are
+pretty obvious, but what about multi-legged robots? As an inspiration I
+recommend this youtube video showing a simulated hexapod that does
+something similar to your HyQ simulated example
+https://www.youtube.com/watch?v=Xio1TbjAK80
+2. While the answer about the environment model is satisfying, I think
+that you should no only refer to the FCL library in a footnote, but to
+cite the paper that explains how it works:
+http://ieeexplore.ieee.org/document/6225337/?reload=true
+3. In Tab. V you refer to the computation time in units - seconds,
+minutes and hours. If so, you should be more specific as to the
+source(s) of the numbers you give in that table. I understand the fact
+that it is practically impossible to have a fair comparison in that
+point, and the whole community is working toward changing this
+situation (as you explain). But you should write explicitly that you
+took the numbers from the respective papers, or from your
+re-implementation of the algorithms you consider (I think it is not the
+case). Well, the papers [8], [17], [18] are quite old, and comparing
+the computation times achieved on the computers available 10 years ago
+and nowadays isn't convincing. 
+4. I found few typos, but I believe that these would be removed in the
+final editing process. 
+The issues raised above are not essentia to the quality of the
+contribution, but you can consider addressing these as an attempt to
+improve the paper. 

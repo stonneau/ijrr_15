@@ -1,0 +1,34 @@
+First of all, I would like to thank the authors for the significant
+improvements to the paper. The contributions are much clearer, the
+algorithms are better described, and I believe that my initial concerns
+about the paper have been addressed. In particular, I would like to
+thank the authors for the detailed inline responses.
+
+I only have two minor points that I would suggest the authors address
+in the final draft:
+
+1) quote: * Also in Sect. I.A, the authors state that
+”optimization-based approaches
+only converge locally”. This is not necessarily true, as convex or
+mixed-integer
+convex optimizations can (sometimes) be solved to a verifiable global
+optimum.
+I would suggest removing this sentence entirely.
+answer: Thanks for the suggestion. Our phrasing was indeed misleading
+and inaccurate. Our
+intention was to explain that the geometry of the scene makes the
+problem highly non-convex,
+and that approaches such as the CIO, if not initialized with an
+appropriate initial guess, might
+never get out of the local minima. We followed the Reviewer’s advice
+and simply removed
+the sentence.
+
+response: It looks like that sentence was not actually removed from the
+paper.
+
+2) The dual reformulation of the LP in (11) in Sect. VI is fine, but is
+a perfectly standard procedure (that, in fact, many LP solvers will
+perform internally automatically). It would be sufficient to mention
+that the dual problem is solved without giving its full formulation.
+Whether the authors include the formulation is up to them.
