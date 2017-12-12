@@ -31,7 +31,7 @@
 %~ \end{lstlisting}
 
 From the start configuration, given as an input by the user,
-we create the initial state $s0$. A state is described by a whole-body configuration, as well as the list of currently active contacts.
+we create the initial state $s0$. A state is described by a whole-body configuration, as well as the list of currently active contacts and their associated 6D positions.
 Algorithm~\ref{alg:interpolate}  is then called with $s0$, as well as the discretized path 
 $\mathbf{Q}^0$, as input parameters.
 
@@ -40,7 +40,7 @@ $\mathbf{Q}^0$, as input parameters.
 	\begin{algorithmic}[1]
 	%~ \Function{GenerateConfiguration}{}
 	\Function{Interpolate}{$s0$,$\mathbf{Q}^0$, $MAX\_TRIES$}
-		\State $states \gets (s0)$ \Comment{List of states intialized with $s0$}
+		\State $states \gets (s0)$ \Comment{List of states initialized with $s0$}
 		\State $nb\_fail \gets 0$ 
 		\State $i \gets 1;$ \Comment{Current index in the list}
 		\While {$i < length(\mathbf{Q}^0)$}
@@ -117,7 +117,7 @@ The method \textsc{MaintainContact}$(pState,\mathbf{q}^0,k)$ performs inverse ki
 If it succeeds, the new limb configuration is assigned to $k$. If it fails, a random collision free configuration is assigned to $k$.
 
 The method \textsc{IsInStaticEquilibrium} returns whether a given state is in static equilibrium. $CreateState$ creates a new state, given
-a configuration and the list of active contacts.
+a root configuration and the list of active contacts.
 $ContactLimbs$ (respectively $FreeLimbs$) returns the list of limbs that are in contact (respectively \textit{not} in contact).  $MarkContact$ (respectively $MarkFree$)  marks a limb as in contact (respectively \textit{not} in contact). These methods follow a FIFO approach: the first Limb chronologically marked as in contact (respectively not in contact) is returned first by $ContactLimbs$ (respectively $FreeLimbs$). This allows the algorithm to be deterministic even though it can handle acyclic motions.
 %~ $add\_contact\_limb(newState,k)$ marks a limb as in contact at a given state.
 
