@@ -23,8 +23,9 @@ To generate a volume $W^k$, we proceed as follows:
 \begin{enumerate}
 \item Generate randomly $N$ valid limb configurations for $R^k$, for $N$ really large (say $100000$);
 \item For each configuration, store the 3D position of the end effector joint relatively to the root of $R^k$; then compute the convex hull of the resulting point cloud;
-\item The resulting polytope can contain a very large number of faces. A last step is thus to simplify it with the blender decimate tool (\url{http://wiki.blender.org/index.php/Doc:2.4/Manual/Modifiers/Generate/Decimate}). This tool removes a user-defined amount of vertices (and faces) of the polytope, thus resulting
-in a conservative approximation of the original shape. For HRP-2 we apply the operator with a ratio of $0.06$, resulting in a polytope of 38 faces for the arms and the legs.
+\item The resulting polytope can contain a very large number of faces.  A last step is thus to simplify it using an incremental decimation method~\cite{Garland:1997:SSU:258734.258849}.
+Variations of this method are commonly implemented in most authoring tools. For our experiments we used the blender decimate tool. Details of its use can be found in the static webpage associated with this paper (\url{http://stevetonneau.fr/files/publications/isrr15/tro_install.html\#decimate}). For HRP-2 we apply the operator with a ratio of $0.06$, resulting in a polytope of 38 faces for the arms and the legs.
+%~ (\url{http://wiki.blender.org/index.php/Doc:2.4/Manual/Modifiers/Generate/Decimate}). For HRP-2 we apply the operator with a ratio of $0.06$, resulting in a polytope of 38 faces for the arms and the legs.
 \end{enumerate}
   
 \begin{figure}
