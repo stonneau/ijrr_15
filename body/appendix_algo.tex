@@ -43,9 +43,9 @@ $\mathbf{Q}^0$, as input parameters.
 		\State $states \gets (s0)$ \Comment{List of states initialized with $s0$}
 		\State $nb\_fail \gets 0$ 
 		\State $i \gets 1;$ \Comment{Current index in the list}
-		\While {$i < length(\mathbf{Q}^0)$}
-			\State $pState \gets lastElement(states)$
-			\State $s \gets$ \textsc{GenFullBody}$(pState, element(\mathbf{Q}^0,i))$
+		\While {$i < Length(\mathbf{Q}^0)$}
+			\State $pState \gets LastElement(states)$
+			\State $s \gets$ \textsc{GenFullBody}$(pState, Element(\mathbf{Q}^0,i))$
 			\If {$s \not= 0 $}
 				\State $nb\_fail \gets 0$
 				\State $i \gets i+1$
@@ -60,7 +60,7 @@ $\mathbf{Q}^0$, as input parameters.
 					\State \textbf{return} $FAILURE$
 				\EndIf		
 			\EndIf
-			\State $pushBack(states, s)$
+			\State \textsc{PushBack}$(states, s)$
 		\EndWhile
 		\State \textbf{return} $states$
 	\EndFunction
@@ -74,8 +74,8 @@ in computing a configuration with only one contact switch occurring.
 Otherwise, the method \textsc{IntermediateContactState} (Algorithm~\ref{alg:repo}) is called.
 It repositions one end effector (either a free limb, or the oldest active contact) towards a new contact position if possible.
 This repositioning allows to increase the odds that the contact can be maintained at the next step.
-The method \textit{length} returns the length of a list, \textit{lastElement} returns the last element
-of a list, \textit{element} returns the element contained by a list at a given index, and \textit{pushBack} inserts an element at the end of a list.
+The method \textit{Length} returns the length of a list, \textit{LastElement} returns the last element
+of a list, \textit{Element} returns the element contained by a list at a given index, and \textsc{PushBack} inserts an element at the end of a list.
 %~ Algorithm~\ref{alg:pi} gives the pseudo code for \textsc{GenFullBody}.
 
 \begin{algorithm}[!tbp]
@@ -83,7 +83,7 @@ of a list, \textit{element} returns the element contained by a list at a given i
 	\begin{algorithmic}[1]
 	%~ \Function{GenerateConfiguration}{}
 	\Function{\textsc{GenFullBody}}{$pState$,$\mathbf{q}^0$}
-		\State $newState \gets CreateState(\mathbf{q}^0,$ 
+		\State $newState \gets \textsc{CreateState}(\mathbf{q}^0,$ 
         \State $\quad \quad \quad \quad  \quad  \quad  \quad  \quad  \quad \quad  \quad ContactLimbs(pState))$
 		%~ \State /*First try to maintain previous contacts*/
 		\State $nConBroken \gets 0$
@@ -93,18 +93,18 @@ of a list, \textit{element} returns the element contained by a list at a given i
 				\If {$nConBroken > 1$}				
 					\State \textbf{return} $0$
 				\EndIf				
-				\State $MarkFree(newState,k)$
+				\State \textsc{MarkFree}$(newState,k)$
 			\Else 					
-				\State $MarkContact(newState,k)$
+				\State \textsc{MarkContact}$(newState,k)$
 			\EndIf
 		\EndFor
 		\For {\textbf{each} $k$ in $FreeLimbs(newState)$}
 			\If {\textsc{GenerateContact}$(newState,k)$}	
-				\State $MarkContact(newState,k)$
+				\State \textsc{MarkContact}$(newState,k)$
 				\State \textbf{return} $newState$
 			\EndIf
 		\EndFor
-		\If {$IsInStaticEquilibrium(newState)$}
+		\If {\textsc{IsInStaticEquilibrium}$(newState)$}
 			\State \textbf{return} $newState$
 		\Else
 			\State \textbf{return} $0$
@@ -116,10 +116,9 @@ of a list, \textit{element} returns the element contained by a list at a given i
 
 The procedure \textsc{MaintainContact}$(pState,\mathbf{q}^0,k)$ performs inverse kinematics to reach the previous contact position for the limb.
 If it succeeds, the new limb configuration is assigned to $k$. If it fails, a random collision free configuration is assigned to $k$.
-
-The method $IsInStaticEquilibrium$ returns whether a given state is in static equilibrium. $CreateState$ creates a new state, given
+The method \textsc{IsInStaticEquilibrium} returns whether a given state is in static equilibrium. \textsc{CreateState} creates a new state, given
 a root configuration and the list of active contacts.
-$ContactLimbs$ (respectively $FreeLimbs$) returns the list of limbs that are in contact (respectively \textit{not} in contact).  $MarkContact$ (respectively $MarkFree$)  marks a limb as in contact (respectively \textit{not} in contact). These methods follow a FIFO approach: the first limb chronologically marked as in contact (respectively not in contact) is returned first by $ContactLimbs$ (respectively $FreeLimbs$). This allows the algorithm to be deterministic even though it can handle acyclic motions.
+$ContactLimbs$ (respectively $FreeLimbs$) returns the list of limbs that are in contact (respectively \textit{not} in contact).  \textsc{MarkContact} (respectively \textsc{MarkFree})  marks a limb as in contact (respectively \textit{not} in contact). These methods follow a FIFO approach: the first limb chronologically marked as in contact (respectively not in contact) is returned first by $ContactLimbs$ (respectively $FreeLimbs$). This allows the algorithm to be deterministic even though it can handle acyclic motions.
 %~ $add\_contact\_limb(newState,k)$ marks a limb as in contact at a given state.
 
 %~ The pseudo code for the method \textsc{IntermediateContactState} is given by Algorithm~\ref{alg:repo}.
@@ -138,20 +137,20 @@ If it fails, $k$ remains unchanged if it is collision free, otherwise it is assi
         \State $newState \gets state$
 		\For {\textbf{each} $k$ in $FreeLimbs(newState)$}
 			\If {\textsc{GenerateContact}$(newState,k)$}	
-				\State $MarkContact(newState,k)$			
+				\State \textsc{MarkContact}$(newState,k)$			
 				\State \textbf{return} $newState$
 			%~ \Else
-				%~ \State $MarkFree(newState,k)$	\comment{Mark }
+				%~ \State \textsc{MarkFree}$(newState,k)$	\comment{Mark }
 				%~ \State $push(states.freeLimbs,k)$		
 			\EndIf
 		\EndFor
 		\For {\textbf{each} $k$ in $ContactLimbs(newState)$}
 			\If {\textsc{GenerateContact}$(newState,k)$}	
 				\State /*Account for repositioning in FIFO queue*/		
-				\State $MarkContact(newState,k)$
+				\State \textsc{MarkContact}$(newState,k)$
 				\State \textbf{return} $newState$
 			%~ \Else
-				%~ \State $MarkFree(newState,k)$	\comment{Mark }
+				%~ \State \textsc{MarkFree}$(newState,k)$	\comment{Mark }
 				%~ \State $push(states.freeLimbs,k)$		
 			\EndIf
 		\EndFor
