@@ -41,6 +41,7 @@
 \newcommand\quot[1]{\begin{quote} \underline{quote}: \textbf{#1}\end{quote}}
 \newcommand\as[1]{\begin{quote} \underline{answer}: {#1}\end{quote} }
 \newcommand\qt[1]{\begin{quote} \underline{added text in paper}: \textit{#1}\end{quote} \leavevmode \\ }
+\newcommand\rrt[1]{\begin{quote} \underline{\textbf{removed} text from the paper}: \textit{#1}\end{quote} \leavevmode \\ }
 \newcommand\jp{ \leavevmode \\}
 \frenchbsetup%
 {%
@@ -92,7 +93,7 @@ website (\url{http://stevetonneau.fr/files/publications/isrr15/tro_install.html}
 \quot {... and to refer
 to the underlying method used by the Blender tool.}
 
-\as{Regarding the decimate tool from Blender, we proceeded as follows: in the paper, we mention a SIGGRAPH paper as one option to reduce mesh complexity, and mention that equivalent methods are proposed by many 3D authoring tools, such as Blender which we used. Then, in the static web page, we remind this piece of information and provide a permanent link to the version of Blender we used, along with the documentation that explains how to use the decimate tool.}
+\as{Regarding the decimate tool from Blender, we proceeded as follows: in the new version of paper, we mention a SIGGRAPH paper as one option to reduce mesh complexity, and mention that equivalent methods are proposed by many 3D authoring tools, such as Blender which we used. Then, in the static web page, we remind this piece of information and provide a permanent link to the version of Blender we used, along with the documentation that explains how to use the decimate tool.}
 
 \qt{The resulting polytope can contain a very large number of faces.  A last step is thus to simplify it using an incremental decimation method[38].
 Variations of this method are commonly implemented in most authoring tools. For our experiments we used the Blender decimate tool. Details of its use can be found in the static webpage associated with this paper \url{http://stevetonneau.fr/files/publications/isrr15/tro_install.html\#decimate}.\\}
@@ -125,8 +126,9 @@ that the dual problem is solved without giving its full formulation.
 Whether the authors include the formulation is up to them.}
 
 \as{Thanks for the comment. Indeed, using the dual formulation is quite common for LP solvers. However, after computing the dual in our case, it turns out that some of the constraints can be solved trivially, which allows to reduce the dimensionality of the problem, resulting in (11). We experimentally verified that this form is faster to solve with respect to the one from equation (10). For this reason, we believe that equation (11) is worth mentioning, and prefer to leave it, since it was given as an option by the reviewer. Finally, we removed the reference to the Slater's conditions since we agree with the reviewer that the procedure is standard.}
+\rrt{Indeed, from Slater’s conditions [33], we know that the optimal values of an LP and its dual are equal.}
 
-\leavevmode \\
+
 \section{Answers to Reviewer 2}
 \quot{All the issues I raised in the first review have been addressed in
 the revised version. I'm satisfied with most of the answers and the
@@ -180,7 +182,7 @@ and nowadays isn't convincing.
 Thus, we removed our over-statement ``\textit{Table V presents the computation times for these scenarios, clearly demonstrating that our approach is order of magnitude faster than previous works}'' and added the following comment in Section VIII E.}
 \qt{
 Table V presents the computation times for these scenarios. Since no implementation of the previous methods is available, we had no choice but to indicate the times directly taken from their corresponding papers.
-In the case of older contributions such as [8], [17], [18], because of the technological progress, it appears that our results would have been more meaningful if the benchmarks were run on a modern computer. However, we believe that the order of magnitudes between the performance of each method remain significant to suggest that our method is faster.
+In the case of older contributions such as [8], [17], [18], because of the technological progress, it appears that our results would have been more meaningful if the benchmarks were run on a modern computer. However, since the computation times differ of several orders of magnitude, we believe that these results clearly show the computational benefits of our method.
 }
 \leavevmode \\
 
