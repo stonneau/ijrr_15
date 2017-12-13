@@ -93,7 +93,7 @@ to the underlying method used by the Blender tool.}
 
 \as{Regarding the decimate tool from Blender, we proceeded as follows: in the paper, we mention a SIGGRAPH paper as one option to reduce mesh complexity, and mention that equivalent methods are proposed by many 3D authoring tools, such as Blender which we used. Then, in the static web page, we remind this piece of information and provide a permanent link to the version of Blender we used, along with the documentation that explains how to use the decimate tool.}
 
-\qt{The resulting polytope can contain a very large number of faces.  A last step is thus to simplify it using an incremental decimation method[37].
+\qt{The resulting polytope can contain a very large number of faces.  A last step is thus to simplify it using an incremental decimation method[38].
 Variations of this method are commonly implemented in most authoring tools. For our experiments we used the Blender decimate tool. Details of its use can be found in the static webpage associated with this paper \url{http://stevetonneau.fr/files/publications/isrr15/tro_install.html\#decimate}.\\}
 
 \section{Answers to Reviewer 1}
@@ -150,7 +150,8 @@ recommend this youtube video showing a simulated hexapod that does
 something similar to your HyQ simulated example
 \url{https://www.youtube.com/watch?v=Xio1TbjAK80}}
 
-\as{TODO}
+\as{Thanks for the comment. We added the following paragraph in the Section.}
+\qt{The following state of the art focuses on contributions proposed for humanoid robots, although our method is also demonstrated on quadruped robots such as HyQ, for which related work also exists [6]. With robots using more than two legs for locomotion, different gait modes can be used to cross cluttered environments, allowing them to remain in a cyclic context. In these works collision avoidance is often treated as a height issue (assuming that all the obstacles are on the ``ground'', and so are the contacts, which prevents from going under a table, or using a wall as contact location for instance). While these approaches are efficient in many cases, we focus on the most generic case, where obstacles are not only on the ground, and cyclic locomotion might not be a solution.}
 \leavevmode \\
 
 \quot{
@@ -158,7 +159,7 @@ While the answer about the environment model is satisfying, I think
 that you should no only refer to the FCL library in a footnote, but to
 cite the paper that explains how it works.
 }
-\as{Thanks for the suggestion. The citation has indeed been included, as reference [31]TODO}
+\as{Thanks for the suggestion. The citation has indeed been included, as reference [32]}
 \leavevmode \\
 
 \quot{
