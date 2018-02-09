@@ -171,7 +171,7 @@ For instance, learning ``terrain costs'', based on expert knowledge as proposed 
  %~ do not seem applicable to real robots.
 
 As far as robotics applications are concerned, none of the existing multi-contact planners is \gls{interactive}\footnote{We define an interactive planner as one for which the time to plan a motion is in the same order of magnitude as the time to execute it. For instance, computing one contact change should take about one or two seconds.}.
-However, recent contributions to the interpolation between contact poses (problem $\mathcal{P}_3$) have brought promising preliminary solutions \citep{Hauser2014, herzog2015trajectory, Park116, Carpentier2016}. In particular, our algorithm proposed in \cite{Carpentier2016} is \gls{interactive}.
+However, recent contributions to the interpolation between contact poses (problem $\mathcal{P}_3$) have brought promising preliminary solutions \citep{Carpentier2016,Hauser2014, herzog2015trajectory, Park116}. In particular, our algorithm proposed in \cite{Carpentier2016} is \gls{interactive}.
 Therefore, a planner capable of efficiently solving \Pa and \Pb could outperform all existing planners if coupled with an interpolation method solving $\mathcal{P}_3$.
 The main contribution of this paper is exactly this planner.
 
