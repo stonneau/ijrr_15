@@ -70,6 +70,7 @@
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage[Symbol]{upgreek}
+\usepackage[utf8]{inputenc}
 
 \newcommand{\fratop}[2]{\genfrac{}{}{0pt}{}{#1}{#2}}
 \newcommand{\mx}[1]{\mathbf{\bm{#1}}} 				% Matrix symbol
@@ -526,7 +527,7 @@ implementation of a contact planner (open source). While
 no contact planner has yet been proposed with theoretical
 completeness, we empirically show the interest of our framework:
 in a
-few seconds, with high success rates, we generate complex contact plans for various scenarios and two robots, HRP-2 and HyQ. These plans are validated either in dynamic simulations, or on the real HRP-2 robot.
+few seconds, with high success rates, we generate complex contact plans for various scenarios and two robots, HRP-2 and HyQ. These plans are validated in dynamic simulations or on the real HRP-2 robot.
 
 %~ Our approach results from the pragmatic choice of favoring efficiency over completeness, which we justify empirically: in a
 %~ few seconds, with high success rates, we generate complex contact plans for various scenarios and robots: HRP-2, HyQ, and a dexterous hand. These plans are then validated either in dynamic simulations, or on the real HRP-2 robot, thus demonstrating 
@@ -604,7 +605,7 @@ At any given time a contact must be chosen between infinitely many possibilities
 The
 foliation prevents the use of efficient sampling-based
 planners
-for two reasons. (i) First, each sub-manifold of the         
+for two reasons. (i) Each sub-manifold of the         
 foliation
 has
 a zero measure and cannot be directly sampled.         
@@ -618,7 +619,7 @@ explicitly projecting it in contact (which is a
 costly
 numerical
 operation).
-(ii) Second, the foliated topology       
+(ii) The foliated topology       
 turns
 the
 exploration
@@ -701,7 +702,7 @@ This decoupling presents pros and cons discussed in previous related literature,
 \subsection{State of the art}
 The following state of the art focuses on contributions proposed for humanoid robots, although our method is also demonstrated on quadruped robots such as HyQ, for which related work also exists~\cite{BELTER20116918}. With robots using more than two legs for locomotion, different gait modes can be used to cross cluttered environments, allowing them to remain in a cyclic context. In these works collision avoidance is often treated as a height issue (assuming that all the obstacles are on the ``ground'', and so are the contacts, which prevents from going under a table, or using a wall as contact location for instance). While these approaches are efficient in many cases, we focus on the most generic case, where obstacles are not only on the ground, and cyclic locomotion might not be a solution. 
 
-Additionally to robotics, acyclic motion planning is also a problem of interest in neurosciences, biomechanics, and virtual character animation.
+Additionally to robotics, acyclic motion planning is also a problem of interest in biomechanics and virtual character animation.
 Early contributions in the latter field rely on local adaptation of motion graphs \citep{citeulike:220163}, or ad-hoc construction of locomotion controllers \citep{Pettre:2003:LPD:846276.846313}. These approaches are by definition not able to discover complex behaviors in unforeseen contexts.
 
 The issue of planning acyclic contacts was first completely described by Bretl~\cite{Bretl:2006:MPM:1124573.1124585}. The issue requires the simultaneous handling of two sub-problems, $\mathcal{P}_1$: planning a guide path for the root of the robot in $SE(3)$; and $\mathcal{P}_2$: planning a discrete sequence of equilibrium configurations along the path. A third nontrivial problem, $\mathcal{P}_3$, 
@@ -771,7 +772,7 @@ of
 a reduction property, the reachability condition.
 
 %~ because we believe it is the most promising direction~\citep{DBLP:conf/iser/EscandeKMG08} to break the complexity of acyclic contact planning. 
-Compared to previous approaches, our solution has two main novelties: 
+Our solution presents two main novelties: 
 
 \noindent \textbf{Regarding $\mathcal{P}_1$}, we propose a fast guide path planning algorithm. The key to its efficiency is that it does not sample directly the contact manifold, but an approximation of the \textit{contact reachable} space. The \textit{contact reachable} space is a low-dimensional space for which there exists a mapping to the contact manifold.
 
@@ -842,7 +843,7 @@ To plan a root path, we then use an RRT planner where, instead of checking colli
 \centering
   \begin{overpic}[width=0.8\linewidth]{figures/reachability_cond}
 	\end{overpic}
-\caption{The reachability condition is verified by the right configuration: the trunk (red) is free of collisions while the limbs reachable workspace (green) intersect the environment.}
+\caption{The reachability condition is verified if the trunk (red) is collision-free while the limbs reachable workspace (green) intersect the environment.}
 		   \label{fig:reach_cond}
 \end{figure}
 
@@ -1275,7 +1276,7 @@ otherwise, the method \textsc{IntermediateContactState} (Algorithm~\ref{alg:repo
 It repositions an end effector (either a free limb, or the oldest active contact) towards a new contact position if possible.
 This repositioning allows to increase the odds that the contact can be maintained at the next step.
 The method \textit{Length} returns the length of a list~; \textit{LastElement} returns the last element
-of a list~; \textit{Element} returns the element contained by a list at a given index~; and \textit{PushBack} inserts an element at the end of a list.
+of a list~; \textit{Element} returns the element of a list at a given index~; and \textit{PushBack} inserts an element at the end of a list.
 %~ Algorithm~\ref{alg:pi} gives the pseudo code for \textsc{GenFullBody}.
 
 \begin{algorithm}[!tbp]
@@ -1325,7 +1326,7 @@ $ContactLimbs$ (respectively $FreeLimbs$) returns the list of limbs that are in 
 %
 \textit{GenerateContact}$(state,k)$ is a call to the contact generator presented in the following Section~\ref{sec:single_contact}.
 It generates a contact configuration in static equilibrium, and assigns the corresponding configuration of the limb $k$ to the state configuration.
-If it fails, $k$ remains unchanged if it is collision free, otherwise it is assigned a random collision free configuration.
+If it fails, $k$ remains unchanged if collision free, else it is assigned a random collision free configuration.
 
 Algorithm~\ref{alg:repo} generates an intermediate state by first trying to create a contact with one of the free limbs (trying in a FIFO order) then by repositioning one of the limbs in contact.
 
@@ -1510,7 +1511,7 @@ We first define the variables of the problem, for $e$ contact points, expressed 
 \end{itemize}
 
 According to Coulomb's law, the non-slipping condition is verified if all the contact forces lie in the friction cone defined by the surface.
-As classically done, we linearize the friction cone in a conservative fashion with a pyramid included in it, described by four generating rays of unit length. We choose for instance:
+Classically, we linearize the friction cone in a conservative fashion with a pyramid included in it, described by four generating rays of unit length. We choose for instance:
 \begin{equation*}
 \mathbf{V}_{i} = \mat{\mathbf{n}_{i} + \mu \mathbf{\boldsymbol\upgamma}_{i1} & \mathbf{n}_{i} -\mu \mathbf{\boldsymbol\upgamma}_{i1} & \mathbf{n}_{i} + \mu \mathbf{\boldsymbol\upgamma}_{i2} & \mathbf{n}_{i} - \mu \mathbf{\boldsymbol\upgamma}_{i2}}^T
 \end{equation*}
@@ -1528,7 +1529,7 @@ We can then stack all the constraints to obtain:
 \end{equation}
 where $\mathbf{V} = \diag{ \{\mathbf{V}_1, \dots, \mathbf{V}_e\} }$, and $\mathbf{f} = (\mathbf{f}_0,...,\mathbf{f}_e)$.
 
-From the Newton-Euler equations, to be in static equilibrium the contact forces have to compensate the gravitational forces:
+From the Newton-Euler equations, to be in static equilibrium the contact forces have to compensate the gravity:
 
 
 \begin{align} \label{eq:new_eul}
@@ -1765,7 +1766,7 @@ The quadruped robot must cross a rubble composed of bricks rotated at different 
 
 \noindent\textbf{Contacts involved:} All (the 4 legs).
 
-\noindent\textbf{Heuristics:} $h_w$ for all legs. The robustness threshold $b_0$ is set to $20$.
+\noindent\textbf{Heuristics:} $h_w$. The robustness threshold $b_0$ is set to $20$.
 
 %~ \noindent\textbf{Observations:} In this context, setting up a really important minimum value for $b_0$ is possible due to the high
 %~ stability of the HyQ robot, and results in more contact switches, in exchange for safety. The guide path-planning in this scenario takes a few seconds in average, more than
@@ -1795,7 +1796,7 @@ In this long scene, HyQ has to cross a 55-cm large hole, followed by a narrow ``
 
 \noindent\textbf{Contacts involved:} All (the 4 legs).
 
-\noindent\textbf{Heuristics:} $h_w$ for all legs. The robustness threshold $b_0$ is set to $10$.
+\noindent\textbf{Heuristics:} $h_w$. The robustness threshold $b_0$ is set to $10$.
 
 %~ \noindent\textbf{Observations:} Despite the apparent simplicity of the scene, this scenario is a hard case for a contact planner.
 %~ While finding a guide path above the hole is easy for the guide planner, finding a sequence of contacts that allows for equilibrium is not trivial.
@@ -1806,7 +1807,7 @@ In this long scene, HyQ has to cross a 55-cm large hole, followed by a narrow ``
 
 \subsubsection{HRP-2 -- Path re-planning (Figure~\ref{fig:re-planning})}
 In this long scene, HRP-2 plans a path through several obstacles. The scene is edited during the execution of the motion: a stair is added,
-some stepping stones are removed, and part of the final staircase is deleted. All these modifications require re-planning.
+stepping stones are removed, as for parts of the final staircase. All these modifications require re-planning.
 
 
 \begin{figure}
@@ -1893,7 +1894,7 @@ EFORT is designed for tasks requiring large magnitude contact forces (such as pu
 In locomotion tasks, such as the stair scenario, one issue with EFORT is that it tends to generate
 configurations close to singularities (and joint limits). While this did not significantly impact
 the generation of the plan, the resulting interpolation turned out to be harder.
-For this reason, we prefer to use our manipulability-based heuristic for the legs of the robot, but we still
+For this reason, we use our manipulability-based heuristic for the legs, but still
 use EFORT for the arms, which results in fewer contact repositionings.
 
 %~ \subsubsection{On the robustness equilibrium criterion:} \label{sec:parrob}
@@ -1912,7 +1913,7 @@ the planner may fail since we impose the constraint that only one contact change
 between two consecutive steps. On the other hand, a small step will not impact the success rate of the planner, 
 but may generate unnecessary states. In most scenarios the torso of HRP-2 moves about 15 cm between two postures, but only 3 cm
 for the car egress scenario to handle the geometry of the car.
-For future work, we would like to automatically adapt the size of the discretization step to the complexity of the environment.
+For future work, we would like to automatically adapt the size of the discretization step.
 
 \subsection{Performance analysis} \label{sec:perf}
 To analyze performance, we ran the planner 1000 times for each scenario.
@@ -1990,7 +1991,7 @@ As expected, a more constrained scenario such as the car egress provides less sa
 For HRP-2, most of the time was spent performing inverse kinematics.
 This is not surprising considering the number of calls to the methods: IK projection is used intensively to maintain contact continuity between two postures; 
 it is also applied every time a new candidate needs to be evaluated. In particular for the car egress scenario,
-the kinematic constraints are very demanding to avoid collisions.
+the collision avoidance constraints are demanding.
 
 On the other hand for HyQ most of the time is spent testing the static equilibrium of the candidate configurations.
 
@@ -2320,7 +2321,7 @@ In step 1 on the other hand, selecting the convex hull (Figure~\ref{fig:hrp2_rom
 Concretely, because the false positive set intersects with $W^0$, the scaling volume of the robot torso, the induced error is compensated,
 as verified by the results shown by Table~\ref{tab:requestpercent}.
 
-\subsection{Step 2: computing the torso scaling workspace $W^0$ of the robot}
+\subsection{Step 2: computing the torso scaling workspace $W^0$}
 To define the volume $W^0$ of HRP-2, we proceed in an empirical manner.
 First, we compute the bounding boxes of the robot torso, head, and upper legs (Figure~\ref{fig:hrp2_w} -- red shapes).
 Then, we perform a scaling of these boxes by a factor $s$. 
@@ -2340,22 +2341,9 @@ We derive these heuristics from the work by \cite{Yoshikawa1984}, recalled here.
 
 \subsubsection{The force and velocity ellipsoids}
 
-\begin{figure}[!tbp]
-  \centering
-	\begin{overpic}[width=1\linewidth]{figures/ellipsoid}
-		\put (8.5,1.2) {\small{Velocity ellipsoid}}
-		\put (62.5,1.2) {\small{Force ellipsoid} \tiny{(scale 0.5)}}
-	\end{overpic}
-  \caption{Examples of velocity and force ellipsoids for a manipulator composed of 2 DoFs and 2 segments.
-Only the horizontal and vertical speeds are shown (not the rotation speeds).}
- %~ since it would require being able to draw in four dimensions.}
-		   \label{sec:efort_ellipsoid}
-\end{figure}
-
-
 We consider: a limb configuration $\mathbf{q}^k$; its end effector position $\mathbf{p}^k$; its Jacobian matrix
 $\mathbf{J}^k(\mathbf{q}^k)$; a force $\mathbf{f}$ exerted by the end effector. For clarity in the rest of the section we omit the $k$ indices and write $\mathbf{J}^k(\mathbf{q}^k)$ as $\mathbf{J}$.
-Yoshikawa~\cite{Yoshikawa1984} defines the velocity(~\ref{eq:vel}) and force~(\ref{eq:for}) ellipsoids:
+Yoshikawa~\cite{Yoshikawa1984} defines the velocity (\ref{eq:vel}) and force~(\ref{eq:for}) ellipsoids:
  
  \begin{equation} 
  \label{eq:vel}
@@ -2369,44 +2357,33 @@ Yoshikawa~\cite{Yoshikawa1984} defines the velocity(~\ref{eq:vel}) and force~(\r
 
 They describe the set of end-effector velocities (respectively forces) that can
 be reached under the constraint $||\dot{\mathbf{q}}||^2 \leq 1$ for the current configuration.
-The longer the axis of the ellipsoid is, the more important the velocity (resp. force) of the end-effector the direction of the axis can be (Figure~\ref{sec:efort_ellipsoid}).
+The longer the axis of the ellipsoid is, the more important the velocity (resp. force) of the end-effector the direction of the axis can be.
+%~ (Figure~\ref{sec:efort_ellipsoid}).
  
 \subsubsection{Manipulability-based heuristics}
-From these definitions, we can derive two useful heuristics, that all account for the environment and the task being performed.
+From these definitions, we derive two heuristics that account for the environment and the task being performed.
 The first one, EFORT, was introduced by \cite{Tonneau2014}; the second one derives the manipulability measure proposed by Yoshikawa~\cite{Yoshikawa1984}.
 
 With EFORT, we define the efficiency of a configuration as the ability of a limb to exert a force in a given direction.
-We thus consider the force ellipsoid as a basis for our heuristic.
 In a given direction $\uprho$, the length of the ellipsoid is given by the force-transmission ratio \citep{1087795}:
 \begin{equation*}
 f_\mathsf{T}(\mathbf{q}, \uprho) = [\uprho^{T}(\mathbf{J}\mathbf{J}	^{T})\uprho]^{-\frac{1}{2}}
 \end{equation*}
 
-In our problem, to compare candidate configurations, we include the quality of the contact surface, and choose $\uprho$ as the direction
-opposite to the local motion (given by the difference between two consecutive root positions):
+To compare candidate configurations, we include the quality of the contact surface, and choose $\uprho$ as the direction opposite to the local motion (given by the difference between two consecutive root positions):
 
 \begin{equation}
 h_{\textrm{\it EFORT}}(\mathbf{q}, \uprho) = [\uprho^{T}(\mathbf{J}\mathbf{J}^T)\uprho]^{-\frac{1}{2}} ( \mu \mathbf{n}^T \uprho)
 \end{equation}
 where $\mu$ and $\mathbf{n}$ are respectively the friction coefficient and the normal vector of the contact surface.
 
-
-%~ If the ability to generate large velocities at the effector is considered, we define a new heuristic $h_{vel}$ with a similar reasoning on the velocity ellipsoid:
-%~ \begin{equation}
-%~ h_{vel}(\mathbf{q}, \uprho) = [\uprho^{T}(\mathbf{J}\mathbf{J}^T)^{-1}\uprho]^{-\frac{1}{2}} ( \mu \mathbf{n}^T \uprho)
-%~ \end{equation}
-
-%~ $h_{\textrm{\it EFORT}}$ and $h_{vel}$ will favor contacts that allow large efforts or fast modifications in the velocity.
-$h_{\textrm{\it EFORT}}$ will favor contacts that allow large efforts.
-$EFORT$ in particular is useful for tasks such as standing up, pushing / pulling.
-In other less demanding cases, manipulability can also be considered to avoid singularities.
-To do so, we can consider the manipulability measure $h_{w}$, also given by Yoshikawa~\cite{Yoshikawa1984}:
+$h_{\textrm{\it EFORT}}$ will favor contacts that allow large efforts. Alternatively, the manipulability measure can be considered~\cite{Yoshikawa1984}:
 
 \begin{equation} \label{ellipsoid}
 h_{w}(\mathbf{q}) = \sqrt{det(\mathbf{J}\mathbf{J}^T)}
 \end{equation}
-$h_{w}$ measures the ``distance'' of a given configuration to singularity. When $h_{w}$ is equal to 0, the configuration is singular;
-the greater $h_{w}$ is, the further away the configuration is from singularity.
+%~ $h_{w}$ measures the ``distance'' of a given configuration to singularity. When $h_{w}$ is equal to 0, the configuration is singular;
+%~ the greater $h_{w}$ is, the further away the configuration is from singularity.
 
 
 
@@ -2417,7 +2394,7 @@ the greater $h_{w}$ is, the further away the configuration is from singularity.
 The stair climbing and the standing up scenarios were validated with the trajectory optimization scheme provided in \citeauthor{Carpentier2016}. 
 %~ \deladp{The optimization is formulated as an optimal control problem that aims at generating a valid trajectory for the center of mass.}
 To address the other scenarios, we propose a new implementation, entirely open source (\url{http://stevetonneau.fr/files/publications/isrr15/tro_install.html\#optim} ), which can be integrated directly in our motion planner software. This formulation uses the center of mass acceleration and angular momentum as input variables, while previously the contact forces were used.
-The center-of-mass trajectory resulting from the optimization is then turned into a collision-free whole-body trajectory.
+The obtained COM trajectory is then turned into a collision-free whole-body trajectory.
 
 We rewrite Eq.~\ref{eq:new_eul} in the general case:
 
@@ -2439,7 +2416,7 @@ We rewrite Eq.~\ref{eq:new_eul} in the general case:
 \noindent where $\dot{L}$ is the angular momentum expressed at the com.
 Eq.~\ref{eq:new_eul_acc} defines a 6-dimensional cone $\mathcal{K}$ ~\citep{qiu:dhm:2011,Caron2015}. For a given set of contacts,
 this cone determines all the admissible wrenches $\mathbf{w}$ that can be generated by contact forces inside their friction cones.
-The face form of $\mathcal{K}$ can be computed using the double description method~\citep{Fukuda1996}, resulting in the following linear inequalities:
+The face form of $\mathcal{K}$ can be computed using the double description method~\citep{Fukuda1996}:
 
 \begin{equation}
 \label{eq:cone_k}
@@ -2538,9 +2515,73 @@ the ARO Contract W911NF-14-1-0437; and the NSF award 1305286. %, and a grant fro
 %\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
 % or if you just want to reserve a space for a photo:
 
-%~ \begin{IEEEbiographynophoto}{Steve Tonneau}
-%~ TODO
-%~ \end{IEEEbiographynophoto}
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/bio/steve}}]{Steve Tonneau} is a post-doctorate in the Gepetto team at LAAS-CNRS. He received the joint M.Eng. and M.Sc. degrees from Insa Rennes in 2008. After 4 years in the industry he defended his Phd in 2015 at the INRIA/IRISA Mimetic research team. His research focuses on motion planning based for legged avatars in arbitrary situations. Applications include computer graphics animation and legged robotics.
+\end{IEEEbiography}
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/bio/andrea}}]{Andrea Del Prete} received his degree in Computer
+Engineering (with honors) from the 2nd faculty of
+the University of Bologna (Italy) in 2009. In March
+2013 he got his PhD from the Cognitive Humanoids
+laboratory, Italian Institute of Technology, Genova
+(Italy). From 2014 to 2017 he had been a PostDoc
+at LAAS-CNRS in Toulouse (France), working on
+optimization-based control of the humanoid robot
+HRP-2. Since 2018 he is a senior researcher at
+the Max Planck Institute for Intelligent Systems, in
+Tuebingen (Germany).
+\end{IEEEbiography}
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/bio/julien}}]{Julien Pettré}
+is a computer scientist. He is junior researcher at Inria, the French National Institute for Research in Computer Science and Control, in the Lagadic team. He received PhD from the University of Toulouse III in 2003, and Habilitation from the University of Rennes I in 2015. From 2004 to 2006, he was postdoctoral fellow at EPFL in Switzerland. He joined Inria in 2006.
+Julien Pettré is currently coordinator of the European H2020 Crowdbot project (2018-21), dedicated to the design of robot navigation techniques for crowded environments. He previously coordinated the national ANR JCJC Percolation project (2013-17) dedicated to the design of new microscopic crowd simulation algorithms, as well as the national ANR CONTINT Chrome project, dedicated to efficient and designer-friendly techniques for crowd animation.
+His research interests are crowd simulation, computer animation, virtual reality, robot navigation and motion planning. 
+\end{IEEEbiography}
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/bio/chonhyon}}]{Chonhyon Park}
+received the B.S. degree and the M.S. degree in computer science and engineering from the Seoul National University, Seoul, South Korea 2005 and 2007, respectively.
+
+He received the Ph.D. degree in computer science at University of North Carolina at Chapel Hill in 2016.
+
+His current research interests include motion and path planning,  navigation of virtual characters, and many-core computing.
+\end{IEEEbiography}
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/bio/dinesh}}]{Dinesh Manocha}
+is currently the Phi Delta
+Theta/Mason Distinguished Professor of Computer
+Science at the University of North Carolina at
+Chapel Hill. He received his Ph.D. in Computer
+Science at the University of California at Berkeley
+1992. Along with his students, Manocha has
+also received 15 best paper awards at the leading
+conferences. He has published more than 480
+papers and some of the software systems related
+to collision detection, GPU-based algorithms and
+geometric computing developed by his group have
+been downloaded by more than 200,000 users and are widely used in the
+industry. He has supervised 33 Ph.D. dissertations and is a fellow of ACM, AAAI,
+AAAS, and IEEE. He received Distinguished Alumni Award from Indian
+Institute of Technology, Delhi.
+\end{IEEEbiography}
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/bio/nicolas}}]{Nicolas Mansard}
+received the joint M.Eng. and
+M.Sc. degrees in 2003, robotics and image process-
+ing from Nationale Supérieure d'Informatique et de
+Mathématiques Appliquées de Grenoble,
+France, and University Joseph Fourier, Grenoble,
+France, respectively, and the Ph.D. degree in robotics
+for his work with Lagadic Group, Institut National
+de Recherche en Informatique et en Automatique,
+Rennes, France, in 2006. He spent one year with
+Stanford University, Stanford, CA, with O. Khatib
+and one year with JRL-Japan with A. Kheddar. He
+is currently with the GEPETTO Group, LAAS- CNRS, Toulouse, France.
+He was an Invited Researcher with Emo Todorovs Group, University of
+Washington, in 2013. His research interest includes the generation of dynamic
+sensor-based robot movements. Dr. N. Mansard received the CNRS Bronze
+medal in 2015.
+\end{IEEEbiography}
 
 % insert where needed to balance the two columns on the last page with
 % biographies
