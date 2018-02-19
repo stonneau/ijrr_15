@@ -78,7 +78,6 @@
 \newcommand{\pder}[2]{\frac{\partial#1}{\partial#2}}		% partial derivative
 \newcommand{\ppder}[2]{\frac{\partial^2 #1}{\partial#2^2}}		% second partial derivative
 \newcommand{\refframe}[1]{\mbox{\textless#1\textgreater}}	% to denote a reference frame
-%\DeclareMathOperator*{\lexmin}{\text{lex}\!\min}			% lexmin
 \DeclareMathOperator*{\argmin}{\arg\!\min}				% argmin
 \DeclareMathOperator*{\argmax}{\arg\!\max}				% argmax
 \DeclareMathOperator*{\st}{subject\,to}					% subject to
@@ -113,35 +112,9 @@
 \newcommand{\Yin}{\ensuremath{\mathcal{Y}_{in}}}					% 
 \newcommand{\Yout}{\ensuremath{\mathcal{Y}_{out}}}					% 
 
-%\algnewcommand{\algorithmicgoto}{\textbf{go to}}%
-%%\algnewcommand{\Goto}[1]{\algorithmicgoto~\ref{#1}}%
-%\algnewcommand{\Goto}{\algorithmicgoto\xspace}%
-%\algnewcommand{\Label}{\State\unskip}
-
 \newenvironment{definition}[1][Definition]{\begin{trivlist}
 \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
 
-\newcommand{\commentt}[2]{\textcolor{#1}{\textbf{\textit{[#2]}}}} 	% make sure no comments left in the paper
-%\newcommand{\commentt}[2]{}							% using this line rather than the previous one you remove all comments
-\newcommand{\adnote}[1]{\commentt{blue}{AD: #1}}
-\newcommand{\nmnote}[1]{\commentt{OliveGreen}{NM: #1}}
-
-% Another method to track changes
-% Examples of usage:
-% - This is \added[id=per,remark={we need this}]{new} text.
-% - This is \deleted[id=per,remark=obsolete]{unnecessary}text.
-% - This is \replaced[id=per]{nice}{bad} text.
-% To print the list of change use: \listofchanges
-\usepackage{changes}	% use this for the working version
-%\usepackage[final]{changes} % use this for the final version
-\definechangesauthor[name={Andrea Del Prete}, color=orange]{adp}
-\newcommand{\deladp}[1]{\deleted[id=adp]{#1}}
-\newcommand{\addadp}[1]{\added[id=adp]{#1}}
-\newcommand{\repadp}[2]{\replaced[id=adp]{#1}{#2}}
-\definechangesauthor[name={Steve Tonneau}, color=blue]{st}
-\newcommand{\delst}[1]{\deleted[id=st]{#1}}
-\newcommand{\addst}[1]{\added[id=st]{#1}}
-\newcommand{\repst}[2]{\replaced[id=st]{#1}{#2}}
 \newcommand{\gls}[1]{\textit{#1}}
 \newcommand{\glslink}[2]{{#2}}
 
@@ -2369,7 +2342,7 @@ We derive these heuristics from the work by \cite{Yoshikawa1984}, recalled here.
 
 \begin{figure}[!tbp]
   \centering
-	\begin{overpic}[width=1\linewidth]{figures/EFORT/ellipsoid}
+	\begin{overpic}[width=1\linewidth]{figures/ellipsoid}
 		\put (8.5,1.2) {\small{Velocity ellipsoid}}
 		\put (62.5,1.2) {\small{Force ellipsoid} \tiny{(scale 0.5)}}
 	\end{overpic}
